@@ -1,4 +1,4 @@
-# TARSjs
+# FormationFinder
 
 ![](https://brainstomping.files.wordpress.com/2015/03/2001-monolith-interstellar-tars.jpg)
 
@@ -21,7 +21,7 @@ It's pretty easy : Git clone or fork this repo and open a terminal.
 
 Run : docker-compose up
 
-Go to : http://172.16.0.10/  It works !
+Go to : http://173.0.0.10/  It works !
 
 ## How does it work ?
 
@@ -29,7 +29,7 @@ Go to : http://172.16.0.10/  It works !
 
 The database is built from the mongodb docker image. It uses a docker volume stored in db/data. This folder is ignored by git so these data aren't messing up the repo.
 
-default ip address : 172.16.0.12
+default ip address : 173.0.0.12
 
 ### Api
 
@@ -41,7 +41,7 @@ default ip address : 172.16.0.11
 
 The front api is running an Nginx server exposing the AngularJS application and serving static files. It is also the only entry point for the clients. It redirects automaticly all /api/ requests to the Api server. This behavior has been made in order to create a cache strategy over the api nodejs server.
 
-default ip address : 172.16.0.10
+default ip address : 173.0.0.10
 
 ## How do I get to code in it ?
 
