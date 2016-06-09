@@ -1,0 +1,41 @@
+<div class="container-fluid" style=" padding: 0">
+    <div class="information-center col-md-12">
+        <div class="header">
+            <div class="container">
+                <div class="col-md-6 col-sm-8">
+                    <h3>{{formationCenter.name}}</h3>
+                    <h3 style="margin: 0;">ʻʻ
+                        <small>{{formationCenter.eslogan}}</small>
+                        ʼʼ
+                    </h3>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="content col-md-10 col-md-offset-1 col-sm-12">
+
+            <div class="col-md-4 col-sm-5">
+                <div class="account-info">
+                    <p>toda la info de information center</p>
+
+                </div>
+
+            </div>
+            <div class="col-md-8 col-sm-7">
+                <div>
+                    <h5>Cursos Activos</h5>
+                    <div class="course-info col-md-12" ng-repeat="curso in formationCenter.courses">
+                        <p>{{curso.location.address}}
+                            <i class="glyphicon glyphicon-shopping-cart pull-right"></i>
+                            <i class="glyphicon glyphicon-euro pull-right">20</i>
+                        </p>
+                        <p>Fecha: {{curso.date.start}} → {{curso.date.end}}</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
