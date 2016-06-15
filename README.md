@@ -1,8 +1,6 @@
 # FormationFinder
 
-![](https://brainstomping.files.wordpress.com/2015/03/2001-monolith-interstellar-tars.jpg)
-
-TarsJS is a full stack framework to start working with MongoDB, Node.js, Sails and AngularJS easily. It is based on Docker containers and offers a quick way to start a project and organize your application. In TarsJS, each component is stored in a seperate docker container.
+FormationFinder is a website based on Endurance Framework with MongoDB, Node.js, Sails and AngularJS. It is based on Docker containers.
 
 ## Prerequisite Tools
 
@@ -62,16 +60,3 @@ Grunt is configured to publish the application in the **/front/src/dist** folder
 The application uses Bower to manage dependencies. Bower components are stored in **/front/src/bower_components** and are automatically copied to **/front/src/dist/libs**.
 
 The Nginx root folder is configured to be the **/front/src/dist** folder.
-
-## Project Roadmap
-
-What's next ?
-
-- A better sample application showing the full stack chain with a mongo collection and a sails api consumed by the angular app.
-- Environment parameters to make it easier to go in production and manage environment variables
-- Unit tests integration with Mocha
-- Logging strategy to be defined
-
-## Any feedback ?
-
-Please let me know :) Honesty level 90%.
