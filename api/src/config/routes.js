@@ -34,7 +34,41 @@ module.exports.routes = {
 
   '/': {
     view: 'homepage'
+  },
+
+  '/FormationCenter/search':{
+    controller: "FormationCenterController", action: "search"
+  },
+
+  '/FormationCenter/searchplaces':{
+    controller: "FormationCenterController", action: "searchplaces"
+  },
+
+  '/Email/send':{
+    controller: "EmailController", action: "send"
+  },
+
+  '/Customer/searchtosendmail':{
+    controller: "CustomerController", action: "searchbyclosedformation"
+  },
+
+  '/Payment/createwallet':{
+    controller: "PayController", action: "createwalletex"
+  },
+  '/Payment/makepayment':{
+    controller: "PayController", action: "makepaymentex"
   }
+  ,
+  '/Formation/searchbyname':{
+    controller: "FormationController", action: "searchbyname"
+  }
+  ,
+  '/Formation/searchbydate':{
+    controller: "FormationController", action: "searchbydate"
+  }
+
+
+
 
   /***************************************************************************
   *                                                                          *

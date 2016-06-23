@@ -1,5 +1,5 @@
 {
-  "name": "src",
+  "name": "formationfinder",
   "private": true,
   "version": "0.0.0",
   "description": "a Sails application",
@@ -19,9 +19,17 @@
     "grunt-sails-linker": "~0.10.1",
     "grunt-sync": "0.2.4",
     "include-all": "~0.1.6",
+    "mangopay": "^1.0.0",
     "rc": "1.0.1",
-    "sails": "~0.12.0",
-    "sails-disk": "~0.10.9"
+    "sails": "~0.12.3",
+    "sails-auth": "^2.1.3",
+    "sails-disk": "~0.10.9",
+    "sails-hook-cron": "^2.2.0",
+    "sails-hook-seed": "^0.2.6",
+    "sails-mongo": "^0.12.0",
+    "sails-mysql": "^0.12.1",
+    "sails-permissions": "^2.2.0",
+    "sails-service-mailer": "file:node_modules\\sails-service-mailer"
   },
   "scripts": {
     "debug": "node debug app.js",
@@ -30,8 +38,13 @@
   "main": "app.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/florian/src.git"
+    "url": "git://github.com/anonymous node/sails user/formationfinder.git"
   },
-  "author": "florian",
-  "license": ""
+  "author": "anonymous node/sails user",
+  "license": "",
+  "devDependencies": {
+    "faker": "^3.1.0",
+    "grunt-mocha-istanbul": "^5.0.1",
+    "grunt-mocha-test": "^0.12.7"
+  }
 }

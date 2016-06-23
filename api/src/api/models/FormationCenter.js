@@ -10,10 +10,39 @@ module.exports = {
   schema: true,
 
   attributes: {
+    name: {
+      type: 'string',
+      required: true
+    },
+
+    address: {
+      type: 'string'
+    },
+
+    zipCode: {
+      type: 'integer'
+    },
+
+    city: {
+      type: 'string'
+    },
+
+    email: {
+      type: 'email',
+      unique: true
+    },
+
+    phoneNumber: {
+      type: 'string'
+    },
 
   	isActivated: {
   		type: 'boolean'
   	},
+
+    walletid: {
+      type: 'string'
+    },
 
   	animators: {
   		collection: 'animator',
@@ -34,11 +63,6 @@ module.exports = {
       collection: 'customerBill',
       via: 'formationCenter'
     },
-
-  	account: {
-  		collection: 'account',
-  		via: 'formationCenter'
-  	},
 
     formations: {
       collection: 'formation',

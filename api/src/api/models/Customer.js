@@ -53,6 +53,9 @@ module.exports = {
   		type: 'integer'
   	},
 
+    emailsend: {
+      type: 'integer'
+    },
   	city: {
   		type: 'string'
   	},
