@@ -19,6 +19,7 @@
  * http://sailsjs.org/#!/documentation/reference/sails.config/sails.config.connections.html
  */
 
+
 module.exports.connections = {
 
   /***************************************************************************
