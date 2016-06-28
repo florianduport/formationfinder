@@ -44,94 +44,59 @@ module.exports = {
     if (!textEmail || textEmail == "")
       return res.json({err:"Not text data"});
 
+    var MailerService = require ('sails-service-mailer');
     ///Read in Configuration´s Colecction data about email server configuration
     ///Get in Database email´s confguration data.
 
-    var ConfigurationObject = {};
+    var ConfigurationObject = "";
     Configuration.find({ type:"smtp"} ).exec(function userFounded(err, configuration) {
+
       if (!configuration || err || configuration == "") {
         //return next(err);
+
+
+        if ( configuration || configuration == "")
+          return res.json({err:"Don´t have smtp server configuration."});
+
         ///Create tmp for test
-        /*
-        Configuration.create( {
-          name:"mail",
-          type:"smtp",
-          emailsystemadress:"formationfinder@localhost.com",
-          emailport:"25",
-          emailhost:"127.0.0.1",
-          emailuser:"dionis@localhost.com",
-          emailpassword:"",
-          emailsecure:false
-        }).then(function (user){
-          configuration = user;
-          console.log("Creado el objeto en BD");
-        });
-      */
+
+
 
         }
 
 
-      if (!configuration)
-        return next();
+      if ( !configuration || configuration == "")
+        return res.json({err:"Don´t have smtp server configuration."});
 
+      ///if they are plus one it´s error and send bad solution
+      if (configuration.length > 1)
+        return res.json({err:"There are many smtp servers configuration."});
 
-      ConfigurationObject = configuration;
+      ///Take first  element in array
+      ConfigurationObject = configuration[0];
 
-      console.log("Datos de la configuracion ", ConfigurationObject );
-
-      var emailport = ConfigurationObject.emailport;
-      var emailhost = ConfigurationObject.emailhost;
-      var emailuser = ConfigurationObject.emailuser;
-      var emailpass = ConfigurationObject.emailpassword;
-      var emailsecure = ConfigurationObject.emailsecure;
-      var emailsystem = ConfigurationObject.emailsecure;
+      var emailportFormation = ConfigurationObject.emailport
+      var emailhostFormation  = ConfigurationObject.emailhost
+      var emailuserFormation  = ConfigurationObject.emailuser
+      var emailpassFormation  = ConfigurationObject.emailpassword
+      var emailsecureFormation  = ConfigurationObject.emailsecure
+      var emailsystemFormation  = ConfigurationObject.emailsystemadress
 
       //  var mailcomposer = require("mailcomposer");
 
-      var MailerService = require ('sails-service-mailer');
-      /*
 
-       },
-       */
-      ///Autentication validation
-      ///Test with google project
-      ///Create config object
+      console.log("Valores de variables: ", ConfigurationObject["emailport"], emailhostFormation, emailsystemFormation);
 
-      /* SMTP config example
+      console.log("Datos de la configuracion ",ConfigurationObject )
 
-       MailerService('smtp', {
-       from: 'no-reply@ghaiklor.com',
-       provider: {
-       port: 25, // The port to connect to
-       host: 'localhost', // The hostname to connect to
-       secure: false, // Defines if the connection should use SSL
-       auth: { // Defines authentication data
-       user: '', // Username
-       pass: '', // Password
-       xoauth2: '' // OAuth2 access token
-       },
-       ignoreTLS: false, // Turns off STARTTLS support if true
-       name: '', // Options hostname of the client
-       localAddress: '', // Local interface to bind to for network connections
-       connectionTimeout: 2000, // How many ms to wait for the connection to establish
-       greetingTimeout: 2000, // How many ms to wait for the greeting after connection
-       socketTimeout: 2000, // How many ms of inactivity to allow
-       debug: false, // If true, the connection emits all traffic between client and server as `log` events
-       authMethod: 'PLAIN', // Defines preferred authentication method
-       tls: {} // Defines additional options to be passed to the socket constructor
-       }
-       });
-
-
-       */
-
-       mailconfig = {
-        from: emailsystem,
+      var mailconfig = {
+        from: emailsystemFormation ,
+        ignoreTLS: false, // Turns off STARTTLS support if true
         provider: {
-          port: ConfigurationObject.emailport, // The port to connect to
-          host: emailhost, // The hostname to connect to
-          name: emailhost, // Options hostname of the client
-          localAddress: emailhost, // Local interface to bind to for network connections
+          port: emailportFormation , // The port to connect to
+          host: emailhostFormation, // The hostname to connect to
+          name: "" , // Options hostname of the client
+          localAddress: emailhostFormation, // Local interface to bind to for network connections
           connectionTimeout: 2000, // How many ms to wait for the connection to establish
           greetingTimeout: 2000, // How many ms to wait for the greeting after connection
           socketTimeout: 2000, // How many ms of inactivity to allow
@@ -139,37 +104,29 @@ module.exports = {
         }
       };
 
-      mailconfig.provider.port  = ConfigurationObject.emailport;
-      mailconfig.provider.host  = ConfigurationObject.emailhost;
-      mailconfig.provider.name = ConfigurationObject.emailhost;
-      mailconfig.provider.localAddress = ConfigurationObject.emailhost;
 
-
-      console.log("Configuration data ", mailconfig);
-
-      console.log("Configuration data ", emailpass,emailuser );
-
-      if (!emailpass && !emailuser ) {
+      if (!emailpassFormation && !emailuserFormation ) {
         var type = "PLAIN"
-        if (!emailsecure)
-          type = emailsecure;
+        if (!emailsecureFormation)
+          type = emailsecureFormation
         mailconfig.secure = true; // Defines if the connection should use SSL
         mailconfig.auth = { // Defines authentication data
-          user: emailuser, // Username
-          pass: emailpass, // Password
+          user: emailuserFormation, // Username
+          pass: emailpassFormation, // Password
 
         }
 
-        if ( emailsecure == "xoauth2") {
+        if ( emailsecureFormation == "xoauth2") {
           ///Find in Colection Configuration (Document) token
           //xoauth2: '' // OAuth2 access token
           mailconfig.auth.xoauth2 = ConfigurationObject.keytoken;
         }
-        else if ( emailsecure == "plain") {
+        else if ( emailsecureFormation == "plain") {
 
         }
       }
 
+      console.log("Configuracion del servidor de correo ", mailconfig);
       var smtp = MailerService('smtp', mailconfig );
 
       var mailElement = { to: toEmail,
@@ -187,6 +144,9 @@ module.exports = {
         console.log("To send mail ==>");
         console.log( mailElement );
       }
+
+
+      console.log("Configuracion del correo ", mailElement);
       smtp.send(mailElement
         )
         .then( function () {
@@ -196,6 +156,43 @@ module.exports = {
         })
         .catch(res.negotiate)
     })
+
+
+   /*
+
+    },
+    */
+    ///Autentication validation
+    ///Test with google project
+    ///Create config object
+
+    /* SMTP config example
+
+     MailerService('smtp', {
+     from: 'no-reply@ghaiklor.com',
+     provider: {
+     port: 25, // The port to connect to
+     host: 'localhost', // The hostname to connect to
+     secure: false, // Defines if the connection should use SSL
+     auth: { // Defines authentication data
+     user: '', // Username
+     pass: '', // Password
+     xoauth2: '' // OAuth2 access token
+     },
+     ignoreTLS: false, // Turns off STARTTLS support if true
+     name: '', // Options hostname of the client
+     localAddress: '', // Local interface to bind to for network connections
+     connectionTimeout: 2000, // How many ms to wait for the connection to establish
+     greetingTimeout: 2000, // How many ms to wait for the greeting after connection
+     socketTimeout: 2000, // How many ms of inactivity to allow
+     debug: false, // If true, the connection emits all traffic between client and server as `log` events
+     authMethod: 'PLAIN', // Defines preferred authentication method
+     tls: {} // Defines additional options to be passed to the socket constructor
+     }
+     });
+
+
+     */
 
 
 
@@ -315,6 +312,28 @@ module.exports = {
     return res.json({
       todo: 'send() is not implemented yet!'
     });
+  },
+
+  sendServices: function ( req, res, next) {
+
+    var toEmail = req.param("to");
+    var ccEmail = req.param("cc");  //Comma separated list or an array of recipients e-mail addresses that will appear on the Cc: field
+    var subjectEmail = req.param("subject");
+    var textEmail = req.param("text");
+    var htmlEmail = req.param("html")
+
+    options = {
+      to: toEmail,
+      cc: ccEmail,
+      subject: subjectEmail,
+      text: textEmail,
+      html: htmlEmail
+
+    }
+
+    EmailService.send(options, function (answer) {
+      return (res.json(answer));
+    })
   }
 };
 

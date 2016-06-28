@@ -12,91 +12,79 @@ module.exports = {
 
   },
 
-  ///Search all FormationCenter with name, id list
-  ///recive name´s parameter and find Formation whit name
-  search: function( req, res, next) {
-    var nameFormationCenter  = req.param('name');
+  searchAllFormationCenters: function (req, res, next) {
+    // body...
 
-    if ( !nameFormationCenter || nameFormationCenter == "" ) {
-      ///Retornar todos los usuarios
-      FormationCenter.find( function userFounded(err, user) {
-        if (err)
-          return next(err);
+    var page = 0;
+    var len = 10;
 
-        ///Iteration by all FormationCenter an return par list (FormationCenter´s name, FormationCenter´s id)
-        console.log("No hay nada");
-        return res.json(
-          FormationCenter
-        );
+    if(req.param('page') !== undefined){
+      if(!isNaN(parseInt(req.param('page')))){
+        page = Math.abs(parseInt(req.param('page')));
+      }
+      else
+      {
+        return res.json({err: 'The page parameter is an invalid string number'});
+      }
+    }
 
+    if(req.param('len') !== undefined){
+      if(!isNaN(parseInt(req.param('len')))){
+        len = Math.abs(parseInt(req.param('len')));
+      }
+      else
+      {
+        return res.json({err: 'The len parameter is an invalid string number'});
+      }
+    }
+
+    FormationCenter.find({
+        skip: page * len,
+        limit: len
       })
-    }
-    else {
-      FormationCenter.find( {"name":nameFormationCenter}).populateAll().exec( function userFounded(err, FormationCenter) {
-        if (err)
-          return next(err);
+      .populate('places')
+      .exec(function  (err, fomationCentersFounded) {
+        // body...
+        if(err) {
+          return res.json(err);
+        }
 
-        console.log(FormationCenter);
-        return res.json(
-           FormationCenter
-        );
-
-      });
-    }
-  },
-  ///Filter by name or zipcode return all places in FormationCenter
-  searchplaces:function( req, res, next) {
-    var nameFormationCenter = req.param('name');
-
-    if (!nameFormationCenter || nameFormationCenter == "") {
-        ///Return error
-         return next("error: not found");
-    }
-
-    /*
-    //Aprender a crear funciones para llamar
-    if( zipCode(nameFormationCenter)) {
-      return searchbyzipcode(nameFormationCenter);
-    }
-    */
-
-    FormationCenter.find( {"name":nameFormationCenter}).populateAll().exec( function userFounded(err, FormationCenter) {
-      if (err)
-        return next(err);
-
-      console.log(FormationCenter);
-
-      Place.find({formationCenter:FormationCenter.id}).exec(function userFounded(err, Place) {
-        if (err)
-          return next(err);
-
-        return res.json(
-          Place
-        );
+        return res.json(fomationCentersFounded);
       });
 
-    });
-
   },
-  /*
-  * Search FormationCenter´s place by zipcode
-  * */
-  searchplacebyzip:function( req, res, next) {
-    var nameFormationCenter = req.param('name');
 
-    if (!name || name == "") {
-      ///Retornar todos los usuarios
-      return next("error: not zipcode");
+  searchByName: function (req, res, next) {
+    // body...
+
+    name = req.param('name');
+
+    if(name === undefined) {
+      return res.json({err: 'Name parameter not provided'});
     }
-    else {
-      Place.findOne("zipCode", nameFormationCenter, function userFounded(err, user) {
-        if (err)
-          return next(err);
-        res.view({
-          formationcenter: FormationCenter
-        });
-      })
+
+    if (typeof(name) != 'string') {
+      name = name.toString();
     }
+
+    FormationCenter.findOne({name: name})
+      .populate('animators')
+      .populate('formations')
+      .populate('places')
+      .exec(function (err, formationCenterFounded) {
+        // body...
+
+        if(err){
+          return res.json({err: 'An error has ocurred searching database'});
+        }
+
+        if(formationCenterFounded === undefined) {
+          return res.json({err: 'No formation Center match that criteria: ' + name});
+        }
+
+        return res.json(formationCenterFounded);
+      });
+
   }
 };
 

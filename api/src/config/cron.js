@@ -66,14 +66,19 @@ module.exports.cron = {
 
                   result = EmailService.send(config, function ( err, result ) {
                     ///If not error when send mail
-                    ///0 Ok, 1 Error, 3 all intent
-                    iResultCostumerUpdate.mailstatus = 0;
+                    ///0 Ok, 1 Error, 5 all intent
+                    iResultCostumerUpdate.mailstatus = 5;
+                    var emailstatus = 5;
                     console.log("Mail send answer ", result.response)
                     if (result.response != "OK") {
 
                       iResultCostumerUpdate.mailstatus = 1;
-                      ///Update all costumer like the started formation´s mail is sended if not error
+                      emailstatus = 1;
+                      ///Update  costumer like the started formation´s mail is sended if not error
+                      Costumer.update({id:options.costumerid},{emailsend:emailsend + emailstatus}).exec(function(err, Costumers){})
                     }
+                    else
+                      Costumer.update({id:options.costumerid},{emailsend:mailstatus}).exec(function(err, Costumers){})
 
                     resultCostumerUpdate.push(iResultCostumerUpdate)
 

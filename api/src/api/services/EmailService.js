@@ -9,7 +9,19 @@ module.exports  = {
    * Send email with Sails services
    * receive to , cc´list, subject, text, idcostumer in option´s object
    */
-  send: function (options) {
+
+  /*
+  *   Send mail to formationfinder´s costumer
+  *   options:
+  *      to:
+  *      cc:
+  *      subject:
+  *      text:
+  *      html:
+  *      costumerid: Costumer id
+  *
+  * */
+  send: function (options, callback) {
     /*
      return res.json({
      todo: 'send() is not implemented yet!'
@@ -23,15 +35,15 @@ module.exports  = {
     var htmlEmail =  options.html;
 
     var MailerService = require ('sails-service-mailer');
-    console.log("1 Enviando notificacion")
+
     if (!toEmail || toEmail == "")
       return {err:"Not sender data"};
-    console.log("2 Enviando notificacion")
+
     if (!textEmail && textEmail == "" && !htmlEmail && htmlEmail == "")
       return {err:"Not text data"};
 
 
-    console.log("3 Enviando notificacion")
+
 
     //var smtp = MailerService('smtp', mailconfig );
 
@@ -47,6 +59,7 @@ module.exports  = {
     ///If exist parament text set
     if ( htmlEmail) {
       mailElement.html = htmlEmail;
+      mailElement.text = htmlEmail;
       console.log("<= To send mail ==>");
       console.log( mailElement );
     }
@@ -62,83 +75,59 @@ module.exports  = {
         //return next(err);
         ///Create tmp for test
 
+        /*
+         if ( configuration || configuration == "")
+         return res.json({err:"Don´t have smtp server configuration."});
+         */
+
+
          Configuration.create( {
          name:"mail",
          type:"smtp",
-         emailsystemadress:"formationfinder@localhost.com",
+         emailsystemadress:"formationfinder@localhost.cu",
          emailport:"25",
          emailhost:"127.0.0.1",
          emailuser:"dionis@localhost.com",
          emailpassword:"",
          emailsecure:false
-         }).then(function (err, user){
-         configuration = user;
+         }).then(function (err, createConfiguration){
+         configuration = createConfiguration;
          console.log("Creado el objeto en BD");
          });
 
         console.log("Se ejecuto el codigo de error");
       }
 
-      console.log("Cuerpo de la funcion de busqueda");
-      if (!configuration)
-        return next();
-      ConfigurationObject = configuration;
+      ///console.log("Cuerpo de la funcion de busqueda");
+      if ( !configuration || configuration == "")
+         return{response:"Don´t have smtp server configuration."};
+      if (configuration.length > 1)
+        return res.json({err:"There are many smtp servers configuration."});
+      ///Take first  element in array
+      ConfigurationObject = configuration[0];
 
-      console.log("Variable configuracion");
-      console.log(ConfigurationObject);
-      var emailport = ConfigurationObject.emailport;
-      var emailhost = ConfigurationObject.emailhost;
-      var emailuser = ConfigurationObject.emailuser;
-      var emailpass = ConfigurationObject.emailpassword;
-      var emailsecure = ConfigurationObject.emailsecure;
-      var emailsystem = ConfigurationObject.emailsecure;
+      var emailportFormation = ConfigurationObject.emailport
+      var emailhostFormation  = ConfigurationObject.emailhost
+      var emailuserFormation  = ConfigurationObject.emailuser
+      var emailpassFormation  = ConfigurationObject.emailpassword
+      var emailsecureFormation  = ConfigurationObject.emailsecure
+      var emailsystemFormation  = ConfigurationObject.emailsystemadress
 
       //  var mailcomposer = require("mailcomposer");
 
-      var MailerService = require ('sails-service-mailer');
-      /*
 
-       },
-       */
-      ///Autentication validation
-      ///Test with google project
-      ///Create config object
+      console.log("Valores de variables: ", ConfigurationObject["emailport"], emailhostFormation, emailsystemFormation);
 
-      /* SMTP config example
-
-       MailerService('smtp', {
-       from: 'no-reply@ghaiklor.com',
-       provider: {
-       port: 25, // The port to connect to
-       host: 'localhost', // The hostname to connect to
-       secure: false, // Defines if the connection should use SSL
-       auth: { // Defines authentication data
-       user: '', // Username
-       pass: '', // Password
-       xoauth2: '' // OAuth2 access token
-       },
-       ignoreTLS: false, // Turns off STARTTLS support if true
-       name: '', // Options hostname of the client
-       localAddress: '', // Local interface to bind to for network connections
-       connectionTimeout: 2000, // How many ms to wait for the connection to establish
-       greetingTimeout: 2000, // How many ms to wait for the greeting after connection
-       socketTimeout: 2000, // How many ms of inactivity to allow
-       debug: false, // If true, the connection emits all traffic between client and server as `log` events
-       authMethod: 'PLAIN', // Defines preferred authentication method
-       tls: {} // Defines additional options to be passed to the socket constructor
-       }
-       });
-
-
-       */
+      console.log("Datos de la configuracion ",ConfigurationObject )
 
       var mailconfig = {
-        from: emailsystem,
+        from: emailsystemFormation ,
+        ignoreTLS: false, // Turns off STARTTLS support if true
         provider: {
-          port: emailport, // The port to connect to
-          host: emailhost, // The hostname to connect to
-          name: emailhost, // Options hostname of the client
-          localAddress: emailhost, // Local interface to bind to for network connections
+          port: emailportFormation , // The port to connect to
+          host: emailhostFormation, // The hostname to connect to
+          name: "" , // Options hostname of the client
+          localAddress: emailhostFormation, // Local interface to bind to for network connections
           connectionTimeout: 2000, // How many ms to wait for the connection to establish
           greetingTimeout: 2000, // How many ms to wait for the greeting after connection
           socketTimeout: 2000, // How many ms of inactivity to allow
@@ -147,26 +136,27 @@ module.exports  = {
       };
 
 
-      if (!emailpass && !emailuser ) {
+      if (!emailpassFormation && !emailuserFormation ) {
         var type = "PLAIN"
-        if (!emailsecure)
-          type = emailsecure;
+        if (!emailsecureFormation)
+          type = emailsecureFormation
         mailconfig.secure = true; // Defines if the connection should use SSL
         mailconfig.auth = { // Defines authentication data
-          user: emailuser, // Username
-          pass: emailpass, // Password
+          user: emailuserFormation, // Username
+          pass: emailpassFormation, // Password
 
         }
 
-        if ( emailsecure == "xoauth2") {
+        if ( emailsecureFormation == "xoauth2") {
           ///Find in Colection Configuration (Document) token
           //xoauth2: '' // OAuth2 access token
           mailconfig.auth.xoauth2 = ConfigurationObject.keytoken;
         }
-        else if ( emailsecure == "plain") {
+        else if ( emailsecureFormation == "plain") {
 
         }
       }
+
 
       /*
        if (!emailpass && !emailuser) {
@@ -182,15 +172,19 @@ module.exports  = {
        );
        }
        */
-      var smtp = MailerService('smtp', mailconfig );
 
-      console.log("Enviando correo con datos");
-      smtp.send({
+
+      var smtp = MailerService('smtp', mailconfig );
+      console.log("Datos del servidor de correo  ", mailconfig)
+      console.log("Datos del correo ", mailElement)
+
+       console.log("dd");
+      smtp.send(
           mailElement
-        })
+        )
         .then( function () {
           ///Update Costumer´s mailstatus atributes with 5 (sended)
-          console.log("Enviado el correo");
+/*          console.log("Enviado el correo");
           if (options.costumerid) {
 
             Costumer.update({id:options.costumerid},{emailsend:5}).exec(function(err, Costumers){
@@ -202,15 +196,16 @@ module.exports  = {
               }
 
             })
-          }
-          return{
+          }*/
+          console.log("Sucessful!!!!");
+          callback( {
             response: 'OK'
-          };
+           });
         })
         .catch(function (errSend) {
           ///Update Costumer´s mailstatus atributes with increment one  (sended)
-          console.log("Enviado el correo ocurrio un error " + errSend);
-          Costumer.update({id: options.costumerid}, {emailsend: Costumer.emailsend + 1}).exec(function (err, Costumers) {
+ //         console.log("Enviado el correo ocurrio un error " + errSend);
+/*          Costumer.update({id: options.costumerid}, {emailsend: Costumer.emailsend + 1}).exec(function (err, Costumers) {
             if (err) {
               console.log("Error ocurred when update costumer emailstatus " + err)
               return {
@@ -218,12 +213,13 @@ module.exports  = {
                 error: errSend
               }
             }
-            console.log("Error" + err)
-            return{
-              response:err,
+            console.log("Error" + err)*/
+          console.log("Error " + errSend)
+          callback(  {
+              response:"ERROR",
               error: errSend
-            };
-          })
+            });
+        //  })
         });
 
       /*

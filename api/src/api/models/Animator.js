@@ -36,7 +36,12 @@ module.exports = {
 
   	zipCode: {
   		type: 'integer'
-  	}
+  	},
+
+    formations: {
+      collection: 'formation',
+      via: 'animators'
+    }
 
   }
 };

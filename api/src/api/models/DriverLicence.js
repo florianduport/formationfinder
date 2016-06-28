@@ -1,5 +1,5 @@
 /**
- * Place.js
+ * DriverLicence.js
  *
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
@@ -11,34 +11,28 @@ module.exports = {
 
   attributes: {
 
-  	formationCenter:{
-      model: 'formationCenter'
-    },
-
-  	address: {
-  		type: 'string'
-  	},
-
-  	name: {
+  	number: {
   		type: 'string',
-  		required: true
+  		required: true,
+  		unique: true
   	},
 
-  	zipCode: {
-  		type: 'integer'
+  	customer: {
+  		model: 'customer'
   	},
 
-  	isActivated: {
-  		type: 'boolean'
+  	dateOfDeliverance: {
+  		type: 'date'
   	},
 
-  	agreementNumber: {
+  	placeOfDeliverance: {
   		type: 'string'
   	},
 
-  	agreementName: {
-  		type: 'string'
+  	dateOfProcuration: {
+  		type: 'date'
   	}
+
   }
 };
 

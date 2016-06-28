@@ -9,7 +9,7 @@ module.exports = {
    * `PayController.createwallet()`
    *  A wallet is for FormationCenter recibe formation center id
    */
-  createwallet: function (config, legalUserValues) {
+  createwallet: function (config, legalUserValues, callback) {
 
 
     //Find data in Configuration document
@@ -38,15 +38,15 @@ module.exports = {
         var formationCenter = {};
 
         if ( !formationCenterName || formationCenterName == "")
-          return { response: "Undefined Formation Center´s name"};
+          callback( { response: "Undefined Formation Center´s name"});
 
         ///Search by formation center syncronized
-        FormationCenter.findOne({name:formationCenterName}).exec( function (err, iFormationCenter) {
+        FormationCenter.findOne({name:formationCenterName}).exec( function (err, iFormationCenters) {
           if (err)
             return  { response:err }
-
+          iFormationCenter = iFormationCenters[0]
           if (!iFormationCenter)
-            return { response: "No exist Formation Center with name ".formationCenterName }
+            callback( { response: "No exist Formation Center with name ".formationCenterName })
 
           formationCenter = iFormationCenter
 
@@ -97,7 +97,7 @@ module.exports = {
 
           if ( err) {
             console.log('err', err);
-            return { response: err}
+            callback( { response: err})
           }
 
           console.log('user', user);
@@ -125,7 +125,7 @@ module.exports = {
           var userdata = user;
 
           if ( !userdata )
-            return { respose: "Not user data values"}
+            callback({respose: "Not user data values"})
           var ownersArray = [];
           ownersArray.push(userdata.Id);
 
@@ -153,8 +153,6 @@ module.exports = {
             console.log('wallet', wallet);
 
             console.log('res', res.statusCode);
-
-            ////Update data  in  FormationFinder
 
             console.log(iFormationCenter);
 
@@ -184,26 +182,21 @@ module.exports = {
             }, function(err, bankaccount, res){
 
               if ( err )
-                return { response: err}
-              //err;
-              //bankaccount;
-              //res;
+                callback( { response: err})
+
 
               FormationCenter.update({id:iFormationCenter.id} , {walletid:wallet.Id, mangouserid: userdata.Id, mangobankid: bankaccount.Id, mangobankbic:backCountData.bic }).exec( function (err, jFormationCenter) {
 
                 if (err)
-                  return { response: "Error in FormationCenter update data"}
+                  callback( {response: "Error in FormationCenter update data"})
 
-
-
-                return {
+                callback( {
                   response: 'OK',
                   userid: userdata.Id,
                   walletid:wallet.Id,
                   bankaccountid:bankaccount.Id,
                   formationcenter: jFormationCenter.name
-
-                };
+                });
               })
             });
 
@@ -219,27 +212,29 @@ module.exports = {
    * `PayController.makepay()`
    * User data
    */
-  makepayment: function (userValue, mount, formationcenter, currency) {
+  makepayment: function (userValue, mount, formationcenter, currency, callback) {
 
     var appuser = 'formationfinder';
     var apppassphrase = '7stCaHPZ9XFMCqteMYvCw99ELtDNCrNVcs3OPVzZLDSZiysTpN';
 
     if (!formationcenter || formationcenter == "")
-      return { response: "Undefined Formation Center´s name"};
+      callback({  response: "Undefined Formation Center´s name"});
 
+    /*
     if (!userValue || userValue == "")
-      return {response: "Undefined buyer´s data "}
-
+      callback({ response: "Undefined buyer´s data "})
+   */
     if (!mount ||mount == "" || mount <= 0 )
-      return {response: "Undefined mount"}
+      callback({ response: "Undefined mount"})
 
     if (!currency ||currency == "" )
-      return {response: "Undefined currency"}
+      callback({ response: "Undefined currency"})
 
     ///Validate currency
 
-
+  console.log("==========")
     Configuration.findOne( ).exec(function ConfigurationFounded(err, iConfiguration) {
+      /*
       if ( !iConfiguration.appmangouser || !iConfiguration.appmangopassphr ) {
         //return next(err);
         ///Create tmp for test
@@ -254,25 +249,25 @@ module.exports = {
         apppassphrase = iConfiguration.appmangopassphr;
       }
 
-
+     */
       var formationCenterName = formationcenter;
       var currencyParam = currency;
       var formationCenter = {};
 
-
+      console.log("==========")
 
       ///Search by formation center syncronized
       FormationCenter.findOne({name:formationCenterName}).exec( function (err, iFormationCenter) {
         if (err)
-          return  { response:err }
+          callback({ response: err})
 
         if (!iFormationCenter)
-          return { response: "Not exist Formation Center with name ".formationCenterName }
+          callback(null,  {  response: "Not exist Formation Center with name ".formationCenterName })
 
         ///If formation center data for make trasference is errr
 
         if ( !iFormationCenter.walletid || !iFormationCenter.mangouserid || !iFormationCenter.mangobankid || !iFormationCenter.mangobankbic)
-          return { response: "Formation Center with name " + formationCenterName +  " not have data for make trasference" }
+          callback( {  response: "Formation Center with name " + formationCenterName +  " not have data for make trasference" })
         formationCenter = iFormationCenter
 
 
@@ -333,7 +328,7 @@ module.exports = {
           console.log('err', err);
 
           if (err)
-             return { response: err}
+            callback( { response: err})
 
           console.log('user', user);
 
@@ -349,7 +344,7 @@ module.exports = {
           }, function(err, card, res){
 
             if ( err )
-             return { response: err}
+              callback( { response: err})
 
             // card; // mango card object
             // res; // raw 'http' response object => res.statusCode === 200
@@ -416,7 +411,7 @@ module.exports = {
             //  res;
 
               if( err)
-                return { response: err}
+                callback( { response: err})
 
               ///      if ( !iFormationCenter.walletid || !iFormationCenter.mangouserid || !iFormationCenter.mangobankid || !iFormationCenter.mangobankbic
               /*
@@ -466,7 +461,7 @@ module.exports = {
                   console.log("MangoPayTrasference objetc created");
                 });
 
-                return {
+                callback( {
                   response: "OK",
                   buyerid:user.Id,
                   formationcetername:iFormationCenter.name,
@@ -474,7 +469,7 @@ module.exports = {
                   mangopaytax:amountFeeds,
                   buyeramount:amount,
                   selleramout:royalAmountTrasference
-                }
+                })
               });
             });
           })

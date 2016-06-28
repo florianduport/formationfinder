@@ -44,6 +44,15 @@ module.exports = {
       type: 'string'
     },
 
+    mangouserid:{
+      type: 'string'
+    },
+    mangobankid:{
+      type: 'string'
+    },
+    mangobankbic:{
+      type: 'string'
+    },
   	animators: {
   		collection: 'animator',
   		via: 'formationCenter'
