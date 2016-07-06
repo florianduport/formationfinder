@@ -35,7 +35,7 @@ module.exports.routes = {
   '/': {
     view: 'homepage'
   },
-
+/*
   '/FormationCenter/search':{
     controller: "FormationCenterController", action: "search"
   },
@@ -43,6 +43,7 @@ module.exports.routes = {
   '/FormationCenter/searchplaces':{
     controller: "FormationCenterController", action: "searchplaces"
   },
+  */
 
   '/Email/send':{
     controller: "EmailController", action: "send"
@@ -53,6 +54,9 @@ module.exports.routes = {
   },
 
   '/Payment/createwallet':{
+    controller: "PayController", action: "createwallet"
+  },
+  '/Payment/createwalletex':{
     controller: "PayController", action: "createwalletex"
   },
   '/Payment/makepayment':{

@@ -40,6 +40,7 @@ module.exports = {
         production: false
       })
 
+      console.log("Create walletid")
 
       //  version: 'v2.01',
       mango.user.createLegal({
@@ -122,17 +123,17 @@ module.exports = {
           ////Update data  in  FormationFinder
           console.log(iFormationCenter);
           console.log("nombre",formationCenterName);
-          FormationCenter.update({id:iFormationCenter.id} , {"walletid":wallet.Id}).exec( function (err, jFormationCenter) {
+          FormationCenter.update({id:iFormationCenter.id} , {"walletid":wallet.Id, "mangouserid": userdata.Id }).exec( function (err, jFormationCenter) {
 
             if (err)
               return next ("Error in FormationCenter update data !!!!")
 
-
+            formationData = jFormationCenter[0]
             return result.json({
               response: 'OK',
               userid: userdata.Id,
               walletid:wallet.Id,
-              formationcenter: jFormationCenter.name
+              formationcenter: formationData.name
 
             });
           })
@@ -146,26 +147,35 @@ module.exports = {
    * User data
    */
   createwalletex: function (req, res) {
-    var formationcenter = req.parm("formationcentername")
-    var currencyReq = req.parm("currency")
-    var legalUserValues = req.parm("formationdata")
+    var formationcenter = req.param("formationcentername")
+    var currencyReq = req.param("currency")
+    var legalUserValues = req.param("formationdata")
     var config = {
       name: formationcenter,
       currency:currencyReq
     }
-    return res.json(PaymentService.createwallet(config, legalUserValues))
+
+
+     PaymentService.createwallet(config, legalUserValues ,function (err, result){
+
+      return res.json(result)
+    })
   },
   /**
    * `PayController.makepay()`
    * User data
    */
   makepaymentex: function (req, res) {
-    userValue = req.parm("userdata")
-    mount = req.parm("price")
-    formationcenter = req.parm("formationcentername")
-    currency = req.parm("currency")
+    console.log("Validation")
+    userValue = req.param("userdata")
+    mount = req.param("price")
+    formationcenter = req.param("formationcentername")
+    currency = req.param("currency")
+    console.log("Validation")
+   PaymentService.makepayment(userValue, mount, formationcenter, currency, function (err, result){
 
-    return res.json(PaymentService.makepayment(userValue, mount, formationcenter, currency))
+      return res.json(result)
+    })
   }
 
 

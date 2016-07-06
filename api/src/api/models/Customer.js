@@ -20,11 +20,9 @@ module.exports = {
     },
 
   	civility: {
-  		//Ver si se pueden definir un conjunto determinado de "civilitys"
-  		//Utilizar un enum
-  		//Ver si utilizar codificador
   		type: 'string',
-  		defaulstTo: 'Mr'
+      enum: ['M', 'Mme', 'Mlle']
+  	//	defaulstTo: 'M'
   	},
 
   	name: {
@@ -53,9 +51,6 @@ module.exports = {
   		type: 'integer'
   	},
 
-    emailsend: {
-      type: 'integer'
-    },
   	city: {
   		type: 'string'
   	},
@@ -64,6 +59,9 @@ module.exports = {
   		//Ver formato de los numeros telefonicos.
   		type: 'string'
   	},
+    emailsend: {
+      type: 'integer'
+    },
 
   	email: {
   		type: 'email',
@@ -71,25 +69,7 @@ module.exports = {
   	},
 
   	driverLicence: {
-  		//Ver el formato de las licencias
-  		type: 'string'
-  	},
-
-  	number: {
-  		//Numero de que?
-  		type: 'integer'
-  	},
-
-  	dateOfDeliverance: {
-  		type: 'date'
-  	},
-
-  	placeOfDeliverance: {
-  		type: 'date'
-  	},
-
-  	dateOfProcuration: {
-  		type: 'date'
+  		model: 'driverLicence'
   	},
 
   	walletId: {
@@ -97,9 +77,18 @@ module.exports = {
   		type: 'string'
   	},
 
-  	reasonOfFormation: {
-  		type: 'string'
-  	},
+    mangouserid: {
+      //Generada por MangoPay
+      type: 'string'
+    },
+    mangobankid: {
+      //Generada por MangoPay
+      type: 'string'
+    },
+    mangobankbic: {
+      //Generada por MangoPay
+      type: 'string'
+    },
 
   	customerBills: {
   		collection: 'customerBill' ,

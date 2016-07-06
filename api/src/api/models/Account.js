@@ -43,8 +43,6 @@ module.exports = {
 
   	formationCenter: {
   		model: 'formationCenter',
-  		//Los centros de formacion tienen un solo account.
-  		unique: true
   	}
 
   }
