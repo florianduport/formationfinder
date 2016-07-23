@@ -1,0 +1,14 @@
+
+> kerberos@0.0.21 install C:\Users\XPS15\Documents\formationfinder\node_modules\kerberos
+> (node-gyp rebuild) || (exit 0)
+
+
+C:\Users\XPS15\Documents\formationfinder\node_modules\kerberos>if not defined npm_config_node_gyp (node "C:\Bitnami\meanstack-3.2.6-2\nodejs\node_modules\npm\bin\node-gyp-bin\\..\..\node_modules\node-gyp\bin\node-gyp.js" rebuild )  else (node "" rebuild ) 
+formationfinder@0.0.0 C:\Users\XPS15\Documents\formationfinder
++-- kerberos@0.0.21  extraneous
++-- mocha@2.5.3  extraneous
++-- sails-mongo@0.12.0 
++-- sails-mysql@0.12.1 
++-- sails-service-mailer@3.2.1  extraneous
+`-- supertest@1.2.0  extraneous
+

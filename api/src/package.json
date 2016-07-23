@@ -29,11 +29,12 @@
     "sails-mongo": "^0.12.0",
     "sails-mysql": "^0.12.1",
     "sails-permissions": "^2.2.0",
-    "sails-service-mailer": "file:node_modules\\sails-service-mailer"
+    "sails-service-mailer":"^3.2.1"
   },
   "scripts": {
     "debug": "node debug app.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "test": "node ./node_modules/mocha/bin/mocha test/bootstrap.test.js test/inject/seed.inject.js  test/**/*.spec.js"
   },
   "main": "app.js",
   "repository": {

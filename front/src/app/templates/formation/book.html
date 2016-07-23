@@ -1,0 +1,85 @@
+<form>
+    <div class="clearfix container-fluid" style="border-radius: 3px; border: 1px solid; margin: 8px;">
+        <fieldset>
+            <legend>Personal Information</legend>
+            <div class="form-group">
+                <label>Civility</label>
+                <select class="form-control" id="civility" ng-model="customerData.civility">
+                    <option>M</option>
+                    <option>Mme</option>
+                    <option>Mlle</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Name</label>
+                <input aria-required="true" id="name" ng-model="customerData.name" class="form-control required" type="text" />
+            </div>
+
+            <div class="form-group">
+                <label>First Name</label>
+                <input aria-required="true" id="firstName" ng-model="customerData.firstName" class="form-control required" type="text" />
+            </div>
+
+            <div class="form-group">
+                <label>Birth Date</label>
+                <input aria-required="true" id="birthDate" ng-model="customerData.birthDate" class="form-control required datepicker" type="date" />
+            </div>
+
+            <div class="form-group">
+                <label>Birth City</label>
+                <input aria-required="true" id="birthCity" ng-model="customerData.birthCity" class="form-control required " type="text" />
+            </div>
+
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input aria-required="true" id="phoneNumber" ng-model="customerData.phoneNumber" class="form-control required" type="text" />
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input aria-required="true" id="email" ng-model="customerData.email" class="form-control required" type="email" />
+            </div>
+
+            <div class="form-group">
+                <label>Address</label>
+                <input aria-required="true" id="address" ng-model="customerData.address" class="form-control required" type="text" />
+            </div>
+
+            <div class="form-group">
+                <label>City</label>
+                <input aria-required="true" id="city" ng-model="customerData.city" class="form-control required" type="text" />
+            </div>
+
+            <div class="form-group">
+                <label>ZipCode</label>
+                <input aria-required="true" id="zipCode" ng-model="customerData.zipCode" class="form-control required" type="text" />
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Licence Information</legend>
+            <div class="form-group">
+                <label>Number</label>
+                <input aria-required="true" id="number" ng-model="customerData.driverLicence.number" class="form-control required" type="text" />
+            </div>
+            
+            <div class="form-group">
+                <label>Place Of Deliverance</label>
+                <input aria-required="true" id="placeOfDeliverance" ng-model="customerData.driverLicence.placeOfDeliverance" class="form-control required" type="text" />
+            </div>
+
+            <div class="form-group">
+                <label>Date Of Deliverance</label>
+                <input aria-required="true" id="dateOfDeliverance" ng-model="customerData.driverLicence.dateOfDeliverance" class="form-control required" type="date" />
+            </div>
+
+            <div class="form-group">
+                <label>Date Of Procuration</label>
+                <input id="dateOfProcuration" ng-model="customerData.driverLicence.dateOfProcuration" class="form-control" type="date" />
+            </div>
+        </fieldset>
+
+        <div class="form-group"><input ng-click="book()" class="form-control" type="submit" value="Book Formation" /></div>
+    </div>
+</form>

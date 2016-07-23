@@ -5,7 +5,23 @@ var faker;
 faker = require('faker');
 
 faker.locale = "fr"
-module.exports = [{
+module.exports =
+  function(done) {
+    var registerSize = 1000;
+
+    var faqArray = []
+    for ( var iValue = 1 ; iValue <  registerSize; iValue++) {
+      faqArray.push( {
+        question: faker.lorem.sentence(),
+
+        answer: faker.lorem.paragraph(),
+      })
+    }
+    done(null, faqArray);
+
+  };
+
+ /* [{
   question: faker.lorem.sentence(),
 
   answer: faker.lorem.paragraph(),
@@ -79,4 +95,4 @@ module.exports = [{
 
 
   }
-  ];
+  ]*/;

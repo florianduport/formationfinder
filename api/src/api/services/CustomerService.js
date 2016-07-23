@@ -29,12 +29,9 @@ module.exports  = {
     async.series({
         one: function(callback){
           Customer.find({"emailsend": 0 }).then( function userFounded( Customers) {
-
               ///Ver como buscar un campo fecha y calcular 5 horas mas
               ///comporar este valor con el campo fecha de todos los insertados
-
-              console.log("Hour to search " + date)
-
+              //console.log("Hour to search " + date)
               return ( Customers)
 
             }
@@ -44,12 +41,13 @@ module.exports  = {
             async.each(Customers, function (iCustomer, callback) {
               // if any of the saves produced an error, err would equal that error
 
-              ///console.log("------Usuario-------")
+             // console.log("------Usuario-------")
               ///console.log(iCustomer)
-
 
               ///, {"createdAt" : { '<': date}}
               Formation.find({"id": iCustomer.formation}).exec(function formationFounded(err, formation) {
+                if (err)
+                  console.log("Error ocurred when customer update "  + err);
 
                 for (iTr in formation) {
                   formationsArray.push(formation[iTr])
@@ -62,32 +60,28 @@ module.exports  = {
                   resultFormation.push(objectResult);
 
                 }
-                //console.log(formation)
-
-                ///Update Customer emailsend with 1 and verify is sended
-                Customer.update({id:iCustomer.id },{emailsend: 1 }).exec( function customerUpdate( err, customerArray) {
-                  if (err)
-                    console.log("Error ocurred when customer update "  + err);
-
-                })
                 callback();
               })
             }, function (err) {
-              if (err)
-                return next(err);
-              //console.log("------- Formations ---------- ")
-              //console.log(formationsArray)
-              callback(null, formationsArray);
-              //return formationsArray
-
-            });
+              if (err) {
+                callback(err,placeFormationArray);
+              }
+             //console.log("------- Formations ---------- ")
+            // console.log(resultFormation)
+             callback(null, formationsArray);
+            })
           });
         },
         two: function(callback){
 
+         // console.log("two  " , resultFormation)
           async.each(resultFormation, function (iResultFormation, callback) {
-            Place.findOne({id: iResultFormation.placeid}).exec (function placeFounded( err, Place) {
-              console.log(Place)
+            Place.findOne({id: iResultFormation.placeid}).exec (function placeFounded( err, Places) {
+              if (err)
+                callback(err,placeFormationArray);
+              Place = Places
+
+             // console.log("El lugar ", Places)
               objectPlaceFormation = {}
               //objectPlaceFormation.formation = iResultFormation;
               objectPlaceFormation.place = Place;
@@ -98,33 +92,45 @@ module.exports  = {
             })
           }, function ( err) {
             if (err)
-              return next(err);
-           // console.log("********************************************")
-           // console.log(placeFormationArray)
+              callback(err,placeFormationArray);
+          /*  console.log("********************************************")
+            console.log(placeFormationArray)*/
             callback(null,placeFormationArray);
           });
         },
         three: function(callback){
-          console.log(" ***** Ejecución final ****** ")
-          for ( iTr in resultFormation) {
-            console.log(resultFormation[iTr])
-          }
-          callback(null,resultFormation);
+          async.each(resultFormation, function (iResultFormation, callback) {
+            Customer.update({id: iResultFormation.costumerid}, {emailsend: 1}).exec(function customerUpdate(err, customerArray) {
+              if (err)
+                console.log("Error ocurred when customer update " + err);
+              callback()
+            })}, function ( err) {
+              if (err)
+                callback(err,placeFormationArray);
+              /*  console.log("********************************************")
+               console.log(placeFormationArray)*/
+              callback(null,placeFormationArray);
+            })
+
         }
-      },
-
-
-      function(err, results) {
+      },  function(err, results) {
         // results is now equal to: {one: 1, two: 2}
-        if (err)
+        if (err) {
+          console.log("Ocurrio un error ", err)
           return next(err);
+        }
 
-       // console.log("**** Ejecucion de la ultima instruccion**** ")
+       /// console.log("**** Ejecucion de la ultima instruccion**** ")
         var valResult = {resultFormation }
-        console.log(resultFormation);
-        callbackFunction  (resultFormation)
+      //  console.log(resultFormation);
+      ///Update Customer emailsend with 1 and verify is sended
 
+        //return formationsArray
+      callbackFunction  (resultFormation)
       });
+
+
+
 
 
 
@@ -197,5 +203,20 @@ module.exports  = {
       return "OK"
 
     });
-  }
+  },
+  isValidCustomerData: function (data) {
+		// body...
+		var isValid =  _.isObject(data) && _.isString(data.name)
+		            && _.isString(data.firstName)
+		            && _.isString(data.phoneNumber)
+		            && _.isString(data.email)
+		            && _.isObject(data.driverLicence)
+		            && _.isString(data.driverLicence.number)
+		            && _.isString(data.driverLicence.placeOfDeliverance);
+
+		console.log("En la comprobacion isValid es: "+isValid);
+
+		return (isValid === true);
+
+	}
 }

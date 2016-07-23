@@ -23,6 +23,11 @@ module.exports.cron = {
      // var EmailServices = require('../api/services/EmailService')
       var CustomerServices = require('../api/services/CustomerService')
 
+      ///Validate asociations
+
+      console.log("****************** Validate asociations ****************************")
+      SeedTmpServices.validateaAssociationsTMP()
+      console.log("****************** End validate asociations ****************************")
       var findData = ["buscar"]
       CustomerServices.searchbyclosedformation( function ( result ){
 

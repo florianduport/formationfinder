@@ -58,7 +58,7 @@ module.exports = {
       }, function(err, user, resD){
         if ( err) {
           console.log('err', err);
-          return res.json({err})
+          return res.json(err)
         }
 
         console.log('user', user);
@@ -166,13 +166,12 @@ module.exports = {
    * User data
    */
   makepaymentex: function (req, res) {
-    console.log("Validation")
     userValue = req.param("userdata")
     mount = req.param("price")
     formationcenter = req.param("formationcentername")
     currency = req.param("currency")
-    console.log("Validation")
-   PaymentService.makepayment(userValue, mount, formationcenter, currency, function (err, result){
+    //console.log("sasda "  +  formationcenter);
+    PaymentService.makepayment(userValue, mount, formationcenter, currency, function (err, result){
 
       return res.json(result)
     })

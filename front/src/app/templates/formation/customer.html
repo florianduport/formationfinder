@@ -1,0 +1,66 @@
+<br />
+<div class="row">
+    <div class="col-sm-4 col-sm-offset-1">
+        <div class="form-group">
+            <label>Civility</label>
+            <select class="form-control" id="civility" ng-model="vm.customerData.civility">
+                <option>M</option>
+                <option>Mme</option>
+                <option>Mlle</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Name</label>
+            <input aria-required="true" id="name" ng-model="vm.customerData.name" class="form-control required" type="text" />
+        </div>
+
+        <div class="form-group">
+            <label>First Name</label>
+            <input aria-required="true" id="firstName" ng-model="vm.customerData.firstName" class="form-control required" type="text" />
+        </div>
+
+        <div class="form-group">
+            <label>Phone Number</label>
+            <input aria-required="true" id="phoneNumber" ng-model="vm.customerData.phoneNumber" class="form-control required" type="text" />
+        </div>
+        <div class="form-group">
+            <label>Email</label>
+            <input aria-required="true" id="email" ng-model="vm.customerData.email" class="form-control required" type="email" />
+        </div>
+
+
+    </div>
+    <div class="col-sm-4 col-sm-offset-1">
+        <div class="form-group">
+            <label>Birth Date</label>
+            <input aria-required="true" id="birthDate" ng-model="vm.customerData.birthDate" class="form-control required datepicker" type="date" />
+        </div>
+
+      <!--  <label>Birth Date</label>
+        <div class="input-group date">
+            <input class="form-control" id="birthDate" uib-datepicker-popup=""  is-open="birthDateIsOpend" datepicker-options="dateOptions" placeholder="Birth Date" type="text" ng-model="customerData.birthDate">
+            <span class="input-group-addon"><span id="datesearchInit" class="fa fa-calendar" ng-click="openbirthDate()"></span></span>
+        </div>
+      -->
+
+        <div class="form-group">
+            <label>Birth City</label>
+            <input aria-required="true" id="birthCity" ng-model="vm.customerData.birthCity" class="form-control required " type="text" />
+        </div>
+
+        <div class="form-group">
+            <label>Address</label>
+            <input aria-required="true" id="address" ng-model="vm.customerData.address" class="form-control required" type="text" />
+        </div>
+
+        <div class="form-group">
+            <label>City</label>
+            <input aria-required="true" id="city" ng-model="vm.customerData.city" class="form-control required" type="text" />
+        </div>
+
+        <div class="form-group">
+            <label>ZipCode</label>
+            <input aria-required="true" id="zipCode" ng-model="vm.customerData.zipCode" class="form-control required" type="text" />
+        </div>
+    </div>
+</div>

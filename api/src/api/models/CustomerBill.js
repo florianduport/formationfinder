@@ -12,7 +12,6 @@ module.exports = {
   attributes: {
 
   	billNumber: {
-  		//Ver el formato de las cuentas, si tienen una cantidad definida de caracteres, etc.
   		type: 'string',
   		required: true,
   		unique: true
@@ -20,8 +19,6 @@ module.exports = {
 
   	billState: {
   		type: 'string'
-  		//Ver si existen un numero predefinido de estados conocidos
-  		//Utilizar un enum y de ser posible poner valor por defecto del estado
   	},
 
   	formationCenter:{
@@ -33,7 +30,6 @@ module.exports = {
   	},
 
   	date: {
-  		//Imagino que sea la fecha de creacion de la cuenta????
   		type: 'date'
   	},
 

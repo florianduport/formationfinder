@@ -37,12 +37,13 @@ module.exports = {
         return res.json({err: 'The len parameter is an invalid string number'});
       }
     }
-
+    console.log("Buscando " , page + " ==== " + len)
     FormationCenter.find({
         skip: page * len,
         limit: len
       })
       .populate('places')
+      .populate('formations')
       .exec(function  (err, fomationCentersFounded) {
         // body...
         if(err) {
@@ -71,6 +72,67 @@ module.exports = {
       .populate('animators')
       .populate('formations')
       .populate('places')
+      .exec(function (err, formationCenterFounded) {
+        // body...
+
+        if(err){
+          return res.json({err: 'An error has ocurred searching database'});
+        }
+
+        if(formationCenterFounded === undefined) {
+          return res.json({err: 'No formation Center match that criteria: ' + name});
+        }
+
+        return res.json(formationCenterFounded);
+      });
+
+  },
+  searchByZipcode: function (req, res, next) {
+    // body...
+
+    name = req.param('name');
+
+    if(name === undefined) {
+      return res.json({err: 'Name parameter not provided'});
+    }
+
+    if (typeof(name) != 'string') {
+      name = name.toString();
+    }
+
+    FormationCenter.findOne({zipCode: name})
+      .populate('animators')
+      .populate('formations')
+      .populate('places')
+      .exec(function (err, formationCenterFounded) {
+        // body...
+
+        if(err){
+          return res.json({err: 'An error has ocurred searching database'});
+        }
+
+        if(formationCenterFounded === undefined) {
+          return res.json({err: 'No formation Center match that criteria: ' + name});
+        }
+
+        return res.json(formationCenterFounded);
+      });
+
+  },
+  searchformationbyPos: function (req, res, next) {
+    // body...
+
+    name = req.param('name');
+
+    if(name === undefined) {
+      return res.json({err: 'Name parameter not provided'});
+    }
+
+    if (typeof(name) != 'string') {
+      name = name.toString();
+    }
+
+    FormationCenter.find().populate(places,{ne:0})
       .exec(function (err, formationCenterFounded) {
         // body...
 

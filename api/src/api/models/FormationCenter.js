@@ -10,9 +10,18 @@ module.exports = {
   schema: true,
 
   attributes: {
+
+  	isActivated: {
+  		type: 'boolean'
+  	},
+
     name: {
       type: 'string',
       required: true
+    },
+
+    firstName: {
+      type: 'string'
     },
 
     address: {
@@ -36,23 +45,6 @@ module.exports = {
       type: 'string'
     },
 
-  	isActivated: {
-  		type: 'boolean'
-  	},
-
-    walletid: {
-      type: 'string'
-    },
-
-    mangouserid:{
-      type: 'string'
-    },
-    mangobankid:{
-      type: 'string'
-    },
-    mangobankbic:{
-      type: 'string'
-    },
   	animators: {
   		collection: 'animator',
   		via: 'formationCenter'

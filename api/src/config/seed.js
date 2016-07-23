@@ -7,5 +7,6 @@ module.exports.seed = {
   path: 'seeds',
 
   //enable or disable seeding
-  active: true
+  active: true,
+  _hookTimeout:50000
 }

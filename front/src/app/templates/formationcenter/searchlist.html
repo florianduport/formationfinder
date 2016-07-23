@@ -1,0 +1,699 @@
+<!--<header >
+    <div class="container container-fluid">
+    <nav class="navbar navbar-default navbar-static-top" role="navigation">
+
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <div class="navbar-brand">
+                    <a href="../../index.html"><h1>Formationfinder</h1></a>
+                </div>
+            </div>
+            <div class="navbar-collapse collapse">
+                &lt;!&ndash;
+                <div class="menu">
+                &ndash;&gt;
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li>
+                            <form class="navbar-form">
+                                <div class="form-horizontal">
+                                    <div class=" form-group">
+                                        <div class=" input-group">
+                                            <input class="form-control"  placeholder="Ville / Zip code" type="text"   >
+                                            <span class="input-group-addon"><span class="fa fa-calendar" data-provide="datepicker" name="date" data-date-format="mm/dd/yyyy"></span></span>
+                                            <span class="input-group-addon"><span class="fa fa-search"></span></span>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </li>
+                        <li role="presentation"><a href="../../index.html" class="active">Home</a></li>
+                        <li role="presentation"><a href="about.html">About Us</a></li>
+                        <li role="presentation"><a href="services.html">Services</a></li>
+                        <li role="presentation"><a href="gallery.html">Gallery</a></li>
+                        <li role="presentation"><a href="contact.html">Contact</a></li>
+                    </ul>
+               &lt;!&ndash;
+                </div>
+                &ndash;&gt;
+            </div>
+
+    </nav>&lt;!&ndash;/nav&ndash;&gt;
+    </div>/.container
+</header>&lt;!&ndash;/header&ndash;&gt;-->
+
+    <!--<script type="text/ng-template" id="myModalContent.html">
+        <div class="modal-header">
+            <h3 class="modal-title">I'm a modal!</h3>
+        </div>
+        <div class="modal-body">
+            <ul>
+                <li ng-repeat="item in items">
+                    <a href="#" ng-click="$event.preventDefault(); selected.item = item">{{ item }}</a>
+                </li>
+            </ul>
+            Selected: <b>{{ selected.item }}</b>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+    </script>-->
+
+<div class="searchresult searchlist" >
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <div class="container">
+        <div class="row col-sm-4 col-xs-4 col-lg 4"></div>
+        <div class="row col-sm-4 col-xs-4 col-lg 4">
+
+                <div class="search-form  form-horizontal">
+                    <div class=" form-group">
+                        <div class=" input-group " >
+                            <input  class="form-control"  placeholder="Ville/Zip code" type="text"  ng-model="criteriaList" >
+                            <span class="input-group-addon"  ng-click="searchFuncList()"><span class="fa fa-search"></span></span>
+                            <!--<uib-alert ng-show="errorValid" dismiss-on-timeout=3000  type="success"  close="closeAlert()">{{ errorMessage }}</uib-alert>-->
+                           <!-- <div ng-controller="AlertDemoCtrl">
+                                <script type="text/ng-template" id="alert.html">
+                                    <div ng-transclude></div>
+                                </script>
+
+                                <div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert($index)">{{alert.msg}}</div>
+                                <div uib-alert template-url="alert.html" style="background-color:#fa39c3;color:white">A happy alert!</div>
+                                <button type="button" class='btn btn-default' ng-click="addAlert()">Add Alert</button>
+                            </div>-->
+                        </div>
+
+
+                    </div>
+
+
+
+                   <!-- <div ng-controller="CollapseDemoCtrl">
+                        <button type="button" class="btn btn-default" ng-click="isCollapsed = !isCollapsed">Toggle collapse Vertically</button>
+                        <hr>
+                        <div uib-collapse="isCollapsed">
+                            <div class="well well-lg">Some content</div>
+                        </div>
+
+                        <button type="button" class="btn btn-default animated"    ng-click="isCollapsedHorizontal = !isCollapsedHorizontal">Toggle collapse Horizontally</button>
+                        <hr>
+                        <div uib-collapse="isCollapsedHorizontal"   ng-class="{'fadeInDown':isCollapsedHorizontal}" horizontal>
+                            <div class="well well-lg animated">
+                                <div>
+                                    <label style="width: 50px">Date: </label>
+                                    <div class=" input-group date" >
+                                        <input class="form-control"  uib-datepicker-popup="{{format}}"  is-open="popup1.opened" datepicker-options="dateOptions" placeholder="Initial Date" type="text" ng-model="search.initialDate">
+                                        <span class="input-group-addon"  ><span id="datesearchInit" class="fa fa-calendar" ng-click="open1()"   ></span></span>
+
+                                    </div>
+                                    <div class=" input-group date" >
+                                        <input class="form-control" uib-datepicker-popup="{{format}}"  is-open="popup2.opened" datepicker-options="dateOptions" placeholder="End Date" type="text" ng-model="search.endDate">
+                                        <span class="input-group-addon"  ><span id="datesearchEnd" class="fa fa-calendar" ng-click="open2()"   ></span></span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label style="width: 50px">Price: </label>
+                                    <input class="form-control" placeholder="150 " type="number" ng-model="initialPrice">
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>-->
+
+
+           </div>
+            <div uib-alert ng-repeat="alert in alerts" dismiss-on-timeout=3000 ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert()">{{ alert.msg }}</div>
+
+            <!-- <uib-alert ng-show="errorValid" dismiss-on-timeout=3000  type="success"  close="closeAlert()">{{ errorMessage }}</uib-alert>
+             <uib-alert template-url="alert.html">A happy alert!</uib-alert>-->
+
+
+        </div>
+        <div class="row col-sm-4 col-xs-4 col-lg 4">
+
+        </div>
+
+    </div>
+    <div class="container">
+        <!--
+           -->
+
+    <div class="row col-sm-2 col-xs-2 col-lg 2"></div>
+    <div class="row col-sm-8 col-xs-8 col-lg 8">
+
+        <div class="search-form  form-horizontal">
+           <!-- <label class="fa-pull-left col-xs-4 " style="color:#000066 " ng-click="advanceSearch=!advanceSearch">Advanced Search</label>
+            <div class="advance-search col-md-10 col-xs-12 col-md-offset-1 animated " style="padding-left: 0"
+                 ng-class="{'fadeInDown':advanceSearch,'hidden':!advanceSearch}">
+                <div>
+                    <label style="width: 50px; color: #000066">Date: </label>
+                    <div class=" input-group date" >
+                        <input class="form-control"  uib-datepicker-popup="{{format}}"  is-open="popup1.opened" datepicker-options="dateOptions" placeholder="Initial Date" type="text" ng-model="search.initialDate">
+                        <span class="input-group-addon"  ><span id="datesearchInit" class="fa fa-calendar" ng-click="open1()"   ></span></span>
+
+                    </div>
+                    <div class=" input-group date" >
+                        <input class="form-control" uib-datepicker-popup="{{format}}"  is-open="popup2.opened" datepicker-options="dateOptions" placeholder="End Date" type="text" ng-model="search.endDate">
+                        <span class="input-group-addon"  ><span id="datesearchEnd" class="fa fa-calendar" ng-click="open2()"   ></span></span>
+                    </div>
+                </div>
+                <div>
+                    <label style="width: 50px; color: #000066">Price: </label>
+                    <input class="form-control" placeholder="150 " type="number" ng-model="initialPrice">
+                </div>
+            </div>-->
+
+
+            <!-- <div ng-controller="CollapseDemoCtrl">
+                 <button type="button" class="btn btn-default" ng-click="isCollapsed = !isCollapsed">Toggle collapse Vertically</button>
+                 <hr>
+                 <div uib-collapse="isCollapsed">
+                     <div class="well well-lg">Some content</div>
+                 </div>
+
+                 <button type="button" class="btn btn-default animated"    ng-click="isCollapsedHorizontal = !isCollapsedHorizontal">Toggle collapse Horizontally</button>
+                 <hr>
+                 <div uib-collapse="isCollapsedHorizontal"   ng-class="{'fadeInDown':isCollapsedHorizontal}" horizontal>
+                     <div class="well well-lg animated">
+                         <div>
+                             <label style="width: 50px">Date: </label>
+                             <div class=" input-group date" >
+                                 <input class="form-control"  uib-datepicker-popup="{{format}}"  is-open="popup1.opened" datepicker-options="dateOptions" placeholder="Initial Date" type="text" ng-model="search.initialDate">
+                                 <span class="input-group-addon"  ><span id="datesearchInit" class="fa fa-calendar" ng-click="open1()"   ></span></span>
+
+                             </div>
+                             <div class=" input-group date" >
+                                 <input class="form-control" uib-datepicker-popup="{{format}}"  is-open="popup2.opened" datepicker-options="dateOptions" placeholder="End Date" type="text" ng-model="search.endDate">
+                                 <span class="input-group-addon"  ><span id="datesearchEnd" class="fa fa-calendar" ng-click="open2()"   ></span></span>
+                             </div>
+                         </div>
+                         <div>
+                             <label style="width: 50px">Price: </label>
+                             <input class="form-control" placeholder="150 " type="number" ng-model="initialPrice">
+                         </div>
+
+                     </div>
+                 </div>
+             </div>-->
+
+
+        </div>
+    </div>
+    <div class="row col-sm-2 col-xs-2 col-lg 2">
+
+    </div>
+
+    </div>
+    <!-- search data  -->
+
+<!--
+            <row class="row">
+                <div class="col-lg-2 col-sm-2">
+                    <h4>{{formationcenter.name}}</h4>
+                   &lt;!&ndash; <div class="follow-ava">
+                        <img src="../../img/profile-widget-avatar.jpg" alt="">
+                    </div>
+                    <h6>Administrator</h6>&ndash;&gt;
+                </div>
+            </row>
+        <row class="row">
+                <div class="col-lg-4 col-sm-4 follow-info">
+                    <div class="wow fadeInLeft" data-wow-delay="0.2s">
+                        <div class="service-box">
+                          &lt;!&ndash;  <div class="service-icon">
+                                <img src="../../img/icons/service-icon-1.png" alt="" />
+                            </div>&ndash;&gt;
+                            <div class="service-desc">
+                                <h5>Phone</h5>
+                                <p>{{formationcenter.phoneNumber}}</p>
+                                <p>Formaciones</p>
+                                <h4>{{formationcenter.formations.length}}</h4>
+                                <p>Lugares</p>
+                                <h4>{{formationcenter.places.length}}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </row>
+            <row class="row">
+                <div class="col-sm-3 col-md-3">
+                    <div class="wow fadeInLeft" data-wow-delay="0.2s">
+                    <div class="service-box">
+                       &lt;!&ndash; <div class="service-icon">
+                            <img src="../../img/icons/service-icon-1.png" alt="" />
+                        </div>&ndash;&gt;
+                        <div class="service-desc">
+                            <h5>City</h5>
+                            <p>{{formationcenter.city}}</p>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </row>
+            <row class="row">
+                <div class="col-sm-6 col-md-6">
+                    <div class="wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="service-box">
+                           &lt;!&ndash; <div class="service-icon">
+                                <img src="../../img/icons/service-icon-2.png" alt="" />
+                            </div>&ndash;&gt;
+                            <div class="service-desc">
+                                <h5>Adress</h5>
+                                <p>{{formationcenter.address}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </row>-->
+                    <!--
+                <div class="col-sm-3 col-md-3">
+                    <div class="wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="service-box">
+                            <div class="service-icon">
+                                <img src="img/icons/service-icon-3.png" alt="" />
+                            </div>
+                            <div class="service-desc">
+                                <h5>Photography</h5>
+                                <p>Vestibulum tincidunt enim in pharetra malesuada. Duis semper magna metus electram accommodare.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 col-md-3">
+                    <div class="wow fadeInRight" data-wow-delay="0.2s">
+                        <div class="service-box">
+                            <div class="service-icon">
+                                <img src="img/icons/service-icon-4.png" alt="" />
+                            </div>
+                            <div class="service-desc">
+                                <h5>Cloud System</h5>
+                                <p>Vestibulum tincidunt enim in pharetra malesuada. Duis semper magna metus electram accommodare.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            col-sm-3 col-md-3     -->
+     <!--   <row>
+          </row>
+-->
+        <!-- </div>
+            <div class="container container-fluid">
+             <div class="row">
+                 <div style="visibility: visible;" class=" wow fadeInDown animated">
+                    <div class="accordion">
+                         <div class="panel-group" id="accordion1">
+                             <div class="panel panel-default">
+                                 <div class="panel-heading active">
+                                     <h3 class="panel-title">
+                                         <a aria-expanded="false" class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne1">
+                                             Trier par :
+                                             <i class="fa fa-angle-right pull-right"></i>
+                                         </a>
+                                     </h3>
+                                 </div>
+
+                                 <div style="height: 0px;" aria-expanded="false" id="collapseOne1" class="panel-collapse collapse" >
+                                     <div class="panel-body">
+                                         <div class="media accordion-inner">
+                                             <div class="pull-left">
+                                                 <img class="img-responsive" src="images/accordion1.png">
+                                             </div>
+                                             <div class="media-body">
+                                                 <h4>Adipisicing elit</h4>
+                                                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore</p>
+                                             </div>
+                                         </div>
+                                     </div>
+                                 </div>
+                             </div>
+
+
+                             <div class="panel panel-default">
+                                 <div class="panel-heading">
+                                     <h3 class="panel-title">
+                                         <a aria-expanded="true" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseThree1">
+                                             Filtrez vos résultats:
+                                             <i class="fa fa-angle-right pull-right"></i>
+                                         </a>
+                                     </h3>
+                                 </div>
+                                 <div style="" aria-expanded="false" id="collapseThree1" class="panel-collapse collapse in">
+                                     <div class="panel-body">
+                                        <form>
+                                            <div class="form-group">
+                                                <label for="subject1">
+                                                    Place</label>
+                                                <select id="subject1" name="subject1" class="form-control" required="required">
+                                                    <div ng-repeat="iplace in formationcenter.places">
+                                                        <option value="{{iplace.name}}" >{{iplace.name}}</option>
+                                                        <p> {{iplace.name}}</p>
+                                                    </div>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="subject2">
+                                                    Pour jour</label>
+                                                <select id="subject2" name="subject2" class="form-control" required="required">
+                                                    <option value="na" selected="">Tous les jours</option>
+                                                    <option value="service">Lundi - Mardi</option>
+                                                    <option value="suggestions">Mardi - Mercredi</option>
+                                                    <option value="product">Mercredi - Jeudi</option>
+                                                    <option value="product">Jeudi - Vendredi</option>
+                                                    <option value="product">Vendredi - Samedi</option>
+                                                </select>
+                                            </div>
+                                        </form>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>-->
+                     <!--/#accordion1
+                 </div>-->
+
+
+
+
+
+    <!-- search action (filter and search) -->
+    <div class="container container-fluid">
+    <div class="row">
+       <!-- <div ng-controller="AccordionDemoCtrl">
+            <script type="text/ng-template" id="group-template.html">
+                <div class="panel-heading">
+                    <h4 class="panel-title" ;  style="color:#000066 ">
+                        <a href tabindex="0" class="accordion-toggle" ng-click="toggleOpen()" uib-accordion-transclude="heading">
+          <span uib-accordion-header ng-class="{'text-muted': isDisabled}">
+            {{heading}}
+          </span>
+                        </a>
+                    </h4>
+                </div>
+                <div class="panel-collapse collapse" uib-collapse="!isOpen">
+                    <div class="panel-body" style="text-align: right" ng-transclude></div>
+                </div>
+            </script>-->
+<!--
+         <p>
+                <button type="button" class="btn btn-default btn-sm" ng-click="status.open = !status.open">Toggle last panel</button>
+                <button type="button" class="btn btn-default btn-sm" ng-click="status.isFirstDisabled = ! status.isFirstDisabled">Enable / Disable first panel</button>
+            </p>
+
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-model="oneAtATime">
+                    Open only one at a time
+                </label>
+            </div>-->
+
+          <uib-accordion close-others="oneAtATime">
+              <!--
+             <div uib-accordion-group class="panel-default" heading="Static Header, initially expanded" is-open="status.isFirstOpen" is-disabled="status.isFirstDisabled">
+                 This content is straight in the template.
+             </div>
+             <div uib-accordion-group class="panel-default" heading="{{group.title}}" ng-repeat="group in groups">
+                 {{group.content}}
+             </div>
+             <div uib-accordion-group class="panel-default" heading="Dynamic Body Content">
+                 <p>The body of the uib-accordion group grows to fit the contents</p>
+                 <button type="button" class="btn btn-default btn-sm" ng-click="addItem()">Add Item</button>
+                 <div ng-repeat="item in items">{{item}}</div>
+             </div>
+             <div uib-accordion-group class="panel-default" heading="Custom template" template-url="group-template.html">
+                 Hello
+             </div>
+
+             <div uib-accordion-group class="panel-danger" heading="Delete account">
+                 <p>Please, to delete your account, click the button below</p>
+                 <button class="btn btn-danger">Delete</button>
+             </div>-->
+
+                <div uib-accordion-group class="panel-default" is-open="status.isCustomHeaderOpen" template-url="group-template.html">
+                    <uib-accordion-heading>
+                        Order result by :<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.isCustomHeaderOpen, 'glyphicon-chevron-right': !status.isCustomHeaderOpen}"></i>
+                    </uib-accordion-heading>
+                    World
+                </div>
+                <!--<div uib-accordion-group class="panel-default" is-open="status.open">-->
+                <!--<div uib-accordion-group class="panel-default" is-open="status.open">
+                    <uib-accordion-heading>
+                        I can have markup, too! <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+                    </uib-accordion-heading>
+                    This is just some content to illustrate fancy headings.
+                </div>-->
+            </uib-accordion>
+        </div>
+
+    </div>
+      </div>
+    <div class="formationresultlist">
+        <div class="container container-fluid">
+            <!--<div class="row">
+                <div class="text-center proximite pcolorbox">
+                    <a href="" ng-click="formationBook(25)" rel="nofollow" class="popup-fiche cboxElement">
+                        <div class="icons puce-active pcolorbox"></div>
+
+                        <div class="plus-info pcolorbox">+d'info</div>
+                    </a>
+                </div>
+            </div>-->
+            <div class="row">
+
+                <ul class="list-group">
+                    <div ng-repeat="iformation in formations">
+                    <li class="list-group-item">
+                        <div class="row">
+
+                                <div class="col-lg-2 col-sm-2">
+                                    <p class="text-info text-primary">{{iformation.name}}</p>
+                                    <!-- <div class="follow-ava">
+                                         <img src="../../img/profile-widget-avatar.jpg" alt="">
+                                     </div>
+                                     <h6>Administrator</h6>-->
+                                </div>
+
+                        </div>
+                        <div class="row">
+        <!--                    <div class="text-center proximite pcolorbox">
+                                <a href="" ng-click="searchPlusInformation(iformation.id)" rel="nofollow" class="popup-fiche cboxElement">
+                                    <div class="icons puce-active pcolorbox"></div>
+
+                                    <div class="plus-info pcolorbox">+d'info</div>
+                                </a>
+                            </div>-->
+                            <div class="row col-sm-4 col-xs-4 col-lg 4">
+
+                            <div class="info-stage">
+                                <div class="nom-ville">
+                                   City:  {{iformation.city}}           </div>
+                              <!--  <div class="etoiles">
+                                        <span class="rating"><i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i></span>            </div>
+        -->
+                                <div class="adresse" title="{{iformation.address}}">
+                                    <p >Adress: {{iformation.address}}</p>            </div>
+                            </div>
+                            </div>
+                            <div class="row col-sm-4 col-xs-4 col-lg 4">
+                                <div class="text-center proximite pcolorbox">
+                                    <a href="" ng-click="searchPlusInformation(iformation.id)" rel="nofollow" class="popup-fiche cboxElement">
+                                        <div class="icons puce-active pcolorbox"></div>
+
+
+
+                                        <div ng-controller="ModalDemoCtrl">
+                                            <script type="text/ng-template" id="myModalContent.html">
+                                                <div class="modal-header">
+                                                    <h3 class="modal-title">Formation Center: {{items.name}}</h3>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <ul>
+                                                        <!--<li ng-repeat="item in items">-->
+                                                        <li>  <a href="#" ng-click="$event.preventDefault(); selected.item = items.address">Address: {{ items.address }}</a> </li>
+                                                         <li>   <a href="#" ng-click="$event.preventDefault(); selected.item = items.phoneNumber">Phone: {{ items.phoneNumber }}</a></li>
+                                                        <li> <a href="#" ng-click="$event.preventDefault(); selected.item = items.email">Email: {{ items.email }}</a></li>
+                                                       <!--</li>-->
+                                                    </ul>
+                                                    <!--Selected: <b>{{ selected.item }}</b>-->
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <!--<button class="btn btn-primary" type="button" ng-click="ok()">OK</button>-->
+                                                    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+                                                </div>
+                                            </script>
+                                            <div class="plus-info pcolorbox" ng-click="openFormationCenterInfo( iformation.name)">+d'info</div>
+                                           <!-- <button type="button" class="btn btn-default" ng-click="open()">Open me!</button>
+                                            <button type="button" class="btn btn-default" ng-click="open('lg')">Large modal</button>
+                                            <button type="button" class="btn btn-default" ng-click="open('sm')">Small modal</button>
+                                            <button type="button" class="btn btn-default" ng-click="toggleAnimation()">Toggle Animation ({{ animationsEnabled }})</button>
+                                            <div ng-show="selected">Selection from a modal: {{ selected }}</div>-->
+                                        </div>
+                                    </a>
+                                </div>
+                            <div class="date text-center">
+                                Date:
+                                <div title="{{iformation.dates[0].date}}">{{iformation.dates[0].date}}</div>
+
+                                <!--<div title="Lundi 18 et Mardi 19 Juillet 2016">
+                                    <div class="date-bloc">
+                                        <span class="day-of-week">Lun</span>
+                                        <span class="day">18</span>
+                                        <span class="month">Juil</span>
+                                    </div>
+                                    <div class="date-bloc">
+                                        <span class="day-of-week">Mar</span>
+                                        <span class="day">19</span>
+                                        <span class="month">Juil</span>
+                                    </div>
+                                </div>-->
+                                <div class="places-dispo">Places disponibles : {{iformation.maxPeople}}</div>
+
+                            </div>
+                            </div>
+                            <div class="row col-sm-4 col-xs-4 col-lg 4">
+                            <div class="prix text-right" >
+                                <span class="label label-default label-pill label-danger pull-right">{{iformation.price}} €</span>
+                                <!--<span class="prix-normal"></span>-->
+                            </div>
+
+                            <div  class="reserver text-center pull-right">
+                               <button class="btn btn-default" href=""   ng-click="formationBook(iformation.id)" title="">S'inscrire</button>
+                            </div>
+
+                            <div class="hide">
+                                <span class="lieu_id">3604</span>
+                                <!--Rich Snippets-->
+                                <div itemscope="" itemtype="http://schema.org/Event">
+                                    <a itemprop="url" href="https://www.permisapoints.fr/stage-recuperation-points-angers-49000-proche.html">
+                                        <span itemprop="name" class="summary">STAGE a  180 €</span>
+                                    </a>
+                                    <span itemprop="startDate" class="dtstart" content="2016-07-18T08h15:00Z">2016-07-18T08h15:00Z</span>
+                                    <span itemprop="endDate" content="2016-07-19T17h00:00Z">2016-07-19T17h00:00Z</span>
+                                    <span itemprop="location" itemscope="" itemtype="http://schema.org/Place">
+                                        <span itemprop="name">AFA</span>
+                                        <span class="address" itemprop="address" itemscope="" itemtype="http://schema.org/PostalAddress">
+                                        <span itemprop="streetAddress">{{formationcenter.adress}}</span>
+                                            <span itemprop="addressLocality">{{formationcenter.city}}</span>
+                                            <span itemprop="postalCode">{{formationcenter.zipCode}}</span>
+                                        </span>
+                                    </span>
+
+                                    <span itemprop="offers" itemscope="" itemtype="http://schema.org/Offer">
+                                        <span itemprop="price">{{iformation.price}} €</span>
+                                    </span>
+
+                                </div>
+                                <!--End Rich Snippets-->
+                            </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    </div>
+                    <!--<li class="list-group-item">
+                        <span class="label label-default label-pill pull-right">1</span>
+                        Morbi leo risus
+                    </li>
+                    <li class="list-group-item">
+                        <span class="label label-default label-pill pull-right">14</span>
+                        Cras justo odio
+                    </li>
+                    <li class="list-group-item">
+                        <span class="label label-default label-pill pull-right">2</span>
+                        Dapibus ac facilisis in
+                    </li>
+                    <li class="list-group-item">
+                        <span class="label label-default label-pill pull-right">1</span>
+                        Morbi leo risus
+                    </li>
+                    <li class="list-group-item">
+                        <span class="label label-default label-pill pull-right">14</span>
+                        Cras justo odio
+                    </li>
+                    <li class="list-group-item">
+                        <span class="label label-default label-pill pull-right">2</span>
+                        Dapibus ac facilisis in
+                    </li>
+                    <li class="list-group-item">
+                        <span class="label label-default label-pill pull-right">1</span>
+                        Morbi leo risus
+                    </li>
+                    <li class="list-group-item">
+                        <span class="label label-default label-pill pull-right">14</span>
+                        Cras justo odio
+                    </li>
+                    <li class="list-group-item">
+                        <span class="label label-default label-pill pull-right">2</span>
+                        Dapibus ac facilisis in
+                    </li>
+                    <li class="list-group-item">
+                        <span class="label label-default label-pill pull-right">1</span>
+                        Morbi leo risus
+                    </li>
+                    <li class="list-group-item">
+                        <span class="label label-default label-pill pull-right">14</span>
+                        Cras justo odio
+                    </li>
+                    <li class="list-group-item">
+                        <span class="label label-default label-pill pull-right">2</span>
+                        Dapibus ac facilisis in
+                    </li>
+                    <li class="list-group-item">
+                        <span class="label label-default label-pill pull-right">1</span>
+                        Morbi leo risus
+                    </li> <li class="list-group-item">
+                    <span class="label label-default label-pill pull-right">14</span>
+                    Cras justo odio
+                </li>
+                    <li class="list-group-item">
+                        <span class="label label-default label-pill pull-right">2</span>
+                        Dapibus ac facilisis in
+                    </li>
+                    <li class="list-group-item">
+                        <span class="label label-default label-pill pull-right">1</span>
+                        Morbi leo risus
+                    </li>
+
+
+                    <li class="list-group-item">
+                        <span class="label label-default label-pill pull-right">14</span>
+                        Cras justo odio
+                    </li>
+                    <li class="list-group-item">
+                        <span class="label label-default label-pill pull-right">2</span>
+                        Dapibus ac facilisis in
+                    </li>
+                    <li class="list-group-item">
+                        <span class="label label-default label-pill pull-right">1</span>
+                        Morbi leo risus
+                    </li>-->
+
+                </ul>
+                 <!--<div style="float: right; margin: 15px">
+                    <pre>Page: {{app.currentPage}} / {{app.totalItems}}</pre>
+                </div>-->
+                <div align="right" style="color:#000066">
+                    <ul   uib-pagination boundary-links="true" items-per-page="app.itemPerPage" total-items="app.totalItems" ng-click="getPagableRecords()" ng-model="app.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+
+                    <!-- <uib-pagination items-per-page="app.itemPerPage" num-pages="numPages"
+                                     total-items="app.totalItems" boundary-link-numbers="true"
+                                     ng-model="app.currentPage" rotate="false" max-size="app.maxSize"
+                                     class="pagination-sm" boundary-links="true"
+                                     ng-click="getPagableRecords()"></uib-pagination>-->
+                </div>
+            </div>
+            <div class="row">
+
+            </div>
+     </div>
+    <!-- search formations list -->
+
+</div>
+</div>

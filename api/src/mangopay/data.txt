@@ -1,0 +1,5 @@
+
+    Company name: INOID
+    Email: inoid2007@gmail.com
+    ClientId: inoids
+    Passphrase: dbB7csNBxzf8sJEoBtLaAb9Rqv4Dc1Kd8eUYoi9n7CfzcD1N9h

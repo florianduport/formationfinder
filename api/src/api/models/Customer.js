@@ -15,14 +15,15 @@ module.exports = {
 		  model: 'formationCenter'
   	},
 
-    formation:{
-      model: 'formation'
+    formation: {
+      model: 'formation',
+      defaultsTo: null
     },
 
   	civility: {
   		type: 'string',
-      enum: ['M', 'Mme', 'Mlle']
-  	//	defaulstTo: 'M'
+      enum: ['M', 'Mme', 'Mlle'],
+  		defaultsTo: 'M'
   	},
 
   	name: {
@@ -56,12 +57,8 @@ module.exports = {
   	},
 
   	phoneNumber: {
-  		//Ver formato de los numeros telefonicos.
   		type: 'string'
   	},
-    emailsend: {
-      type: 'integer'
-    },
 
   	email: {
   		type: 'email',
@@ -69,7 +66,9 @@ module.exports = {
   	},
 
   	driverLicence: {
-  		model: 'driverLicence'
+  		type: 'json',
+      defaultsTo: {},
+      required: true
   	},
 
   	walletId: {
@@ -77,18 +76,9 @@ module.exports = {
   		type: 'string'
   	},
 
-    mangouserid: {
-      //Generada por MangoPay
-      type: 'string'
-    },
-    mangobankid: {
-      //Generada por MangoPay
-      type: 'string'
-    },
-    mangobankbic: {
-      //Generada por MangoPay
-      type: 'string'
-    },
+  	reasonOfFormation: {
+  		type: 'string'
+  	},
 
   	customerBills: {
   		collection: 'customerBill' ,

@@ -11,23 +11,23 @@ module.exports = {
 
   attributes: {
 
-    formationCenter: {
-      model: 'formationCenter',
+  	formationCenter: {
+  		model: 'formationCenter',
 
-    },
+  	},
 
     dates: {
       type: 'array',
       defaultsTo: []
     },
 
-    maxPeople: {
-      type: 'integer'
-    },
+  	maxPeople: {
+  		type: 'integer'
+  	},
 
-    price: {
-      type: 'float'
-    },
+  	price: {
+  		type: 'float'
+  	},
 
     isConfirmed: {
       type: 'boolean'
@@ -37,14 +37,14 @@ module.exports = {
       type: 'boolean'
     },
 
-    place: {
-      model: 'place'
-    },
+  	place: {
+  		model: 'place'
+  	},
 
-    animators: {
+  	animators: {
       collection: 'animator',
       via: 'formations'
-    },
+  	},
 
     customers: {
       collection: 'customer',
@@ -71,9 +71,10 @@ module.exports = {
       maxDate = this.dates[0].date;
 
       for(var i = 1; i < lth; i++){
-        if(maxDate < this.dates[i].date){
-          maxDate = this.dates[i].date;
-        }
+
+          if(maxDate < this.dates[i].date){
+            maxDate = this.dates[i].date;
+          }
       }
 
       return maxDate;
@@ -88,9 +89,9 @@ module.exports = {
       minDate = this.dates[0].date;
 
       for(var i = 1; i < lth; i++){
-        if(minDate > this.dates[i].date){
-          minDate = this.dates[i].date;
-        }
+          if(minDate > this.dates[i].date){
+            minDate = this.dates[i].date;
+          }
       }
 
       return minDate;
@@ -98,13 +99,42 @@ module.exports = {
 
     hasDates: function () {
       // body...
+      return this.dates.length > 0 ;
+    },
 
-      if(this.dates.length > 0)
-        return true;
-      else
-        return false;
+    dateIndex: function (date) {
+      // body...
+
+      if(!_.isNumber(date) || this.dates.length == 0)
+        return null;
+
+      lth = this.dates.length;
+
+      for(var i = 0; i < lth ; i++){
+
+        if(date == this.dates[i].date){
+          return i;
+        }
+      }
+
+      return null;
+    },
+
+    getDates: function () {
+      // body...
+      dates = [];
+
+      lth = this.dates.length;
+
+      for (var i = 0; i < lth; i++) {
+        dates.push(this.dates[i]);
+        dates[i].date = new Date(dates[i].date);
+      };
+
+      return dates;
     }
 
-  }
+  } //attributes.
+
 };
 

@@ -35,15 +35,6 @@ module.exports.routes = {
   '/': {
     view: 'homepage'
   },
-/*
-  '/FormationCenter/search':{
-    controller: "FormationCenterController", action: "search"
-  },
-
-  '/FormationCenter/searchplaces':{
-    controller: "FormationCenterController", action: "searchplaces"
-  },
-  */
 
   '/Email/send':{
     controller: "EmailController", action: "send"
@@ -70,7 +61,18 @@ module.exports.routes = {
   '/Formation/searchbydate':{
     controller: "FormationController", action: "searchbydate"
   }
-
+  ,
+  '/Formation/count':{
+    controller: "FormationController", action: "count"
+  }
+  ,
+  '/Faq/count':{
+    controller: "FaqController", action: "countFaq"
+  }
+  ,
+  '/Faq/findFaq':{
+    controller: "FaqController", action: "findFaq"
+  }
 
 
 

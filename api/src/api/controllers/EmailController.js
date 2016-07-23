@@ -85,9 +85,9 @@ module.exports = {
       //  var mailcomposer = require("mailcomposer");
 
 
-      console.log("Valores de variables: ", ConfigurationObject["emailport"], emailhostFormation, emailsystemFormation);
+     // console.log("Valores de variables: ", ConfigurationObject["emailport"], emailhostFormation, emailsystemFormation);
 
-      console.log("Datos de la configuracion ",ConfigurationObject )
+     /// console.log("Datos de la configuracion ",ConfigurationObject )
 
       var mailconfig = {
         from: emailsystemFormation ,
@@ -126,7 +126,7 @@ module.exports = {
         }
       }
 
-      console.log("Configuracion del servidor de correo ", mailconfig);
+    //  console.log("Configuracion del servidor de correo ", mailconfig);
       var smtp = MailerService('smtp', mailconfig );
 
       var mailElement = { to: toEmail,
@@ -141,12 +141,12 @@ module.exports = {
       ///If exist parament text set
       if ( req.param("html")) {
         mailElement.html = req.param("html");
-        console.log("To send mail ==>");
-        console.log( mailElement );
+       // console.log("To send mail ==>");
+       // console.log( mailElement );
       }
 
 
-      console.log("Configuracion del correo ", mailElement);
+    //  console.log("Configuracion del correo ", mailElement);
       smtp.send(mailElement
         )
         .then( function () {
