@@ -1,66 +1,97 @@
 <br />
-<div class="row">
-    <div class="col-sm-4 col-sm-offset-1">
-        <div class="form-group">
-            <label>Civility</label>
-            <select class="form-control" id="civility" ng-model="vm.customerData.civility">
-                <option>M</option>
-                <option>Mme</option>
-                <option>Mlle</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>Name</label>
-            <input aria-required="true" id="name" ng-model="vm.customerData.name" class="form-control required" type="text" />
-        </div>
+<form name="customerForm">
+    <div class="row">
+        <div class="col-sm-4 col-sm-offset-1">
+            <div class="form-group">
+                <label>Civility</label>
+                <select name="civility" id="civility" class="form-control" ng-model="vm.customerData.civility">
+                    <option value="M" selected>M</option>
+                    <option value="Mme">Mme</option>
+                    <option value="Mlle">Mlle</option>
+                </select>
+            </div>
 
-        <div class="form-group">
-            <label>First Name</label>
-            <input aria-required="true" id="firstName" ng-model="vm.customerData.firstName" class="form-control required" type="text" />
-        </div>
+            <div class="form-group">
+                <label>Name (*)</label>
+                <input name="name" id="name" ng-model="vm.customerData.name" class="form-control" type="text" required/>
+                <span style="color:#cc0000" ng-show="customerForm.name.$dirty && customerForm.name.$invalid">
+                    <span ng-show="customerForm.name.$error.required">Name is required.</span>
+                </span>
+            </div>
 
-        <div class="form-group">
-            <label>Phone Number</label>
-            <input aria-required="true" id="phoneNumber" ng-model="vm.customerData.phoneNumber" class="form-control required" type="text" />
-        </div>
-        <div class="form-group">
-            <label>Email</label>
-            <input aria-required="true" id="email" ng-model="vm.customerData.email" class="form-control required" type="email" />
-        </div>
+            <div class="form-group">
+                <label>First Name (*)</label>
+                <input name="firstName" id="firstName" ng-model="vm.customerData.firstName" class="form-control" type="text" required/>
+                <span style="color:#cc0000" ng-show="customerForm.firstName.$dirty && customerForm.firstName.$invalid">
+                    <span ng-show="customerForm.firstName.$error.required">First Name is required.</span>
+                </span>
+            </div>
 
+            <div class="form-group">
+                <label>Phone Number (*)</label>
+                <input name="phoneNumber" id="phoneNumber"  
+                       class="form-control" type="text"
+                       placeholder="0913332109"
+                       ng-model="vm.customerData.phoneNumber"
+                       required
+                       ng-pattern="vm.phoneRegExp"
+                       ng-maxlength="10" />
+                
+                <span style="color:#cc0000" ng-show="customerForm.phoneNumber.$dirty && customerForm.phoneNumber.$invalid">
+                    <span ng-show="customerForm.phoneNumber.$error.required">Phone number is required.</span>
+                    <span ng-show="customerForm.phoneNumber.$error.pattern">Invalid phone format.</span>
+                  <!--  <span ng-show="customerForm.phoneNumber.$error.maxlength">Invalid phone length.</span> -->
+                </span>
+            </div>
+            <div class="form-group">
+                <label>Email (*)</label>
+                <input name="email" id="email" ng-model="vm.customerData.email" class="form-control" type="email" required />
+                <span style="color:#cc0000" ng-show="customerForm.email.$dirty && customerForm.email.$invalid">
+                    <span ng-show="customerForm.email.$error.required">Email is required.</span>
+                    <span ng-show="customerForm.email.$error.email">Invalis email address.</span>
+                </span>
+            </div>
+        </div>
+        <div class="col-sm-4 col-sm-offset-1">
+            <div class="form-group">
+                <label>Birth Date</label>
+                <input name="birthDate" id="birthDate" ng-model="vm.customerData.birthDate" class="form-control" type="date" />
+            </div>
 
+            <div class="form-group">
+                <label>Birth City</label>
+                <input name="birthCity" id="birthCity" ng-model="vm.customerData.birthCity" class="form-control" type="text" />
+            </div>
+
+            <div class="form-group">
+                <label>Address</label>
+                <input name="address" id="address" ng-model="vm.customerData.address" class="form-control" type="text" />
+            </div>
+
+            <div class="form-group">
+                <label>City</label>
+                <input name="city" id="city" ng-model="vm.customerData.city" class="form-control" type="text" />
+            </div>
+
+            <div class="form-group">
+                <label>ZipCode (*)</label>
+                <input name="zipCode" id="zipCode" 
+                       ng-model="vm.customerData.zipCode" 
+                       class="form-control" 
+                       ng-pattern="vm.zipcodeRegExp"
+                       placeholder="2134"
+                       required
+                       type="text" />
+                <span style="color:#cc0000" ng-show="customerForm.zipCode.$dirty && customerForm.zipCode.$invalid">
+                    <span ng-show="customerForm.zipCode.$error.required">Zipcode is required.</span>
+                    <span ng-show="customerForm.zipCode.$error.pattern">Invalid zipcode format.</span>
+                </span>
+            </div>
+        </div>
     </div>
-    <div class="col-sm-4 col-sm-offset-1">
-        <div class="form-group">
-            <label>Birth Date</label>
-            <input aria-required="true" id="birthDate" ng-model="vm.customerData.birthDate" class="form-control required datepicker" type="date" />
-        </div>
-
-      <!--  <label>Birth Date</label>
-        <div class="input-group date">
-            <input class="form-control" id="birthDate" uib-datepicker-popup=""  is-open="birthDateIsOpend" datepicker-options="dateOptions" placeholder="Birth Date" type="text" ng-model="customerData.birthDate">
-            <span class="input-group-addon"><span id="datesearchInit" class="fa fa-calendar" ng-click="openbirthDate()"></span></span>
-        </div>
-      -->
-
-        <div class="form-group">
-            <label>Birth City</label>
-            <input aria-required="true" id="birthCity" ng-model="vm.customerData.birthCity" class="form-control required " type="text" />
-        </div>
-
-        <div class="form-group">
-            <label>Address</label>
-            <input aria-required="true" id="address" ng-model="vm.customerData.address" class="form-control required" type="text" />
-        </div>
-
-        <div class="form-group">
-            <label>City</label>
-            <input aria-required="true" id="city" ng-model="vm.customerData.city" class="form-control required" type="text" />
-        </div>
-
-        <div class="form-group">
-            <label>ZipCode</label>
-            <input aria-required="true" id="zipCode" ng-model="vm.customerData.zipCode" class="form-control required" type="text" />
+    <div class="row">
+        <div class="col-md-9 col-md-offset-1">
+            <div uib-alert ng-repeat="message in vm.validationMessages" ng-class="'alert-' + message.type" close="vm.closeMessage($index)" dismiss-on-timeout="4000">{{message.info}}</div>
         </div>
     </div>
-</div>
+</form>

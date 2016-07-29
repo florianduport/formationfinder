@@ -502,4 +502,157 @@ describe('FormationController', function() {
     });
   });
 
+
+
+  describe('#Test find advaced search ==> ', function() {
+    //it('--Advaced Search', function (done) {
+    //  // var app = sails();
+    //
+    //    // console.log("Data of place ", iPlace)
+    //    var config = {
+    //      city: "a",
+    //    }
+    //
+    //    request(sails.hooks.http.app)
+    //      .post('/Formation/searchByCityMongoEx')
+    //      .send(config)
+    //      .expect(200, function (err, res) {
+    //        if (err) return done(err);
+    //
+    //       // console.log("Resultado ", res.body);
+    //
+    //        assert.equal(true, res.body.length > 1)
+    //        done();
+    //      })
+    //
+    //});
+
+    it('-should find by first formation with initDate and endDate in native Mongo', function (done) {
+      // var app = sails();
+      Place.findOne({city:{'contains' : 'a'}}).exec(function (err, iPlace) {
+        //console.log("Data of place ", iPlace)
+        var config = {
+          zipcode: iPlace.zipcode,
+          page: 0,
+          len: 5,
+          initialDate: "2016-10-04",
+          finalDate: "2017-05-03"
+        }
+
+        request(sails.hooks.http.app)
+          .post('/Formation/searchByZipcodeMongoEx')
+          .send(config)
+          .expect(200, function (err, res) {
+            if (err) return done(err);
+            //console.log("Respuesta ",res.body.length )
+            assert.equal( res.body.length,1)
+            done();
+          })
+      });
+    });
+
+    it('-should count  by first formation with initDate and endDate in native Mongo', function (done) {
+      // var app = sails();
+      Place.findOne({city:{'contains' : 'a'}}).exec(function (err, iPlace) {
+        //console.log("Data of place ", iPlace)
+        var config = {
+          zipcode: iPlace.zipcode,
+          page: 0,
+          len: 5,
+          initialDate: "2016-10-04",
+          finalDate: "2017-05-03"
+        }
+
+        request(sails.hooks.http.app)
+          .post('/Formation/countByZipcodeMongoEx')
+          .send(config)
+          .expect(200, function (err, res) {
+            if (err) return done(err);
+            //console.log("Respuesta ",res.body.length )
+            assert.equal( res.body,1)
+            done();
+          })
+      });
+    });
+
+
+    it('-should find by first formation with initDate, endDate and price in native Mongo', function (done) {
+      // var app = sails();
+
+      // console.log("Data of place ", iPlace)
+      var config = {
+        city: "a",
+        page: 0,
+        price: 100,
+        len: 5,
+        initialDate: "2016-10-04",
+        finalDate: "2017-05-03"
+      }
+
+      request(sails.hooks.http.app)
+        .post('/Formation/searchByCityMongoEx')
+        .send(config)
+        .expect(200, function (err, res) {
+          if (err) return done(err);
+
+          // console.log("Resultado ", res.body);
+
+          assert.equal(true, res.body.length > 1)
+          done();
+        })
+
+    });
+
+    it('-should count by first formation with initDate, endDate and price in native Mongo', function (done) {
+      // var app = sails();
+
+      // console.log("Data of place ", iPlace)
+      var config = {
+        city: "a",
+        page: 0,
+        price: 100,
+        len: 5,
+        initialDate: "2016-10-04",
+        finalDate: "2017-05-03"
+      }
+
+      request(sails.hooks.http.app)
+        .post('/Formation/countByCityMongoEx')
+        .send(config)
+        .expect(200, function (err, res) {
+          if (err) return done(err);
+
+          // console.log("Resultado ", res.body);
+
+          assert.equal(true, res.body > 1)
+          done();
+        })
+
+    });
+
+    //it('should find by first formation in native Mongo', function (done) {
+    //  // var app = sails();
+    //  Place.findOne({city:{'contains' : 'a'}}).exec(function (err, iPlace) {
+    //
+    //    var config = {
+    //      city: iPlace.city,
+    //      page: 0,
+    //      limit:5
+    //    }
+    //
+    //    request(sails.hooks.http.app)
+    //      .post('/Formation/searchByCityMongoEx')
+    //      .send(config)
+    //      .expect(200, function (err, res) {
+    //        if (err) return done(err);
+    //        assert.equal(res.body.length, 1)
+    //        done();
+    //      })
+    //  });
+    //});
+  });
+
+
+
+
 });

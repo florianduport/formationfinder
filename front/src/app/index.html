@@ -63,15 +63,13 @@
         <li><a href="#about">Testimonies</a></li>
 		<li><a href="#service">Service</a></li>
 		<li><a href="#contact">Contact</a></li>
-        <li class="open dropdown " >
-
-			<p id="menu-item"><div class="dropdown-toggle" data-toggle="dropdown" >Geosearch <b class="caret"></b></div></p>
-
+        <li  >
+			<a class="open dropdown " id="menu-item"><div class="dropdown-toggle o" data-toggle="dropdown" > Geosearch<b class="caret"></b></div>
           <ul class="dropdown-menu">
 			  <li>
 				  <div class="menu-item"><!--<p>Use Google Maps</p>--> </div>
 				  <div id="ng-map-class">
-				<ng-map  zoom="4" center="48.864716, 2.349014" on-center-changed="vm.centerChanged()" on-click="vm.click()">
+					<ng-map  zoom="4" center="48.864716, 2.349014" on-center-changed="vm.centerChanged()" on-click="vm.click()">
 				    <marker position="48.864716, 2.349014"  title="Click to zoom"></marker>
 				   <div ng-repeat="iformationcenter in formationcenters">
 				    <div ng-repeat="iplace in iformationcenter.places">
@@ -86,6 +84,7 @@
 			  <!--  <li><a href="#">Example menu</a></li>
                 <li><a href="#">Example menu</a></li>-->
           </ul>
+			</a>
         </li>
       </ul>
             </div>

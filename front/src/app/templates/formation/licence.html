@@ -1,25 +1,44 @@
 <br />
-<div class="row">
-    <div class="col-sm-4 col-sm-offset-1">
-        <div class="form-group">
-            <label>Number</label>
-            <input aria-required="true" id="number" ng-model="vm.customerData.driverLicence.number" class="form-control required" type="text" />
-        </div>
+<form name="licence">
+    <div class="row">
+        <div class="col-sm-4 col-sm-offset-1">
+            <div class="form-group">
+                <label>Number (*)</label>
+                <input name="number" id="number" ng-model="vm.customerData.driverLicence.number" class="form-control" type="text" required />
+                <span style="color:#cc0000" ng-show="licence.number.$dirty && licence.number.$invalid">
+                    <span ng-show="licence.number.$error.required">Licence number is required.</span>
+                </span>
+            </div>
 
-        <div class="form-group">
-            <label>Place Of Deliverance</label>
-            <input aria-required="true" id="placeOfDeliverance" ng-model="vm.customerData.driverLicence.placeOfDeliverance" class="form-control required" type="text" />
+            <div class="form-group">
+                <label>Place Of Deliverance (*)</label>
+                <input name="placeOfDeliverance" id="placeOfDeliverance" ng-model="vm.customerData.driverLicence.placeOfDeliverance" class="form-control" type="text" required/>
+                <span style="color:#cc0000" ng-show="licence.placeOfDeliverance.$dirty && licence.placeOfDeliverance.$invalid">
+                    <span ng-show="licence.placeOfDeliverance.$error.required">Place of Deliverance is required.</span>
+                </span>
+            </div>
+        </div>
+        <div class="col-sm-4 col-sm-offset-1">
+            <div class="form-group">
+                <label>Date Of Deliverance (*)</label>
+                <input name="dateOfDeliverance" id="dateOfDeliverance" ng-model="vm.customerData.driverLicence.dateOfDeliverance" class="form-control" type="text" required/>
+                <span style="color:#cc0000" ng-show="licence.dateOfDeliverance.$dirty && licence.dateOfDeliverance.$invalid">
+                    <span ng-show="licence.dateOfDeliverance.$error.required">Date of deliverance is required.</span>
+                </span>
+            </div>
+
+            <div class="form-group">
+                <label>Date Of Procuration (*)</label>
+                <input name="dateOfProcuration" id="dateOfProcuration" ng-model="vm.customerData.driverLicence.dateOfProcuration" class="form-control" type="text" required/>
+                <span style="color:#cc0000" ng-show="licence.dateOfProcuration.$dirty && licence.dateOfProcuration.$invalid">
+                    <span ng-show="licence.dateOfProcuration.$error.required">Date of procuration is required.</span>
+                </span>
+            </div>
         </div>
     </div>
-    <div class="col-sm-4 col-sm-offset-1">
-        <div class="form-group">
-            <label>Date Of Deliverance</label>
-            <input aria-required="true" id="dateOfDeliverance" ng-model="vm.customerData.driverLicence.dateOfDeliverance" class="form-control required" type="date" />
-        </div>
-
-        <div class="form-group">
-            <label>Date Of Procuration</label>
-            <input id="dateOfProcuration" ng-model="vm.customerData.driverLicence.dateOfProcuration" class="form-control" type="date" />
+    <div class="row">
+        <div class="col-md-9 col-md-offset-1">
+            <div uib-alert ng-repeat="message in vm.validationMessages" ng-class="'alert-' + message.type" close="vm.closeMessage($index)" dismiss-on-timeout="4000">{{message.info}}</div>
         </div>
     </div>
-</div>
+</form>

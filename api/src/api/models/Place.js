@@ -39,8 +39,8 @@ module.exports = {
   	},
 
     location: {
-      type: 'json',
-      index:'2dsphere'
+      type: 'json'
+      ///index:'2dsphere'
     },
 
     latitude: {

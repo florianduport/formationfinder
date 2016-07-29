@@ -171,10 +171,14 @@ module.exports = {
     formationcenter = req.param("formationcentername")
     currency = req.param("currency")
     //console.log("sasda "  +  formationcenter);
-    PaymentService.makepayment(userValue, mount, formationcenter, currency, function (err, result){
+    /*PaymentService.makepayment(userValue, mount, formationcenter, currency, function (err, result){
 
       return res.json(result)
-    })
+    })*/
+    return res.json({
+      value: 'ok',
+      info: 'Payment result: satisfactory'
+    });
   }
 
 

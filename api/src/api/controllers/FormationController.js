@@ -534,20 +534,1036 @@ module.exports = {
    * @param req
    * @param res
    * @param next
+   *
+   *
+   * function findData() {
+formation = db.getCollection('formation').find({});
+formationResult = []
+formation.forEach(function (iFormation, i) {
+
+
+  placeResult = db.getCollection('place').findOne({_id:iFormation.place,city:"Port Carla"})
+  print( placeResult)
+
+   if ( placeResult != null && typeof placeResult.city != "undefined")
+        formationResult.push(placeResult)
+ })
+  return formationResult
+}
+
+   findData()
      */
+
+//----------------------------------------------------------------------------------------------------------------------
+
+  countByCityMongoEx: function (req, res, next) {
+    // body...
+
+    cityname = req.param('city');
+
+    // console.log("Call Services")
+    if(cityname === undefined){
+      return res.json({ err: 'No city provided' });
+    }
+
+
+    initialDate = req.param('initialDate');
+    finalDate = req.param('finalDate');
+
+    if ( typeof initialDate != "undefined" )
+      initialDate = new Date(initialDate);
+
+    if ( typeof finalDate != "undefined" )
+      finalDate = new Date(finalDate);
+
+    if (initialDate || finalDate) {
+      if(!_.isDate(initialDate) || !_.isDate(finalDate)){
+        return res.json({err: 'Invalid date format for initialDate or finalDate.'});
+      }
+    }
+    var page = 0;
+    var len = 10;
+
+    if(req.param('page') !== undefined){
+      if(!isNaN(parseInt(req.param('page')))){
+        page = Math.abs(parseInt(req.param('page')));
+      }
+      else
+      {
+        return res.json({err: 'The page parameter is an invalid string number'});
+      }
+    }
+
+    //console.log("Call Services")
+    if(req.param('len') !== undefined){
+      if(!isNaN(parseInt(req.param('len')))){
+        len = Math.abs(parseInt(req.param('len')));
+      }
+      else
+      {
+        return res.json({err: 'The len parameter is an invalid string number'});
+      }
+    }
+
+
+    query = {};
+    queryPlace = {};
+
+    /// console.log("Validation price", !isNaN(parseInt(req.param('price'))) )
+    // console.log("Validation price", req.param('price') )
+
+    if (req.param('price') && !isNaN(parseInt(req.param('price'))) ) {
+      query.price = {$gte: req.param('price')};
+      //console.log("Create price restriction")
+    }
+    //query.limit = len
+    //query.skip = page * len
+    skip = page * len
+
+    //console.log("INITIAL DATE", initialDate)
+    if (initialDate) {
+      if (!query.dates) {
+        query.dates = {}
+        query.dates.$elemMatch = {}
+        query.dates.$elemMatch.date = {}
+      }
+
+      query.dates.$elemMatch.date.$gte = new Date(req.param('initialDate'))
+    }
+
+
+    //console.log("FINAL DATE", finalDate)
+    if (finalDate) {
+      if (!query.dates) {
+        query.dates = {}
+        query.dates.$elemMatch = {}
+        query.dates.$elemMatch.date = {}
+      }
+      query.dates.$elemMatch.date.$lte = new Date(req.param('finalDate'))
+    }
+
+    // query.isFull = false
+    ///---------------------------------------------------------------------------------
+
+
+    var ObjectID = require('mongodb').ObjectID
+    Place.find({ city: {contains: cityname}}).exec( function(err, resulFormation){
+
+      arrayData = []
+      var promise;
+      promise = resulFormation.reduce(function (prev, iPlace) {
+        return prev.then(function () {
+          object = iPlace.id
+          arrayData.push(new ObjectID( iPlace.id));
+        });
+      }, Promise.resolve());
+
+      promise.then(function(array) {
+       if (initialDate || finalDate)
+          query.place = {$in:arrayData}
+        /*query = {
+         place : {$in:arrayData},
+         price: {
+         $gte:50
+         },
+         dates: {
+         $elemMatch:{
+         date: {
+         $gte:new Date("2016-10-04"),
+         $lte: new Date("2017-05-03")
+         }
+         }
+         }
+
+         }*/
+
+        console.log("QUERY: " , query)
+        Formation.native(function(err, collection) {
+          if (err) return res.serverError(err);
+          //console.log("---")
+          ////Transform all arrayData to new ObjectId [new ObjectID (arrayData[0])]
+          // {"place":{"$all": [new ObjectID(arrayData[0])] },"price":{"$gte":50},"dates":{"$elemMatch":{"date":{"$gte":new Date("2016-10-04"),"$lte":new Date("2017-05-03")}}}}
+
+          //console.log("******")
+          // parameters.place = {$all:[new ObjectID(arrayData[0])]}
+          collection.find(query).toArray(function (err, results) {
+            // console.log("sfdsdfsss " + results);
+            if (err) return res.serverError(err);
+            ////Dados los id buscar un place un el nombre "5797e539e1e9812814a35520"
+            //console.log("DATA", results)
+            ///Make populate for all id formation to search place and formationcenter data
+            return res.json({res:"OK", size:results.length})
+           });
+        });
+      });
+    });
+
+
+
+
+
+    ////--------------------------------------------------------------------------------
+
+
+
+
+
+    // console.log("Query" ,queryPlace )
+    // console.log("Query" ,query )
+    /* Formation.find(query)
+     .populate('place', queryPlace)
+     .populate('formationCenter')
+     .exec(function placesFouded(err, placesFormations) {
+     // body...
+     formationsResponse = [];
+
+     placesFormations.forEach(function (iPlace, index) {
+     if ( typeof iPlace.place != "undefined" ) {
+     iPlace.formationCenter.city = iPlace.place.city;
+     formationsResponse.push({
+     formation: iPlace
+     });
+     }
+     });
+
+     return res.json(formationsResponse);
+     });*/
+  },
+
+  countByZipCodeMongoEx: function (req, res, next) {
+    // body...
+
+    zipcodeData = req.param('zipcode');
+
+    // console.log("Call Services")
+    if(zipcodeData === undefined){
+      return res.json({ err: 'No zipcode provided' });
+    }
+
+
+    initialDate = req.param('initialDate');
+    finalDate = req.param('finalDate');
+
+    if ( typeof initialDate != "undefined" )
+      initialDate = new Date(initialDate);
+
+    if ( typeof finalDate != "undefined" )
+      finalDate = new Date(finalDate);
+
+    if (initialDate || finalDate) {
+      if(!_.isDate(initialDate) || !_.isDate(finalDate)){
+        return res.json({err: 'Invalid date format for initialDate or finalDate.'});
+      }
+    }
+    var page = 0;
+    var len = 10;
+
+    if(req.param('page') !== undefined){
+      if(!isNaN(parseInt(req.param('page')))){
+        page = Math.abs(parseInt(req.param('page')));
+      }
+      else
+      {
+        return res.json({err: 'The page parameter is an invalid string number'});
+      }
+    }
+
+    //console.log("Call Services")
+    if(req.param('len') !== undefined){
+      if(!isNaN(parseInt(req.param('len')))){
+        len = Math.abs(parseInt(req.param('len')));
+      }
+      else
+      {
+        return res.json({err: 'The len parameter is an invalid string number'});
+      }
+    }
+
+
+    query = {};
+    queryPlace = {};
+
+    /// console.log("Validation price", !isNaN(parseInt(req.param('price'))) )
+    // console.log("Validation price", req.param('price') )
+
+    if (req.param('price') && !isNaN(parseInt(req.param('price'))) ) {
+      query.price = {$gte: req.param('price')};
+      //console.log("Create price restriction")
+    }
+    //query.limit = len
+    //query.skip = page * len
+    skip = page * len
+
+    //console.log("INITIAL DATE", initialDate)
+    if (initialDate) {
+      if (!query.dates) {
+        query.dates = {}
+        query.dates.$elemMatch = {}
+        query.dates.$elemMatch.date = {}
+      }
+
+      query.dates.$elemMatch.date.$gte = new Date(req.param('initialDate'))
+    }
+
+
+    //console.log("FINAL DATE", finalDate)
+    if (finalDate) {
+      if (!query.dates) {
+        query.dates = {}
+        query.dates.$elemMatch = {}
+        query.dates.$elemMatch.date = {}
+      }
+      query.dates.$elemMatch.date.$lte = new Date(req.param('finalDate'))
+    }
+
+    // query.isFull = false
+    ///---------------------------------------------------------------------------------
+
+
+    var ObjectID = require('mongodb').ObjectID
+    Place.find({ zipcode:  zipcodeData }).exec( function(err, resulFormation){
+
+      arrayData = []
+      var promise;
+      promise = resulFormation.reduce(function (prev, iPlace) {
+        return prev.then(function () {
+          object = iPlace.id
+          arrayData.push(new ObjectID( iPlace.id));
+        });
+      }, Promise.resolve());
+
+      promise.then(function(array) {
+        if (initialDate || finalDate)
+          query.place = {$in:arrayData}
+        /*query = {
+         place : {$in:arrayData},
+         price: {
+         $gte:50
+         },
+         dates: {
+         $elemMatch:{
+         date: {
+         $gte:new Date("2016-10-04"),
+         $lte: new Date("2017-05-03")
+         }
+         }
+         }
+
+         }*/
+
+        console.log("QUERY: " , query)
+        Formation.native(function(err, collection) {
+          if (err) return res.serverError(err);
+          //console.log("---")
+          ////Transform all arrayData to new ObjectId [new ObjectID (arrayData[0])]
+          // {"place":{"$all": [new ObjectID(arrayData[0])] },"price":{"$gte":50},"dates":{"$elemMatch":{"date":{"$gte":new Date("2016-10-04"),"$lte":new Date("2017-05-03")}}}}
+
+          //console.log("******")
+          // parameters.place = {$all:[new ObjectID(arrayData[0])]}
+          collection.find(query).toArray(function (err, results) {
+            // console.log("sfdsdfsss " + results);
+            if (err) return res.serverError(err);
+            ////Dados los id buscar un place un el nombre "5797e539e1e9812814a35520"
+            //console.log("DATA", results)
+            ///Make populate for all id formation to search place and formationcenter data
+            return res.json({res:"OK", size:results.length})
+          });
+        });
+      });
+    });
+
+
+
+
+
+    ////--------------------------------------------------------------------------------
+
+
+
+
+
+    // console.log("Query" ,queryPlace )
+    // console.log("Query" ,query )
+    /* Formation.find(query)
+     .populate('place', queryPlace)
+     .populate('formationCenter')
+     .exec(function placesFouded(err, placesFormations) {
+     // body...
+     formationsResponse = [];
+
+     placesFormations.forEach(function (iPlace, index) {
+     if ( typeof iPlace.place != "undefined" ) {
+     iPlace.formationCenter.city = iPlace.place.city;
+     formationsResponse.push({
+     formation: iPlace
+     });
+     }
+     });
+
+     return res.json(formationsResponse);
+     });*/
+  },
+///--------------------------------------------------------------------------------
+  searchByCityMongoEx: function (req, res, next) {
+    // body...
+
+    cityname = req.param('city');
+
+    // console.log("Call Services")
+    if(cityname === undefined){
+      return res.json({ err: 'No city provided' });
+    }
+
+
+    initialDate = req.param('initialDate');
+    finalDate = req.param('finalDate');
+
+    if ( typeof initialDate != "undefined" )
+    initialDate = new Date(initialDate);
+
+    if ( typeof finalDate != "undefined" )
+    finalDate = new Date(finalDate);
+
+    if (initialDate || finalDate) {
+      if(!_.isDate(initialDate) || !_.isDate(finalDate)){
+        return res.json({err: 'Invalid date format for initialDate or finalDate.'});
+      }
+    }
+    var page = 0;
+    var len = 10;
+
+    if(req.param('page') !== undefined){
+      if(!isNaN(parseInt(req.param('page')))){
+        page = Math.abs(parseInt(req.param('page')));
+      }
+      else
+      {
+        return res.json({err: 'The page parameter is an invalid string number'});
+      }
+    }
+
+    //console.log("Call Services")
+    if(req.param('len') !== undefined){
+      if(!isNaN(parseInt(req.param('len')))){
+        len = Math.abs(parseInt(req.param('len')));
+      }
+      else
+      {
+        return res.json({err: 'The len parameter is an invalid string number'});
+      }
+    }
+
+
+    query = {};
+    queryPlace = {};
+
+    /// console.log("Validation price", !isNaN(parseInt(req.param('price'))) )
+    // console.log("Validation price", req.param('price') )
+
+    if (req.param('price') && !isNaN(parseInt(req.param('price'))) ) {
+      query.price = {$gte: req.param('price')};
+      //console.log("Create price restriction")
+    }
+    //query.limit = len
+    //query.skip = page * len
+    skip = page * len
+
+    //console.log("INITIAL DATE", initialDate)
+    if (initialDate) {
+       if (!query.dates) {
+         query.dates = {}
+         query.dates.$elemMatch = {}
+         query.dates.$elemMatch.date = {}
+       }
+
+      query.dates.$elemMatch.date.$gte = new Date(req.param('initialDate'))
+    }
+
+
+    //console.log("FINAL DATE", finalDate)
+    if (finalDate) {
+      if (!query.dates) {
+        query.dates = {}
+        query.dates.$elemMatch = {}
+        query.dates.$elemMatch.date = {}
+      }
+      query.dates.$elemMatch.date.$lte = new Date(req.param('finalDate'))
+    }
+
+   // query.isFull = false
+    ///---------------------------------------------------------------------------------
+
+
+    var ObjectID = require('mongodb').ObjectID
+    Place.find({ city: {contains: cityname}}).exec( function(err, resulFormation){
+
+      arrayData = []
+      var promise;
+      promise = resulFormation.reduce(function (prev, iPlace) {
+        return prev.then(function () {
+          object = iPlace.id
+          arrayData.push(new ObjectID( iPlace.id));
+        });
+      }, Promise.resolve());
+
+      promise.then(function(array) {
+        if (initialDate || finalDate)
+        query.place = {$in:arrayData}
+        /*query = {
+          place : {$in:arrayData},
+          price: {
+            $gte:50
+          },
+          dates: {
+            $elemMatch:{
+              date: {
+                $gte:new Date("2016-10-04"),
+                $lte: new Date("2017-05-03")
+              }
+            }
+          }
+
+        }*/
+
+        console.log("QUERY: " , query)
+        Formation.native(function(err, collection) {
+          if (err) return res.serverError(err);
+          //console.log("---")
+          ////Transform all arrayData to new ObjectId [new ObjectID (arrayData[0])]
+          // {"place":{"$all": [new ObjectID(arrayData[0])] },"price":{"$gte":50},"dates":{"$elemMatch":{"date":{"$gte":new Date("2016-10-04"),"$lte":new Date("2017-05-03")}}}}
+
+          //console.log("******")
+          // parameters.place = {$all:[new ObjectID(arrayData[0])]}
+          collection.find(query).limit(len).skip(skip).toArray(function (err, results) {
+           // console.log("sfdsdfsss " + results);
+            if (err) return res.serverError(err);
+            ////Dados los id buscar un place un el nombre "5797e539e1e9812814a35520"
+             //console.log("DATA", results)
+            ///Make populate for all id formation to search place and formationcenter data
+            formationArray = []
+            async = require("async");
+            async.each(results,
+              // 2nd param is the function that each item is passed to
+              function(iFormation, callback){
+                // Call an asynchronous function, often a save() to DB
+
+
+                console.log(iFormation)
+                console.log(",,,,,,,,,,,")
+                idStr = "" + iFormation._id
+                console.log(idStr)
+                Formation.find({id:idStr})
+                  .populate('place')
+                  .populate('formationCenter')
+                  .exec(function placesFouded(err, placesFormation) {
+                    // body...
+                    formationsResponse = [];
+
+                    console.log(placesFormation.length)
+                    console.log("----------------------------------")
+                    console.log(placesFormation)
+                    console.log("----------------------------------")
+                    //console.log("ANSWER", placesFormation);
+
+
+
+                    /*                promiseResult = placesFormations.reduce(function (prev, iFormation) {
+                     return prev.then(function () {
+                     if (typeof iFormation.place != "undefined") {
+                     iFormation.formationCenter.city = iFormation.place.city;
+                     formationsResponse.push({
+                     formation: iFormation
+                     });
+                     }
+                     });
+                     }, Promise.resolve());
+
+                     promiseResult.then(function(array) {
+                     console.log("<--->", formationsResponse)
+                     return res.json(formationsResponse)
+
+                     });*/
+                    formationArray.push(placesFormation[0]);
+                    callback();
+                  });
+
+              },
+              // 3rd param is the function to call when everything's done
+              function(err){
+                // All tasks are done now
+                console.log("ANSWER ID", formationArray);
+                return res.json(formationArray)
+              }
+            );
+          /*  promise = results.reduce(function (prev, iFormation) {
+              return prev.then(function () {
+                console.log(new ObjectID(iFormation.id))
+                Formation.findOne({id:new ObjectID(iFormation.id)})
+                  .populate('place')
+                  .populate('formationCenter')
+                  .exec(function placesFouded(err, placesFormation) {
+                    // body...
+                    formationsResponse = [];
+                    console.log("ANSWER", placesFormation);
+
+
+
+                    /!*                promiseResult = placesFormations.reduce(function (prev, iFormation) {
+                     return prev.then(function () {
+                     if (typeof iFormation.place != "undefined") {
+                     iFormation.formationCenter.city = iFormation.place.city;
+                     formationsResponse.push({
+                     formation: iFormation
+                     });
+                     }
+                     });
+                     }, Promise.resolve());
+
+                     promiseResult.then(function(array) {
+                     console.log("<--->", formationsResponse)
+                     return res.json(formationsResponse)
+
+                     });*!/
+                    formationArray.push(placesFormation);
+                  });
+                idstring =  new ObjectID (iFormation.id)
+                //console.log("ID formation " + iFormation.price)
+
+
+              });
+            }, Promise.resolve());
+
+            promise.then(function(array) {
+              console.log("ANSWER ID", formationArray);
+              return res.json(formationArray)
+
+
+              //.populate('place')
+              //.populate('formationCenter') {id: formationArray[0]}
+              //configquery = {id: informationArray}
+/!*              Formation.find({id:[formationArray[0],formationArray[1]]})
+                .populate('place')
+                .populate('formationCenter')
+                .exec(function placesFouded(err, placesFormations) {
+                  // body...
+                  formationsResponse = [];
+                  console.log("ANSWER", placesFormations);
+                  return res.json(placesFormations)
+
+
+  /!*                promiseResult = placesFormations.reduce(function (prev, iFormation) {
+                    return prev.then(function () {
+                      if (typeof iFormation.place != "undefined") {
+                        iFormation.formationCenter.city = iFormation.place.city;
+                        formationsResponse.push({
+                          formation: iFormation
+                        });
+                      }
+                    });
+                  }, Promise.resolve());
+
+                  promiseResult.then(function(array) {
+                    console.log("<--->", formationsResponse)
+                    return res.json(formationsResponse)
+
+                  });*!/
+
+                });*!/
+            });
+*/
+
+
+
+          });
+        });
+      });
+    });
+
+
+
+
+
+    ////--------------------------------------------------------------------------------
+
+
+
+
+
+    // console.log("Query" ,queryPlace )
+    // console.log("Query" ,query )
+   /* Formation.find(query)
+      .populate('place', queryPlace)
+      .populate('formationCenter')
+      .exec(function placesFouded(err, placesFormations) {
+        // body...
+        formationsResponse = [];
+
+        placesFormations.forEach(function (iPlace, index) {
+          if ( typeof iPlace.place != "undefined" ) {
+            iPlace.formationCenter.city = iPlace.place.city;
+            formationsResponse.push({
+              formation: iPlace
+            });
+          }
+        });
+
+        return res.json(formationsResponse);
+      });*/
+  },
+
+  searchByZipcodeMongoEx: function (req, res, next) {
+    // body...
+
+    zipcodeData = req.param('zipcode');
+
+    // console.log("Call Services")
+    if(zipcodeData === undefined){
+      return res.json({ err: 'No zipcode provided' });
+    }
+
+
+    initialDate = req.param('initialDate');
+    finalDate = req.param('finalDate');
+
+    if ( typeof initialDate != "undefined" )
+      initialDate = new Date(initialDate);
+
+    if ( typeof finalDate != "undefined" )
+      finalDate = new Date(finalDate);
+
+    if (initialDate || finalDate) {
+      if(!_.isDate(initialDate) || !_.isDate(finalDate)){
+        return res.json({err: 'Invalid date format for initialDate or finalDate.'});
+      }
+    }
+    var page = 0;
+    var len = 10;
+
+    if(req.param('page') !== undefined){
+      if(!isNaN(parseInt(req.param('page')))){
+        page = Math.abs(parseInt(req.param('page')));
+      }
+      else
+      {
+        return res.json({err: 'The page parameter is an invalid string number'});
+      }
+    }
+
+    //console.log("Call Services")
+    if(req.param('len') !== undefined){
+      if(!isNaN(parseInt(req.param('len')))){
+        len = Math.abs(parseInt(req.param('len')));
+      }
+      else
+      {
+        return res.json({err: 'The len parameter is an invalid string number'});
+      }
+    }
+
+
+    query = {};
+    queryPlace = {};
+
+    /// console.log("Validation price", !isNaN(parseInt(req.param('price'))) )
+    // console.log("Validation price", req.param('price') )
+
+    if (req.param('price') && !isNaN(parseInt(req.param('price'))) ) {
+      query.price = {$gte: req.param('price')};
+      //console.log("Create price restriction")
+    }
+    //query.limit = len
+    //query.skip = page * len
+    skip = page * len
+
+    //console.log("INITIAL DATE", initialDate)
+    if (initialDate) {
+      if (!query.dates) {
+        query.dates = {}
+        query.dates.$elemMatch = {}
+        query.dates.$elemMatch.date = {}
+      }
+
+      query.dates.$elemMatch.date.$gte = new Date(req.param('initialDate'))
+    }
+
+
+    //console.log("FINAL DATE", finalDate)
+    if (finalDate) {
+      if (!query.dates) {
+        query.dates = {}
+        query.dates.$elemMatch = {}
+        query.dates.$elemMatch.date = {}
+      }
+      query.dates.$elemMatch.date.$lte = new Date(req.param('finalDate'))
+    }
+
+    // query.isFull = false
+    ///---------------------------------------------------------------------------------
+
+
+    var ObjectID = require('mongodb').ObjectID
+    Place.find({ zipcode:zipcodeData}).exec( function(err, resulFormation){
+
+      arrayData = []
+      var promise;
+      promise = resulFormation.reduce(function (prev, iPlace) {
+        return prev.then(function () {
+          object = iPlace.id
+          arrayData.push(new ObjectID( iPlace.id));
+        });
+      }, Promise.resolve());
+
+      promise.then(function(array) {
+        if (initialDate || finalDate)
+         query.place = {$in:arrayData}
+        /*query = {
+         place : {$in:arrayData},
+         price: {
+         $gte:50
+         },
+         dates: {
+         $elemMatch:{
+         date: {
+         $gte:new Date("2016-10-04"),
+         $lte: new Date("2017-05-03")
+         }
+         }
+         }
+
+         }*/
+
+        console.log("QUERY: " , query)
+        Formation.native(function(err, collection) {
+          if (err) return res.serverError(err);
+          //console.log("---")
+          ////Transform all arrayData to new ObjectId [new ObjectID (arrayData[0])]
+          // {"place":{"$all": [new ObjectID(arrayData[0])] },"price":{"$gte":50},"dates":{"$elemMatch":{"date":{"$gte":new Date("2016-10-04"),"$lte":new Date("2017-05-03")}}}}
+
+          //console.log("******")
+          // parameters.place = {$all:[new ObjectID(arrayData[0])]}
+          collection.find(query).limit(len).skip(skip).toArray(function (err, results) {
+            // console.log("sfdsdfsss " + results);
+            if (err) return res.serverError(err);
+            ////Dados los id buscar un place un el nombre "5797e539e1e9812814a35520"
+            //console.log("DATA", results)
+            ///Make populate for all id formation to search place and formationcenter data
+            formationArray = []
+            async = require("async");
+            async.each(results,
+              // 2nd param is the function that each item is passed to
+              function(iFormation, callback){
+                // Call an asynchronous function, often a save() to DB
+
+                idStr = "" + iFormation._id
+                console.log(idStr)
+                Formation.find({id:idStr})
+                  .populate('place')
+                  .populate('formationCenter')
+                  .exec(function placesFouded(err, placesFormation) {
+                    // body...
+                    formationsResponse = [];
+                    //console.log("ANSWER", placesFormation);
+
+
+
+                    /*                promiseResult = placesFormations.reduce(function (prev, iFormation) {
+                     return prev.then(function () {
+                     if (typeof iFormation.place != "undefined") {
+                     iFormation.formationCenter.city = iFormation.place.city;
+                     formationsResponse.push({
+                     formation: iFormation
+                     });
+                     }
+                     });
+                     }, Promise.resolve());
+
+                     promiseResult.then(function(array) {
+                     console.log("<--->", formationsResponse)
+                     return res.json(formationsResponse)
+
+                     });*/
+                    formationArray.push(placesFormation[0]);
+                    callback();
+                  });
+
+              },
+              // 3rd param is the function to call when everything's done
+              function(err){
+                // All tasks are done now
+                 console.log("ANSWER ID", formationArray);
+                return res.json(formationArray)
+              }
+            );
+            /*  promise = results.reduce(function (prev, iFormation) {
+             return prev.then(function () {
+             console.log(new ObjectID(iFormation.id))
+             Formation.findOne({id:new ObjectID(iFormation.id)})
+             .populate('place')
+             .populate('formationCenter')
+             .exec(function placesFouded(err, placesFormation) {
+             // body...
+             formationsResponse = [];
+             console.log("ANSWER", placesFormation);
+
+
+
+             /!*                promiseResult = placesFormations.reduce(function (prev, iFormation) {
+             return prev.then(function () {
+             if (typeof iFormation.place != "undefined") {
+             iFormation.formationCenter.city = iFormation.place.city;
+             formationsResponse.push({
+             formation: iFormation
+             });
+             }
+             });
+             }, Promise.resolve());
+
+             promiseResult.then(function(array) {
+             console.log("<--->", formationsResponse)
+             return res.json(formationsResponse)
+
+             });*!/
+             formationArray.push(placesFormation);
+             });
+             idstring =  new ObjectID (iFormation.id)
+             //console.log("ID formation " + iFormation.price)
+
+
+             });
+             }, Promise.resolve());
+
+             promise.then(function(array) {
+             console.log("ANSWER ID", formationArray);
+             return res.json(formationArray)
+
+
+             //.populate('place')
+             //.populate('formationCenter') {id: formationArray[0]}
+             //configquery = {id: informationArray}
+             /!*              Formation.find({id:[formationArray[0],formationArray[1]]})
+             .populate('place')
+             .populate('formationCenter')
+             .exec(function placesFouded(err, placesFormations) {
+             // body...
+             formationsResponse = [];
+             console.log("ANSWER", placesFormations);
+             return res.json(placesFormations)
+
+
+             /!*                promiseResult = placesFormations.reduce(function (prev, iFormation) {
+             return prev.then(function () {
+             if (typeof iFormation.place != "undefined") {
+             iFormation.formationCenter.city = iFormation.place.city;
+             formationsResponse.push({
+             formation: iFormation
+             });
+             }
+             });
+             }, Promise.resolve());
+
+             promiseResult.then(function(array) {
+             console.log("<--->", formationsResponse)
+             return res.json(formationsResponse)
+
+             });*!/
+
+             });*!/
+             });
+             */
+
+
+
+          });
+        });
+      });
+    });
+
+
+
+
+
+    ////--------------------------------------------------------------------------------
+
+
+
+
+
+    // console.log("Query" ,queryPlace )
+    // console.log("Query" ,query )
+    /* Formation.find(query)
+     .populate('place', queryPlace)
+     .populate('formationCenter')
+     .exec(function placesFouded(err, placesFormations) {
+     // body...
+     formationsResponse = [];
+
+     placesFormations.forEach(function (iPlace, index) {
+     if ( typeof iPlace.place != "undefined" ) {
+     iPlace.formationCenter.city = iPlace.place.city;
+     formationsResponse.push({
+     formation: iPlace
+     });
+     }
+     });
+
+     return res.json(formationsResponse);
+     });*/
+  },
 
   searchcityMongo: function (req, res, next) {
 
    //db.getCollection('formation').find({"dates":{"$elemMatch":{"date":{"$gte":new ISODate("2016-10-04"),"$lte":new ISODate("2017-05-03")}}}})
+      cityv = req.param("city")
+        var ObjectID = require('mongodb').ObjectID
+        Place.find({ city: {contains: cityv}}).exec( function(err, resulFormation){
 
-    Formation.native(function(err, collection) {
-      if (err) return res.serverError(err);
+         arrayData = []
+          var promise;
+          promise = resulFormation.reduce(function (prev, iPlace) {
+            return prev.then(function () {
+              object = iPlace.id
+              arrayData.push(new ObjectID( iPlace.id));
+            });
+          }, Promise.resolve());
 
-      collection.find({"dates":{"$elemMatch":{"date":{"$gte":new ISODate("2016-10-04"),"$lte":new ISODate("2017-05-03")}}}}).toArray(function (err, results) {
-        if (err) return res.serverError(err);
-        return res.json(results);
-      });
-    });
+          promise.then(function(array) {
+
+
+            parameters = {
+              place : {$in:arrayData},
+              price: {
+                $gte:50
+              },
+              dates: {
+                $elemMatch:{
+                  date: {
+                    $gte:new Date("2016-10-04"),
+                    $lte: new Date("2017-05-03")
+                  }
+                }
+              }
+
+            }
+            Formation.native(function(err, collection) {
+              if (err) return res.serverError(err);
+             //console.log("---")
+              ////Transform all arrayData to new ObjectId [new ObjectID (arrayData[0])]
+              // {"place":{"$all": [new ObjectID(arrayData[0])] },"price":{"$gte":50},"dates":{"$elemMatch":{"date":{"$gte":new Date("2016-10-04"),"$lte":new Date("2017-05-03")}}}}
+
+              //console.log("******")
+             // parameters.place = {$all:[new ObjectID(arrayData[0])]}
+              collection.find(parameters).limit(page).skip(0).toArray(function (err, results) {
+               //console.log("sfdsdfsss " + results);
+                if (err) return res.serverError(err);
+                ////Dados los id buscar un place un el nombre "5797e539e1e9812814a35520"
+                return res.json(results)
+              });
+            });
+          });
+        });
+
+
+
   },
 
   searchByDate: function (req, res, next) {

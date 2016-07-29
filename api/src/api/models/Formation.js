@@ -38,7 +38,8 @@ module.exports = {
     },
 
   	place: {
-  		model: 'place'
+  		model: 'place',
+
   	},
 
   	animators: {
@@ -132,6 +133,22 @@ module.exports = {
       };
 
       return dates;
+    },
+    hasYear: function (year) {
+      // body...
+
+      if(!this.hasDates())
+        return false;
+
+      lth = this.dates.length;
+
+      for(var i = 0; i < lth; i++){
+        tempYear = new Date(this.dates[i].date);
+        if(year === tempYear.getFullYear())
+          return true;
+      }
+
+      return false;
     }
 
   } //attributes.

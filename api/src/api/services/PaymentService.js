@@ -3,10 +3,52 @@
  */
 module.exports = {
 
+ findMangoPayConfiguration: function ( callback) {
 
+   var appuser = 'inoid2016';
+   var apppassphrase = '7GuneTv8QdsmMxLpfm2yWi0smLPaZ1szas9YZgRd2SeyzG47tG';
+
+   Configuration.find().limit(1).exec(function ConfigurationFounded(err, iConfigurations) {
+     console.log("Load configurationsss!!!!!")
+     if (err) {
+       console.log("Load configurationsss!!!!!", err)
+       callback(null, {response: "ERROR",
+         message: err})
+       return;
+     }
+     var iConfiguration = iConfigurations[0];
+     if (iConfiguration.appmangouser === undefined || iConfiguration.appmangopassphr  === undefined  ) {
+       //return next(err);
+       ///Create tmp for test
+       Configuration.update({},{ appmangouser : appuser, appmangopassphr : apppassphrase}).exec(function (err, Config){
+         //configuration = Config[0];
+         console.log("Creado el objeto en BD");
+       });
+       console.log("Se ejecuto el codigo de error");
+     }
+     else {
+       appuser = iConfiguration.appmangouser;
+       apppassphrase = iConfiguration.appmangopassphr;
+     }
+
+     ///Initialize Mangopay library
+     //  version: 'v2.01',
+     var mango = require('mangopay')({
+       username: appuser,
+       password: apppassphrase,
+       version: 'v2.0',
+       production: false
+     })
+
+
+     //console.log("Load mango pay" , mango)
+
+     callback(null, mango)
+   });
+ },
 
   /**
-   * `PayController.createwallet()`
+   * `PayController.createwallet() for legal user`
    *  A wallet is for FormationCenter recibe formation center id
    */
   createwallet: function (config, legalUserValues, callback) {
@@ -14,71 +56,38 @@ module.exports = {
 
     //Find data in Configuration document
 
-    var appuser = 'formationfinder';
-    var apppassphrase = '7stCaHPZ9XFMCqteMYvCw99ELtDNCrNVcs3OPVzZLDSZiysTpN';
 
-    Configuration.findOne( ).exec(function ConfigurationFounded(err, iConfigurations) {
-      if (err) {
-        callback(null, {response: "ERROR",
-          message: err})
-        return;
-      }
-      iConfiguration = iConfigurations[0]
-        if (iConfiguration.appmangouser === undefined || iConfiguration.appmangopassphr  === undefined  ) {
-          //return next(err);
-          ///Create tmp for test
-           Configuration.update({},{ appmangouser : appuser, appmangopassphr : apppassphrase}).exec(function (err, Config){
-           configuration = Config[0];
-           console.log("Creado el objeto en BD");
-           });
-          console.log("Se ejecuto el codigo de error");
-        }
-        else {
-          appuser = iConfiguration.appmangouser;
-          apppassphrase = iConfiguration.appmangopassphr;
-        }
+    this.findMangoPayConfiguration( function(err, mango) {
 
 
-        var formationCenterName = config.name;
-        var currencyParam = config.currency;
-        var formationCenter = {};
 
-        if ( !formationCenterName || formationCenterName == "") {
-          callback({response: "Undefined Formation Center´s name"});
-          return;
-        }
+    if ( typeof config == "undefined") {
+      callback(null, {response: "ERROR",
+        message: "Config parameter undefined"})
+      return;
 
-        ///Search by formation center syncronized
-        FormationCenter.findOne({name:formationCenterName}).exec( function (err, iFormationCenters) {
-          if (err) {
-            callback(null, {response: "ERROR",
-              message: err})
-            return;
-          }
+    }
 
-          iFormationCenter = iFormationCenters[0]
-          if (!iFormationCenter) {
-            callback({response: "No exist Formation Center with name ".formationCenterName})
-            return;
-          }
+    ///Validate stadar in currency see documentation
+    if ( typeof config.currency == "undefined" || config.currency == "") {
+      callback(null, {response: "ERROR", message: "currecy value  undefined"})
+      return;
+    }
 
-          formationCenter = iFormationCenter
+    var currencyParam = config.currency;
 
-          moment  = require("moment")
-          ///Initialize Mangopay library
-          //  version: 'v2.01',
-          var mango = require('mangopay')({
-            username: appuser,
-            password: apppassphrase,
-            production: false
-          })
+    ///Search by formation center syncronized
+     moment  = require("moment")
 
-        var legalUserData = {
+
+
+
+    var legalUserData = {
               name : 'mycompany.com',
               email: 'info@mycompany.com',
               legalpersonType: 'BUSINESS',
-              legalRepresentativeFirstName: 'Inoid',
-              legalRepresentativeLastName: 'Doe',
+              legalRepresentativeFirstName: 'Inoidssss',
+              legalRepresentativeLastName: 'Doessss',
               legalRepresentativeEmail: 'john_doe@mycompany.es',
               headquartersAddress: 'Canal Street, Madrid, Spain',
               legalRepresentativeAdress: 'Canal Street, Madrid, Spain',
@@ -88,11 +97,21 @@ module.exports = {
 
         }
 
-        ///Validate user data parameters
-        if (legalUserValues) {
+        ///Validate user data parameters for developmet parameters
+        if (typeof legalUserValues != "undefined") {
           legalUserData = legalUserValues;
         }
+        else { //Validate parameters
 
+          ///Required paramenter view Mangopay documentation
+
+          ///Validate estandar
+/*          legalRepresentativeNationality
+          legalRepresentativeCountryOfResidence
+          legalpersonType*/
+       }
+
+        console.log("Call form mango services")
         mango.user.createLegal({
           Name: legalUserData.name,
           Email: legalUserData.email,
@@ -105,36 +124,45 @@ module.exports = {
           LegalRepresentativeBirthday: legalUserData.legalRepresentativeBirthday,
           LegalRepresentativeCountryOfResidence: legalUserData.legalRepresentativeCountryOfResidence,
           LegalRepresentativeNationality: legalUserData.legalRepresentativeNationality
+
+
+          //Email: legalUserData.email,
+          //LegalPersonType: legalUserData.legalpersonType,
+          //"Tag": "custom meta",
+          //"HeadquartersAddress": {
+          //  "AddressLine1": "1 Mangopay Street",
+          //  "AddressLine2": "The Loop",
+          //  "City": "Paris",
+          //  "Region": "Ile de France",
+          //  "PostalCode": "75001",
+          //  "Country": "FR"
+          //},
+          //"Name": "Mangopay Ltd",
+          //"LegalRepresentativeAddress": {
+          //  "AddressLine1": "1 Mangopay Street",
+          //  "AddressLine2": "The Loop",
+          //  "City": "Paris",
+          //  "Region": "Ile de France",
+          //  "PostalCode": "75001",
+          //  "Country": "FR"
+          //},
+          //"LegalRepresentativeBirthday": 1463496101,
+          //"LegalRepresentativeCountryOfResidence": "ES",
+          //"LegalRepresentativeNationality": "FR",
+          //"LegalRepresentativeEmail": "support@mangopay.com",
+          //"LegalRepresentativeFirstName": "Joe",
+          //"LegalRepresentativeLastName": "Blogs"
+
         }, function(err, user, resD){
 
           if ( err) {
-            //console.log('err', err);
+            console.log('err', err);
             callback(null, {response: "ERROR",
               message: err})
             return;
           }
 
-         //console.log('user', user);
-          //console.log('res', resD.statusCode);
 
-          ///Get new user data validate if created
-          /*
-           { FirstName: 'Ada',
-           LastName: 'Lovelace',
-           Address: 'C/ Larios, 1, 29015, Málaga',
-           Birthday: 1300186358,
-           Nationality: 'ES',
-           CountryOfResidence: 'ES',
-           Occupation: null,
-           IncomeRange: null,
-           ProofOfIdentity: null,
-           ProofOfAddress: null,
-           PersonType: 'NATURAL',
-           Email: 'ada.lovelace@gmail.com',
-           Id: '4317773',
-           Tag: null,
-           CreationDate: 1415987431 }
-           */
 
           var userdata = user;
 
@@ -164,8 +192,13 @@ module.exports = {
             if ( err ) {
               callback(null, {response: "ERROR",
                 message: err})
-              return;
+              //return;
             }
+
+            callback(null, {response: "OK",
+              wallet: wallet.Id,
+              user: user.Id})
+
 
             //console.log('err', err);
 
@@ -179,60 +212,622 @@ module.exports = {
 
             //Register a bank account for the seller
             //Erase in production mode
-            backCountData = {
-               ownername: "Simone de Beauvoir",
-               type: "IBAN",
-               ownerAddress: "Gran Vía, Madrid",
-              iban: "FR3020041010124530725S03383",
-              bic: "CRLYFRPP"
-            }
-
-            if (legalUserData.backCountData) {
-              backCountData = backCountData;
-            }
-
-            mango.bank.create({
-              OwnerName: backCountData.ownername,
-              UserId: userdata.Id,
-              Type: backCountData.type,
-              OwnerAddress: backCountData.ownerAddress,
-              IBAN: backCountData.iban,
-              BIC: backCountData.bic
-            }, function(err, bankaccount, res){
-
-              if ( err ) {
-                callback(null, {response: "ERROR",
-                  message: err})
-                return;
-              }
-
-
-              FormationCenter.update({id:iFormationCenter.id} , {walletid:wallet.Id, mangouserid: userdata.Id, mangobankid: bankaccount.Id, mangobankbic:backCountData.bic }).exec( function (err, jFormationCenter) {
-
-                if (err) {
-                  callback(null, {response: "ERROR",
-                    message:"Error in FormationCenter update data " + err})
-                  return;
-                }
-
-                callback( {
-                  response: 'OK',
-                  userid: userdata.Id,
-                  walletid:wallet.Id,
-                  bankaccountid:bankaccount.Id,
-                  formationcenter: jFormationCenter.name
-                });
-              })
-            });
-
-        });
+          });
       });
     });
-  });
-
   },
 
 
+
+  /***
+   *   Create a mangonpay user natuarl and his wallet
+   *
+   *
+   */
+  createNaturalWallet: function ( config, naturalUserValues, callback) {
+
+    var naturalUserData = {
+      FirstName: "Victor", // Required
+      LastName: "Hugo",    // Required
+      Birthday: 1300186358,  // Required
+      Nationality: "FR", // Required, default: 'FR'
+      CountryOfResidence: "FR", // Required, default: 'FR'
+      Address: "1 rue des Misérables, Paris",
+      Occupation: "Writer",
+      IncomeRange: "6",
+      ProofOfIdentity: null,
+      ProofOfAddress: null,
+      PersonType: "NATURAL",
+      Email: "victor@hugo.com",
+      Tag: "custom tag",
+
+    }
+
+    ///Validate user data parameters for developmet parameters
+    if (typeof naturalUserValues != "undefined") {
+      naturalUserData = naturalUserValues;
+    }
+    else { //Validate parameters
+
+      if (typeof naturalUserData.FirstName != "undefined") {
+        callback(null, {response: "ERROR",
+          message: "User value firstname undefined"})
+      }
+      else if (typeof naturalUserData.LastName != "undefined") {
+        callback(null, {response: "ERROR",
+          message: "User value lastname undefined"})
+      }
+      else if (typeof naturalUserData.FirstName != "undefined") {
+        callback(null, {response: "ERROR",
+          message: err})
+      }
+      else if(typeof naturalUserData.Birthday != "undefined") {
+        callback(null, {response: "ERROR",
+          message: "User value birthday undefined"})
+      }
+      else if(typeof naturalUserData.CountryOfResidence != "undefined") {
+        callback(null, {response: "ERROR",
+          message: "User value country of residence undefined"})
+      }
+      else if(typeof naturalUserData.Nationality != "undefined") {
+        callback(null, {response: "ERROR",
+          message: "User value nationality undefined"})
+      }
+      ///Required paramenter view Mangopay documentation
+
+      ///Validate estandar
+      /*          Nationality
+       CountryOfResidence
+       legalpersonType*/
+    }
+    mango.user.signup({
+      FirstName: naturalUserData.FirstName, // Required
+      LastName: naturalUserData.LastName,    // Required
+      Birthday: naturalUserData.Birthday,  // Required
+      Nationality: naturalUserData.Nationality, // Required, default: 'FR'
+      CountryOfResidence:naturalUserData.CountryOfResidence, // Required, default: 'FR'
+      Address: naturalUserData.Address,
+      Occupation: naturalUserData.Occupation,
+      IncomeRange: naturalUserData.IncomeRange,
+      ProofOfIdentity: naturalUserData.ProofOfIdentity,
+      ProofOfAddress: naturalUserData.ProofOfAddress,
+      PersonType: naturalUserData.PersonType,
+      Email:naturalUserData.Email,
+      Tag: naturalUserData.Tag,
+    }, function(err, user, wallet){
+      console.log('err', err);
+      console.log('user', user);
+      console.log('wallet', wallet);
+
+      if ( err ) {
+        callback(null, {response: "ERROR",
+          message: err})
+        //return;
+      }
+
+      callback(null, {response: "OK",
+        wallet: wallet.Id,
+        user: user.Id})
+    });
+
+  },
+  /***
+   *   Create bank count to mangopay user
+   *
+   *
+   */
+  createBankCount: function( bankCountValues, userid,callback) {
+
+    backCountData = {
+      ownername: "Simone de Beauvoir",
+      type: "IBAN",
+      ownerAddress: "Gran Vía, Madrid",
+      iban: "FR3020041010124530725S03383",
+      bic: "CRLYFRPP"
+    }
+
+    if (typeof userid == "undefined")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist userid parameter"
+      })
+    ///For development porpouses
+    if ( bankCountValues ) {
+      backCountData = bankCountValues;
+    }
+    findMangoPayConfiguration( function(err, mango) {
+    mango.bank.create({
+        OwnerName: backCountData.ownername,
+        UserId: userid,
+        Type: backCountData.type,
+        OwnerAddress: backCountData.ownerAddress,
+        IBAN: backCountData.iban,
+        BIC: backCountData.bic
+      }, function(err, bankaccount, res) {
+
+      if (err) {
+        callback(null, {
+          response: "ERROR",
+          message: err
+        })
+      }
+
+      callback(null, {
+        response: "OK",
+        bankcount: bankaccount
+      });
+    });
+    });
+  },
+  createCard: function( cardValues,config,  userid,callback) {
+
+    if ( typeof config == "undefined") {
+      callback(null, {response: "ERROR",
+        message: "Config parameter undefined"})
+      return;
+
+    }
+
+    ///Validate stadar in currency see documentation
+    if ( typeof config.currency == "undefined" || config.currency == "") {
+      callback(null, {response: "ERROR", message: "currecy value  undefined"})
+      return;
+    }
+
+    var currencyParam = config.currency;
+    if (typeof userid == "undefined")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist userid parameter"
+      })
+
+    cardValueEx = {
+      CardNumber: '4970100000000154',
+      CardExpirationDate: '0216',
+      CardCvx: '123',
+    }
+
+    if ( cardValues) {
+      cardValueEx = cardValues
+    }
+
+    if (typeof cardValueEx.CardNumber != "undefined") {
+      callback(null, {response: "ERROR",
+        message: "User card parameter card number undefined"})
+    }
+    else if (typeof cardValueEx.CardExpirationDate != "undefined") {
+      callback(null, {response: "ERROR",
+        message: "User card parameter card expiration date undefined"})
+    }
+    else if (typeof cardValueEx.CardCvx != "undefined") {
+      callback(null, {response: "ERROR",
+        message: "User card parameter cardcvx undefined"})
+    }
+    findMangoPayConfiguration( function(err, mango) {
+      mango.card.create({
+        UserId: userid,
+        CardNumber: cardValueEx.CardNumber,
+        CardExpirationDate: cardValueEx.CardExpirationDate,
+        CardCvx: cardValueEx.CardCvx,
+      }, function (err, card, res) {
+        if (err) {
+          callback(null, {
+            response: "ERROR",
+            message: err
+          })
+          //return;
+        }
+
+/*      View documentation
+        mango.card.initRegistration({
+          UserId: userid,
+          Currency: "EUR"
+        }, function (err, registration, res) {
+          err;
+          registration; // mango registration object
+          res; // raw 'http' response object => res.statusCode === 200
+        })*/
+
+        callback(null, {
+          response: "OK",
+          card: card
+        })
+      });
+    });
+  },
+/*
+*  Withdraw money from a wallet to a bank account:
+* */
+  withdrawWalletToBank : function( userid, walletid, bankcountid, bic, debitedFunds, fees, callback) {
+	   debiteFundsEx = {
+        Currency:"EUR",
+        Amount:"9000"
+    }
+	   feesEx = {
+        Currency:"EUR",
+        Amount:"0"
+    }
+	   if (typeof bic == "undefined")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist bic parameter"
+      })
+
+	  if (typeof userid == "undefined")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist userid parameter"
+      })
+
+	   if (typeof walletid == "undefined")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist walletid parameter"
+      })
+
+	  if (typeof bankcountid == "undefined")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist bankcountid parameter"
+      })
+
+
+	  if (debitedFunds) {
+		  debiteFundsEx = debitedFunds
+	  }
+	  if (typeof debitedFunds == "undefined")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist debitedFunds parameter"
+      })
+
+	   if (typeof debitedFunds.Currency == "undefined")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist fees.Currency parameter"
+      })
+
+	  if (typeof fees == "undefined")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist debitedFunds parameter"
+	  })
+
+	   if (fees) {
+		  feesEx = fees
+	  }
+
+	  if (typeof fees.Currency == "undefined")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist fees.Currency parameter"
+      })
+
+     if (typeof debitedFunds.Currency == "undefined")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist fees.Currency parameter"
+      })
+
+     if (typeof debitedFunds.Currency == "undefined")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist fees.Currency parameter"
+      })
+
+	   if (typeof fees.Amount != "number")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist fees.Currency is not a number"
+      })
+      if (typeof debitedFunds.Amount != "number")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist fees.Currency is not a number"
+      })
+
+      if ( debitedFunds.Amount < fees.Amount )
+      callback(null,  {
+        response: "ERROR",
+        message: "Amount for debited is minus than fees"
+      })
+
+
+
+	  findMangoPayConfiguration( function(err, mango) {
+		  mango.bank.wire({
+			AuthorId: userid,
+			DebitedWalletId: walletid,
+			DebitedFunds: debiteFundsEx,
+			Fees: feesEx,
+			BankAccountId:bankcountid,
+			BIC: bic
+		}, function(err, wire, res){0
+			  if (err) {
+        callback(null, {
+          response: "ERROR",
+          message: err
+        })
+      }
+
+      callback(null, {
+        response: "OK",
+        bankcount: wire
+      });
+});
+
+	  });
+
+
+  } ,
+  /**
+   *
+   *
+     makeBuyToMango: Send payment to user wallet
+
+
+   */
+  makeBuyToMango: function (userid, walletid, cardid, debiteFunds, fees) {
+
+    ///10% money for may platform
+    // In my case I charge a fee to the buyer so, let’s say that the product costs
+    // 100€ and the fee we apply is 10%, I should set the amount debited to 110€ (11000 cents).
+
+    debiteFundsEx =  {
+      Currency: "EUR",
+      Amount: "11000"
+    }
+
+    ///10% money for may platform
+    feesEx = {
+      Currency: "EUR",
+      Amount: "1000"
+    }
+    if (typeof userid == "undefined")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist userid parameter"
+      })
+
+    if (typeof walletid == "undefined")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist walletid parameter"
+      })
+
+    if (typeof cardid == "undefined")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist cardid parameter"
+      })
+
+
+    if (debitedFunds) {
+      debiteFundsEx = debitedFunds
+    }
+    if (typeof debitedFunds == "undefined")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist debitedFunds parameter"
+      })
+
+    if (typeof debitedFunds.Currency == "undefined")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist fees.Currency parameter"
+      })
+
+    if (typeof fees == "undefined")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist debitedFunds parameter"
+      })
+
+    if (fees) {
+      feesEx = fees
+    }
+
+    if (typeof fees.Currency == "undefined")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist fees.Currency parameter"
+      })
+
+    if (typeof debitedFunds.Currency == "undefined")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist fees.Currency parameter"
+      })
+
+    if (typeof debitedFunds.Currency == "undefined")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist fees.Currency parameter"
+      })
+
+    if (typeof fees.Amount != "number")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist fees.Currency is not a number"
+      })
+    if (typeof debitedFunds.Amount != "number")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist fees.Currency is not a number"
+      })
+
+    if ( debitedFunds.Amount < fees.Amount )
+      callback(null,  {
+        response: "ERROR",
+        message: "Amount for debited is minus than fees"
+      })
+
+
+    findMangoPayConfiguration( function(err, mango) {
+
+
+      mango.payin.createByToken({
+        AuthorId: userid,        // Required (The user ID of the Payin transaction’s author)
+        CreditedUserId: userid, // Required (The ID of the owner of the credited wallet)
+        DebitedFunds: {             // Required
+          Currency: "EUR",
+          Amount: 10000
+        },
+        Fees: {               // Required
+          Currency: "EUR",
+          Amount: 100
+        },
+        CreditedWalletId: walletid,  // Required (The ID of the credited wallet)
+        CardId: cardid,            // Required
+        SecureMode: "DEFAULT",
+        SecureModeReturnURL: "",
+        Tag: "payin"
+
+      }, function (err, payin, res) {
+        console.log('err', err);
+        console.log('payin', payin);
+        console.log('res', res.statusCode);
+
+        if (err) {
+          callback(null, {
+            response: "ERROR",
+            message: err
+          })
+        }
+
+        callback(null, {
+          response: "OK",
+          payin: payin
+        });
+      })
+    });
+},
+  transferWalletToWallet: function (buyerUserId, buyerWalletId, sellerUserId, sellerWalletId, debitedFunds, fees ) {
+///10% money for may platform
+    // In my case I charge a fee to the buyer so, let’s say that the product costs
+    // 100€ and the fee we apply is 10%, I should set the amount debited to 110€ (11000 cents).
+
+    debiteFundsEx =  {
+      Currency: "EUR",
+      Amount: "11000"
+    }
+
+    ///10% money for may platform
+    feesEx = {
+      Currency: "EUR",
+      Amount: "1000"
+    }
+    if (typeof buyerUserId == "undefined")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist buyerUserId parameter"
+      })
+
+    if (typeof buyerWalletId == "undefined")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist buyerWalletId parameter"
+      })
+
+    if (typeof sellerUserId == "undefined")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist sellerUserId parameter"
+      })
+
+    if (typeof sellerWalletId == "undefined")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist sellerWalletId parameter"
+      })
+
+    if (debitedFunds) {
+      debiteFundsEx = debitedFunds
+    }
+    if (typeof debitedFunds == "undefined")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist debitedFunds parameter"
+      })
+
+    if (typeof debitedFunds.Currency == "undefined")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist fees.Currency parameter"
+      })
+
+    if (typeof fees == "undefined")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist debitedFunds parameter"
+      })
+
+    if (fees) {
+      feesEx = fees
+    }
+
+    if (typeof fees.Currency == "undefined")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist fees.Currency parameter"
+      })
+
+    if (typeof debitedFunds.Currency == "undefined")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist fees.Currency parameter"
+      })
+
+    if (typeof debitedFunds.Currency == "undefined")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist fees.Currency parameter"
+      })
+
+    if (typeof fees.Amount != "number")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist fees.Currency is not a number"
+      })
+    if (typeof debitedFunds.Amount != "number")
+      callback(null,  {
+        response: "ERROR",
+        message: "No exist fees.Currency is not a number"
+      })
+
+    if ( debitedFunds.Amount < fees.Amount )
+      callback(null,  {
+        response: "ERROR",
+        message: "Amount for debited is minus than fees"
+      })
+
+
+    findMangoPayConfiguration( function(err, mango) {
+    mango.wallet.transfer({
+      AuthorId : buyerUserId,
+      DebitedFunds: debiteFundsEx,
+      Fees : feesEx,
+      DebitedWalletID : buyerWalletId,
+      CreditedWalletID : sellerWalletId,
+      CreditedUserId : sellerUserId,
+      Tag : "DefaultTag"
+    }, function(err, transfer, res){
+      if (err) {
+        callback(null, {
+          response: "ERROR",
+          message: err
+        })
+      }
+
+      callback(null, {
+        response: "OK",
+        payin: transfer
+      });
+    });
+
+    });
+
+  },
   /**
    * `PayController.makepay()`
    * User data

@@ -201,6 +201,40 @@ module.exports = {
          return "OK"
 
       });
+    },
+  searchByLicenceInYear: function (req, res, next) {
+    // body...
+
+    result = {};
+    licence = req.param('licence');
+
+    year = new Date();
+    year = year.getFullYear();
+
+    if(licence === undefined || !_.isString(licence)){
+      result.status = "error";
+      result.info = "You must provided a valid string licence parameter.";
+
+      return res.json(result);
     }
+
+    if(req.param('year') !== undefined){
+      if(!isNaN(parseInt(req.param('year')))){
+        year = Math.abs(parseInt(req.param('year')));
+      }
+      else
+      {
+        result.status = "error";
+        result.info = "The year parameter is an invalid string number.";
+
+        return res.json(result);
+      }
+    }
+
+    Customer.searchByLicenceNumberInYear(licence, year, function (result) {
+      // body...
+      return res.json(result);
+    });
+  }
 };
 

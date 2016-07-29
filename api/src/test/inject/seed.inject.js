@@ -282,11 +282,38 @@ describe('data seeding', function(){
       four: function (callback) {
 
         console.log("------ Process End -------")
-        callback(null, placeFormationAsociation);
+        Place.native(function (err, collection) {
+          collection.ensureIndex({location: '2dsphere'}, function () {
 
-      }
-    }, function (err, results) {
+            // It's very important to trigger this callack method when you are finished
+            // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
+            console.log("Index to 2dsphere location atributes in Place colection")
+            callback(null, placeFormationAsociation);
+          });
+        });
+
+
+
+      },
+        five: function(callback) {
+
+          Formation.native(function (err, collection) {
+            collection.ensureIndex({place: 1}, function () {
+
+              // It's very important to trigger this callack method when you are finished
+              // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
+              console.log("Index to 2dsphere location atributes in Place colection")
+              callback(null, placeFormationAsociation);
+
+            });
+          });
+
+        }
+    }
+      , function (err, results) {
       // results is now equal to: {one: 1, two: 2}
+
+
       if (err)
         return next(err);
     });

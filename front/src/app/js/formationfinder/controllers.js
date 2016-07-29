@@ -23,6 +23,30 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location",
         }])
     .controller("SearchController", ["$scope", "$rootScope", "$http", "$location", "$routeParams",
         function ($scope, $rootScope, $http, $location, $routeParams) {
+
+            $scope.radioModel = 'Middle';
+
+            $scope.checkModel = {
+                left: false,
+                middle: true,
+                right: false
+            };
+
+            $scope.checkResults = [];
+
+            $scope.$watchCollection('checkModel', function () {
+                $scope.checkResults = [];
+                angular.forEach($scope.checkModel, function (value, key) {
+                    if (value) {
+                        $scope.checkResults.push(key);
+                    }
+                });
+            });
+
+
+            $scope.sortType     = 'price'; // set the default sort type
+            $scope.sortReverse  = false;  // set the default sort order
+            $scope.searchFish   = '';     // set the default search/filter term
             //gloal configurations
             $scope.search = {};
             $scope.open1 = function() {
@@ -131,7 +155,14 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location",
             $scope.app.maxSize = 5;
             $scope.app.itemPerPage = 5;
             $scope.app.totalItems = 0;
+            $scope.searchText = "";
 
+            /*$scope.$watch(function() {
+                return $scope.searchText;
+            }, function(newValue, oldValue) {
+                console.log("change detected: " + newValue)
+                $scope.searchText = newValue;
+            });*/
             //data = 5;
             $routeParams.criteria = String($routeParams.criteria).trim()
             $scope.formationcenterlist = []
@@ -147,17 +178,60 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location",
 //---------------------------------------------------------------------------------------------------------------
             ///Show modal with formation´s Formation Center information
             $scope.searchFuncList = function(){
-                    $scope.errorValid = true
-                    console.log("INSERTANDO ALERTA")
-               // $scope.alerts.push( { type: 'danger', msg: 'Oh snap! Change a few things up and try submitting again.' });
 
-                //$scope.errorMessage = "Probando "
+
+                $scope.errorMessage = "Probando "
                 if ( typeof $scope.criteriaList == "undefined" || $scope.criteriaList == "")
                     $scope.criteriaList = ""
                 $scope.search.name = $scope.criteriaList;
                 $scope.app.currentPage = 0;
+
+
+                console.log("El valor de la forama ", $scope.myform)
+
+                if ( $scope.search.initialDate != "" || typeof $scope.search.endDate != "" || $scope.initialPrice != "" ) {
+                    if (!$scope.myform.$valid) {
+
+                        $scope.errorValid = true
+                        console.log("INSERTANDO ALERTA")
+                        message = "Sorry, Some Advanced Search fields are invalid";
+                        $scope.alerts.push({
+                            type: 'danger',
+                            msg: message
+                        });
+                        return;
+                    }
+
+                    if ($scope.search.initialDate != "" || typeof $scope.search.endDate != "") {
+
+                        timestampInit = new Date($scope.search.initialDate).getTime()
+                        timestampEnd = new Date($scope.search.endDate).getTime()
+                        if (timestampEnd <= timestampInit) {
+                            $scope.errorValid = true
+                            console.log("INSERTANDO ALERTA")
+                            message = "Sorry, End date isn´t correct";
+                            $scope.alerts.push({
+                                type: 'danger',
+                                msg: message
+                            });
+                            return;
+                        }
+                    }
+
+                }
+
+
                 $scope.countRecords();
                 $scope.getPagableRecords();
+                /*if ($scope.formations.length == 0 ) {
+                    $scope.errorValid = true
+                    console.log("INSERTANDO ALERTA")
+                    message = "Sorry, not exist result for your search criteria"
+                    $scope.alerts.push({
+                        type: 'danger',
+                        msg: message
+                    });
+                }*/
 
             }
 
@@ -174,8 +248,8 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location",
                 if (  $scope.search.name != 'undefined'){
                     //console.log("ddddddnnnn"+ !isNaN(parseInt ($scope.search.name )))
                     if ( !isNaN(parseInt ($scope.search.name ))){
-
-                        $http.post($rootScope.urlBase + "/Formation/countbyzipcode", {
+                         //countbyzipcode
+                        $http.post($rootScope.urlBase + "/Formation/countByZipcodeMongoEx", {
                                 zipcode:  $scope.search.name
                                })
                             .success(function (data_result) {
@@ -202,7 +276,8 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location",
                 if ( $scope.search.name == "undefined" )
                     $scope.search.name = ""
 
-                $http.post($rootScope.urlBase + '/Formation/countbycity', {
+                //countbycity
+                $http.post($rootScope.urlBase + '/Formation/countByCityMongoEx', {
                         city:  $scope.search.name
                     })
                     .success(function (data_result) {
@@ -238,14 +313,38 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location",
                     });*/
             };
 
+
+            $scope.updateupdateSort= function () {
+                $scope.getPagableRecords();
+                $scope.apply();
+            };
+
             $scope.getPagableRecords = function() {
 
                 var pageData = 0;
+
 
                 if ( $scope.app.currentPage > 0) {
                     pageData = $scope.app.currentPage - 1;
                     pageData = String(pageData)
                 }
+                config = {
+                    page : pageData,
+                    len : $scope.app.itemPerPage
+                }
+
+                if ( typeof $scope.search.initialDate != "undefined")
+                    config.initialData = $scope.search.initialDate
+
+                if ( typeof $scope.search.endDate != "undefined")
+                    config.finalDate =  $scope.search.endDate
+
+
+                ///Date validate and if initialDate is more than that end date not search
+
+                ///Price validate an if not a number or number < 0 not search
+                if ( typeof $scope.initialPrice != "undefined")
+                    config.price =  $scope.search.initialPrice
 
                 //console.log("Pagination " ,pageData )
 
@@ -255,11 +354,12 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location",
                         console.log("Es un numero")
                         ///Validar si es un numero postal angular.isNumber(value)
 
+                        config.zipcode =  $scope.search.name
 
-                        $http.post($rootScope.urlBase + "/formation/searchbyzipcode", {
-                                zipcode:  $scope.search.name,
-                                page : pageData,
-                                len : $scope.app.itemPerPage})
+                        //searchbyzipcode
+
+
+                        $http.post($rootScope.urlBase + "/formation/searchByZipcodeMongoEx", config)
                             .success(function (data_result) {
                                 if (data_result.err ){
                                     ///Mostrar mensaje en ventana modal de que no existe centros de formacion
@@ -270,16 +370,29 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location",
                                     return;
                                 }
                                 $scope.formationcenterlist = data_result;
+
+                                if (  data_result) {
+                                    if (data_result.length == 0) {
+                                        $scope.errorValid = true
+                                        console.log("INSERTANDO ALERTA")
+                                        message = "Sorry, not exist result for your search criteria"
+                                        $scope.alerts.push({
+                                            type: 'danger',
+                                            msg: message
+                                        });
+                                    }
+                                }
+
                                 $scope.formations = [];
                                 //console.log("Resultados", data_result[0].formation.formationCenter)
                                 data_result.forEach(function (iFormationcenter, ivalue) {
 
 
-                                    iFormationcenter.formation.name = iFormationcenter.formation.formationCenter.name;
-                                    iFormationcenter.formation.city = iFormationcenter.formation.formationCenter.city;
-                                    iFormationcenter.formation.address = iFormationcenter.formation.formationCenter.address;
+                                    iFormationcenter.name = iFormationcenter.formationCenter.name;
+                                    iFormationcenter.city = iFormationcenter.formationCenter.city;
+                                    iFormationcenter.address = iFormationcenter.formationCenter.address;
                                     //console.log("Valor ",iFormation)
-                                    $scope.formations.push(iFormationcenter.formation)
+                                    $scope.formations.push(iFormationcenter)
                                 })
 
                                // console.log("RESULTADOS", data_result)
@@ -294,10 +407,12 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location",
                     }
                     else {
                         ///Validar si es un numero postal angular.isNumber(value)
-                        $http.post($rootScope.urlBase + "/formation/searchbycity", {
-                                "city": $scope.search.name,
-                                page : pageData,
-                                len : $scope.app.itemPerPage})
+
+                        config.city=  $scope.search.name
+                        // searchbycity
+
+                        console.log("Call services", config)
+                        $http.post($rootScope.urlBase + "/formation/searchByCityMongoEx", config)
                             .success(function (data_result) {
                                 if (data_result.err ){
                                     ///Mostrar mensaje en ventana modal de que no existe centros de formacion
@@ -310,15 +425,27 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location",
 
                                 $scope.formationcenterlist = data_result;
                                 $scope.formations = [];
+
+                                if (  data_result) {
+                                    if (data_result.length == 0) {
+                                        $scope.errorValid = true
+                                        console.log("INSERTANDO ALERTA")
+                                        message = "Sorry, not exist result for your search criteria"
+                                        $scope.alerts.push({
+                                            type: 'danger',
+                                            msg: message
+                                        });
+                                    }
+                                }
                                // console.log("Resultados", data_result[0].formation.formationCenter)
                                 data_result.forEach(function (iFormationcenter, ivalue) {
 
-
-                                    iFormationcenter.formation.name = iFormationcenter.formation.formationCenter.name;
-                                    iFormationcenter.formation.city = iFormationcenter.formation.formationCenter.city;
-                                    iFormationcenter.formation.address = iFormationcenter.formation.formationCenter.address;
+                                    console.log("DATA", iFormationcenter)
+                                    iFormationcenter.name = iFormationcenter.formationCenter.name;
+                                    iFormationcenter.city = iFormationcenter.formationCenter.city;
+                                    iFormationcenter.address = iFormationcenter.formationCenter.address;
                                     //console.log("Valor ",iFormation)
-                                    $scope.formations.push(iFormationcenter.formation)
+                                    $scope.formations.push(iFormationcenter)
                                 })
                                // console.log("RESULTADOS", data_result)
                             })
@@ -337,10 +464,10 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location",
                     //if ($scope.app.currentPage == 1)
                     //    $scope.app.currentPage = 0
                     //console.log("Sin nombre ======================= " , $scope.app.currentPage)
-                         $http.post($rootScope.urlBase + "/formation/searchbycity", {
-                            city: "",
-                            page : pageData,
-                            len : $scope.app.itemPerPage})
+                    config.city = ""
+
+                    //searchbycity
+                    $http.post($rootScope.urlBase + "/formation/searchByCityMongoEx",config)
                         .success(function (data_result) {
                             if (data_result.err ){
                                 ///Mostrar mensaje en ventana modal de que no existe centros de formacion
@@ -354,6 +481,17 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location",
                             $scope.formationcenterlist = data_result;
                             $scope.formations = [];
                             //console.log("Resultados", data_result[0].formation.formationCenter)
+                            if (  data_result) {
+                                if (data_result.length == 0) {
+                                    $scope.errorValid = true
+                                    console.log("INSERTANDO ALERTA")
+                                    message = "Sorry, not exist result for your search criteria"
+                                    $scope.alerts.push({
+                                        type: 'danger',
+                                        msg: message
+                                    });
+                                }
+                            }
                             data_result.forEach(function (iFormationcenter, ivalue) {
 
 
@@ -385,6 +523,8 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location",
 
             $scope.countRecords();
             $scope.getPagableRecords();
+
+
 //-------------------------------------------------------------------------------------------------------------------
             // functions
             $scope.showMap = function (id) {
@@ -456,6 +596,33 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location",
             };
 
 
+            ////----------------------------------Acordion Controller
+
+            $scope.oneAtATime = true;
+
+            $scope.groups = [
+                {
+                    title: 'Dynamic Group Header - 1',
+                    content: 'Dynamic Group Body - 1'
+                },
+                {
+                    title: 'Dynamic Group Header - 2',
+                    content: 'Dynamic Group Body - 2'
+                }
+            ];
+
+            $scope.items = ['Item 1', 'Item 2', 'Item 3'];
+
+            $scope.addItem = function() {
+                var newItemNo = $scope.items.length + 1;
+                $scope.items.push('Item ' + newItemNo);
+            };
+
+            $scope.status = {
+                isCustomHeaderOpen: false,
+                isFirstOpen: true,
+                isFirstDisabled: false
+            };
             //init
             /*if ($scope.criterio != "") {
                 $scope.searchFunc();
@@ -575,9 +742,9 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location",
             },
             events: {
                 click: function(e, map) {
+                   ///call find place services
 
-
-                    alert(e.latLng.lat() + " " + e.latLng.lng());
+                   /// alert(e.latLng.lat() + " " + e.latLng.lng());
                 }
             }
         };
@@ -1074,7 +1241,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location",
         $uibModalInstance.dismiss('cancel');
         $scope.formationCenterName = ""
     };
-}).controller('AccordionDemoCtrl', function ($scope) {
+})/*.controller('AccordionDemoCtrl',['$scope','$rootScope',"SearchService", function ($scope, $rootScope, SearchService) {
     $scope.oneAtATime = true;
 
     $scope.groups = [
@@ -1100,7 +1267,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location",
         isFirstOpen: true,
         isFirstDisabled: false
     };
-}).controller('CarouselDemoCtrl', function ($scope) {
+}])*/.controller('CarouselDemoCtrl', function ($scope) {
         $scope.myInterval = 5000;
         $scope.noWrapSlides = false;
         $scope.active = 0;
@@ -1366,61 +1533,193 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location",
     };
 
     $scope.statesWithFlags = [{'name':'Alabama','flag':'5/5c/Flag_of_Alabama.svg/45px-Flag_of_Alabama.svg.png'},{'name':'Alaska','flag':'e/e6/Flag_of_Alaska.svg/43px-Flag_of_Alaska.svg.png'},{'name':'Arizona','flag':'9/9d/Flag_of_Arizona.svg/45px-Flag_of_Arizona.svg.png'},{'name':'Arkansas','flag':'9/9d/Flag_of_Arkansas.svg/45px-Flag_of_Arkansas.svg.png'},{'name':'California','flag':'0/01/Flag_of_California.svg/45px-Flag_of_California.svg.png'},{'name':'Colorado','flag':'4/46/Flag_of_Colorado.svg/45px-Flag_of_Colorado.svg.png'},{'name':'Connecticut','flag':'9/96/Flag_of_Connecticut.svg/39px-Flag_of_Connecticut.svg.png'},{'name':'Delaware','flag':'c/c6/Flag_of_Delaware.svg/45px-Flag_of_Delaware.svg.png'},{'name':'Florida','flag':'f/f7/Flag_of_Florida.svg/45px-Flag_of_Florida.svg.png'},{'name':'Georgia','flag':'5/54/Flag_of_Georgia_%28U.S._state%29.svg/46px-Flag_of_Georgia_%28U.S._state%29.svg.png'},{'name':'Hawaii','flag':'e/ef/Flag_of_Hawaii.svg/46px-Flag_of_Hawaii.svg.png'},{'name':'Idaho','flag':'a/a4/Flag_of_Idaho.svg/38px-Flag_of_Idaho.svg.png'},{'name':'Illinois','flag':'0/01/Flag_of_Illinois.svg/46px-Flag_of_Illinois.svg.png'},{'name':'Indiana','flag':'a/ac/Flag_of_Indiana.svg/45px-Flag_of_Indiana.svg.png'},{'name':'Iowa','flag':'a/aa/Flag_of_Iowa.svg/44px-Flag_of_Iowa.svg.png'},{'name':'Kansas','flag':'d/da/Flag_of_Kansas.svg/46px-Flag_of_Kansas.svg.png'},{'name':'Kentucky','flag':'8/8d/Flag_of_Kentucky.svg/46px-Flag_of_Kentucky.svg.png'},{'name':'Louisiana','flag':'e/e0/Flag_of_Louisiana.svg/46px-Flag_of_Louisiana.svg.png'},{'name':'Maine','flag':'3/35/Flag_of_Maine.svg/45px-Flag_of_Maine.svg.png'},{'name':'Maryland','flag':'a/a0/Flag_of_Maryland.svg/45px-Flag_of_Maryland.svg.png'},{'name':'Massachusetts','flag':'f/f2/Flag_of_Massachusetts.svg/46px-Flag_of_Massachusetts.svg.png'},{'name':'Michigan','flag':'b/b5/Flag_of_Michigan.svg/45px-Flag_of_Michigan.svg.png'},{'name':'Minnesota','flag':'b/b9/Flag_of_Minnesota.svg/46px-Flag_of_Minnesota.svg.png'},{'name':'Mississippi','flag':'4/42/Flag_of_Mississippi.svg/45px-Flag_of_Mississippi.svg.png'},{'name':'Missouri','flag':'5/5a/Flag_of_Missouri.svg/46px-Flag_of_Missouri.svg.png'},{'name':'Montana','flag':'c/cb/Flag_of_Montana.svg/45px-Flag_of_Montana.svg.png'},{'name':'Nebraska','flag':'4/4d/Flag_of_Nebraska.svg/46px-Flag_of_Nebraska.svg.png'},{'name':'Nevada','flag':'f/f1/Flag_of_Nevada.svg/45px-Flag_of_Nevada.svg.png'},{'name':'New Hampshire','flag':'2/28/Flag_of_New_Hampshire.svg/45px-Flag_of_New_Hampshire.svg.png'},{'name':'New Jersey','flag':'9/92/Flag_of_New_Jersey.svg/45px-Flag_of_New_Jersey.svg.png'},{'name':'New Mexico','flag':'c/c3/Flag_of_New_Mexico.svg/45px-Flag_of_New_Mexico.svg.png'},{'name':'New York','flag':'1/1a/Flag_of_New_York.svg/46px-Flag_of_New_York.svg.png'},{'name':'North Carolina','flag':'b/bb/Flag_of_North_Carolina.svg/45px-Flag_of_North_Carolina.svg.png'},{'name':'North Dakota','flag':'e/ee/Flag_of_North_Dakota.svg/38px-Flag_of_North_Dakota.svg.png'},{'name':'Ohio','flag':'4/4c/Flag_of_Ohio.svg/46px-Flag_of_Ohio.svg.png'},{'name':'Oklahoma','flag':'6/6e/Flag_of_Oklahoma.svg/45px-Flag_of_Oklahoma.svg.png'},{'name':'Oregon','flag':'b/b9/Flag_of_Oregon.svg/46px-Flag_of_Oregon.svg.png'},{'name':'Pennsylvania','flag':'f/f7/Flag_of_Pennsylvania.svg/45px-Flag_of_Pennsylvania.svg.png'},{'name':'Rhode Island','flag':'f/f3/Flag_of_Rhode_Island.svg/32px-Flag_of_Rhode_Island.svg.png'},{'name':'South Carolina','flag':'6/69/Flag_of_South_Carolina.svg/45px-Flag_of_South_Carolina.svg.png'},{'name':'South Dakota','flag':'1/1a/Flag_of_South_Dakota.svg/46px-Flag_of_South_Dakota.svg.png'},{'name':'Tennessee','flag':'9/9e/Flag_of_Tennessee.svg/46px-Flag_of_Tennessee.svg.png'},{'name':'Texas','flag':'f/f7/Flag_of_Texas.svg/45px-Flag_of_Texas.svg.png'},{'name':'Utah','flag':'f/f6/Flag_of_Utah.svg/45px-Flag_of_Utah.svg.png'},{'name':'Vermont','flag':'4/49/Flag_of_Vermont.svg/46px-Flag_of_Vermont.svg.png'},{'name':'Virginia','flag':'4/47/Flag_of_Virginia.svg/44px-Flag_of_Virginia.svg.png'},{'name':'Washington','flag':'5/54/Flag_of_Washington.svg/46px-Flag_of_Washington.svg.png'},{'name':'West Virginia','flag':'2/22/Flag_of_West_Virginia.svg/46px-Flag_of_West_Virginia.svg.png'},{'name':'Wisconsin','flag':'2/22/Flag_of_Wisconsin.svg/45px-Flag_of_Wisconsin.svg.png'},{'name':'Wyoming','flag':'b/bc/Flag_of_Wyoming.svg/43px-Flag_of_Wyoming.svg.png'}];
-}).controller("WizardController", function(){
-
+}).controller("WizardController", function($rootScope, $http, $routeParams) {
 
     var vm = this;
 
     //Model
     vm.currentStep = 1;
+
+    vm.validPayment = false;
+
+    vm.validationMessages = [];
+    vm.paymentMessages = [];
+    vm.customerFoundMessages = [];
+
+    //Initializating customer Object.
+    vm.customerData = {};
+    vm.customerData.driverLicence = {};
+    vm.customerData.civility = "M";
+
+    //Regulars expressions for validating fields.
+    vm.phoneRegExp = /^(0)\d{9}$/;
+    vm.zipcodeRegExp = /^\d{4}$/;
+
+    vm.paymentServicesError = false;
+    vm.paymentButtonDisabled = true;
+
+    //Wizard navigation steps.
     vm.steps = [
         {
             step: 1,
-            name: "Customer information",
+            name: "Customer Information",
             template: "templates/formation/customer.html"
         },
         {
             step: 2,
-            name: "Licence information",
+            name: "Licence",
             template: "templates/formation/licence.html"
         },
         {
             step: 3,
-            name: "Payment configuration",
+            name: "Payment",
             template: "templates/formation/payment.html"
         },
         {
             step: 4,
-            name: "Recap reservation",
+            name: "Recap",
             template: "templates/formation/recap.html"
-        },
+        }
     ];
-    vm.customerData = {};
-    vm.customerData.driverLicence = {}
-    //Functions
-    vm.gotoStep = function(newStep) {
-        vm.currentStep = newStep;
-    }
 
-    vm.getStepTemplate = function(){
+    //wizard Functions
+    vm.gotoStep = function(newStep) {
+
+        if (newStep === 3)
+        {
+            if (vm.validateData()) {
+                vm.currentStep = newStep;
+            }
+        }
+        else
+        {
+            vm.currentStep = newStep;
+        }
+    };
+
+    vm.getStepTemplate = function() {
         for (var i = 0; i < vm.steps.length; i++) {
-            if (vm.currentStep == vm.steps[i].step) {
+            if (vm.currentStep === vm.steps[i].step) {
                 return vm.steps[i].template;
             }
         }
-    }
+    };
+
+    vm.validateData = function() {
+
+        //If there is some mising or invalid data, show an error and return false.
+        if (!vm.customerData.name
+            || !vm.customerData.firstName
+            || !vm.customerData.phoneNumber
+            || !vm.customerData.email
+            || !vm.customerData.zipCode
+            || !vm.customerData.driverLicence.number
+            || !vm.customerData.driverLicence.placeOfDeliverance
+            || !vm.customerData.driverLicence.dateOfDeliverance
+            || !vm.customerData.driverLicence.dateOfProcuration) {
+
+            if (vm.validationMessages.length === 0) {
+                vm.validationMessages.push({type: "danger", info: "There are some mising or invalid information, please check again."});
+            }
+
+            return false;
+        }
+
+        //Before enable the payment button, check if there is an customer with this data in the system in this year.
+        yearAct = new Date();
+        yearAct = yearAct.getFullYear();
+
+        $http.post($rootScope.urlBase + "/customer/searchByLicenceInYear", {
+                licence: vm.customerData.driverLicence.number,
+                year: yearAct})
+            .success(function(data) {
+                console.log("entre a success, el servicio devolvio");
+                if (data.status === "error") {
+                    console.log("no encontre el usuario. Validar el botton.");
+                    vm.paymentButtonDisabled = false;
+
+                    if (vm.customerFoundMessages.length > 0) {
+                        vm.customerFoundMessages.splice(0, 1);
+                    }
+                }
+                else {
+                    vm.paymentButtonDisabled = true;
+
+                    if (vm.customerFoundMessages.length === 0) {
+                        vm.customerFoundMessages.push({type: "danger", info: "There is a customer registered in the system with that licence number in this year."});
+                    }
+                }
+            })
+            .error(function(err) {
+                console.log("Entre a error algun problema con el log.");
+                console.log(err);
+            });
+
+        return true;
+    };
+
+    vm.makePayment = function() {
+
+        $http.get($rootScope.urlBase + "/Payment/makepayment/")
+            .success(function(data, status, headers, config) {
+                if (data.value === "ok") {
+
+                    if (vm.paymentMessages.length > 0) {
+                        vm.paymentMessages.splice(0, 1);
+                    }
+                    vm.paymentMessages.push({type: "success", info: "Payment ok."});
+
+                    //The payment have been made. Now make the book process.
+                    $http.post($rootScope.urlBase + "/formation/bookFormation", {
+                            id: $routeParams.id,
+                            customerData: vm.customerData
+                        })
+                        .success(function(data) {
+                            if (data.ok !== undefined) {
+                                alert("Book process complit.");
+                            }
+                            console.log(data);
+                        })
+                        .error(function(err) {
+                            console.log(err);
+                        });
+
+                    vm.gotoStep(4);
+                }
+            })
+            .error(function(error, status, headers, config) {
+                if (vm.paymentMessages.length > 0) {
+                    vm.paymentMessages.splice(0, 1);
+                }
+                vm.paymentMessages.push({type: "danger", info: "Sorry, some is wrong with the payment service. Pleace try another payment way."});
+            });
+
+    };
 
     vm.book = function() {
-        console.log("Data",vm.customerData)
-        alert(
-           /* "Saving form... \n\n" +
-            "Name: " + vm.user.name + "\n" +
-            "Email: " + vm.user.email + "\n" +
-            "Age: " + vm.user.age);*/
+        book = $http.post($rootScope.urlBase + "/formation/bookFormation", {
+                id: $routeParams.id,
+                customerData: vm.customerData
+            })
+            .success(function(data) {
+                if (data.ok !== undefined) {
+                    alert("Book process complit.");
+                }
+                console.log(data);
+            })
+            .error(function(err) {
+                console.log(err);
+            });
 
-            JSON.stringify( vm.customerData))
-    }
+    };
 
+    vm.closeMessage = function(MessageIndex) {
+        vm.validationMessages.splice(MessageIndex, 1);
+    };
+
+    vm.paymentMessagesClose = function(MessageIndex) {
+        vm.paymentMessages.splice(MessageIndex, 1);
+    };
 
 });
 ;

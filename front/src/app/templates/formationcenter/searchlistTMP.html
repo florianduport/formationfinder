@@ -160,29 +160,56 @@
                 <div>
                     <label style="width: 50px; color: #000066">Date: </label>
                     <div class=" input-group date" >
-                        <span class="input-group-addon"  ><span  class="text-info">Init date:</span></span>
-                        <input class="form-control"  uib-datepicker-popup="{{format}}"  is-open="popup1.opened" name="initDate" ng-pattern="/^\d{2}-\w{4}-\d{4}$/" datepicker-options="dateOptions" placeholder="" type="text" ng-model="search.initialDate">
+                        <input class="form-control"  uib-datepicker-popup="{{format}}"  is-open="popup1.opened" datepicker-options="dateOptions" placeholder="" type="text" ng-model="search.initialDate">
                         <span class="input-group-addon"  ><span id="datesearchInit" class="fa fa-calendar" ng-click="open1()"   ></span></span>
 
                     </div>
-                    <span   class="error-message text-danger" ng-show="myform.initDate.$dirty && myform.initDate.$invalid"><h5 style="text-decoration-color:#f1a417;background: #afd9ee">Init date field should be date</h5></span>
-
                     <div class=" input-group date" >
-                        <span class="input-group-addon"  ><span  class="text-info">End date:</span></span>
-                        <input class="form-control" uib-datepicker-popup="{{format}}" name="endDate" ng-pattern="/^\d{2}-\w{4}-\d{4}$/" is-open="popup2.opened" datepicker-options="dateOptions" placeholder="" type="text" ng-model="search.endDate">
+                        <input class="form-control" uib-datepicker-popup="{{format}}"  is-open="popup2.opened" datepicker-options="dateOptions" placeholder="" type="text" ng-model="search.endDate">
                         <span class="input-group-addon"  ><span id="datesearchEnd" class="fa fa-calendar" ng-click="open2()"   ></span></span>
-
                     </div>
-                    <span   class="error-message text-danger" ng-show="myform.endDate.$dirty && myform.endDate.$invalid"><h5 style="text-decoration-color:#f1a417;background: #afd9ee">End date field should be date</h5></span>
-
                 </div>
-                 <div>
+                <div>
                     <label style="width: 50px; color: #000066">Price: </label>
                     <input class="form-control" placeholder="" name="phoneNumber" type="number"  ng-pattern="/^\d{1,5}$/" ng-model="initialPrice">
-                   <span   class="error-message text-danger" ng-show="myform.phoneNumber.$dirty && myform.phoneNumber.$invalid"><h5 style="text-decoration-color:#f1a417;background: #afd9ee">Price field should be of 5 digits</h5></span>
+                   <span   class="error-message text-danger" ng-show="myform.phoneNumber.$dirty && myform.phoneNumber.$invalid"><h5 style="text-decoration-color:#f1a417;background: #afd9ee">The price  number field should be of 5 digits</h5></span>
                 </div>
             </div>
                 </form>
+
+
+            <!--   <div ng-controller="CollapseDemoCtrl">
+                    <button type="button" class="btn btn-default" ng-click="isCollapsed = !isCollapsed">Toggle collapse Vertically</button>
+                    <hr>
+                    <div uib-collapse="isCollapsed">
+                        <div class="well well-lg">Some content</div>
+                    </div>
+
+                    <button type="button" class="btn btn-default animated"    ng-click="isCollapsedHorizontal = !isCollapsedHorizontal">Toggle collapse Horizontally</button>
+                    <hr>
+                    <div uib-collapse="isCollapsedHorizontal"   ng-class="{'fadeInDown':isCollapsedHorizontal}" horizontal>
+                        <div class="well well-lg animated">
+                            <div>
+                                <label style="width: 50px">Date: </label>
+                                <div class=" input-group date" >
+                                    <input class="form-control"  uib-datepicker-popup="{{format}}"  is-open="popup1.opened" datepicker-options="dateOptions" placeholder="Initial Date" type="text" ng-model="search.initialDate">
+                                    <span class="input-group-addon"  ><span id="datesearchInit" class="fa fa-calendar" ng-click="open1()"   ></span></span>
+
+                                </div>
+                                <div class=" input-group date" >
+                                    <input class="form-control" uib-datepicker-popup="{{format}}"  is-open="popup2.opened" datepicker-options="dateOptions" placeholder="End Date" type="text" ng-model="search.endDate">
+                                    <span class="input-group-addon"  ><span id="datesearchEnd" class="fa fa-calendar" ng-click="open2()"   ></span></span>
+                                </div>
+                            </div>
+                            <div>
+                                <label style="width: 50px">Price: </label>
+                                <input class="form-control" placeholder="150 " type="number" ng-model="initialPrice">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>-->
+
 
         </div>
 
@@ -192,17 +219,326 @@
 
     </div>
     <div class="row col-sm-8 col-xs-8 col-lg 8">
+
     </div>
-   </div>
+
+    </div>
+    <!-- search data  -->
+
+<!--
+            <row class="row">
+                <div class="col-lg-2 col-sm-2">
+                    <h4>{{formationcenter.name}}</h4>
+                   &lt;!&ndash; <div class="follow-ava">
+                        <img src="../../img/profile-widget-avatar.jpg" alt="">
+                    </div>
+                    <h6>Administrator</h6>&ndash;&gt;
+                </div>
+            </row>
+        <row class="row">
+                <div class="col-lg-4 col-sm-4 follow-info">
+                    <div class="wow fadeInLeft" data-wow-delay="0.2s">
+                        <div class="service-box">
+                          &lt;!&ndash;  <div class="service-icon">
+                                <img src="../../img/icons/service-icon-1.png" alt="" />
+                            </div>&ndash;&gt;
+                            <div class="service-desc">
+                                <h5>Phone</h5>
+                                <p>{{formationcenter.phoneNumber}}</p>
+                                <p>Formaciones</p>
+                                <h4>{{formationcenter.formations.length}}</h4>
+                                <p>Lugares</p>
+                                <h4>{{formationcenter.places.length}}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </row>
+            <row class="row">
+                <div class="col-sm-3 col-md-3">
+                    <div class="wow fadeInLeft" data-wow-delay="0.2s">
+                    <div class="service-box">
+                       &lt;!&ndash; <div class="service-icon">
+                            <img src="../../img/icons/service-icon-1.png" alt="" />
+                        </div>&ndash;&gt;
+                        <div class="service-desc">
+                            <h5>City</h5>
+                            <p>{{formationcenter.city}}</p>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </row>
+            <row class="row">
+                <div class="col-sm-6 col-md-6">
+                    <div class="wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="service-box">
+                           &lt;!&ndash; <div class="service-icon">
+                                <img src="../../img/icons/service-icon-2.png" alt="" />
+                            </div>&ndash;&gt;
+                            <div class="service-desc">
+                                <h5>Adress</h5>
+                                <p>{{formationcenter.address}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </row>-->
+                    <!--
+                <div class="col-sm-3 col-md-3">
+                    <div class="wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="service-box">
+                            <div class="service-icon">
+                                <img src="img/icons/service-icon-3.png" alt="" />
+                            </div>
+                            <div class="service-desc">
+                                <h5>Photography</h5>
+                                <p>Vestibulum tincidunt enim in pharetra malesuada. Duis semper magna metus electram accommodare.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 col-md-3">
+                    <div class="wow fadeInRight" data-wow-delay="0.2s">
+                        <div class="service-box">
+                            <div class="service-icon">
+                                <img src="img/icons/service-icon-4.png" alt="" />
+                            </div>
+                            <div class="service-desc">
+                                <h5>Cloud System</h5>
+                                <p>Vestibulum tincidunt enim in pharetra malesuada. Duis semper magna metus electram accommodare.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            col-sm-3 col-md-3     -->
+     <!--   <row>
+          </row>
+-->
+        <!-- </div>
+            <div class="container container-fluid">
+             <div class="row">
+                 <div style="visibility: visible;" class=" wow fadeInDown animated">
+                    <div class="accordion">
+                         <div class="panel-group" id="accordion1">
+                             <div class="panel panel-default">
+                                 <div class="panel-heading active">
+                                     <h3 class="panel-title">
+                                         <a aria-expanded="false" class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne1">
+                                             Trier par :
+                                             <i class="fa fa-angle-right pull-right"></i>
+                                         </a>
+                                     </h3>
+                                 </div>
+
+                                 <div style="height: 0px;" aria-expanded="false" id="collapseOne1" class="panel-collapse collapse" >
+                                     <div class="panel-body">
+                                         <div class="media accordion-inner">
+                                             <div class="pull-left">
+                                                 <img class="img-responsive" src="images/accordion1.png">
+                                             </div>
+                                             <div class="media-body">
+                                                 <h4>Adipisicing elit</h4>
+                                                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore</p>
+                                             </div>
+                                         </div>
+                                     </div>
+                                 </div>
+                             </div>
+
+
+                             <div class="panel panel-default">
+                                 <div class="panel-heading">
+                                     <h3 class="panel-title">
+                                         <a aria-expanded="true" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseThree1">
+                                             Filtrez vos résultats:
+                                             <i class="fa fa-angle-right pull-right"></i>
+                                         </a>
+                                     </h3>
+                                 </div>
+                                 <div style="" aria-expanded="false" id="collapseThree1" class="panel-collapse collapse in">
+                                     <div class="panel-body">
+                                        <form>
+                                            <div class="form-group">
+                                                <label for="subject1">
+                                                    Place</label>
+                                                <select id="subject1" name="subject1" class="form-control" required="required">
+                                                    <div ng-repeat="iplace in formationcenter.places">
+                                                        <option value="{{iplace.name}}" >{{iplace.name}}</option>
+                                                        <p> {{iplace.name}}</p>
+                                                    </div>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="subject2">
+                                                    Pour jour</label>
+                                                <select id="subject2" name="subject2" class="form-control" required="required">
+                                                    <option value="na" selected="">Tous les jours</option>
+                                                    <option value="service">Lundi - Mardi</option>
+                                                    <option value="suggestions">Mardi - Mercredi</option>
+                                                    <option value="product">Mercredi - Jeudi</option>
+                                                    <option value="product">Jeudi - Vendredi</option>
+                                                    <option value="product">Vendredi - Samedi</option>
+                                                </select>
+                                            </div>
+                                        </form>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>-->
+                     <!--/#accordion1
+                 </div>-->
+
+
+
+
+
+    <!-- search action (filter and search) ng-controller="AccordionDemoCtrl"-->
 
     <div class="container ">
     <div class="row">
+<!--       <div ng-controller="SearchController">
+            <script type="text/ng-template" id="group-template.html">
+                <div class="panel-heading">
+                    <h4 class="panel-title" ;  style="color:#000066 ">
+                        <a href tabindex="0" class="accordion-toggle" ng-click="toggleOpen()" uib-accordion-transclude="heading">
+          <span uib-accordion-header ng-class="{'text-muted': isDisabled}">
+            {{heading}}
+          </span>
+                        </a>
+                    </h4>
+                </div>
+                <div class="panel-collapse collapse" uib-collapse="!isOpen">
+                    <div class="panel-body" style="text-align: right" ng-transclude></div>
+                </div>
+            </script>-->
+<!--
+         <p>
+                <button type="button" class="btn btn-default btn-sm" ng-click="status.open = !status.open">Toggle last panel</button>
+                <button type="button" class="btn btn-default btn-sm" ng-click="status.isFirstDisabled = ! status.isFirstDisabled">Enable / Disable first panel</button>
+            </p>
+
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-model="oneAtATime">
+                    Open only one at a time
+                </label>
+            </div>-->
+
+          <!--<uib-accordion close-others="oneAtATime">-->
+              <!--
+             <div uib-accordion-group class="panel-default" heading="Static Header, initially expanded" is-open="status.isFirstOpen" is-disabled="status.isFirstDisabled">
+                 This content is straight in the template.
+             </div>
+             <div uib-accordion-group class="panel-default" heading="{{group.title}}" ng-repeat="group in groups">
+                 {{group.content}}
+             </div>
+             <div uib-accordion-group class="panel-default" heading="Dynamic Body Content">
+                 <p>The body of the uib-accordion group grows to fit the contents</p>
+                 <button type="button" class="btn btn-default btn-sm" ng-click="addItem()">Add Item</button>
+                 <div ng-repeat="item in items">{{item}}</div>
+             </div>
+             <div uib-accordion-group class="panel-default" heading="Custom template" template-url="group-template.html">
+                 Hello
+             </div>
+
+             <div uib-accordion-group class="panel-danger" heading="Delete account">
+                 <p>Please, to delete your account, click the button below</p>
+                 <button class="btn btn-danger">Delete</button>
+             </div>-->
+
+<!--                <div uib-accordion-group class="panel-default" is-open="status.isCustomHeaderOpen" template-url="group-template.html">
+                    <uib-accordion-heading>
+                      Filter and order results by :<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.isCustomHeaderOpen, 'glyphicon-chevron-right': !status.isCustomHeaderOpen}"></i>
+                    </uib-accordion-heading>
+                    <div class="container">
+                        <row>
+
+                        </row>
+                        <row>
+                            <form class="form-horizontal " >
+&lt;!&ndash;                                <div class="form-group">
+
+
+                                        <div class="radio">
+
+                                            <label>Date
+                                                &lt;!&ndash;<span class="input-group-addon" id="basic-addon1">&ndash;&gt;
+                                                <input  type="radio"  value="option2"   name="optionsRadios" ng-click="sortType = 'date'; sortReverse = !sortReverse; updateSort()">
+                                                &lt;!&ndash;</span>&ndash;&gt;
+                                            </label>
+
+                                        </div>
+                                        <div class="radio">
+                                            <label >
+
+                                                Price
+                                                <input type="radio" value="option3" name="optionsRadios" ng-click="sortType = 'price'; sortReverse = !sortReverse; updateSort()" >
+
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label >
+
+                                                City
+                                                <input  type="radio"  value="option4" name="optionsRadios" ng-click="sortType = 'city'; sortReverse = !sortReverse; updateSort()" >
+                                            </label>
+                                        </div>
+                                    </div>&ndash;&gt;
+                            </form>
+
+                          &lt;!&ndash;  <button type="button" class="btn btn-primary" ng-model="singleModel" uib-btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
+                                Single Toggle
+                            </button>&ndash;&gt;
+                           &lt;!&ndash; <h4>Checkbox</h4>
+                            <pre>Model: {{checkModel}}</pre>
+                            <pre>Results: {{checkResults}}</pre>
+                            <div class="btn-group">
+                                <label class="btn btn-primary" ng-model="checkModel.left" uib-btn-checkbox>Left</label>
+                                <label class="btn btn-primary" ng-model="checkModel.middle" uib-btn-checkbox>Middle</label>
+                                <label class="btn btn-primary" ng-model="checkModel.right" uib-btn-checkbox>Right</label>
+                            </div>&ndash;&gt;
+
+                            <div class="btn-group pull-left">
+                                <label class="btn btn-primary" ng-model="radioModel" uib-btn-radio="'Left'">Price</label>
+                                <label class="btn btn-primary" ng-model="radioModel" uib-btn-radio="'Middle'">City</label>
+                                <label class="btn btn-primary" ng-model="radioModel" uib-btn-radio="'Right'">Date</label>
+                            </div>
+
+                           &lt;!&ndash;     <label class="btn btn-success" ng-model="radioModel" uib-btn-radio="'Left'" uncheckable>Left</label>
+                                <label class="btn btn-success" ng-model="radioModel" uib-btn-radio="'Middle'" uncheckable>Middle</label>
+                                <label class="btn btn-success" ng-model="radioModel" uib-btn-radio="'Right'" uib-uncheckable="uncheckable">Right</label>
+                            </div>
+                            <div>
+                                <button class="btn btn-default" ng-click="uncheckable = !uncheckable">
+                                    Toggle uncheckable
+                                </button>
+                            </div>&ndash;&gt;
+                        </row>
+                        <row>
+
+                        </row>
+                    </div>
+
+
+                </div>
+                &lt;!&ndash;<div uib-accordion-group class="panel-default" is-open="status.open">&ndash;&gt;
+                &lt;!&ndash;<div uib-accordion-group class="panel-default" is-open="status.open">
+                    <uib-accordion-heading>
+                        I can have markup, too! <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+                    </uib-accordion-heading>
+                    This is just some content to illustrate fancy headings.
+                </div>&ndash;&gt;
+            </uib-accordion>-->
         <div class="panel-default" is-open="status.isCustomHeaderOpen" template-url="group-template.html">
             <div class="panel-heading">
                 <h4 class="panel-title" ;  style="color:#000066 ">
+
                     Filter and order results by :
+
                 </h4>
             </div>
+            <!--<div class="panel-collapse collapse open" >-->
             <div class="panel-body" style="text-align: left"  style="color:#000066 " >
                 <div class="btn-group pull-left">
                     <label class="btn btn-primary" ng-model="radioModel" uib-btn-radio="'Left'" ng-click="sortType = 'price'; sortReverse = !sortReverse; updateSort()" >Price</label>
@@ -210,17 +546,35 @@
                     <label class="btn btn-primary" ng-model="radioModel" uib-btn-radio="'Right'" ng-click="sortType = 'date'; sortReverse = !sortReverse; updateSort()">Date</label>
                 </div>
             </div>
+            <!--</div>-->
         </div>
         </div>
 
     </div>
       </div>
 
-
+    
         <div class="container container-fluid">
+            <!--<div class="row">
+                <div class="text-center proximite pcolorbox">
+                    <a href="" ng-click="formationBook(25)" rel="nofollow" class="popup-fiche cboxElement">
+                        <div class="icons puce-active pcolorbox"></div>
+
+                        <div class="plus-info pcolorbox">+d'info</div>
+                    </a>
+                </div>
+            </div>-->
             <div class="row">
+              <!--  <h4>Radio &amp; Uncheckable Radio</h4>
+                <pre>{{radioModel || 'null'}}</pre>-->
                 <div align="right" style="color:#000066">
                     <ul   uib-pagination boundary-links="true" items-per-page="app.itemPerPage" total-items="app.totalItems" ng-click="getPagableRecords()" ng-model="app.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+
+                    <!-- <uib-pagination items-per-page="app.itemPerPage" num-pages="numPages"
+                                     total-items="app.totalItems" boundary-link-numbers="true"
+                                     ng-model="app.currentPage" rotate="false" max-size="app.maxSize"
+                                     class="pagination-sm" boundary-links="true"
+                                     ng-click="getPagableRecords()"></uib-pagination>-->
                 </div>
                 <ul class="list-group">
                     <div>
@@ -230,18 +584,31 @@
 
                                 <div class="col-lg-2 col-sm-2">
                                     <p class="text-info text-primary">{{iformation.name}}</p>
+                                    <!-- <div class="follow-ava">
+                                         <img src="../../img/profile-widget-avatar.jpg" alt="">
+                                     </div>
+                                     <h6>Administrator</h6>-->
                                 </div>
 
                         </div>
                         <div class="row">
+        <!--                    <div class="text-center proximite pcolorbox">
+                                <a href="" ng-click="searchPlusInformation(iformation.id)" rel="nofollow" class="popup-fiche cboxElement">
+                                    <div class="icons puce-active pcolorbox"></div>
+
+                                    <div class="plus-info pcolorbox">+d'info</div>
+                                </a>
+                            </div>-->
                             <div class="row col-sm-4 col-xs-4 col-lg 4">
 
                             <div class="info-stage">
                                 <div class="nom-ville">
-                                   City:  {{iformation.city}}</div>
-
+                                   City:  {{iformation.city}}           </div>
+                              <!--  <div class="etoiles">
+                                        <span class="rating"><i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i></span>            </div>
+        -->
                                 <div class="adresse" title="{{iformation.address}}">
-                                    <p >Adress: {{iformation.address}}</p></div>
+                                    <p >Adress: {{iformation.address}}</p>            </div>
                             </div>
                             </div>
                             <div class="row col-sm-4 col-xs-4 col-lg 4">
@@ -310,9 +677,9 @@
                                <button class="btn btn-default" href=""   ng-click="formationBook(iformation.id)" title="">S'inscrire</button>
                             </div>
 
-<!--                            <div class="hide">
+                            <div class="hide">
                                 <span class="lieu_id">3604</span>
-                                &lt;!&ndash;Rich Snippets&ndash;&gt;
+                                <!--Rich Snippets-->
                                 <div itemscope="" itemtype="http://schema.org/Event">
                                     <a itemprop="url" href="https://www.permisapoints.fr/stage-recuperation-points-angers-49000-proche.html">
                                         <span itemprop="name" class="summary">STAGE a  180 €</span>
@@ -333,8 +700,8 @@
                                     </span>
 
                                 </div>
-                                &lt;!&ndash;End Rich Snippets&ndash;&gt;
-                            </div>-->
+                                <!--End Rich Snippets-->
+                            </div>
                             </div>
                         </div>
                     </li>
