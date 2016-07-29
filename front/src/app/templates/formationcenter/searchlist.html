@@ -130,15 +130,11 @@
                                 </div>
 
                             </div>
-
-
-
                         </div>
                     </div>-->
             <div uib-alert ng-repeat="alert in alerts" dismiss-on-timeout=3000 ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert()">{{ alert.msg }}</div>
 
            </div>
-
 
 
             <!-- <uib-alert ng-show="errorValid" dismiss-on-timeout=3000  type="success"  close="closeAlert()">{{ errorMessage }}</uib-alert>
