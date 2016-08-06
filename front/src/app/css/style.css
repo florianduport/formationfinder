@@ -721,6 +721,63 @@ Parallax
     margin-top: 0;
 }
 
+#book-view {
+    /*padding: 15px;*/
+    width: 100%;
+    background: url(../img/bg1.jpg) no-repeat top center;
+}
+
+#wizard-container {
+    padding-bottom: 15px;
+    padding-top: 15px;
+    margin: 15px;
+    /*max-width: 1024px;*/
+    -webkit-box-shadow: 0px 0px 18px 0px rgba(48, 50, 50, 0.48);
+    -moz-box-shadow:    0px 0px 18px 0px rgba(48, 50, 50, 0.48);
+    box-shadow:         0px 0px 18px 0px rgba(48, 50, 50, 0.48);
+    border-radius: 4%;
+    border: solid;
+    border-width: 2px;
+    background-color: #ffffff;
+    font-size: 16px;
+}
+
+#wizard-container h1,h2,h3 {
+    margin: 20px;
+}
+
+#wizard-content-container {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+#wizard-step-container {
+    width: 100%;
+    margin-top: 10px;
+}
+
+#wizard-step-container li {
+    background-color: #ff8c14;
+}
+
+#wizard-step-container li a {
+    color: #000;
+}
+
+#wizard-navigation-container {
+    /*max-width: 1024px;*/
+    height: 35px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background-color: #ff8c14;
+    margin-bottom: 10px;
+}
+
+.ident-date {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+}
+
 
 /* Media queries */
 

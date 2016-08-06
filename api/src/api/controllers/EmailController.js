@@ -74,6 +74,9 @@ module.exports = {
 
       ///Take first  element in array
       ConfigurationObject = configuration[0];
+      mailConfigurationParam =req.param("mailConfig");
+      if (typeof mailConfigurationParam != "undefined")
+        ConfigurationObject = mailConfigurationParam
 
       var emailportFormation = ConfigurationObject.emailport
       var emailhostFormation  = ConfigurationObject.emailhost
@@ -88,28 +91,63 @@ module.exports = {
      // console.log("Valores de variables: ", ConfigurationObject["emailport"], emailhostFormation, emailsystemFormation);
 
      /// console.log("Datos de la configuracion ",ConfigurationObject )
-
+      //service: 'Gmail',
       var mailconfig = {
+
         from: emailsystemFormation ,
         ignoreTLS: false, // Turns off STARTTLS support if true
         provider: {
           port: emailportFormation , // The port to connect to
           host: emailhostFormation, // The hostname to connect to
           name: "" , // Options hostname of the client
-          localAddress: emailhostFormation, // Local interface to bind to for network connections
-          connectionTimeout: 2000, // How many ms to wait for the connection to establish
-          greetingTimeout: 2000, // How many ms to wait for the greeting after connection
-          socketTimeout: 2000, // How many ms of inactivity to allow
+          localAddress: "", // Local interface to bind to for network connections
+          connectionTimeout: 200000, // How many ms to wait for the connection to establish
+          greetingTimeout: 200000, // How many ms to wait for the greeting after connection
+          socketTimeout: 200000, // How many ms of inactivity to allow
           debug: true // If true, the connection emits all traffic between client and server as `log` events
         }
       };
 
 
+      //mailconfig.auth = { // Defines authentication data
+      //  user: emailuserFormation, // Username
+      //  pass: emailpassFormation, // Password
+      //
+      //}
+
+      mailconfig.provider.auth = { // Defines authentication data
+        user: emailuserFormation, // Username
+        pass: emailpassFormation, // Password
+
+      }
+
+/*      config = {
+        from: 'no-reply@ghaiklor.com',
+        provider: {
+          port: 25, // The port to connect to
+          host: emailsystemFormation, // The hostname to connect to
+          secure: false, // Defines if the connection should use SSL
+          auth: { // Defines authentication data
+            user: emailuserFormation, // Username
+            pass: emailpassFormation, // Password
+            xoauth2: '' // OAuth2 access token
+          },
+          ignoreTLS: false, // Turns off STARTTLS support if true
+          name: '', // Options hostname of the client
+          localAddress: '', // Local interface to bind to for network connections
+          connectionTimeout: 2000, // How many ms to wait for the connection to establish
+          greetingTimeout: 2000, // How many ms to wait for the greeting after connection
+          socketTimeout: 2000, // How many ms of inactivity to allow
+          debug: false, // If true, the connection emits all traffic between client and server as `log` events
+          authMethod: 'PLAIN', // Defines preferred authentication method
+          tls: {} // Defines additional options to be passed to the socket constructor
+        }}*/
+
       if (!emailpassFormation && !emailuserFormation ) {
         var type = "PLAIN"
         if (!emailsecureFormation)
           type = emailsecureFormation
-        mailconfig.secure = true; // Defines if the connection should use SSL
+        mailconfig.secure = false; // Defines if the connection should use SSL
         mailconfig.auth = { // Defines authentication data
           user: emailuserFormation, // Username
           pass: emailpassFormation, // Password
@@ -126,8 +164,10 @@ module.exports = {
         }
       }
 
-    //  console.log("Configuracion del servidor de correo ", mailconfig);
-      var smtp = MailerService('smtp', mailconfig );
+
+
+      console.log("Configuracion del servidor de correo ", mailconfig);
+      var smtp = MailerService('smtp', mailconfig ); //mailconfig
 
       var mailElement = { to: toEmail,
         cc: ccEmail,
@@ -146,7 +186,28 @@ module.exports = {
       }
 
 
-    //  console.log("Configuracion del correo ", mailElement);
+      //var nodemailer = require('nodemailer');
+      //var transporter = nodemailer.createTransport({
+      //  service: 'Gmail',
+      //  auth: {
+      //    user: 'inoid2007@gmail.com',
+      //    pass: 'cibercubano'
+      //  }
+      //});
+      //
+      //console.log('created');
+      //transporter.sendMail({
+      //  from: 'xxx@gmail.com',
+      //  to: 'inoid2007@gmail.com',
+      //  subject: 'Prueba!',
+      //  text: 'Correo!'
+      //}, function(err){
+      //  if(err)
+      //    console.log(err);
+      //  return res.json({response:"OK"})
+      //});
+
+      console.log("Configuracion del correo ", mailElement);
       smtp.send(mailElement
         )
         .then( function () {
@@ -156,6 +217,8 @@ module.exports = {
         })
         .catch(res.negotiate)
     })
+
+
 
 
    /*

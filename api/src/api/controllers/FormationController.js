@@ -520,7 +520,7 @@ module.exports = {
                 }
                 else
                 {
-                  return res.json({err: 'The customer is register in another formation'});
+                  return res.json({err: 'The customer is register in other formation'});
                 }
               });
           }
@@ -576,10 +576,12 @@ formation.forEach(function (iFormation, i) {
     if ( typeof finalDate != "undefined" )
       finalDate = new Date(finalDate);
 
-    if (initialDate || finalDate) {
-      if(!_.isDate(initialDate) || !_.isDate(finalDate)){
-        return res.json({err: 'Invalid date format for initialDate or finalDate.'});
-      }
+    if (initialDate  && !_.isDate(initialDate)) {
+      return res.json({err: 'Invalid date format for initialDate.'});
+    }
+
+    if (finalDate  && !_.isDate(finalDate)) {
+      return res.json({err: 'Invalid date format for endDate.'});
     }
     var page = 0;
     var len = 10;
@@ -659,7 +661,7 @@ formation.forEach(function (iFormation, i) {
       }, Promise.resolve());
 
       promise.then(function(array) {
-       if (initialDate || finalDate)
+       //if (initialDate || finalDate)
           query.place = {$in:arrayData}
         /*query = {
          place : {$in:arrayData},
@@ -750,10 +752,12 @@ formation.forEach(function (iFormation, i) {
     if ( typeof finalDate != "undefined" )
       finalDate = new Date(finalDate);
 
-    if (initialDate || finalDate) {
-      if(!_.isDate(initialDate) || !_.isDate(finalDate)){
-        return res.json({err: 'Invalid date format for initialDate or finalDate.'});
-      }
+    if (initialDate  && !_.isDate(initialDate)) {
+        return res.json({err: 'Invalid date format for initialDate.'});
+    }
+
+    if (finalDate  && !_.isDate(finalDate)) {
+      return res.json({err: 'Invalid date format for endDate.'});
     }
     var page = 0;
     var len = 10;
@@ -833,7 +837,7 @@ formation.forEach(function (iFormation, i) {
       }, Promise.resolve());
 
       promise.then(function(array) {
-        if (initialDate || finalDate)
+       // if (initialDate || finalDate)
           query.place = {$in:arrayData}
         /*query = {
          place : {$in:arrayData},
@@ -918,17 +922,29 @@ formation.forEach(function (iFormation, i) {
     initialDate = req.param('initialDate');
     finalDate = req.param('finalDate');
 
+
+
+
     if ( typeof initialDate != "undefined" )
     initialDate = new Date(initialDate);
 
     if ( typeof finalDate != "undefined" )
     finalDate = new Date(finalDate);
 
-    if (initialDate || finalDate) {
-      if(!_.isDate(initialDate) || !_.isDate(finalDate)){
-        return res.json({err: 'Invalid date format for initialDate or finalDate.'});
-      }
+    //console.log("INITIAL:", initialDate)
+    //console.log("FINAL:", finalDate)
+
+
+    if (initialDate && !_.isDate(initialDate)) {
+
+        return res.json({err: 'Invalid date format for initialDate'});
+
     }
+
+    if (finalDate && !_.isDate(finalDate)) {
+        return res.json({err: 'Invalid date format for finalDate.'});
+    }
+
     var page = 0;
     var len = 10;
 
@@ -992,7 +1008,7 @@ formation.forEach(function (iFormation, i) {
 
    // query.isFull = false
     ///---------------------------------------------------------------------------------
-
+    console.log("City name search: ", cityname)
 
     var ObjectID = require('mongodb').ObjectID
     Place.find({ city: {contains: cityname}}).exec( function(err, resulFormation){
@@ -1002,12 +1018,13 @@ formation.forEach(function (iFormation, i) {
       promise = resulFormation.reduce(function (prev, iPlace) {
         return prev.then(function () {
           object = iPlace.id
-          arrayData.push(new ObjectID( iPlace.id));
+          console.log("Data", iPlace)
+          arrayData.push( new ObjectID(iPlace.id));
         });
       }, Promise.resolve());
 
       promise.then(function(array) {
-        if (initialDate || finalDate)
+        //if (initialDate || finalDate)
         query.place = {$in:arrayData}
         /*query = {
           place : {$in:arrayData},
@@ -1048,10 +1065,10 @@ formation.forEach(function (iFormation, i) {
                 // Call an asynchronous function, often a save() to DB
 
 
-                console.log(iFormation)
-                console.log(",,,,,,,,,,,")
+                //console.log(iFormation)
+                //console.log(",,,,,,,,,,,")
                 idStr = "" + iFormation._id
-                console.log(idStr)
+                //console.log(idStr)
                 Formation.find({id:idStr})
                   .populate('place')
                   .populate('formationCenter')
@@ -1059,10 +1076,10 @@ formation.forEach(function (iFormation, i) {
                     // body...
                     formationsResponse = [];
 
-                    console.log(placesFormation.length)
-                    console.log("----------------------------------")
-                    console.log(placesFormation)
-                    console.log("----------------------------------")
+                    //console.log(placesFormation.length)
+                    //console.log("----------------------------------")
+                    //console.log(placesFormation)
+                    //console.log("----------------------------------")
                     //console.log("ANSWER", placesFormation);
 
 
@@ -1091,7 +1108,7 @@ formation.forEach(function (iFormation, i) {
               // 3rd param is the function to call when everything's done
               function(err){
                 // All tasks are done now
-                console.log("ANSWER ID", formationArray);
+               // console.log("ANSWER ID", formationArray.length);
                 return res.json(formationArray)
               }
             );
@@ -1231,10 +1248,19 @@ formation.forEach(function (iFormation, i) {
     if ( typeof finalDate != "undefined" )
       finalDate = new Date(finalDate);
 
-    if (initialDate || finalDate) {
-      if(!_.isDate(initialDate) || !_.isDate(finalDate)){
-        return res.json({err: 'Invalid date format for initialDate or finalDate.'});
-      }
+
+    //console.log("INITIAL:", initialDate)
+   // console.log("FINAL:", finalDate)
+
+
+    if (initialDate && !_.isDate(initialDate)) {
+
+      return res.json({err: 'Invalid date format for initialDate'});
+
+    }
+
+    if (finalDate && !_.isDate(finalDate)) {
+      return res.json({err: 'Invalid date format for finalDate.'});
     }
     var page = 0;
     var len = 10;
@@ -1300,7 +1326,7 @@ formation.forEach(function (iFormation, i) {
     // query.isFull = false
     ///---------------------------------------------------------------------------------
 
-
+   // console.log("Zipcode place query ",zipcodeData )
     var ObjectID = require('mongodb').ObjectID
     Place.find({ zipcode:zipcodeData}).exec( function(err, resulFormation){
 
@@ -1309,12 +1335,14 @@ formation.forEach(function (iFormation, i) {
       promise = resulFormation.reduce(function (prev, iPlace) {
         return prev.then(function () {
           object = iPlace.id
-          arrayData.push(new ObjectID( iPlace.id));
+         // console.log("DATA" ,iPlace )
+          arrayData.push(  new ObjectID(iPlace.id));
         });
       }, Promise.resolve());
 
       promise.then(function(array) {
-        if (initialDate || finalDate)
+
+       // if (initialDate || finalDate)
          query.place = {$in:arrayData}
         /*query = {
          place : {$in:arrayData},
@@ -1355,12 +1383,14 @@ formation.forEach(function (iFormation, i) {
                 // Call an asynchronous function, often a save() to DB
 
                 idStr = "" + iFormation._id
-                console.log(idStr)
+               // console.log(idStr)
                 Formation.find({id:idStr})
                   .populate('place')
                   .populate('formationCenter')
                   .exec(function placesFouded(err, placesFormation) {
                     // body...
+                    if (err)
+                     console.log("////", err)
                     formationsResponse = [];
                     //console.log("ANSWER", placesFormation);
 
@@ -1390,7 +1420,7 @@ formation.forEach(function (iFormation, i) {
               // 3rd param is the function to call when everything's done
               function(err){
                 // All tasks are done now
-                 console.log("ANSWER ID", formationArray);
+                 //console.log("ANSWER ID", formationArray.length);
                 return res.json(formationArray)
               }
             );

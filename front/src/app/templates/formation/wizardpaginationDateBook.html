@@ -1,16 +1,20 @@
 <br />
 <br />
 <br />
-<div class="container" style="border-radius: 10px; border: 1px;" ng-controller="WizardController as vm">
+<div class="container" id="book-view" ng-controller="WizardController as vm">
     <div class="row">
-        <div class="well col-md-12">
-            <h3>Book Formation</h3>
-            
+        <div class="col-xs-1 col-sm-1 col-md-2 col-lg-3">
+        </div>
+        <div class="col-xs-10 col-sm-10 col-md-8 col-lg-6">
             <div id="wizard-container">
+                <div class="col-sm-12 text-center">
+                    <h3>Book Formation</h3>
+                </div>
                 <div id="wizard-step-container">
                     <ul class="nav nav-pills nav-justified">
-                        <!--<li ng-repeat="step in vm.steps" ng-class="{'active':step.step == vm.currentStep}"><a ng-click="vm.gotoStep(step.step)" href="">{{step.step}}. {{step.name}}</a></li> -->
-                        <li ng-repeat="step in vm.steps" ng-class="{'active':step.step == vm.currentStep}"> <a ng-click="vm.gotoStep(step.step)">{{step.step}}. {{step.name}}</a> </li>
+                        <li ng-repeat="step in vm.steps" ng-class="{'active':step.step == vm.currentStep}">
+                            <a ng-click="vm.gotoStep(step.step)"><span class="badge">{{step.step}}</span> {{step.name}}</a>
+                        </li>
                     </ul>
                 </div>
 
@@ -21,17 +25,19 @@
                 <div id="wizard-navigation-container">
                     <div class="pull-left">
                         <span class="btn-group">
-                            <button ng-disabled="vm.currentStep <= 1" class="btn btn-primary" name="previous" type="button" ng-click="vm.gotoStep(vm.currentStep - 1)"><i class="fa fa-arrow-left"></i> Previous </button>
+                            <button style="border-radius: 10%" ng-disabled="vm.currentStep <= 1" class="btn btn-primary" name="previous" type="button" ng-click="vm.gotoStep(vm.currentStep - 1)"><span class="badge"><i class="fa fa-arrow-left"></i></span> Previous </button>
                         </span>
                     </div>
                     <div class="pull-right">
                         <span class="btn-group">
-                            <button ng-disabled="vm.currentStep >= vm.steps.length" class="btn btn-primary" name="next" type="button" ng-click="vm.gotoStep(vm.currentStep + 1)"> Next <i class="fa fa-arrow-right"></i></button>
+                            <button style="border-radius: 10%" ng-disabled="vm.currentStep >= vm.steps.length" class="btn btn-primary" name="next" type="button" ng-click="vm.gotoStep(vm.currentStep + 1)"> Next <span class="badge"><i class="fa fa-arrow-right"></i></span></button>
                         </span>
-                        <button ng-disabled="vm.currentStep != vm.steps.length" class="btn btn-success" name="next" type="button" ng-click="vm.book()"> <i class="fa fa-floppy-o"></i> Book</button>
+                       <!-- <button ng-disabled="vm.currentStep != vm.steps.length" class="btn btn-success" name="next" type="button" ng-click="vm.book()"> <i class="fa fa-floppy-o"></i> Book</button> -->
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="col-xs-1 col-sm-1 col-md-2 col-lg-3">
         </div>
     </div>
 </div>

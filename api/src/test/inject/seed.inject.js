@@ -130,36 +130,107 @@ describe('data seeding', function(){
 
     Configuration.find({ type:"smtp"} ).exec(function userFounded(err, configuration) {
       if (err || configuration.length == 0) {
-        Configuration.create({
+        //Configuration.create({
+        //  name: "mail",
+        //  type: "smtp",
+        //  emailsystemadress: "formationfinder@localhost.com",
+        //  emailport: "25",
+        //  emailhost: "127.0.0.1",
+        //  emailuser: "dionis@localhost.com",
+        //  emailpassword: "",
+        //  emailsecure: false
+        //}).then(function (Configurations) {
+        //  configuration = Configurations[0];
+        //  //console.log("Creado el objeto en BD");
+        //});
+        // GMail configuration
+
+        emailconfig = {
           name: "mail",
-          type: "smtp",
-          emailsystemadress: "formationfinder@localhost.com",
-          emailport: "25",
-          emailhost: "127.0.0.1",
-          emailuser: "dionis@localhost.com",
-          emailpassword: "",
-          emailsecure: false
+          type: "smtp"
+        }
+        if ( typeof sails.config.globals.configsystem != "undefined"){
+
+          if (typeof sails.config.globals.configsystem.emailsystemadress != "undefined") {
+            emailconfig.emailsystemadress = sails.config.globals.configsystem.emailsystemadress
+            console.log("Read config value to configuration file.");
+          }
+          else {
+            console.log("No exist emailsystemadress  parameter in config system file set default parameter.");
+            emailconfig.emailsystemadress = "formationfinder@localhost.com"
+
+          }
+
+
+          if (typeof sails.config.globals.configsystem.emailport != "undefined") {
+            emailconfig.emailport = sails.config.globals.configsystem.emailport
+            console.log("Read config value to configuration file.");
+          }
+          else {
+            console.log("No exist  emailport  parameter in config system file set default parameter.");
+            emailconfig.emailport = "25"
+
+          }
+
+          if (typeof sails.config.globals.configsystem.emailhost != "undefined") {
+            emailconfig.emailhost = sails.config.globals.configsystem.emailhost
+            console.log("Read config value to configuration file.");
+          }
+          else {
+            console.log("No exist  emailhost  parameter in config system file set default parameter.");
+            emailconfig.emailhost = "127.0.0.1"
+          }
+
+          if (typeof sails.config.globals.configsystem.emailuser != "undefined") {
+            emailconfig.emailuser = sails.config.globals.configsystem.emailuser
+            console.log("Read config value to configuration file.");
+          }
+          else {
+            console.log("No exist  emailuser  parameter in config system file set default parameter.");
+            emailconfig.emailuser = "formationfinder@localhost.com"
+          }
+
+          if (typeof sails.config.globals.configsystem.emailpassword != "undefined") {
+            emailconfig.emailpassword = sails.config.globals.configsystem.emailpassword
+            console.log("Read config value to configuration file.");
+          }
+          else {
+            console.log("No exist  emailuser  parameter in config system file set default parameter.");
+            emailconfig.emailpassword = ""
+          }
+
+          if (typeof sails.config.globals.configsystem.emailsecure != "undefined") {
+            emailconfig.emailsecure = sails.config.globals.configsystem.emailsecure
+            console.log("Read config value to configuration file.");
+          }
+          else {
+            console.log("No exist  emailsecure  parameter in config system file set default parameter.");
+            emailconfig.emailsecure = false
+          }
+        }
+
+         //Configuration.create({
+         //name: "mail",
+         //type: "smtp",
+         //emailsystemadress: "formationfinder@localhost.com",
+         //emailport: "587",
+         //emailhost: "smtp.gmail.com",
+         //emailuser: "inoid2007@gmail.com",
+         //emailpassword: "cibercubano",
+         //emailsecure: false
+         //}).then(function (Configurations) {
+         //configuration = Configurations[0];
+         ////console.log("Creado el objeto en BD");
+         //});
+
+
+        Configuration.create({
+          emailconfig
         }).then(function (Configurations) {
           configuration = Configurations[0];
           //console.log("Creado el objeto en BD");
         });
-        /* GMail configuration
 
-
-         Configuration.create({
-         name: "mail",
-         type: "smtp",
-         emailsystemadress: "formationfinder@localhost.com",
-         emailport: "25",
-         emailhost: "smtp.gmail.com",
-         emailuser: "inoid2007@gmail.com",
-         emailpassword: "cibercubano",
-         emailsecure: false
-         }).then(function (Configurations) {
-         configuration = Configurations[0];
-         //console.log("Creado el objeto en BD");
-         });
-         */
       }
     })
     ///Get id for formation

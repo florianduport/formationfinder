@@ -44,8 +44,22 @@ module.exports = {
     phoneNumber: {
       type: 'string'
     },
+    mangowallet: {
+      type: 'string'
+    },
+    mangouser: {
+      type: 'string'
+    },
+    mangobankaccount: {
+      type: 'string'
+    },
+    mangobicbankaccount: {
+      type: 'string'
+    },
 
-  	animators: {
+
+
+    animators: {
   		collection: 'animator',
   		via: 'formationCenter'
   	},
@@ -74,6 +88,7 @@ module.exports = {
       collection: 'customer',
       via: 'formationCenter'
     }
+
 
   }
 };

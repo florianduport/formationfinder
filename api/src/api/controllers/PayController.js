@@ -173,13 +173,206 @@ module.exports = {
     //console.log("sasda "  +  formationcenter);
     /*PaymentService.makepayment(userValue, mount, formationcenter, currency, function (err, result){
 
-      return res.json(result)
-    })*/
+     return res.json(result)
+     })*/
     return res.json({
       value: 'ok',
       info: 'Payment result: satisfactory'
     });
-  }
+  },
+
+  /**
+   * `PayController.makepay()`
+   * User data
+   */
+  //createwalletToFormationcenter: function (req, res) {
+  //  userValue = req.param("userdata")
+  //  mount = req.param("price")
+  //  formationcenter = req.param("formationcentername")
+  //
+  //  ///Find formationCenter with name
+  //  Formationcenter.findOne({name:formationcenter}).exec( function formName ( err, results)
+  //  {
+  //    if (err) return res.json({response:"ERROR", msg: err.message})
+  //
+  //    formationCenterData = results;
+  //
+  //    var legalUserData =  {
+  //      Tag: "custom meta",
+  //      HeadquartersAddress: {
+  //        AddressLine1: formationCenterData.address,
+  //        AddressLine2: formationCenterData.address,
+  //        City: formationCenterData.city,
+  //        Region: formationCenterData.city,
+  //        PostalCode: formationCenterData.zipCode,
+  //        Country: "FR"
+  //      },
+  //      LegalPersonType: "BUSINESS",
+  //      Name: formationCenterData.name,
+  //      LegalRepresentativeAddress: {
+  //        AddressLine1: formationCenterData.address,
+  //        AddressLine2: formationCenterData.address,
+  //        City: formationCenterData.city,
+  //        Region: formationCenterData.city,
+  //        PostalCode: formationCenterData.zipCode,
+  //        Country: "FR"
+  //      },
+  //      LegalRepresentativeBirthday: new Date().getTime(),
+  //      LegalRepresentativeCountryOfResidence: "ES",
+  //      LegalRepresentativeNationality: "FR",
+  //      LegalRepresentativeEmail: formationCenterData.email,
+  //      LegalRepresentativeFirstName: formationCenterData.name,
+  //      LegalRepresentativeLastName: formationCenterData.name,
+  //      Email: formationCenterData.email
+  //  }
+  //
+  //    currency = req.param("currency")
+  //    PaymentService.createwallet( config,legalUserData,   // var CustomerServices = require('../../api/services/CustomerService')
+  //      function resultServices ( err, result ) {
+  //
+  //        if (err) return res.json({response:"ERROR", msg: err.message})
+  //        console.log("Mangopay results", result)
+  //        console.log("Update formation center")
+  //        Formationcenter.update({name:formationcenter},{mangowallet:result.wallet,mangouser:result.user }).exec( function formName ( err, results)
+  //        {
+  //
+  //          if (err) return res.json({response:"ERROR", msg: err.message})
+  //
+  //          return res.json({
+  //            response: 'OK',
+  //            wallet: result.wallet,
+  //            user:result.user,
+  //            formationcener:formationCenterData.id
+  //          });
+  //        })
+  //      });
+  //  }
+  //})
+  //
+  //
+  //
+  ///**
+  // * `PayController.makepay()`
+  // * User data
+  // */
+  //makebuyer: function (req, res) {
+  //  userValue = req.param("userdata")
+  //  creditCardData = req.param("creditCardData")
+  //  formationID = req.param("formationidentifier")
+  //
+  //  ///-----------------------------------------
+  //
+  //
+  //  //Search the formation.
+  //  Formation.findOne(formationID).populate("formationcenter").
+  //    .exec(function (err, formationFounded) {
+  //      // body...
+  //      if(err){
+  //        return res.json({response:"ERROR", message:err});
+  //      }
+  //      ///Verify if formationcenter have walletid and userid mangopay information
+  //
+  //      //If the formation does'nt exist or is full send an error.
+  //      if(formationFounded === undefined){
+  //        return res.json({err: 'No formation match that id: ' + formationID.toString()});
+  //      }
+  //
+  //      if(formationFounded.isFull == true){
+  //        return res.json({err: 'The formation is full.'});
+  //      }
+  //
+  //      if ( typeof formationFounded.formationcenter.mangowallet  == "undefined" || typeof formationFounded.formationcenter.mangouser  == "undefined")
+  //        return res.json({response:"ERROR", message:"Formation center don´t have Mangopay information"})
+  //
+  //      ////Crear usuario legal y obtener un wallet para el
+  //
+  //      var naturalUserData = {
+  //        FirstName: userValue.firstName, // Required
+  //        LastName: userValue.name",    // Required
+  //        Birthday:  userValue.birthDate,  // Required,  // Required
+  //        Nationality: "FR", // Required, default: 'FR'
+  //        CountryOfResidence: "FR", // Required, default: 'FR'
+  //        Address: {
+  //          AddressLine1: userValue.address,
+  //          AddressLine2: userValue.address,
+  //          City: userValue.city,
+  //          Region: userValue.city,
+  //          PostalCode: userValue.zipCode,
+  //          Country: "FR"
+  //
+  //        },
+  //        Occupation: "",
+  //        IncomeRange: "6",
+  //        ProofOfIdentity: null,
+  //        ProofOfAddress: null,
+  //        PersonType: "NATURAL",
+  //        Email: userValue.email,
+  //        Tag: "custom tag"
+  //
+  //      }
+  //
+  //
+  //  ////Register Cards
+  //
+  //  ///Remmeber money count is in cents 1100 centes
+  //
+  //
+  //      config  = { currency:"EUR"}
+  //      PaymentService.createNaturalWallet( config, naturalUserData,  // var CustomerServices = require('../../api/services/CustomerService')
+  //        function resultServices ( err, result ) {
+  //          if ( err) return res.json({
+  //            response: "ERROR",
+  //            msg: err.message
+  //          })
+  //
+  //          uservalueWalletId = result.wallet
+  //          uservalueMangoUser = result.user
+  //
+  //
+  //          ////With price create objet for payin
+  //          ///Remenber in Euro cents
+  //
+  //          testAmount = 1200; //It's 120 euro
+  //          debiteFundsEx =  {
+  //            Currency: "EUR",
+  //            Amount: (formationFounded.price*100)
+  //          }
+  //
+  //          ///10% money for may platform
+  //          feesEx = {
+  //            Currency: "EUR",
+  //            Amount:  (0)
+  //          }
+  //
+  //
+  //          ///View home convert timestamp to corret date in tarjet
+  //          cardValueEx = {
+  //            CardNumber: creditCardData.number,
+  //            CardExpirationDate: "0623",  //12-06-2023  moment('0623', 'MMDD').unix()
+  //            CardCvx: '342',
+  //          }
+  //
+  //          console.log("CALL FUNCTION")
+  //
+  //          PaymentService.createCard( cardValueEx, config, result.user,  // var CustomerServices = require('../../api/services/CustomerService')
+  //            function resultServices ( err, result ) {
+  //              if (err) return res.json({response:"ERROR", message:err})
+  //              //User card parameter card number undefined
+  //
+  //
+  //             carddata = result.card.Id
+  //
+  //              PaymentService.makeBuyToMango( uservalueMangoUser, uservalueWalletId,  formationFounded.formationcenter.mangowallet  , carddata ,debiteFundsEx, feesEx,  // var CustomerServices = require('../../api/services/CustomerService')
+  //                function resultServices ( err, result ) {
+  //                  if (err) return res.json({response:"ERROR", message:err})
+  //
+  //                    return res.json({response:"OK", data:result})
+  //
+  //                });
+  //              })
+  //           });
+  //         });
+  //}
 
 
 

@@ -76,7 +76,8 @@
             <div class="search-form  form-horizontal">
                 <div class=" form-group">
                     <div class=" input-group " >
-                        <input  class="form-control"  placeholder="Ville/Zip code" type="text"  ng-model="criteriaList" >
+                        <!--For geolocation uib-typeahead="address for address in getLocation($viewValue)"-->
+                        <input  class="form-control"  placeholder="Ville/Zip code" type="text"  uib-typeahead="state for state in states | filter:$viewValue" ng-model="criteriaList" maxlength="40">
                         <span class="input-group-addon"  ng-click="searchFuncList()"><span class="fa fa-search"></span></span>
 
                         <!--<uib-alert ng-show="errorValid" dismiss-on-timeout=3000  type="success"  close="closeAlert()">{{ errorMessage }}</uib-alert>-->
@@ -94,126 +95,77 @@
 
                 </div>
 
-        </div>
-        <div class="row col-sm-8 col-xs-8 col-lg 8">
+                <div uib-alert ng-repeat="alert in alerts" dismiss-on-timeout=3000 ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert()">{{ alert.msg }}</div>
 
+            </div>
 
-
-                    <label class="fa-pull-left " style="color:#000066 " ng-click="advanceSearch=!advanceSearch">Advanced Search</label>
-
-                   <!-- <div ng-controller="CollapseDemoCtrl">
-                        <button type="button" class="btn btn-default" ng-click="isCollapsed = !isCollapsed">Toggle collapse Vertically</button>
-                        <hr>
-                        <div uib-collapse="isCollapsed">
-                            <div class="well well-lg">Some content</div>
+            <div class="row col-sm-8 col-xs-12 col-lg 8">
+                <div class="panel-default" is-open="status.isCustomHeaderOpen" template-url="group-template.html">
+                    <div class="panel-heading">
+                        <h4 class="panel-title" ;  style="color:#000066 ">
+                            Filter results by :
+                        </h4>
+                    </div>
+                    <div class="panel-body" style="text-align: left"  style="color:#000066 " >
+                        <div class="btn-group pull-left">
+                            <button type="button" class="btn   btn-primary" ng-model="radioModel" uib-btn-radio="'Left'" ng-click="sortType = 'price'; sortReverse = !sortReverse; updateSort()" >Price</button>
+                            <button type="button"class="btn    btn-primary" ng-model="radioModel" uib-btn-radio="'Middle'" ng-click="sortType = 'city'; sortReverse = !sortReverse; updateSort()">City</button>
+                            <button type="button" class="btn    btn-primary" ng-model="radioModel" uib-btn-radio="'Right'" ng-click="sortType = 'datetime'; sortReverse = !sortReverse; updateSort()">Date</button>
+                            <button type="button" class="btn   btn-primary"  ng-click="showMap($event)" ng-model="mapView"  uib-btn-radio="'Right'" >View Map</button>
+                            <!--ng-click="sortType = 'date'; sortReverse = !sortReverse; updateSort()"-->
                         </div>
+                    </div>
 
-                        <button type="button" class="btn btn-default animated"    ng-click="isCollapsedHorizontal = !isCollapsedHorizontal">Toggle collapse Horizontally</button>
-                        <hr>
-                        <div uib-collapse="isCollapsedHorizontal"   ng-class="{'fadeInDown':isCollapsedHorizontal}" horizontal>
-                            <div class="well well-lg animated">
-                                <div>
-                                    <label style="width: 50px">Date: </label>
-                                    <div class=" input-group date" >
-                                        <input class="form-control"  uib-datepicker-popup="{{format}}"  is-open="popup1.opened" datepicker-options="dateOptions" placeholder="Initial Date" type="text" ng-model="search.initialDate">
-                                        <span class="input-group-addon"  ><span id="datesearchInit" class="fa fa-calendar" ng-click="open1()"   ></span></span>
 
-                                    </div>
-                                    <div class=" input-group date" >
-                                        <input class="form-control" uib-datepicker-popup="{{format}}"  is-open="popup2.opened" datepicker-options="dateOptions" placeholder="End Date" type="text" ng-model="search.endDate">
-                                        <span class="input-group-addon"  ><span id="datesearchEnd" class="fa fa-calendar" ng-click="open2()"   ></span></span>
-                                    </div>
+                </div>
+                <label class="fa-pull-left " style="color:#0a0d66 " ng-click="advanceSearch=!advanceSearch"><p>Advanced Search</p></label>
+                <div class="advance-search  search-form  form-horizontal panel-group overlay">
+                    <form name="myform" novalidate >
+                        <div class=" animated " style="padding-left: 0"
+                             ng-class="{'fadeInDown':advanceSearch,'hidden':!advanceSearch}">
+                            <div class="form-group">
+                                <label style="width: 50px; color: #000066">Date: </label>
+                                <div class=" input-group date ident-date" >
+                                    <span class="input-group-addon"  ><span  class="text-info">Init  date:</span></span>
+                                    <input class="form-control md-datepicker-is-showing"  uib-datepicker-popup="{{format}}"  is-open="popup1.opened" name="initDate" ng-pattern="/^\d{2}-\w{3,9}-\d{4}$/" datepicker-options="dateOptionsSearch" placeholder="" type="text" ng-model="search.initialDate">
+                                    <span class="input-group-addon"  ><span id="datesearchInit" class="fa fa-calendar " ng-click="open1()"   ></span></span>
+
                                 </div>
-                                <div>
-                                    <label style="width: 50px">Price: </label>
-                                    <input class="form-control" placeholder="150 " type="number" ng-model="initialPrice">
+                                <span   class="error-message text-danger" ng-show="myform.initDate.$dirty && myform.initDate.$invalid"><p style="text-decoration-color:#f1a417;background: #afd9ee">Init date field should be date</p></span>
+
+                                <div class=" input-group date ident-date" >
+                                    <span class="input-group-addon"  ><span  class="text-info">End date:</span></span>
+                                    <input class="form-control" uib-datepicker-popup="{{format}}" name="endDate" ng-pattern="/^\d{2}-\w{3,9}-\d{4}$/" is-open="popup2.opened" datepicker-options="dateOptionsSearch" placeholder="" type="text" ng-model="search.endDate">
+                                    <span class="input-group-addon"  ><span id="datesearchEnd" class="fa fa-calendar" ng-click="open2()"   ></span></span>
+
                                 </div>
+                                <span   class="error-message text-danger" ng-show="myform.endDate.$dirty && myform.endDate.$invalid"><p style="text-decoration-color:#f1a417;background: #afd9ee">End date field should be date</p></span>
 
                             </div>
+                            <div class="form-group">
+                                <label style="width: 50px; color: #000066">Price: </label>
+                                <div class=" input-group " >
+
+                                    <input class="form-control" placeholder="" name="phoneNumber" type="number"  ng-pattern="/^\d{1,5}$/" ng-model="initialPrice">
+                                    <span class="input-group-addon"  > <span class="fa fa-money "    ></span></span>
+                                </div>
+                                <span   class="error-message text-danger" ng-show="myform.phoneNumber.$dirty && myform.phoneNumber.$invalid"><p style="text-decoration-color:#f1a417;background: #afd9ee">Price field should be of 5 digits</p></span>
+                            </div>
                         </div>
-                    </div>-->
-            <div uib-alert ng-repeat="alert in alerts" dismiss-on-timeout=3000 ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert()">{{ alert.msg }}</div>
-
-           </div>
-
-
-            <!-- <uib-alert ng-show="errorValid" dismiss-on-timeout=3000  type="success"  close="closeAlert()">{{ errorMessage }}</uib-alert>
-             <uib-alert template-url="alert.html">A happy alert!</uib-alert>-->
-
-
-        </div>
-        <div class="row col-sm-8 col-xs-8 col-lg 8">
-
-        </div>
-
-    </div>
-    <div class="formationresultlist">
-    <div class="container">
-        <!-- col-md-10 col-xs-12 col-md-offset-1
-           -->
-
-    <div class="row col-sm-8 col-xs-8 col-lg 8">
-        <div class="search-form  form-horizontal panel-group">
-            <form name="myform" novalidate>
-            <div class="advance-search  animated " style="padding-left: 0"
-                 ng-class="{'fadeInDown':advanceSearch,'hidden':!advanceSearch}">
-                <div>
-                    <label style="width: 50px; color: #000066">Date: </label>
-                    <div class=" input-group date" >
-                        <span class="input-group-addon"  ><span  class="text-info">Init date:</span></span>
-                        <input class="form-control"  uib-datepicker-popup="{{format}}"  is-open="popup1.opened" name="initDate" ng-pattern="/^\d{2}-\w{4}-\d{4}$/" datepicker-options="dateOptions" placeholder="" type="text" ng-model="search.initialDate">
-                        <span class="input-group-addon"  ><span id="datesearchInit" class="fa fa-calendar" ng-click="open1()"   ></span></span>
-
-                    </div>
-                    <span   class="error-message text-danger" ng-show="myform.initDate.$dirty && myform.initDate.$invalid"><h5 style="text-decoration-color:#f1a417;background: #afd9ee">Init date field should be date</h5></span>
-
-                    <div class=" input-group date" >
-                        <span class="input-group-addon"  ><span  class="text-info">End date:</span></span>
-                        <input class="form-control" uib-datepicker-popup="{{format}}" name="endDate" ng-pattern="/^\d{2}-\w{4}-\d{4}$/" is-open="popup2.opened" datepicker-options="dateOptions" placeholder="" type="text" ng-model="search.endDate">
-                        <span class="input-group-addon"  ><span id="datesearchEnd" class="fa fa-calendar" ng-click="open2()"   ></span></span>
-
-                    </div>
-                    <span   class="error-message text-danger" ng-show="myform.endDate.$dirty && myform.endDate.$invalid"><h5 style="text-decoration-color:#f1a417;background: #afd9ee">End date field should be date</h5></span>
-
+                    </form>
                 </div>
-                 <div>
-                    <label style="width: 50px; color: #000066">Price: </label>
-                    <input class="form-control" placeholder="" name="phoneNumber" type="number"  ng-pattern="/^\d{1,5}$/" ng-model="initialPrice">
-                   <span   class="error-message text-danger" ng-show="myform.phoneNumber.$dirty && myform.phoneNumber.$invalid"><h5 style="text-decoration-color:#f1a417;background: #afd9ee">Price field should be of 5 digits</h5></span>
-                </div>
-            </div>
-                </form>
+         </div>
+        <div class="row col-sm-8   col-lg 8">
+
+
+        <div class="row col-sm-8  col-lg 8">
 
         </div>
 
-    </div>
-    <div class="row col-sm-8 col-xs-8 col-lg 8">
-
-
-    </div>
-    <div class="row col-sm-8 col-xs-8 col-lg 8">
     </div>
    </div>
 
-    <div class="container ">
-    <div class="row">
-        <div class="panel-default" is-open="status.isCustomHeaderOpen" template-url="group-template.html">
-            <div class="panel-heading">
-                <h4 class="panel-title" ;  style="color:#000066 ">
-                    Filter and order results by :
-                </h4>
-            </div>
-            <div class="panel-body" style="text-align: left"  style="color:#000066 " >
-                <div class="btn-group pull-left">
-                    <label class="btn btn-primary" ng-model="radioModel" uib-btn-radio="'Left'" ng-click="sortType = 'price'; sortReverse = !sortReverse; updateSort()" >Price</label>
-                    <label class="btn btn-primary" ng-model="radioModel" uib-btn-radio="'Middle'" ng-click="sortType = 'city'; sortReverse = !sortReverse; updateSort()">City</label>
-                    <label class="btn btn-primary" ng-model="radioModel" uib-btn-radio="'Right'" ng-click="sortType = 'date'; sortReverse = !sortReverse; updateSort()">Date</label>
-                </div>
-            </div>
-        </div>
-        </div>
 
-    </div>
       </div>
 
 
@@ -222,29 +174,32 @@
                 <div align="right" style="color:#000066">
                     <ul   uib-pagination boundary-links="true" items-per-page="app.itemPerPage" total-items="app.totalItems" ng-click="getPagableRecords()" ng-model="app.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
                 </div>
-                <ul class="list-group">
-                    <div>
+                <ul class="list-group" >
 
-                    <li class="list-group-item"  ng-repeat="iformation in formations | filter:criteriaList | orderBy:sortType ">
+
+                    <li class="list-group-item" ng-repeat="iformation in formations | filter:criteriaList | orderBy:sortType " >
                         <div class="row">
 
-                                <div class="col-lg-2 col-sm-2">
-                                    <p class="text-info text-primary">{{iformation.name}}</p>
-                                </div>
+                                <div class="col-sm-4 col-xs-6 col-lg 4  clearfix">
+                                    <form>
+                                        <input type="checkbox" checklist-model="search.formation" checklist-value="iformation">
+                                        <!--<input type="checkbox" ng-model="iformation.name">-->
+                                    </form>
 
-                        </div>
-                        <div class="row">
-                            <div class="row col-sm-4 col-xs-4 col-lg 4">
+                                    <div class="text-success bold" title="Formation center´s name">{{iformation.name}}</div>
+
+
+
 
                             <div class="info-stage">
                                 <div class="nom-ville">
-                                   City:  {{iformation.city}}</div>
+                                   City: {{iformation.city}}</div>
 
-                                <div class="adresse" title="{{iformation.address}}">
-                                    <p >Adress: {{iformation.address}}</p></div>
+                                <div class="texte-prefecture" title="{{iformation.address}}">
+                                    Address:{{iformation.address}}</div>
                             </div>
                             </div>
-                            <div class="row col-sm-4 col-xs-4 col-lg 4">
+                            <div class="col-sm-4 col-xs-4 col-lg 4  hidden-xs clearfix">
                                 <div class="text-center proximite pcolorbox">
                                     <a href="" ng-click="searchPlusInformation(iformation.id)" rel="nofollow" class="popup-fiche cboxElement">
                                         <div class="icons puce-active pcolorbox"></div>
@@ -271,44 +226,43 @@
                                                     <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
                                                 </div>
                                             </script>
-                                            <div class="plus-info pcolorbox" ng-click="openFormationCenterInfo( iformation.name)">+d'info</div>
-                                           <!-- <button type="button" class="btn btn-default" ng-click="open()">Open me!</button>
-                                            <button type="button" class="btn btn-default" ng-click="open('lg')">Large modal</button>
-                                            <button type="button" class="btn btn-default" ng-click="open('sm')">Small modal</button>
-                                            <button type="button" class="btn btn-default" ng-click="toggleAnimation()">Toggle Animation ({{ animationsEnabled }})</button>
-                                            <div ng-show="selected">Selection from a modal: {{ selected }}</div>-->
+                                            <div class="plus-info pcolorbox alert-link" ng-click="openFormationCenterInfo( iformation.name)">Other data</div>
                                         </div>
                                     </a>
                                 </div>
-                            <div class="date text-center">
-                                Date:
-                                <div title="{{iformation.dates[0].date}}">{{iformation.dates[0].date}}</div>
+                                <div class="text-info pull-left">Places disponibles : {{iformation.maxPeople}}</div>
+                            <div class="date text-left">
+                                <div  class="text-info pull-left" title="{{idate.date}}">
 
-                                <!--<div title="Lundi 18 et Mardi 19 Juillet 2016">
-                                    <div class="date-bloc">
-                                        <span class="day-of-week">Lun</span>
-                                        <span class="day">18</span>
-                                        <span class="month">Juil</span>
+                                        <div class="pcolorbox" >Dates:</div>
+
+                                    <uib-accordion close-others="oneAtATime">
+                                        <div uib-accordion-group class="panel-default" heading="{{  idate.date }}" ng-repeat="idate in iformation.dates">
+                                            <span class="input-group-addon"  >  Morning: :{{idate.morning.hourStart}} -{{idate.morning.hourEnd}}</span>
+                                            <span class="input-group-addon"  >  Afternoon: {{idate.afternoon.hourStart}} -{{idate.afternoon.hourEnd}}</span>
+                                        </div>
+                                    </uib-accordion>
+                                </div>
+
+
+                                    <div class="hide">
+                                        <p>{{iformation.datetime}}</p>
                                     </div>
-                                    <div class="date-bloc">
-                                        <span class="day-of-week">Mar</span>
-                                        <span class="day">19</span>
-                                        <span class="month">Juil</span>
-                                    </div>
-                                </div>-->
-                                <div class="places-dispo">Places disponibles : {{iformation.maxPeople}}</div>
+                                                            </div>
+                                                            </div>
+                  <div class="col-sm-4 col-xs-6 col-lg 4  clearfix"  >
 
-                            </div>
-                            </div>
-                            <div class="row col-sm-4 col-xs-4 col-lg 4">
-                            <div class="prix text-right" >
-                                <span class="label label-default label-pill label-danger pull-right">{{iformation.price}} €</span>
-                                <!--<span class="prix-normal"></span>-->
-                            </div>
+                                  <div class="prix-normal"  title="Price" >
+                                      <span style="margin-rightt: 1px" class="label label-default label-pill label-danger"> Price: {{iformation.price}} €</span>
+                                      <!--<span class="prix-normal"></span>-->
+                                  </div>
 
-                            <div  class="reserver text-center pull-right">
-                               <button class="btn btn-default" href=""   ng-click="formationBook(iformation.id)" title="">S'inscrire</button>
-                            </div>
+                                  <div  class="reserver text-center">
+                                      <button class="btn  btn-success"  style="border-radius: 10%" href=""   ng-click="formationBook(iformation.id)" title="">S'inscrire</button>
+                                  </div>
+
+
+
 
 <!--                            <div class="hide">
                                 <span class="lieu_id">3604</span>
@@ -339,97 +293,13 @@
                         </div>
                     </li>
 
-                    </div>
-                    <!--<li class="list-group-item">
-                        <span class="label label-default label-pill pull-right">1</span>
-                        Morbi leo risus
-                    </li>
-                    <li class="list-group-item">
-                        <span class="label label-default label-pill pull-right">14</span>
-                        Cras justo odio
-                    </li>
-                    <li class="list-group-item">
-                        <span class="label label-default label-pill pull-right">2</span>
-                        Dapibus ac facilisis in
-                    </li>
-                    <li class="list-group-item">
-                        <span class="label label-default label-pill pull-right">1</span>
-                        Morbi leo risus
-                    </li>
-                    <li class="list-group-item">
-                        <span class="label label-default label-pill pull-right">14</span>
-                        Cras justo odio
-                    </li>
-                    <li class="list-group-item">
-                        <span class="label label-default label-pill pull-right">2</span>
-                        Dapibus ac facilisis in
-                    </li>
-                    <li class="list-group-item">
-                        <span class="label label-default label-pill pull-right">1</span>
-                        Morbi leo risus
-                    </li>
-                    <li class="list-group-item">
-                        <span class="label label-default label-pill pull-right">14</span>
-                        Cras justo odio
-                    </li>
-                    <li class="list-group-item">
-                        <span class="label label-default label-pill pull-right">2</span>
-                        Dapibus ac facilisis in
-                    </li>
-                    <li class="list-group-item">
-                        <span class="label label-default label-pill pull-right">1</span>
-                        Morbi leo risus
-                    </li>
-                    <li class="list-group-item">
-                        <span class="label label-default label-pill pull-right">14</span>
-                        Cras justo odio
-                    </li>
-                    <li class="list-group-item">
-                        <span class="label label-default label-pill pull-right">2</span>
-                        Dapibus ac facilisis in
-                    </li>
-                    <li class="list-group-item">
-                        <span class="label label-default label-pill pull-right">1</span>
-                        Morbi leo risus
-                    </li> <li class="list-group-item">
-                    <span class="label label-default label-pill pull-right">14</span>
-                    Cras justo odio
-                </li>
-                    <li class="list-group-item">
-                        <span class="label label-default label-pill pull-right">2</span>
-                        Dapibus ac facilisis in
-                    </li>
-                    <li class="list-group-item">
-                        <span class="label label-default label-pill pull-right">1</span>
-                        Morbi leo risus
-                    </li>
 
 
-                    <li class="list-group-item">
-                        <span class="label label-default label-pill pull-right">14</span>
-                        Cras justo odio
-                    </li>
-                    <li class="list-group-item">
-                        <span class="label label-default label-pill pull-right">2</span>
-                        Dapibus ac facilisis in
-                    </li>
-                    <li class="list-group-item">
-                        <span class="label label-default label-pill pull-right">1</span>
-                        Morbi leo risus
-                    </li>-->
 
                 </ul>
-                 <!--<div style="float: right; margin: 15px">
-                    <pre>Page: {{app.currentPage}} / {{app.totalItems}}</pre>
-                </div>-->
                 <div align="right" style="color:#000066">
                     <ul   uib-pagination boundary-links="true" items-per-page="app.itemPerPage" total-items="app.totalItems" ng-click="getPagableRecords()" ng-model="app.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
 
-                    <!-- <uib-pagination items-per-page="app.itemPerPage" num-pages="numPages"
-                                     total-items="app.totalItems" boundary-link-numbers="true"
-                                     ng-model="app.currentPage" rotate="false" max-size="app.maxSize"
-                                     class="pagination-sm" boundary-links="true"
-                                     ng-click="getPagableRecords()"></uib-pagination>-->
                 </div>
             </div>
             <div class="row">

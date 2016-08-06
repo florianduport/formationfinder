@@ -11,6 +11,25 @@
 
 module.exports.bootstrap = function(cb) {
    //console.log(sails.model)
+  ///Read config file
+ //
+  //var fs = require('fs');
+  var fs = require('node-properties-parser');
+
+  try {
+ try {
+    var config = fs.readSync('etc/config.properties');
+    console.log("JSON FILE READED", config)
+    sails.config.globals.configsystem = config;
+ }catch (err) {
+   console.log("ERROR: ", err)
+ }
+  }
+  catch (err) {
+
+    console.error(err);
+  }
+
 
   // It's very important to trigger this callback method when you are finished
   // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)

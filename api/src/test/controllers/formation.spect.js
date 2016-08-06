@@ -535,8 +535,8 @@ describe('FormationController', function() {
           zipcode: iPlace.zipcode,
           page: 0,
           len: 5,
-          initialDate: "2016-10-04",
-          finalDate: "2017-05-03"
+          initialDate: "2015-10-04",
+          finalDate: "2023-05-03"
         }
 
         request(sails.hooks.http.app)
@@ -559,17 +559,18 @@ describe('FormationController', function() {
           zipcode: iPlace.zipcode,
           page: 0,
           len: 5,
-          initialDate: "2016-10-04",
-          finalDate: "2017-05-03"
+          initialDate: "2015-10-04",
+          finalDate: "2023-05-03"
         }
 
+        console.log("######------------------------------------------------------------------------------#####")
         request(sails.hooks.http.app)
           .post('/Formation/countByZipcodeMongoEx')
           .send(config)
           .expect(200, function (err, res) {
             if (err) return done(err);
             //console.log("Respuesta ",res.body.length )
-            assert.equal( res.body,1)
+            assert.equal( res.body.size,1)
             done();
           })
       });
@@ -624,7 +625,7 @@ describe('FormationController', function() {
 
           // console.log("Resultado ", res.body);
 
-          assert.equal(true, res.body > 1)
+          assert.equal(true, res.body.size > 1)
           done();
         })
 

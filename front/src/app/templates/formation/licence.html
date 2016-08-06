@@ -1,43 +1,77 @@
 <br />
-<form name="licence">
-    <div class="row">
-        <div class="col-sm-4 col-sm-offset-1">
-            <div class="form-group">
-                <label>Number (*)</label>
-                <input name="number" id="number" ng-model="vm.customerData.driverLicence.number" class="form-control" type="text" required />
-                <span style="color:#cc0000" ng-show="licence.number.$dirty && licence.number.$invalid">
-                    <span ng-show="licence.number.$error.required">Licence number is required.</span>
-                </span>
-            </div>
-
-            <div class="form-group">
-                <label>Place Of Deliverance (*)</label>
-                <input name="placeOfDeliverance" id="placeOfDeliverance" ng-model="vm.customerData.driverLicence.placeOfDeliverance" class="form-control" type="text" required/>
-                <span style="color:#cc0000" ng-show="licence.placeOfDeliverance.$dirty && licence.placeOfDeliverance.$invalid">
-                    <span ng-show="licence.placeOfDeliverance.$error.required">Place of Deliverance is required.</span>
-                </span>
-            </div>
+<form name="licence" class="form-horizontal" role="form">
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-5 col-md-5 col-lg-5" for="number">Number (*)</label>
+        <div class="col-xs-12 col-sm-6 col-md-5 col-lg-5">
+            <input name="number" id="number" 
+                   ng-model="vm.customerData.driverLicence.number" 
+                   ng-pattern="vm.numberRegExp"
+                   ng-change="vm.checkCustomerLicenceNumber()"
+                   maxlength="12"
+                   class="form-control" 
+                   type="text" 
+                   required />
         </div>
-        <div class="col-sm-4 col-sm-offset-1">
-            <div class="form-group">
-                <label>Date Of Deliverance (*)</label>
-                <input name="dateOfDeliverance" id="dateOfDeliverance" ng-model="vm.customerData.driverLicence.dateOfDeliverance" class="form-control" type="text" required/>
-                <span style="color:#cc0000" ng-show="licence.dateOfDeliverance.$dirty && licence.dateOfDeliverance.$invalid">
-                    <span ng-show="licence.dateOfDeliverance.$error.required">Date of deliverance is required.</span>
-                </span>
-            </div>
-
-            <div class="form-group">
-                <label>Date Of Procuration (*)</label>
-                <input name="dateOfProcuration" id="dateOfProcuration" ng-model="vm.customerData.driverLicence.dateOfProcuration" class="form-control" type="text" required/>
-                <span style="color:#cc0000" ng-show="licence.dateOfProcuration.$dirty && licence.dateOfProcuration.$invalid">
-                    <span ng-show="licence.dateOfProcuration.$error.required">Date of procuration is required.</span>
-                </span>
-            </div>
-        </div>
+        <span style="color:#cc0000" ng-show="licence.number.$dirty && licence.number.$invalid">
+            <span ng-show="licence.number.$error.required">Licence number is required.</span>
+            <span ng-show="licence.number.$error.pattern">You sould provide 12 digit.</span>
+        </span>
+        <span style="color:#cc0000" ng-show="vm.customerLicenceNumberUsed">There is a registered customer with that same licence number in this year.</span>
     </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-5 col-md-5 col-lg-5" for="placeOfDeliverance">Place Of Deliverance (*)</label>
+        <div class="col-xs-12 col-sm-6 col-md-5 col-lg-5">
+            <input name="placeOfDeliverance" id="placeOfDeliverance" 
+                   ng-model="vm.customerData.driverLicence.placeOfDeliverance" 
+                   maxlength="40"
+                   class="form-control" type="text" required/>
+        </div>
+        <span style="color:#cc0000" ng-show="licence.placeOfDeliverance.$dirty && licence.placeOfDeliverance.$invalid">
+            <span ng-show="licence.placeOfDeliverance.$error.required">Place of Deliverance is required.</span>
+        </span>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-5 col-md-5 col-lg-5" for="dateOfDeliverance">Date Of Deliverance (*)</label>
+        <div class="input-group date col-xs-12 col-sm-6 col-md-5 col-lg-5 ident-date">
+            <input name="dateOfDeliverance" id="dateOfDeliverance" 
+                   ng-model="vm.customerData.driverLicence.dateOfDeliverance" 
+                   class="form-control" 
+                   type="text" required 
+                   placeholder="2010/05/22"
+                   ng-pattern="vm.dateRegExp"
+                   ng-change="vm.verifyDeliDate()"
+                   uib-datepicker-popup="{{vm.format}}"
+                   is-open="vm.popupDeliDate.opened"
+                   datepicker-options="vm.DeliDateOptions"/>
+            <span class="input-group-addon" ><span id="deliDateInit" class="fa fa-calendar" ng-click="vm.openDeliDate()"></span></span>
+        </div>
+        <span class="error-message text-danger" ng-show="licence.dateOfDeliverance.$dirty && licence.dateOfDeliverance.$invalid">You should provide a valid date string.</span>
+        <span class="error-message text-danger" ng-show="vm.showDDerror">The date provided is out of posible range.</span>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-5 col-md-5 col-lg-5" for="dateOfProcuration">Date Of Procuration (*)</label>
+        <div class="input-group date col-xs-12 col-sm-6 col-md-5 col-lg-5 ident-date">
+            <input name="dateOfProcuration" id="dateOfProcuration" 
+                   ng-model="vm.customerData.driverLicence.dateOfProcuration" 
+                   class="form-control" 
+                   type="text" required 
+                   placeholder="2010/05/23"
+                   ng-pattern="vm.dateRegExp"
+                   ng-change="vm.verifyProcDate()"
+                   uib-datepicker-popup="{{vm.format}}"
+                   is-open="vm.popupProcDate.opened"
+                   datepicker-options="vm.DeliDateOptions" />
+            <span class="input-group-addon" ><span id="procDateInit" class="fa fa-calendar" ng-click="vm.openProcDate()"></span></span>
+        </div>
+        <span class="error-message text-danger" ng-show="licence.dateOfProcuration.$dirty && licence.dateOfProcuration.$invalid">You should provide a valid date string.</span>
+        <span class="error-message text-danger" ng-show="vm.showPDerror">The procuration date provided is out of posible range.</span>
+        <span class="error-message text-danger" ng-show="vm.showPDerrorLessDD">The procuration date must be after deliverance date.</span>
+    </div>
+
     <div class="row">
-        <div class="col-md-9 col-md-offset-1">
+        <div class="col-xs-12 col-sm-10 col-md-9 col-sm-offset-2 col-md-offset-1">
             <div uib-alert ng-repeat="message in vm.validationMessages" ng-class="'alert-' + message.type" close="vm.closeMessage($index)" dismiss-on-timeout="4000">{{message.info}}</div>
         </div>
     </div>

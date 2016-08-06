@@ -6,7 +6,11 @@
  */
 
 module.exports = {
-
+  searchallplaces: function(req, res, next){
+    Place.find().exec( function(err, resulFormation){
+       return res.json(resulFormation)
+    });
+  },
   /**
    *
    * @param req lat: latidude, long: longitude, distance(optional): Max distance in meters
@@ -93,6 +97,61 @@ module.exports = {
             result:PlaceResult
           })
       });
+    });
+  },
+
+
+  searchByCities: function (req, res, next) {
+    citiesArray = req.param("places");
+    if (!citiesArray ) {
+      return res.json({
+        response: "ERROR",
+        msg: "Parameter places not exist"
+      })
+    }
+
+    if (citiesArray.length == 0) {
+      return res.json({
+        response: "ERROR",
+        msg: "Not exist citi's name for search"
+      })
+    }
+
+    query = {}
+    query.city = {$in:citiesArray}
+    /*query = {
+     place : {$in:arrayData},
+     price: {
+     $gte:50
+     },
+     dates: {
+     $elemMatch:{
+     date: {
+     $gte:new Date("2016-10-04"),
+     $lte: new Date("2017-05-03")
+     }
+     }
+     }
+
+     }*/
+
+    console.log("QUERY: " , query)
+    Place.native(function(err, collection) {
+      if (err) return res.serverError(err);
+      //console.log("---")
+      ////Transform all arrayData to new ObjectId [new ObjectID (arrayData[0])]
+      // {"place":{"$all": [new ObjectID(arrayData[0])] },"price":{"$gte":50},"dates":{"$elemMatch":{"date":{"$gte":new Date("2016-10-04"),"$lte":new Date("2017-05-03")}}}}
+
+      //console.log("******")
+      // parameters.place = {$all:[new ObjectID(arrayData[0])]}
+      collection.find(query).toArray(function (err, results) {
+
+           console.log("Result name in system",results )
+            if (err) return res.serverError(err);
+
+
+             return res.json(results);
+      })
     });
   }
 };

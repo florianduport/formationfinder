@@ -63,7 +63,7 @@ module.exports.connections = {
   //   user: 'username', //optional
   //   password: 'password', //optional
   //   database: 'your_mongo_db_name_here' //optional
-  // },
+  // }, '192.168.56.102',
 
      MongodbServer: {
      adapter: 'sails-mongo',
