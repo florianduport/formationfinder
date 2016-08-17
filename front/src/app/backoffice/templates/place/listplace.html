@@ -1,0 +1,130 @@
+<div class="container" style="">
+    <div class="row">
+        <div class="col-lg-6 col-sm-6 col-xs-12 ">
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+           <!--Search form -->
+            <div class="search-form  form-horizontal">
+                <div class="form-group">
+
+                    <div class="input-group" >
+                        <!--For geolocation uib-typeahead="address for address in getLocation($viewValue)"-->
+                        <input  class="form-control"  placeholder="Ville/Zip code" type="text"  uib-typeahead="state for state in states | filter:$viewValue" ng-model="criteriaList" maxlength="40">
+                        <span class="input-group-addon"  ng-click="searchFuncList()"><span class="fa fa-search"></span></span>
+
+                    </div>
+                    <div uib-alert ng-repeat="alert in alerts" dismiss-on-timeout=3000 ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert()">{{ alert.msg }}</div>
+                    <button type="button" class="btn   btn-primary" ng-click="advanceSearch = !advanceSearch">Advanced Search</button>
+                    <hr>
+                    <div uib-collapse="advanceSearch" horizontal>
+                        <div class="fadeInDown">
+                            <form name="myform" novalidate >
+                                <!--<div class=" animated " style="padding-left: 0"-->
+                                <!--ng-class="{'fadeInDown':advanceSearch,'hidden':!advanceSearch}">-->
+                                <div class=" form-group">
+                                    <label style="width: 50px; color: #cd0b1a">Date: </label>
+                                    <div class=" input-group date ident-date" >
+                                        <span class="input-group-addon"  ><span  class="text-danger">Init  date:</span></span>
+                                        <input   tooltip-placement="top" tooltip-trigger="'none'" uib-tooltip="Init date field should be date" tooltip-class="customClass" tooltip-is-open="myform.initDate.$dirty && myform.initDate.$invalid" class="form-control md-datepicker-is-showing"  uib-datepicker-popup="{{format}}"  is-open="popup1.opened" name="initDate" ng-pattern="/^\d{2}-\w{3,9}-\d{4}$/" datepicker-options="dateOptionsSearch" placeholder="" type="text" ng-model="search.initialDate">
+                                        <span class="input-group-addon"  ><span id="datesearchInit" class="fa fa-calendar " ng-click="open1()"   ></span></span>
+
+                                    </div>
+                                    <!--<span   class="error-message text-danger" ng-show="myform.initDate.$dirty && myform.initDate.$invalid"><p style="text-decoration-color:#f1a417;background: #afd9ee">Init date field should be date</p></span>-->
+
+                                    <div class=" input-group date ident-date" >
+                                        <span class="input-group-addon"  ><span  class="text-danger">End date:</span></span>
+                                        <input  tooltip-placement="bottom" tooltip-trigger="'none'" uib-tooltip="End date field should be date" tooltip-class="customClass" tooltip-is-open="myform.endDate.$dirty && myform.endDate.$invalid" class="form-control" uib-datepicker-popup="{{format}}" name="endDate" ng-pattern="/^\d{2}-\w{3,9}-\d{4}$/" is-open="popup2.opened" datepicker-options="dateOptionsSearch" placeholder="" type="text" ng-model="search.endDate">
+                                        <span class="input-group-addon"  ><span id="datesearchEnd" class="fa fa-calendar" ng-click="open2()"   ></span></span>
+
+                                    </div>
+                                    <!--<span   class="error-message text-danger" ng-show="myform.endDate.$dirty && myform.endDate.$invalid"><p style="text-decoration-color:#f1a417;background: #afd9ee">End date field should be date</p></span>-->
+
+                                </div>
+                                <div class="form-group">
+                                    <label style="width: 50px; color: #cd0b1a">Price: </label>
+                                    <div class=" input-group " >
+
+                                        <input  class="form-control"  tooltip-placement="top" tooltip-trigger="'none'" uib-tooltip="Price field should be of 5 digits" tooltip-class="customClass" tooltip-is-open="myform.phoneNumber.$dirty && myform.phoneNumber.$invalid"  placeholder="" name="phoneNumber" type="number"  ng-pattern="/^\d{1,5}$/" ng-model="initialPrice">
+                                        <span class="input-group-addon"  > <span class="fa fa-money "    ></span></span>
+                                    </div>
+                                    <!--<span   class="error-message text-danger" ng-show="myform.phoneNumber.$dirty && myform.phoneNumber.$invalid"><p style="text-decoration-color:#f1a417;background: #afd9ee">Price field should be of 5 digits</p></span>-->
+                                </div>
+                                <!--</div>-->
+                            </form>
+                        </div>
+                    </div>
+                    <div class=" advance-search  search-form  form-horizontal panel-group overlay">
+
+                    </div>
+
+                </div>
+
+
+            </div>
+           <!--Place table -->
+            <table class="table bootstrap-datatable countries">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Postal code</th>
+                    <th>City</th>
+                    <th>Agrement</th>
+                    <th>Activated</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="iplace in places" >
+                    <td >{{iplace.name}}</td>
+                    <td>{{iplace.address}}</td>
+                    <td>{{iplace.zipcode}}</td>
+                    <td>{{iplace.city}}</td>
+                    <td>
+                        <!--Agrement's name-->
+                        <!--Agrement's number-->
+                    </td>
+                    <td>
+                        <div class=" input-group " >
+                            <input type="checkbox" checklist-model="search.formation" checklist-value="iplace.isActivated" >
+
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-6 col-sm-6  hidden-xs">
+            <!--Map show-->
+            <ul >
+                <li>
+                    <div class=" input-group ">
+
+                        <label class="text-info" for="showall">Search all places</label>
+                                        <span id="showall" class="input-group-addon"><span class="fa fa-search "
+                                                                                           ng-click="searchAllPlaces($event)"></span></span>
+
+                    </div>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <div id="ng-map-class">
+                        <!--<ng-map  zoom="4" center="48.864716, 2.349014" on-center-changed="vm.centerChanged()" on-click="vm.click()">-->
+                        <!--<marker position="48.864716, 2.349014"  title="Click to zoom"></marker>-->
+                        <!--<div ng-repeat="iformationcenter in formationcenters">-->
+                        <!--<div ng-repeat="iplace in iformationcenter.places">-->
+                        <!--<marker position="{{iplace.latitude}}, {{iplace.longitude}}"  title="Click to zoom"></marker>-->
+                        <!--</div>-->
+                        <!--</div>-->
+
+                        <!--</ng-map>-->
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+

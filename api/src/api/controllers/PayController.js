@@ -185,6 +185,181 @@ module.exports = {
    * `PayController.makepay()`
    * User data
    */
+  makepayment: function (req, res) {
+    userValue = req.param("userdata")
+    cardValue = req.param("cardata")
+
+    ///Validate cardValue
+
+    mount = req.param("price")
+
+
+    //Validate price
+
+    formationcenter = req.param("formationcentername")
+
+    ///Validate formationcenter name
+
+
+    currency = req.param("currency")
+
+    //Validate currency
+
+    ///Find walletid and userid in Formationcenter register
+
+    FormationCenter.findOne({name:formationcenter}).exec(function formationResult(err, formationCenterData){
+      if (err)
+         return res.json({response:"ERROR", message:err})
+      if ( typeof formationCenterData.walletid == "undefined" || typeof formationCenterData.walletid == "undefined")
+        return res.json({response:"ERROR", message:"Formation Center " + formationcenter + " don't have data for make payment"})
+
+      var naturalUserData = {
+      FirstName: "Dionis", // Required
+      LastName: "HugoSI",    // Required
+      Birthday:  moment('300680', 'DDMMYY').unix(),  // Required,  // Required
+      Nationality: "FR", // Required, default: 'FR'
+      CountryOfResidence: "FR", // Required, default: 'FR'
+      Address: {
+        AddressLine1: "1 Mangopay Street",
+        AddressLine2: "The Loop",
+        City: "Paris",
+        Region: "Ile de France",
+        PostalCode: "75001",
+        Country: "FR"
+
+      },
+      Occupation: "Writer",
+      IncomeRange: "6",
+      ProofOfIdentity: null,
+      ProofOfAddress: null,
+      PersonType: "NATURAL",
+      Email: "victor@hugo.com",
+      Tag: "custom tag"
+
+    }
+
+    //Blog workflow
+    //var naturalUserData = {
+    //  Email: "ada.lovelace@gmail.com",
+    //  FirstName: "Ada",
+    //  LastName: "Lovelace",
+    //  Address: "C/ Larios, 1, 29015, Málaga",
+    //  Birthday: 1300186358,
+    //  Nationality: "ES",
+    //  CountryOfResidence: "ES"
+    //}
+
+
+    config = {currency: "EUR"}
+    config.currency = currency;
+
+    ///Create natural user and wallet
+    PaymentService.createNaturalWallet(config, userValue,  // var CustomerServices = require('../../api/services/CustomerService')
+      function resultServices(err, result) {
+        if (err) {
+          console.log(err)
+            return res.json({response:"ERROR", message:err })
+        }
+
+
+
+        ///Register user card to mangopay
+
+        cardValueEx = {
+          CardNumber: '4706750000000017',
+          CardExpirationDate: "1223",  //12-06-2023  moment('0623', 'MMDD').unix()
+          CardCvx: '342',
+        }
+
+        console.log("CALL FUNCTION")
+
+        PaymentService.createCard( cardValue, config,  result.user,  // var CustomerServices = require('../../api/services/CustomerService')
+          function resultServices ( err, resultCard ) {
+           if (err) {
+              console.log(err)
+              return res.json({response:"ERROR", message:err })
+            }
+            //User card parameter card number undefined
+
+            //console.log("=======" +  result.card)
+
+            ///Remmeber money count is in cents 1100 centes
+            testAmount = 12; //It's 120 euro
+            debiteFundsEx =  {
+              Currency: "EUR",
+              Amount: mount
+            }
+
+
+            ///10% money for may platform
+
+            ///Get data about money pay to our marketplace
+            ourMarketPlacePrice = 0
+            feesEx = {
+              Currency: "EUR",
+              Amount:  ourMarketPlacePrice
+            }
+
+            ///Payin to Mango
+            PaymentService.makeBuyToMango( result.user, result.user, result.wallet  , resultCard.card ,debiteFundsEx, feesEx,  // var CustomerServices = require('../../api/services/CustomerService')
+              function resultServices ( err, result ) {
+                if (err) {
+                  console.log(err)
+                  return res.json({response:"ERROR", message:err })
+                }
+
+
+                ///Transfer the user walletid to Formationcenter Wallet id.
+                PaymentService.transferWalletToWallet( result.user, result.wallet, formationCenterData.mangouser, formationCenter.mangowallet ,debiteFundsEx, feesEx,  // var CustomerServices = require('../../api/services/CustomerService')
+                  function resultServices ( err, result ) {
+                    if (err) {
+                      console.log(err)
+                      return res.json({response:"ERROR", message:err })
+                    }
+
+                    return res.json({response:"OK", walleid : user.wallet, userid:result.id, carid:resultCard.card})
+
+
+                  });
+
+
+
+              });
+
+
+          })
+
+       });
+
+
+
+      });
+
+
+
+    ///Save idwallet and user Mangopay
+
+
+
+
+
+
+    //console.log("sasda "  +  formationcenter);
+    /*PaymentService.makepayment(userValue, mount, formationcenter, currency, function (err, result){
+
+     return res.json(result)
+     })*/
+    return res.json({
+      value: 'ok',
+      info: 'Payment result: satisfactory'
+    });
+  },
+
+
+  /**
+   * `PayController.makepay()`
+   * User data
+   */
   //createwalletToFormationcenter: function (req, res) {
   //  userValue = req.param("userdata")
   //  mount = req.param("price")

@@ -13,12 +13,12 @@ module.exports = {
 
   	customer: {
   		model: 'customer',
-  		required: true
+
   	},
 
   	formation: {
   		model: 'formation',
-  		required: true
+
   	},
 
   	text: {

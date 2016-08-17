@@ -529,30 +529,6 @@ module.exports = {
       });
   },
 
-  /*****
-   *
-   * @param req
-   * @param res
-   * @param next
-   *
-   *
-   * function findData() {
-formation = db.getCollection('formation').find({});
-formationResult = []
-formation.forEach(function (iFormation, i) {
-
-
-  placeResult = db.getCollection('place').findOne({_id:iFormation.place,city:"Port Carla"})
-  print( placeResult)
-
-   if ( placeResult != null && typeof placeResult.city != "undefined")
-        formationResult.push(placeResult)
- })
-  return formationResult
-}
-
-   findData()
-     */
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -1011,7 +987,11 @@ formation.forEach(function (iFormation, i) {
     console.log("City name search: ", cityname)
 
     var ObjectID = require('mongodb').ObjectID
-    Place.find({ city: {contains: cityname}}).exec( function(err, resulFormation){
+    queryPlace = {}
+    if (cityname == "")
+      queryPlace.city= {contains: cityname}
+
+    Place.find(queryPlace).exec( function(err, resulFormation){
 
       arrayData = []
       var promise;
@@ -1072,6 +1052,7 @@ formation.forEach(function (iFormation, i) {
                 Formation.find({id:idStr})
                   .populate('place')
                   .populate('formationCenter')
+                  .populate('customers')
                   .exec(function placesFouded(err, placesFormation) {
                     // body...
                     formationsResponse = [];

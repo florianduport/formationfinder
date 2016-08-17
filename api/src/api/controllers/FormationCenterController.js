@@ -87,6 +87,50 @@ module.exports = {
       });
 
   },
+  searchByNameEx: function (req, res, next) {
+    // body...
+
+    name = req.param('name');
+
+    if(name === undefined) {
+      return res.json({err: 'Name parameter not provided'});
+    }
+
+    if (typeof(name) != 'string') {
+      name = name.toString();
+    }
+
+    FormationCenter.findOne({name: name})
+      .populate('animators')
+      .populate('formations')
+      .populate('places')
+      .exec(function (err, formationCenterFounded) {
+        // body...
+
+        if(err){
+          return res.json({err: 'An error has ocurred searching database'});
+        }
+
+        if(formationCenterFounded === undefined) {
+          return res.json({err: 'No formation Center match that criteria: ' + name});
+        }
+
+
+        formationArray = []
+        Customer.find({formationCenter:formationCenterFounded.id}).exec(function myResult(err, costumerLists){
+
+
+          formationCenterFounded.customers = costumerLists
+          console.log("Insert Costumers ", formationCenterFounded.customers )
+          return res.json(formationCenterFounded);
+
+        })
+
+
+        //return res.json(formationCenterFounded);
+      });
+
+  },
   searchByZipcode: function (req, res, next) {
     // body...
 
@@ -147,6 +191,27 @@ module.exports = {
         return res.json(formationCenterFounded);
       });
 
+  },
+  searchAllFormationCentersNames: function (req, res) {
+    FormationCenter.find().exec(function (err, formationCenters) {
+      if(err){
+        return res.json({status: 'error', info: 'An error has ocurred searching all Formation Centers.'})
+      }
+
+      names = [];
+      lgth = formationCenters.length;
+
+      for(var i = 0; i < lgth; i++){
+        names.push(formationCenters[i].name);
+      }
+
+      return res.json({status: 'ok', result: names});
+    })
+  },
+  create: function (req, res) {
+    console.log("Creando formation center de prueba");
+
+    return res.json({status: 'ok'});
   }
 };
 

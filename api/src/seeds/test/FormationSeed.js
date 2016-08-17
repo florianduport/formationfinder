@@ -30,14 +30,14 @@ module.exports = [{
     }
   }],
 
-  maxPeople: faker.random.number(20),
+  maxPeople: faker.random.number({max:20, min:5}),
 
   isConfirmed: faker.random.boolean(),
 
   isFull:  false,
 //faker.random.boolean(),
 
-  price:faker.commerce.price(),
+  price:faker.commerce.price(50, 250),
 
   agreementName:faker.random.words(),
 
@@ -70,13 +70,13 @@ module.exports = [{
       }
     }],
 
-    maxPeople: faker.random.number(20),
+    maxPeople: faker.random.number({max:20, min:5}),
 
     isConfirmed: faker.random.boolean(),
 
     isFull: false,
 
-    price:faker.commerce.price(),
+    price:faker.commerce.price(50, 250),
 
     agreementName:faker.random.words(),
 
@@ -110,13 +110,13 @@ module.exports = [{
       }
     }],
 
-    maxPeople: faker.random.number(20),
+    maxPeople: faker.random.number({max:20, min:5}),
 
     isConfirmed: faker.random.boolean(),
 
     isFull: false,
 
-    price:faker.commerce.price(),
+    price:faker.commerce.price(50, 250),
 
     agreementName:faker.random.words(),
 
@@ -150,15 +150,14 @@ module.exports = [{
       }
     }],
 
-    maxPeople: faker.random.number(20),
+    maxPeople: faker.random.number({max:20, min:5}),
 
     isConfirmed: faker.random.boolean(),
 
     isFull:  false,
 //faker.random.boolean(),
 
-    price:faker.commerce.price(),
-
+    price:faker.commerce.price(50, 250),
     agreementName:faker.random.words(),
 
     initdate:faker.date.past()
@@ -190,13 +189,13 @@ module.exports = [{
       }
     }],
 
-    maxPeople: faker.random.number(20),
+    maxPeople: faker.random.number({max:20, min:5}),
 
     isConfirmed: faker.random.boolean(),
 
     isFull: false,
 
-    price:faker.commerce.price(),
+    price:faker.commerce.price(50, 250),
 
     agreementName:faker.random.words(),
 
@@ -230,13 +229,13 @@ module.exports = [{
       }
     }],
 
-    maxPeople: faker.random.number(20),
+    maxPeople: faker.random.number({max:20, min:5}),
 
     isConfirmed: faker.random.boolean(),
 
     isFull: false,
 
-    price:faker.commerce.price(),
+    price:faker.commerce.price(50, 250),
 
     agreementName:faker.random.words(),
 
@@ -270,14 +269,14 @@ module.exports = [{
       }
     }],
 
-    maxPeople: faker.random.number(20),
+    maxPeople: faker.random.number({max:20, min:5}),
 
     isConfirmed: faker.random.boolean(),
 
     isFull:  false,
 //faker.random.boolean(),
 
-    price:faker.commerce.price(),
+    price:faker.commerce.price(50, 250),
 
     agreementName:faker.random.words(),
 
@@ -310,13 +309,13 @@ module.exports = [{
       }
     }],
 
-    maxPeople: faker.random.number(20),
+    maxPeople: faker.random.number({max:20, min:5}),
 
     isConfirmed: faker.random.boolean(),
 
     isFull: false,
 
-    price:faker.commerce.price(),
+    price:faker.commerce.price(50, 250),
 
     agreementName:faker.random.words(),
 
@@ -350,13 +349,13 @@ module.exports = [{
       }
     }],
 
-    maxPeople: faker.random.number(20),
+    maxPeople: faker.random.number({max:20, min:5}),
 
     isConfirmed: faker.random.boolean(),
 
     isFull: false,
 
-    price:faker.commerce.price(),
+    price:faker.commerce.price(50, 250),
 
     agreementName:faker.random.words(),
 
@@ -390,14 +389,14 @@ module.exports = [{
       }
     }],
 
-    maxPeople: faker.random.number(20),
+    maxPeople: faker.random.number({max:20, min:5}),
 
     isConfirmed: faker.random.boolean(),
 
     isFull:  false,
 //faker.random.boolean(),
 
-    price:faker.commerce.price(),
+    price:faker.commerce.price(50, 250),
 
     agreementName:faker.random.words(),
 
@@ -430,13 +429,13 @@ module.exports = [{
       }
     }],
 
-    maxPeople: faker.random.number(20),
+    maxPeople: faker.random.number({max:20, min:5}),
 
     isConfirmed: faker.random.boolean(),
 
     isFull: false,
 
-    price:faker.commerce.price(),
+    price:faker.commerce.price(50, 250),
 
     agreementName:faker.random.words(),
 
@@ -470,13 +469,13 @@ module.exports = [{
       }
     }],
 
-    maxPeople: faker.random.number(20),
+    maxPeople: faker.random.number({max:20, min:5}),
 
     isConfirmed: faker.random.boolean(),
 
     isFull: false,
 
-    price:faker.commerce.price(),
+    price:faker.commerce.price(50, 250),
 
     agreementName:faker.random.words(),
 

@@ -1,0 +1,95 @@
+<div class="searchresult searchlist" >
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <div class="container">
+        <div class="row col-sm-8 col-xs-8 col-lg 8">
+            <div class="search-form  form-horizontal">
+                <div class=" form-group">
+                    <div  class="input-group" >
+                        <!--For geolocation uib-typeahead="address for address in getLocation($viewValue)"-->
+                        <input  class="form-control"  placeholder="Question?" type="text"  uib-typeahead="state for state in states | filter:$viewValue" ng-model="faqList" maxlength="100">
+
+
+                        <span class="input-group-addon"  ng-click="searchFaqList()"><span class="fa fa-search"></span></span>
+
+                        <!--<uib-alert ng-show="errorValid" dismiss-on-timeout=3000  type="success"  close="closeAlert()">{{ errorMessage }}</uib-alert>-->
+                        <!-- <div ng-controller="AlertDemoCtrl">
+                             <script type="text/ng-template" id="alert.html">
+                                 <div ng-transclude></div>
+                             </script>
+
+                             <div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert($index)">{{alert.msg}}</div>
+                             <div uib-alert template-url="alert.html" style="background-color:#fa39c3;color:white">A happy alert!</div>
+                             <button type="button" class='btn btn-default' ng-click="addAlert()">Add Alert</button>
+                             {{ alert.msg }}
+                         </div>-->
+
+                    </div>
+                </div>
+                <div uib-alert ng-repeat="alert in alerts" dismiss-on-timeout=3000 ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert()"> {{ alert.msg }}</div>
+            </div>
+         </div>
+        </div>
+
+
+
+
+
+    <div class="container container-fluid">
+        <div class="row">
+            <div align="right" style="color:#000066">
+                <!--<ul uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" boundary-links="true" num-pages="numPages"></ul>-->
+                <ul   uib-pagination   boundary-links="true"  items-per-page="appFaq.itemPerPageFaq" total-items="appFaq.totalItemsFaq" ng-click="getPagableRecordsFaq()" force-ellipses="true"  max-size="appFaq.smallnumPages" boundary-link-numbers="true" rotate="true"  ng-model="appFaq.currentPageFaq" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+            </div>
+            <ul class="list-group" >
+                <uib-accordion close-others="oneAtATime">
+                <li class="list-group-item" ng-repeat="ifaq in faqs | filter:faqList | orderBy:sortType " >
+                    <div class="row">
+
+
+
+                            <!--<uib-accordion close-others="oneAtATime">-->
+                                <!--<div uib-accordion-group class="panel-default" heading="{{  ifaq.question }}" >-->
+                                    <!--<span class="input-group-addon"  > {{ifaq.answer}} </span>-->
+
+                                <!--</div>-->
+                            <!--</uib-accordion>-->
+
+                        <div uib-accordion-group class="panel-default" is-open="false" >
+                            <uib-accordion-heading>
+                                {{  ifaq.question }}<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.isCustomHeaderOpen, 'glyphicon-chevron-right': !status.isCustomHeaderOpen}"></i>
+                            </uib-accordion-heading>
+                            {{ifaq.answer}}
+                        </div>
+
+                        <!--<div uib-accordion-group class="panel-default" is-open="status.isCustomHeaderOpen" >-->
+                            <!--<uib-accordion-heading>-->
+                                <!--{{  ifaq.question }} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.isCustomHeaderOpen, 'glyphicon-chevron-right': !status.isCustomHeaderOpen}"></i>-->
+                            <!--</uib-accordion-heading>-->
+                            <!--{{ifaq.answer}}-->
+                        <!--</div>-->
+
+                        </div>
+
+                </li>
+                </uib-accordion>
+
+
+
+
+            </ul>
+            <div align="right" style="color:#000066">
+                <ul   uib-pagination boundary-links="true" items-per-page="appFaq.itemPerPageFaq" total-items="appFaq.totalItemsFaq" ng-click="getPagableRecordsFaq()" force-ellipses="true"  max-size="appFaq.smallnumPages" boundary-link-numbers="true" rotate="true" ng-model="appFaq.currentPageFaq" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+    <!-- search formations list -->
+
+</div>
+</div>

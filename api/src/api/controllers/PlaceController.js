@@ -7,7 +7,8 @@
 
 module.exports = {
   searchallplaces: function(req, res, next){
-    Place.find().exec( function(err, resulFormation){
+    Place.find({}).exec( function(err, resulFormation){
+      //console.log("Result ",resulFormation )
        return res.json(resulFormation)
     });
   },

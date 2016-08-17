@@ -1,11 +1,16 @@
 /**
  * Created by JKindelan on 5/20/2016.
  */
-app.controller("IndexController", ["$scope", "$rootScope", "$location","$http","NgMap","$log",
-        function ($scope, $rootScope, $location, $http, NgMap, $log) {
+app.controller("IndexController", ["$scope", "$rootScope", "$location","$http","NgMap","$log","$translate",
+        function ($scope, $rootScope, $location, $http, NgMap, $log, $translate) {
+
+        $scope.findFaq = function(){
+            console.log("Buscando data FAQ")
+            $location.path("/faq/search" );
+        }
 
 
-
+///---------------------------------------------------------------------------------------------------
          $scope.searchAllFormation = function()
             {
             $http.post($rootScope.urlBase + "/place/searchallplaces")
@@ -149,7 +154,24 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location","$http","
         }])
     .controller("SearchController", ["$scope", "$rootScope", "$http", "$location", "$routeParams","$timeout", "NavigatorGeolocation","NgMap",
         function ($scope, $rootScope, $http, $location, $routeParams, $timeout, NavigatorGeolocation,NgMap) {
+            $scope.weekDay = ["Sunday","Monday","Tuesday","Wensday","Thuesday","Fryday","Saturday"]
+            $scope.advanceSearch = true
+            $scope.rate = 0;
+            $scope.max = 5;
+            $scope.isReadonly = false;
 
+            $scope.hoveringOver = function(value) {
+                $scope.overStar = value;
+                $scope.percent = 100 * (value / $scope.max);
+            };
+
+            $scope.ratingStates = [
+                {stateOn: 'glyphicon-ok-sign', stateOff: 'glyphicon-ok-circle'},
+                {stateOn: 'glyphicon-star', stateOff: 'glyphicon-star-empty'},
+                {stateOn: 'glyphicon-heart', stateOff: 'glyphicon-ban-circle'},
+                {stateOn: 'glyphicon-heart'},
+                {stateOff: 'glyphicon-off'}
+            ];
             $scope.searchAllFormation = function()
             {
                 $http.post($rootScope.urlBase + "/place/searchallplaces")
@@ -567,7 +589,25 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location","$http","
                     });*/
             };
 
+///-------------------------------------------------------------------------------------------
 
+            $scope.getReadableDate = function(dateParmt){
+                value = new Date(dateParmt);
+                resultDate =  $scope.weekDay[value.getDay()] +": "+value.getDate() + "-" + value.getMonth() + "-" + value.getFullYear();
+
+                return resultDate
+
+            };
+
+            $scope.getCustomerFormation = function( customersArray) {
+                if ( typeof customersArray == "undefined" ) {
+                    console.log("It´s undefined")
+                }
+                return customersArray.length
+
+            }
+
+///-------------------------------------------------------------------------------------------
             $scope.updateupdateSort= function () {
                 $scope.getPagableRecords();
                 $scope.apply();
@@ -671,12 +711,10 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location","$http","
                                         return
                                     }
                                 }
-
+                                $scope.formations.shift()
                                 $scope.formations = [];
                                 //console.log("Resultados", data_result[0].formation.formationCenter)
                                 data_result.forEach(function (iFormationcenter, ivalue) {
-
-
 
                                     iFormationcenter.name = iFormationcenter.formationCenter.name;
                                     iFormationcenter.city = iFormationcenter.place.city;
@@ -730,6 +768,8 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location","$http","
 
                                 $scope.formationcenterlist = data_result;
                                 $scope.formations = [];
+                                $scope.formations.shift()
+
 
                                 if (  data_result) {
                                     if (data_result.length == 0) {
@@ -746,6 +786,8 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location","$http","
 
                                 }
                                // console.log("Resultados", data_result[0].formation.formationCenter)
+                                console.log("RESULTADOS", data_result)
+
                                 data_result.forEach(function (iFormationcenter, ivalue) {
 
 
@@ -755,6 +797,9 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location","$http","
                                     iFormationcenter.datetime = new Date(iFormationcenter.dates[0].date).getTime()
                                     console.log("Valor ", iFormationcenter.datetime)
                                     $scope.formations.push(iFormationcenter)
+
+                                    ///For each dates informacion change all date
+                                    ///$scope.getReadableDate()
                                     //console.log("Valor ",iFormation)
 
                                 })
@@ -801,7 +846,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location","$http","
                                 });
                                 return;
                             }
-                            console.log("dfdd")
+                           // console.log("dfdd")
 
                             $scope.formationcenterlist = data_result;
                             $scope.formations = [];
@@ -818,6 +863,8 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location","$http","
                                     return;
                                 }
                             }
+
+                            console.log("RESULTADOS", data_result)
                             data_result.forEach(function (iFormationcenter, ivalue) {
 
 
@@ -831,7 +878,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location","$http","
 
 
 
-                            //console.log("RESULTADOS", data_result)
+
 
 
                         })
@@ -1094,24 +1141,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location","$http","
             }
 
         }])
-    .controller("FAQController", ["$scope", "$rootScope", "$http", "$location", "$routeParams", "$routeParams",
-        function ($scope, $rootScope, $http, $location, $routeParams) {
-            $scope.faq = false;
-            $http.post($rootScope.urlBase + "/faq")
-                .success(function (data_result) {
-
-                    console.log(data_result);
-                    $scope.faq = data_result;
-
-                })
-                .error(function (error) {
-                    //@action mostrar error
-                    console.log(error);
-                })
-            ;
-
-        }])
-    .controller('CustomControlCtrl',["NgMap","$scope","$rootScope", "$http", "$location", function(NgMap, $scope,$rootScope, $http, $location) {
+  .controller('CustomControlCtrl',["NgMap","$scope","$rootScope", "$http", "$location","$translate", function(NgMap, $scope,$rootScope, $http, $location, $translate) {
 
         /*$scope.googleMapsUrl="https://maps.googleapis.com/maps/api/js?key=AIzaSyAhbZEULLv5kcXwrA_xrlYS8JU2QjyrjO8";
          var vm = this;
@@ -1127,8 +1157,14 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location","$http","
          //vm.map.setCenter(chicago);
          };*/
 
+      $scope.changeLanguage = function (langKey) {
+          console.log("Change language to ", langKey)
+          $translate.use(langKey);
+      };
 
-        $scope.items = [
+
+
+      $scope.items = [
             'The first choice!',
             'And another choice for you.',
             'but wait! A third!'
@@ -1347,58 +1383,483 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location","$http","
         }
     }])
 
-    .controller("TestimonySearchController", ["$scope", "$resource", function ($scope, $resource) {
-        $scope.data = {};
+    .controller("TestimonySearchController", ['$scope','$http','$timeout','$rootScope', function($scope,$http,$timeout,$rootScope) {
+        // console.log("Instancia del controlador de la FAQ")
 
-        Post = $resource($rootScope.urlBase + "/testimony/searchAllTestimonies",$scope.data);
+        $scope.$watchCollection('checkModel', function () {
+            $scope.checkResults = [];
+            angular.forEach($scope.checkModel, function (value, key) {
+                if (value) {
+                    $scope.checkResults.push(key);
+                }
+            });
+        });
 
-        $scope.search = function () {
-            $scope.testimonies = Post.query();
 
-            console.log($scope.testimonies);
+        $scope.sortType     = 'price'; // set the default sort type
+        $scope.sortReverse  = false;  // set the default sort order
+        $scope.searchFish   = '';     // set the default search/filter term
+        //gloal configurations
+
+
+
+        // local configurations
+        app = this;
+        $scope.map = false;
+        $scope.searchResullt = null;
+        $scope.search = {};
+        $scope.search.nameTestimony = "";
+        $scope.appTestimony = {}
+        $scope.appTestimony.currentPageTestimony = 0;
+        $scope.appTestimony.maxSizeTestimony = 5;
+        $scope.appTestimony.itemPerPageTestimony = 10;
+        $scope.appTestimony.totalItemsTestimony = 0;
+        $scope.appTestimony.smallnumPages = 5
+        $scope.searchText = "";
+
+        /*$scope.$watch(function() {
+         return $scope.searchText;
+         }, function(newValue, oldValue) {
+         console.log("change detected: " + newValue)
+         $scope.searchText = newValue;
+         });*/
+        //data = 5;
+        //$routeParams.criteria = String($routeParams.criteria).trim()
+        $scope.faqs = []
+        // console.log("dddddd", $routeParams.criteria != 'undefined')
+        // console.log("dddddd", String($routeParams.criteria).trim())
+        // console.log("dddddd " + $routeParams.criteria)
+        ////if criteria is empty
+
+        $scope.alerts = [
+
+        ];
+
+        $scope.oneAtATime = true;
+
+        $scope.groups = [
+            {
+                title: 'Dynamic Group Header - 1',
+                content: 'Dynamic Group Body - 1'
+            },
+            {
+                title: 'Dynamic Group Header - 2',
+                content: 'Dynamic Group Body - 2'
+            }
+        ];
+
+        $scope.items = ['Item 1', 'Item 2', 'Item 3'];
+
+        $scope.addItem = function() {
+            var newItemNo = $scope.items.length + 1;
+            $scope.items.push('Item ' + newItemNo);
         };
+
+        $scope.status = {
+            isCustomHeaderOpen: false,
+            isFirstOpen: true,
+            isFirstDisabled: false
+        };
+
+//---------------------------------------------------------------------------------------------------------------
+        ///Show modal with formation´s Formation Center information
+        $scope.searchTestimonyList = function(){
+
+            $scope.errorMessage = "Probando "
+            if ( typeof $scope.TestimonyList == "undefined" || $scope.TestimonyList == "")
+                $scope.TestimonyList = ""
+            $scope.search.nameTestimony = $scope.TestimonyList;
+            ///$scope.appTestimony.currentPageTestimony = 0;
+            $scope.countRecordsTestimony();
+            $scope.getPagableRecordsTestimony();
+
+
+        }
+
+        $scope.showMessageTestimony = function(type, message) {
+
+            if (  $scope.alerts.length > 0) {
+                $scope.alerts.splice(0, 1);
+            }
+            console.log("MENSAJE DE ALERTA " , message)
+            $scope.alerts.push({type: type, msg: message});
+        }
+
+
+        $scope.closeAlert = function(index ) {
+            $scope.alerts.splice(index, 1);
+        }
+
+        $scope.searchPlusInformation = function (formationId) {
+
+        }
+
+        $scope.countRecordsTestimony = function() {
+            config = {}
+
+
+
+            if ( $scope.search.nameTestimony == "undefined" )
+                $scope.search.nameTestimony = ""
+
+            config.question = $scope.search.nameTestimony
+            //countbycity
+            console.log("Call services " , config)
+            $http.post($rootScope.urlBase + '/Testimony/countAllTestimonies', config)
+                .success(function (data_result) {
+                    if (data_result.response != "OK") {
+                        // $scope.appTestimony.totalItemsTestimony = 0;
+                        return;
+                    }
+                    tmpSize =  $scope.appTestimony.totalItemsTestimony
+                    console.log("Cantidad de objetos ---" ,data_result.size )
+                    if (  data_result.size >  0)
+                        $scope.appTestimony.totalItemsTestimony = data_result.size
+
+                    return;
+                    // console.log("RESULTADOS", data_result)
+                })
+                .error(function (error) {
+                    //@action mostrar error
+                    $scope.errorMessage = error
+                    console.log(error);
+                    return
+                })
+
+
+        };
+
+
+        $scope.showTestimonyCustomer = function( iTestimony) {
+
+            if (iTestimony.customer) {
+                return iTestimony.customer.name + " " + iTestimony.customer.name.firstName
+            }
+
+            return iTestimony.text
+
+        };
+
+        $scope.updateupdateSort= function () {
+            $scope.getPagableRecordsTestimony();
+            $scope.apply();
+        };
+
+        $scope.getPagableRecordsTestimony = function() {
+
+            var pageData = 0;
+
+
+            if ( $scope.appTestimony.currentPageTestimony > 0) {
+                pageData = $scope.appTestimony.currentPageTestimony - 1;
+                pageData = String(pageData)
+            }
+            config = {
+                page : pageData,
+                len : $scope.appTestimony.itemPerPageTestimony
+            }
+
+            config.question = ""
+            if ( typeof $scope.TestimonyList == "undefined" || $scope.TestimonyList == "")
+                $scope.TestimonyList = ""
+            $scope.search.nameTestimony = $scope.TestimonyList;
+
+            config.question = $scope.search.nameTestimony
+
+            //if ($scope.app.currentPage == 1)
+            //    $scope.app.currentPage = 0
+            //console.log("Sin nombre ======================= " , $scope.app.currentPage)
+
+
+
+            //searchbycity
+            $http.post($rootScope.urlBase + "/Testimony/findTestimonies",config)
+                .success(function (data_result) {
+
+                   // console.log("Result testimonies",  data_result )
+                    if (data_result.length == 0 ){
+                        ///Mostrar mensaje en ventana modal de que no existe centros de formacion
+                        ///regresar a la pagina inicial
+                        $scope.errorValid = true ;
+                        /// alert(data_result.err );
+                        // $location.path("/");
+                        console.log("INSERTANDO ALERTA")
+                        message = "Sorry, not exist result for your search criteria"
+
+                        $scope.showMessageTestimony( 'danger',message)
+                        return;
+                    }
+                    console.log("dfdd")
+
+                    $scope.faqs = data_result;
+                    $scope.formations = [];
+                    // console.log("Resultados", data_result[0].formation.formationCenter)
+                    if (  data_result) {
+                        if (data_result.length == 0) {
+                            $scope.errorValid = true
+                            console.log("INSERTANDO ALERTA")
+                            var message = "Sorry, not exist result for your search criteria"
+                            $scope.showMessageTestimony( 'danger', message)
+                            return;
+                        }
+                    }
+
+                    $scope.Testimonys = data_result;
+
+
+                    //console.log("RESULTADOS", data_result)
+
+
+                })
+                .error(function (error) {
+                    //@action mostrar error
+                    $scope.errorMessage = error
+                    console.log(error);
+
+                    console.log("INSERTANDO ALERTA")
+                    message = "Sorry, can´t get results"
+                    $scope.showMessageTestimony( 'danger', message)
+                    return
+                });
+        };
+
+        console.log("Controlador del Testimony")
+        $scope.countRecordsTestimony();
+        $scope.getPagableRecordsTestimony();
     }])
     .controller("FaqController",['$scope','$http','$timeout','$rootScope', function($scope,$http,$timeout,$rootScope){
 
+
+       // console.log("Instancia del controlador de la FAQ")
+
+        $scope.$watchCollection('checkModel', function () {
+            $scope.checkResults = [];
+            angular.forEach($scope.checkModel, function (value, key) {
+                if (value) {
+                    $scope.checkResults.push(key);
+                }
+            });
+        });
+
+
+        $scope.sortType     = 'price'; // set the default sort type
+        $scope.sortReverse  = false;  // set the default sort order
+        $scope.searchFish   = '';     // set the default search/filter term
+        //gloal configurations
+
+
+
+        // local configurations
         app = this;
-        $scope.app = {}
-        $scope.app.currentPage = 1;
-        $scope.app.maxSize = 5;
-        $scope.app.itemPerPage = 5;
-        $scope.app.totalItems = 0;
+        $scope.map = false;
+        $scope.searchResullt = null;
+        $scope.search = {};
+        $scope.search.nameFaq = "";
+        $scope.appFaq = {}
+        $scope.appFaq.currentPageFaq = 0;
+        $scope.appFaq.maxSizeFaq = 5;
+        $scope.appFaq.itemPerPageFaq = 10;
+        $scope.appFaq.totalItemsFaq = 0;
+        $scope.appFaq.smallnumPages = 5
+        $scope.searchText = "";
 
-        $scope.countRecords = function() {
-            $http.get($rootScope.urlBase + "/Faq/count")
-                .success(function(data,status,headers,config){
+        /*$scope.$watch(function() {
+         return $scope.searchText;
+         }, function(newValue, oldValue) {
+         console.log("change detected: " + newValue)
+         $scope.searchText = newValue;
+         });*/
+        //data = 5;
+        //$routeParams.criteria = String($routeParams.criteria).trim()
+        $scope.faqs = []
+        // console.log("dddddd", $routeParams.criteria != 'undefined')
+        // console.log("dddddd", String($routeParams.criteria).trim())
+        // console.log("dddddd " + $routeParams.criteria)
+        ////if criteria is empty
 
-                    if (data.res != "OK") {
-                        $scope.app.totalItems = 0;
+        $scope.alerts = [
+
+        ];
+
+        $scope.oneAtATime = true;
+
+        $scope.groups = [
+            {
+                title: 'Dynamic Group Header - 1',
+                content: 'Dynamic Group Body - 1'
+            },
+            {
+                title: 'Dynamic Group Header - 2',
+                content: 'Dynamic Group Body - 2'
+            }
+        ];
+
+        $scope.items = ['Item 1', 'Item 2', 'Item 3'];
+
+        $scope.addItem = function() {
+            var newItemNo = $scope.items.length + 1;
+            $scope.items.push('Item ' + newItemNo);
+        };
+
+        $scope.status = {
+            isCustomHeaderOpen: false,
+            isFirstOpen: true,
+            isFirstDisabled: false
+        };
+
+//---------------------------------------------------------------------------------------------------------------
+        ///Show modal with formation´s Formation Center information
+        $scope.searchFaqList = function(){
+
+            $scope.errorMessage = "Probando "
+            if ( typeof $scope.faqList == "undefined" || $scope.faqList == "")
+                $scope.faqList = ""
+            $scope.search.nameFaq = $scope.faqList;
+            ///$scope.appFaq.currentPageFaq = 0;
+            $scope.countRecordsFaq();
+            $scope.getPagableRecordsFaq();
+
+
+        }
+
+        $scope.showMessageFaq = function(type, message) {
+
+            if (  $scope.alerts.length > 0) {
+                $scope.alerts.splice(0, 1);
+            }
+            console.log("MENSAJE DE ALERTA " , message)
+            $scope.alerts.push({type: type, msg: message});
+        }
+
+
+        $scope.closeAlert = function(index ) {
+            $scope.alerts.splice(index, 1);
+        }
+
+        $scope.searchPlusInformation = function (formationId) {
+
+        }
+
+        $scope.countRecordsFaq = function() {
+            config = {}
+
+
+
+            if ( $scope.search.nameFaq == "undefined" )
+                $scope.search.nameFaq = ""
+
+            config.question = $scope.search.nameFaq
+            //countbycity
+            console.log("Call services " , config)
+            $http.post($rootScope.urlBase + '/Faq/countFaq', config)
+                .success(function (data_result) {
+                    if (data_result.response != "OK") {
+                       // $scope.appFaq.totalItemsFaq = 0;
                         return;
                     }
-                    $scope.app.totalItems = data.size
+                    tmpSize =  $scope.appFaq.totalItemsFaq
+                    console.log("Cantidad de objetos ---" ,data_result.size )
+                    if (  data_result.size >  0)
+                        $scope.appFaq.totalItemsFaq = data_result.size
+
+                    return;
+                    // console.log("RESULTADOS", data_result)
                 })
-                .error(function(data,status,header,config){
-                    console.log(data);
+                .error(function (error) {
+                    //@action mostrar error
+                    $scope.errorMessage = error
+                    console.log(error);
+                    return
+                })
+
+
+        };
+
+
+        $scope.updateupdateSort= function () {
+            $scope.getPagableRecordsFaq();
+            $scope.apply();
+        };
+
+        $scope.getPagableRecordsFaq = function() {
+
+            var pageData = 0;
+
+
+            if ( $scope.appFaq.currentPageFaq > 0) {
+                pageData = $scope.appFaq.currentPageFaq - 1;
+                pageData = String(pageData)
+            }
+            config = {
+                page : pageData,
+                len : $scope.appFaq.itemPerPageFaq
+            }
+
+            config.question = ""
+            if ( typeof $scope.faqList == "undefined" || $scope.faqList == "")
+                $scope.faqList = ""
+            $scope.search.nameFaq = $scope.faqList;
+
+            config.question = $scope.search.nameFaq
+
+            //if ($scope.app.currentPage == 1)
+            //    $scope.app.currentPage = 0
+            //console.log("Sin nombre ======================= " , $scope.app.currentPage)
+
+
+
+            //searchbycity
+            $http.post($rootScope.urlBase + "/Faq/findFaq",config)
+                .success(function (data_result) {
+                    if (data_result.length == 0 ){
+                        ///Mostrar mensaje en ventana modal de que no existe centros de formacion
+                        ///regresar a la pagina inicial
+                        $scope.errorValid = true ;
+                        /// alert(data_result.err );
+                        // $location.path("/");
+                        console.log("INSERTANDO ALERTA")
+                        message = "Sorry, not exist result for your search criteria"
+
+                        $scope.showMessageFaq( 'danger',message)
+                        return;
+                    }
+                    console.log("dfdd")
+
+                    $scope.faqs = data_result;
+                    $scope.formations = [];
+                    // console.log("Resultados", data_result[0].formation.formationCenter)
+                    if (  data_result) {
+                        if (data_result.length == 0) {
+                            $scope.errorValid = true
+                            console.log("INSERTANDO ALERTA")
+                            var message = "Sorry, not exist result for your search criteria"
+                            $scope.showMessageFaq( 'danger', message)
+                            return;
+                        }
+                    }
+
+
+
+
+                    //console.log("RESULTADOS", data_result)
+
+
+                })
+                .error(function (error) {
+                    //@action mostrar error
+                    $scope.errorMessage = error
+                    console.log(error);
+
+                    console.log("INSERTANDO ALERTA")
+                    message = "Sorry, can´t get results"
+                    $scope.showMessageFaq( 'danger', message)
+                    return
                 });
         };
 
-        $scope.getPagableRecords = function() {
-            var param = {
-                page : $scope.app.currentPage,
-                len : $scope.app.itemPerPage
-            };
-            $http.get($rootScope.urlBase + "/Faq/findFaq",{params : param})
-                .success(function(data,status,headers,config){
-                    $scope.FaqList = data;
-                    //console.log("Resultados ",  $scope.FaqList)
-                })
-                .error(function(data,status,header,config){
-                    console.log(data);
-                });
-        };
-
-        $scope.countRecords();
-        $scope.getPagableRecords();
+        console.log("Controlador del FAQ")
+        $scope.countRecordsFaq();
+        $scope.getPagableRecordsFaq();
 
     }])
     .controller('DatepickerDemoCtrl', function ($scope) {
@@ -2745,5 +3206,6 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location","$http","
         $uibModalInstance.dismiss('cancel');
         $scope.formationCenterName = ""
     };
-});
-;
+}).controller('SitemapController',["NgMap","$scope","$rootScope", "$http", "$location","$translate", function(NgMap, $scope,$rootScope, $http, $location, $translate) {
+}]);
+    ;

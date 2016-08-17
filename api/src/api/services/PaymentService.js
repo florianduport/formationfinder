@@ -336,7 +336,7 @@ module.exports = {
 
       callback(null, {
         response: "OK",
-        bankcount: bankaccount
+        bankcount: bankaccount.Id
       });
     });
     });
@@ -400,6 +400,7 @@ module.exports = {
           //expect(cardRegistration.AccessKey).not.to.be.null
 
           mango.card.create({
+            Tag: "custom meta",
         UserId: userid,
         CardNumber: cardValueEx.CardNumber,
         CardExpirationDate: cardValueEx.CardExpirationDate,
@@ -426,12 +427,12 @@ module.exports = {
              })*/
 
             console.log("IDENTIFICADOR OBJ", card)
-
-            console.log("IDENTIFICADOR", card.Id )
+            console.log("_____________________________________")
+            console.log("IDENTIFICADOR", card.CardId )
 
             callback(null, {
               response: "OK",
-              card: card.Id
+              card: card.CardId
             })
           })
       });
@@ -537,26 +538,31 @@ module.exports = {
         return;
       }
 
+    paydata = {
+      Tag :"custom meta",
+        AuthorId: userid,
+      DebitedFunds: debiteFundsEx,
+      Fees: feesEx,
+      BankAccountId:bankcountid,
+      DebitedWalletId: walletid,
+      BankWireRef: "invoice 7282"
+    }
 
+    console.log("To Wire", paydata)
 	  this.findMangoPayConfiguration( function(err, mango) {
-		  mango.bank.wire({
-			AuthorId: userid,
-			DebitedWalletId: walletid,
-			DebitedFunds: debiteFundsEx,
-			Fees: feesEx,
-			BankAccountId:bankcountid,
-			BIC: bic
-		}, function(err, wire, res){0
+		  mango.bank.wire(paydata, function(err, wire, res){
+
 			  if (err) {
-        callback(null, {
+          console.log("ERROR", err)
+        callback({
           response: "ERROR",
           message: err
-        })
+        }, null )
       }
 
       callback(null, {
         response: "OK",
-        bankcount: wire
+        wire: wire
       });
 });
 
@@ -568,8 +574,6 @@ module.exports = {
    *
    *
      makeBuyToMango: Send payment to user wallet
-
-
    */
   makeBuyToMango: function (userbuyer, useridseller, walletidseller, cardidbuyer, debiteFunds, fees, callback) {
 
@@ -662,15 +666,18 @@ module.exports = {
 
     console.log("PAGO ID", cardidbuyer);
 
+
     payinData = {
-      AuthorId: userbuyer,
       Tag: "custom meta",
+      AuthorId: userbuyer,
       CreditedUserId: useridseller,
       CreditedWalletId: walletidseller,
       DebitedFunds: debiteFundsEx,
       Fees:feesEx ,
       SecureModeReturnURL: "http://www.my-site.com/returnURL",
       CardId: cardidbuyer,
+      SecureMode: "DEFAULT",
+      StatementDescriptor: "Mar2016"
     }
 
 
@@ -698,20 +705,18 @@ module.exports = {
       })
     });
 },
-  transferWalletToWallet: function (buyerUserId, buyerWalletId, sellerUserId, sellerWalletId, debitedFunds, fees ) {
+  transferWalletToWallet: function (buyerUserId, buyerWalletId, sellerUserId, sellerWalletId, debitedFunds, fees, callback ) {
 ///10% money for may platform
     // In my case I charge a fee to the buyer so, let’s say that the product costs
     // 100€ and the fee we apply is 10%, I should set the amount debited to 110€ (11000 cents).
 
     debiteFundsEx =  {
-      Currency: "EUR",
-      Amount: "11000"
+
     }
 
     ///10% money for may platform
     feesEx = {
-      Currency: "EUR",
-      Amount: "1000"
+
     }
     if (typeof buyerUserId == "undefined")
       callback(null,  {
@@ -798,21 +803,22 @@ module.exports = {
       })
 
 
-    findMangoPayConfiguration( function(err, mango) {
+    this.findMangoPayConfiguration( function(err, mango) {
     mango.wallet.transfer({
       AuthorId : buyerUserId,
       DebitedFunds: debiteFundsEx,
       Fees : feesEx,
-      DebitedWalletID : buyerWalletId,
+      DebitedWalletID : buyerWalletId ,
       CreditedWalletID : sellerWalletId,
-      CreditedUserId : sellerUserId,
-      Tag : "DefaultTag"
+
+      Tag : "custom meta"
     }, function(err, transfer, res){
       if (err) {
-        callback(null, {
+        console.log("ERROR", err)
+        callback({
           response: "ERROR",
           message: err
-        })
+        }, null )
       }
 
       callback(null, {
@@ -830,27 +836,12 @@ module.exports = {
    */
   makeWalletToFormationCenter: function ( formationcenter, callback) {
 
-    var appuser = 'formationfinder';
-    var apppassphrase = '7stCaHPZ9XFMCqteMYvCw99ELtDNCrNVcs3OPVzZLDSZiysTpN';
-
-    if (!formationcenter || formationcenter == "") {
-      callback(null, {response: "Undefined Formation Center´s name"});
+   if (!formationcenter || formationcenter == "") {
+      callback({response: "Undefined Formation Center´s name"}, null );
       return;
     }
 
-    /*
-     if (!userValue || userValue == "")
-     callback({ response: "Undefined buyer´s data "})
-     */
-    //if (!mount ||mount == "" || mount <= 0 ) {
-    //  callback(null, {response: "Undefined mount"})
-    //  return;
-    //}
-    //
-    //if (!currency ||currency == "" ) {
-    //  callback(null,{response: "Undefined currency"})
-    //  return;
-    //}
+
 
     ///Validate currency
 
@@ -861,7 +852,7 @@ module.exports = {
     ///Search by formation center syncronized
     FormationCenter.findOne({name: formationCenterName}).exec(function (err, iFormationCenter) {
       if (err) {
-        callback(null, {response: err})
+        callback({response: err}, null)
         return;
       }
 
@@ -870,42 +861,59 @@ module.exports = {
         return;
       }
 
-      var legalUserData = {
-        name: iFormationCenter.name,
-        email: iFormationCenter.email,
-        legalpersonType: 'BUSINESS',
-        legalRepresentativeFirstName: iFormationCenter.firstName,
-        legalRepresentativeLastName: iFormationCenter.firstName,
-        legalRepresentativeEmail: iFormationCenter.email,
-        headquartersAddress: iFormationCenter.email,
-        legalRepresentativeAdress: iFormationCenter.address,
-        legalRepresentativeBirthday: moment('300681', 'DDMMYY').unix(),
-        legalRepresentativeCountryOfResidence: 'ES',
-        legalRepresentativeNationality: 'ES'
-
+      var legalUserData =  {
+        Tag: "custom meta",
+        HeadquartersAddress: {
+          AddressLine1:  iFormationCenter.address,
+          AddressLine2: iFormationCenter.address,
+          City: iFormationCenter.city,
+          Region: iFormationCenter.city,
+          PostalCode: iFormationCenter.zipCode,
+          Country: "FR"
+        },
+        LegalPersonType: "BUSINESS",
+        Name: iFormationCenter.name,
+        LegalRepresentativeAddress: {
+          AddressLine1: iFormationCenter.address,
+          AddressLine2: iFormationCenter.address,
+          City: iFormationCenter.city,
+          Region: iFormationCenter.city,
+          PostalCode: iFormationCenter.zipCode,
+          Country: "FR"
+        },
+        LegalRepresentativeBirthday: moment('300681', 'DDMMYY').unix(),
+        LegalRepresentativeCountryOfResidence: "ES",
+        LegalRepresentativeNationality: "FR",
+        LegalRepresentativeEmail: iFormationCenter.email,
+        LegalRepresentativeFirstName:  iFormationCenter.firstName,
+        LegalRepresentativeLastName:  iFormationCenter.firstName,
+        Email: iFormationCenter.email,
       }
 
+      console.log("Date to send ",  legalUserData)
+
       config = {}
-      config.currency = "ES";
+      config.currency = "EUR";
 
 
-      PaymentServices.createwallet(config, legalUserData, function (err, result) {
+      PaymentService.createwallet(config, legalUserData, function (err, result) {
         if (err) callback({
           response: "ERROR",
           msg: "Couldn' t create mangopay wallet for Formation Center " + formationCenterName + ": " + err
-        })
+        }, null)
 
         ///Update formation center
-        Configuration.update({name: formationCenterName}, {
+        FormationCenter.update({name: formationCenterName}, {
           mangowallet: result.wallet,
           mangouser: result.user
         }).exec(function (err, Config) {
           if (err) callback({
             response: "ERROR",
             msg: "Couldn' t create mangopay wallet for Formation Center " + formationCenterName + ": " + err
-          });
+          }, null);
 
-          if (err) callback({response: "OK"})
+
+          callback(null, {response: "OK",  mangowallet: result.wallet, mangouser: result.user, name:formationCenterName })
 
         });
 
@@ -920,34 +928,20 @@ module.exports = {
    */
   registerBankAccountToFormationCenter: function (bankaccountdata,  formationcenter, callback) {
 
-    var appuser = 'formationfinder';
-    var apppassphrase = '7stCaHPZ9XFMCqteMYvCw99ELtDNCrNVcs3OPVzZLDSZiysTpN';
-
     if (!formationcenter || formationcenter == "") {
-      callback(null, {  response: "Undefined Formation Center´s name"});
+      callback( {  response: "Undefined Formation Center´s name"}, null);
       return;
     }
 
     if (!bankaccountdata || bankaccountdata == "") {
-      callback(null, {  response: "Undefined Bank account data"});
+      callback({  response: "Undefined Bank account data"},null );
       return;
     }
 
-    if (!bankaccountdata.type || bankaccountdata.type == "") {
-      callback(null, {  response: "Undefined Bank account type data"});
+    if (!bankaccountdata.Type || bankaccountdata.Type == "") {
+      callback( {  response: "Undefined Bank account type data"}, null);
       return;
     }
-
-    if (!bankaccountdata.iban || bankaccountdata.iban == "") {
-      callback(null, {  response: "Undefined Bank account IBAN data"});
-      return;
-    }
-
-    if (!bankaccountdata.bic || bankaccountdata.bic == "") {
-      callback(null, {  response: "Undefined Bank account BIC data"});
-      return;
-    }
-
 
 
     /*
@@ -974,32 +968,30 @@ module.exports = {
     ///Search by formation center syncronized
     FormationCenter.findOne({name:formationCenterName}).exec( function (err, iFormationCenter) {
       if (err) {
-        callback(null, {response: err})
+        callback( {response: err}, null)
         return;
       }
 
       if (!iFormationCenter) {
-        callback(null, {response: "Not exist Formation Center with name ".formationCenterName})
+        callback({response: "Not exist Formation Center with name ".formationCenterName}, null)
         return;
       }
 
       if (!iFormationCenter.mangowallet || iFormationCenter.mangowallet == "") {
-        callback(null, {  response: "Undefined mangopay wallet for Formation Center " + formationCenterName});
+        callback({  response: "Undefined mangopay wallet for Formation Center " + formationCenterName}, null );
         return;
       }
 
       if (!iFormationCenter.mangouser ||iFormationCenter.mangouser == "") {
-        callback(null, {  response:" Undefined mangopay user for Formation Center " + formationCenterName});
+        callback({  response:" Undefined mangopay user for Formation Center " + formationCenterName}, null );
         return;
       }
 
-      backCountData = {
-        ownername: iFormationCenter.name,
-        type: bankaccountdata.type,
-        ownerAddress: iFormationCenter.address,
-        iban: bankaccountdata.iban,
-        bic: bankaccountdata.bic
-      }
+      backCountData = bankaccountdata
+
+      backCountData.Id = iFormationCenter.mangouser
+      backCountData.UserId = iFormationCenter.mangouser
+
 
       PaymentService.createBankCount(backCountData, iFormationCenter.mangouser , function (err, result) {
         if (err) callback({
@@ -1008,16 +1000,16 @@ module.exports = {
         })
 
         ///Update formation center bankcount: bankaccount
-        Configuration.update({name: formationCenterName}, {
+        FormationCenter.update({name: formationCenterName}, {
           mangobankaccount: result.bankcount,
-          mangobicbankaccount: bankaccountdata.bic
+
         }).exec(function (err, Config) {
           if (err) callback({
             response: "ERROR",
             msg: "Couldn' t register bank account for Formation Center " + formationCenterName + ": " + err
           })
 
-           callback({response: "OK"})
+           callback(null,{response: "OK"})
 
         });
       })

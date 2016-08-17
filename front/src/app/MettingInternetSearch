@@ -1,12 +1,12 @@
-Garantizar subir el c{odigo
+Garantizar subir el c{odigo OK
 
-Poner las busquedas deseadas y dejar la mayor cantidad de inform en chache
+Poner las busquedas deseadas y dejar la mayor cantidad de inform en chache OK
 
-Traducir y actualizar las reuniones.
+Traducir y actualizar las reuniones. OK
 
 Enviar correos.
 
-Ir a feceebok y chatear con mi tia y los socios.
+Ir a feceebok y chatear con mi tia y los socios. OK
 
 
 Internet Search
@@ -80,3 +80,43 @@ Florian ask what the user levels must be considered
 users of the system in the back office . For user stories is understood
 there System Manager , and the user of a training center .
 But it is considered that there could be an advanced user ???
+
+
+# Meeting  August 2, 2016
+
+## Usert story implementation review
+
+Evaluate formationfider project .
+
+## Objectives
+
+* Test user story 1,2,3,4,5 implementation.
+*  Study and asing work about  user story 6,7,8,9.
+
+[Meeting objectives]
+
+* Test user story 1,2,3,4,5 implementation.
+*  Study and asing work about  user story 6,7,8,9.
+
+## Actors
+Piterson,
+
+Dionis,
+
+Jorbel
+
+## Content of the meeting
+
+Analysis of the stories of 6,7,8,9
+
+Dionis user history 6 and creating the template for the backoffice is assigned.
+
+to Pitterson user stories assigned 7,8,9 .
+
+We neewd ask to Florian about user levels in the back office.
+For user stories is understood there System Manager , and the user of a training center .
+But it is considered that there could be an advanced user ?.
+
+## Action plan
+
+Monday 14 should be implemented all user story and work continue in 1,2,3,4,5.

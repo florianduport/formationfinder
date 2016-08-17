@@ -8,6 +8,8 @@ faker.locale = "fr"
 module.exports = [ {
   name: faker.internet.userName(),
 
+  firstName: faker.internet.userName(),
+
   email: faker.internet.email(),
 
   address: faker.address.streetAddress(),

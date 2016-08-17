@@ -16,13 +16,13 @@ module.exports = {
   	},
 
   	isMainLogin: {
-  		type: 'boolean'
+  		type: 'boolean',
+      defaultsTo: false
   	},
 
   	username: {
   		type: 'string',
   		required:true,
-  		unique: true
   	},
 
   	// Para el password se deben usar el modulo para passwords
@@ -33,7 +33,8 @@ module.exports = {
   	},
 
   	isActivated: {
-  		type: 'boolean'
+  		type: 'boolean',
+      defaultsTo: false
   	}
   }
 };

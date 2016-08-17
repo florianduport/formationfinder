@@ -1,0 +1,26 @@
+<form class="login-form">
+    <div class="login-wrap">
+        <p class="login-img"><i class="icon_lock_alt"></i></p>
+        <div class="input-group" data-toggle="tooltip" title="Insert user´s name">
+            <span class="input-group-addon"><i class="icon_profile"></i></span>
+            <input type="text" class="form-control" placeholder="Username"
+                   autofocus
+                   maxlength="40"
+                   ng-model="username"
+                   ng-pattern="usernameExpReg"
+                   ng-change="searchLoginNames()"
+                   uib-typeahead="name for name in usersnames | filter:$viewValue"
+                   required>
+        </div>
+        <div class="input-group" data-toggle="tooltip" title="Select a Formation Center">
+            <span class="input-group-addon"><i class="icon_briefcase"></i></span>
+            <input type="text" class="form-control" placeholder="Formation center"
+                   maxlength="40"
+                   ng-model="formationCenter"
+                   disabled>
+        </div>
+
+        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-click="deleteLogin()">{{loginButtonText}}
+        </button>
+    </div>
+</form>

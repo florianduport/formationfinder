@@ -6,23 +6,11 @@
  */
 
 module.exports = {
-  countFaq: function(req,res, next) {
-    Faq.count().exec(function countFaq(error, found) {
-       if (error) {
-
-         return  res.json({"res": error});
-       }
-
-         console.log('There are ' + found + ' Faq');
-
-         return  res.json({"res":"OK", "size": found})
-
-
-      // There are 1 users called 'Flynn'
-      // Don't forget to handle your errors
-    });
-  },
   findFaq: function(req,res, next) {
+    answerToSearch= ""
+    if (req.param('question')) {
+      answerToSearch = req.param('question')
+    }
     if(!isNaN(parseInt(req.param('page')))){
       page = Math.abs(parseInt(req.param('page')));
     }
@@ -41,11 +29,24 @@ module.exports = {
       return res.json({err: 'The len parameter is an invalid string number'});
     }
   }
+  else
+  {
+    return res.json({err:'The len parameter is an invalid string number'});
+  }
 
-  Faq.find({
+
+    config =  {
       skip: page * len,
-      limit: len
-    })
+        limit: len
+    }
+
+    if ( answerToSearch != "") {
+
+      config.question = { contains:answerToSearch}
+    }
+
+
+  Faq.find(config)
     .exec(function  (err, fomationCentersFounded) {
       // body...
       if(err) {
@@ -55,6 +56,33 @@ module.exports = {
       return res.json(fomationCentersFounded);
     });
 
-}
+},
+
+  countFaq: function(req,res, next) {
+    answerToSearch= ""
+    if (req.param('question')) {
+      answerToSearch = req.param('question')
+    }
+
+
+    config =  {
+    }
+
+    if ( answerToSearch != "") {
+
+      config.question = { contains:answerToSearch}
+    }
+
+    Faq.count(config)
+      .exec(function  (err, fomationCentersFounded) {
+        // body...
+        if(err) {
+          return res.json({response:"ERROR", message: err.message});
+        }
+
+        return res.json( {response:"OK", size: fomationCentersFounded});
+      });
+
+  }
 };
 

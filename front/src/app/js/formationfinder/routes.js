@@ -1,7 +1,7 @@
 /**
  * Created by JKindelan on 5/20/2016.
  */
-app.config(["$routeProvider", function ($routeProvider) {
+app.config(["$routeProvider" ,function ($routeProvider ) {
 
     $routeProvider
         .when("/", {
@@ -27,7 +27,15 @@ app.config(["$routeProvider", function ($routeProvider) {
         )
         .when("/testimony/search", {
             controller: "TestimonySearchController",
-            templateUrl: "templates/testimony/search.html"
+            templateUrl: "templates/testimony/testimonyfaq.html"
+        })
+        .when("/faq", {
+            controller: "FaqController",
+            templateUrl: "templates/faq/faq.html"
+        })
+        .when("/sitemap", {
+            controller: "SitemapController",
+            templateUrl: "templates/sitemap/sitemap.html"
         })
         .otherwise("/");
 }])
