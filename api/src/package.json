@@ -2,7 +2,7 @@
   "name": "formationfinder",
   "private": true,
   "version": "0.0.0",
-  "description": "a Sails application",
+  "description": "Aplication for tanstit point recuperation",
   "keywords": [],
   "dependencies": {
     "ejs": "2.3.4",
@@ -29,7 +29,10 @@
     "sails-mongo": "^0.12.0",
     "sails-mysql": "^0.12.1",
     "sails-permissions": "^2.2.0",
-    "sails-service-mailer": "file:node_modules\\sails-service-mailer"
+    "sails-service-mailer": "^1.0.0",
+    "node-properties-parser": "^1.0.0",
+    "jsonwebtoken": "^1.0.0"
+
   },
   "scripts": {
     "debug": "node debug app.js",
