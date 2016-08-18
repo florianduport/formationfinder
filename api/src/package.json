@@ -30,8 +30,8 @@
     "sails-mysql": "^0.12.1",
     "sails-permissions": "^2.2.0",
     "sails-service-mailer": "^1.0.0",
-    "node-properties-parser": "^1.0.0",
-    "jsonwebtoken": "^1.0.0"
+    "node-properties-parser": "^0.0.2",
+    "jsonwebtoken": "^7.0.0"
 
   },
   "scripts": {

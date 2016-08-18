@@ -37,5 +37,9 @@ app.config(["$routeProvider" ,function ($routeProvider ) {
             controller: "SitemapController",
             templateUrl: "templates/sitemap/sitemap.html"
         })
+        .when("/backoffice/", {
+            controller: "indexController",
+            templateUrl: "backoffice/index.html"
+        })
         .otherwise("/");
 }])
