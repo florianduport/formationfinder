@@ -7,6 +7,51 @@
 
 module.exports = {
 
+  searchByFormationCenter: function (req, res) {
+
+    if (req.param('formationCenter') === undefined) {
+      return res.json({status: "error", info: "Formation Center Name is required."});
+    }
+
+    FormationCenter.findOne({name: req.param('formationCenter')})
+      .exec(function (err, FC) {
+        if (err) {
+          return res.json({status: "error", info: "An error has ocurred searching formation Center."});
+        }
+
+        if (!FC) {
+          return res.json({status: "error", info: "No Formation Center with that name."});
+        }
+
+        Login.find({formationCenter: FC.id}).exec(function (err, Logins) {
+          if (err) {
+            return res.json({status: "error", info: "An error has ocurred searching Logins."});
+          }
+          return res.json({status: "ok", data: Logins});
+        });
+      });
+  },
+
+  searchByID: function (req, res, next) {
+    if (req.param('id') === undefined) {
+      return res.json({status: "error", info: "Login id is required."});
+    }
+
+    Login.findOne({id: req.param('id')})
+      .exec(function (err, LoginFounded) {
+        if (err) {
+          return res.json({status: "error", info: "Error searching Login."});
+        }
+
+        if (!LoginFounded) {
+          return res.json({status: "error", info: "no Login with id."});
+        }
+
+        return res.json({status: "ok", data: LoginFounded});
+
+      });
+  },
+
   create: function (req, res, next) {
 
     //Validate parameters.
@@ -57,12 +102,12 @@ module.exports = {
         }
 
         if (FC) {
-          //If the formation center exist, then search the login username in that formation center.
+          //If the formation center exist, then search the login username.
           //If the username doesn't exist then create one.
 
           Login.findOne({
-            username: req.param('username'),
-            formationCenter: FC.id
+            username: req.param('username')
+            //formationCenter: FC.id
           }).exec(function (err, loginFounded) {
 
             if (err) {
@@ -70,7 +115,7 @@ module.exports = {
             }
 
             if (loginFounded) {
-              return res.json({status: "error", info: "The username exist in the formation center provided."});
+              return res.json({status: "error", info: "The username already exist."});
             }
             else {
               //Create the Login.
@@ -99,6 +144,55 @@ module.exports = {
 
   },
 
+  update: function (req, res) {
+    if (req.param('id') === undefined) {
+      return res.json({status: "error", info: "Login id is required."});
+    }
+
+    //if (req.param('formationCenter') === undefined) {
+    //  return res.json({status: "error", info: "Formation Center Name is required."});
+    //}
+
+    if (req.param('newCredentials') === undefined) {
+      return res.json({status: "error", info: "newCredentials parameter is required."});
+    }
+
+    //FormationCenter.findOne({name: req.param('formationCenter')})
+    //  .exec(function (err, FC) {
+    //    if (err) {
+    //      return res.json({status: "error", info: "An error has ocurred searching the Formation Center."});
+    //    }
+    //
+    //    if (!FC) {
+    //      return res.json({status: "error", info: "No Formation Center with that name."});
+    //    }
+
+        var newCredentials = req.param('newCredentials');
+
+        //Validate that the new username doesn´t exist.
+        Login.findOne({username: newCredentials.username}).exec(function (err, LoginFounded) {
+          if (err) {
+            return res.json({status: "error", info: "Error searching Login."});
+          }
+
+          if (LoginFounded) {
+            return res.json({status: "error", info: "Error username already exist."});
+          }
+
+          Login.update({
+              id: req.param('id')
+              //formationCenter: FC.id
+            }, newCredentials)
+            .exec(function (err, updated) {
+              if (err) {
+                return res.json({status: "error", info: "An error has ocurred updating the Login."});
+              }
+              return res.json({status: "ok", info: "Login updated."});
+            });
+        });
+      //});
+  },
+
   check: function (req, res, next) {
 
     //Validate parameters.
@@ -110,45 +204,32 @@ module.exports = {
       return res.json({status: "error", info: "Password is required."});
     }
 
-    if (req.param('formationCenter') === undefined) {
-      return res.json({status: "error", info: "Formation Center Name is required."});
-    }
+    Login.findOne({
+        username: req.param('username'),
+        password: req.param('password')
+      })
+      .populate('formationCenter')
+      .exec(function (err, loginFounded) {
 
-    FormationCenter.findOne({name: req.param('formationCenter')})
-      .exec(function (err, FC) {
         if (err) {
-          return res.json({status: "error", info: "An error has ocurred searching the Formation Center."});
+          return res.json({status: "error", info: "An error has ocurred searching Login."});
         }
 
-        if (!FC) {
-          return res.json({status: "error", info: "No Formation Center with that name."});
+        if (!loginFounded) {
+          return res.json({status: "error", info: "Invalid username/password convination."});
         }
 
-        Login.findOne({
-          username: req.param('username'),
-          formationCenter: FC.id
-        }).exec(function (err, loginFounded) {
+        resulToken = LoginService.generateLoginToken(loginFounded.id);
+        if (resulToken.status == 'ok') {
+          var result = {};
+          result.token = resulToken.token;
+          result.formationCenter = loginFounded.formationCenter.name;
+          return res.json({status: "ok", data: result});
 
-          if (err) {
-            return res.json({status: "error", info: "An error has ocurred searching Login."});
-          }
+        } else {
+          return res.json({status: "error", info: "Error generated at generateLoginToken."});
+        }
 
-          if (!loginFounded) {
-            return res.json({status: "error", info: "That username doesn't exist in the formation center provided."});
-          }
-
-          if (loginFounded.password === req.param('password')) {
-            resulToken = LoginService.generateLoginToken(loginFounded.id);
-            if (resulToken.status == 'ok') {
-              return res.json({status: "ok", info: "User and passwors match.", token: resulToken.token});
-            } else {
-              return res.json({status: "error", info: "Error generated at generateLoginToken."});
-            }
-          }
-          else {
-            return res.json({status: "error", info: "The password provided doesn't math."});
-          }
-        });
       });
   },
 
@@ -204,7 +285,8 @@ module.exports = {
       });
   },
 
-  searchAllUserNames: function (req, res) {
+
+  searchUserNamesByFormationCenter: function (req, res) {
 
     if (req.param('formationCenter') === undefined) {
       return res.json({status: "error", info: "Formation Center Name is required."});
@@ -228,7 +310,7 @@ module.exports = {
             names = [];
             lgth = Logins.length;
 
-            for(var i = 0; i < lgth; i++){
+            for (var i = 0; i < lgth; i++) {
               names.push(Logins[i].username);
             }
             return res.json({status: "ok", data: names})

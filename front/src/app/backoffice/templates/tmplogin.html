@@ -1,0 +1,44 @@
+<form class="login-form" name="loginForm">
+    <div class="login-wrap">
+        <p class="login-img"><i class="icon_lock_alt"></i></p>
+        <div class="input-group" data-toggle="tooltip" title="Insert user´s name">
+            <span class="input-group-addon"><i class="icon_profile"></i></span>
+            <input type="text" class="form-control" placeholder="Username"
+                   autofocus
+                   maxlength="40"
+                   ng-model="credentials.username"
+                   ng-pattern="usernameExpReg"
+                   required>
+        </div>
+        <div class="input-group" data-toggle="tooltip" title="Insert password">
+            <span class="input-group-addon"><i class="icon_key_alt"></i></span>
+            <input type="password" class="form-control" placeholder="Password"
+                   maxlength="40"
+                   ng-model="credentials.password"
+                   required>
+        </div>
+        <div class="input-group" data-toggle="tooltip" title="Select a Formation Center">
+            <span class="input-group-addon"><i class="icon_briefcase"></i></span>
+            <input type="text" class="form-control" placeholder="Formation center"
+                   maxlength="40"
+                   ng-model="credentials.formationCenter"
+                   required
+                   uib-typeahead="FCname for FCname in formationCentersNames | filter:$viewValue">
+        </div>
+        <label class="checkbox">
+            <input type="checkbox" value="remember-me"> Remember me
+            <span class="pull-right"> <a href="#"> Forgot Password?</a></span>
+        </label>
+        <button class="btn btn-primary btn-lg btn-block"
+                type="submit"
+                ng-disabled="loginForm.$invalid"
+                ng-click="login()">{{loginButtonText}}</button>
+        <div class="form-inline">
+            <strong>We're log social networks</strong><br/>
+            <button data-toggle="tooltip" title="login with Facebook" target="_blank"><i class="fa fa-facebook"></i>
+            </button>
+            <button data-toggle="tooltip" title="login with Google+" target="_blank"><i class="fa fa-google-plus"></i>
+            </button>
+        </div>
+    </div>
+</form>

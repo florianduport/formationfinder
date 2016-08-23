@@ -31,6 +31,51 @@ module.exports   = {
           }
     });
   });
-}
+},
+
+  isExistPlaceName: function ( placeName, callback) {
+
+    if ( placeName == "" || typeof  placeName == "undefined") {
+      callback(null, false)
+      return false
+    }
+
+    Place.findOne({name:placeName}).exec(function (err, resultData){
+      if (err) {
+        callback(err, false)
+        return;
+      }
+
+      if (typeof  resultData  == "undefined") {
+        console.log("Return false")
+        callback(null, false)
+        return;
+      }
+      callback(null, true)
+
+    })
+  },
+
+
+  isExistSameLocation: function ( latitude, longitude, callback) {
+    if ( latitude == "" || typeof  latitude == "undefined" ||  longitude == "" || typeof  longitude == "undefined") {
+      callback(null, false)
+      return;
+    }
+
+    Place.findOne({latitude:latitude, longitude:longitude}).exec(function( err, resultObject){
+      if (err) {
+        callback(err, false)
+        return;
+      }
+
+      if (typeof  resultData  == "undefined") {
+        callback(null, false)
+        return;
+      }
+
+      callback(null, true)
+    })
+  }
 }
 

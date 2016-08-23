@@ -6,6 +6,68 @@
  */
 
 module.exports = {
+  searchByID: function (req, res, next) {
+
+    if (req.param('id') === undefined) {
+      return res.json({status: "error", info: "Formation id is required."});
+    }
+
+    Formation.findOne({id: req.param('id')})
+      .populate('place')
+      .populate('animators')
+      .exec(function (err, FormationFounded) {
+        if (err) {
+          return res.json({status: "error", info: "Error searching Formation."});
+        }
+
+        if (!FormationFounded) {
+          return res.json({status: "error", info: "Formation not found."});
+        }
+
+        return res.json({status: "ok", data: FormationFounded});
+      });
+  },
+
+  create: function (req, res, next) {
+    if (req.param('formationCenter') === undefined) {
+      return res.json({status: "error", info: "Formation Center Name is required."});
+    }
+
+    iFormation = req.param('formation');
+
+    if (iFormation === undefined || typeof(iFormation) !== "object") {
+      return res.json({status: "error", info: "Formation object is required."});
+    }
+
+    // ******************************************************************** //
+    // ** Here we need to validate the formation object composition.     ** //
+    // ******************************************************************** //
+
+    FormationCenter.findOne({name: req.param('formationCenter')})
+      .exec(function (err, FC) {
+        if (err) {
+          return res.json({status: "error", info: "An error has ocurred searching the Formation Center."});
+        }
+
+        if (!FC) {
+          return res.json({status: "error", info: "No Formation Center with that name."});
+        }
+
+        iFormation.formationCenter = FC.id;
+
+        Formation.create(iFormation)
+          .exec(function (err, cFormation) {
+            if(err || !cFormation){
+              return res.json({status: "error", info: "Error creating Formation."});
+            }
+
+            return res.json({status: "ok", info: "Formation created.", data: cFormation});
+
+        });
+
+      });
+  },
+
 	searchbynameTMP: function(req,res,next) {
     var paginationlimit = 10;
 
@@ -32,6 +94,51 @@ module.exports = {
     });
 
   },
+
+  searchByFormationCenter: function (req, res) {
+    if (req.param('formationCenter') === undefined) {
+      return res.json({status: "error", info: "Formation Center Name is required."});
+    }
+
+    FormationCenter.findOne({name: req.param('formationCenter')})
+      .exec(function (err, FC) {
+        if (err) {
+          return res.json({status: "error", info: "An error has ocurred searching the Formation Center."});
+        }
+
+        if (!FC) {
+          return res.json({status: "error", info: "No Formation Center with that name."});
+        }
+
+        Formation.find({formationCenter: FC.id})
+          .populate('place')
+          .sort('updatedAt DESC')
+          //probar .sort(updatedAt: 'DESC')
+          .exec(function (err, formationsFounded) {
+            if (err) {
+              return res.json({status: "error", info: "An error has ocurred searching Formations."});
+            }
+
+            return res.json({status: "ok", data: formationsFounded});
+          });
+
+      });
+  },
+
+  deleteByID: function (req, res) {
+    if (req.param('id') === undefined) {
+      return res.json({status: "error", info: "ID parameter is required."});
+    }
+
+    Formation.destroy({id: req.param('id')})
+      .exec(function (err) {
+        if (err) {
+          return res.json({status: "error", info: "An error has ocurred deleting Formation."});
+        }
+        return res.json({status: "ok", info: "Formation deleted."});
+      });
+  },
+
   searchbyname: function(req,res,next) {
 
     var page = 0;
@@ -1039,7 +1146,7 @@ module.exports = {
             ///Make populate for all id formation to search place and formationcenter data
             formationArray = []
             async = require("async");
-            async.each(results,
+            async.forEach(results,
               // 2nd param is the function that each item is passed to
               function(iFormation, callback){
                 // Call an asynchronous function, often a save() to DB
@@ -1057,121 +1164,18 @@ module.exports = {
                     // body...
                     formationsResponse = [];
 
-                    //console.log(placesFormation.length)
-                    //console.log("----------------------------------")
-                    //console.log(placesFormation)
-                    //console.log("----------------------------------")
-                    //console.log("ANSWER", placesFormation);
 
-
-
-                    /*                promiseResult = placesFormations.reduce(function (prev, iFormation) {
-                     return prev.then(function () {
-                     if (typeof iFormation.place != "undefined") {
-                     iFormation.formationCenter.city = iFormation.place.city;
-                     formationsResponse.push({
-                     formation: iFormation
-                     });
-                     }
-                     });
-                     }, Promise.resolve());
-
-                     promiseResult.then(function(array) {
-                     console.log("<--->", formationsResponse)
-                     return res.json(formationsResponse)
-
-                     });*/
                     formationArray.push(placesFormation[0]);
                     callback();
                   });
 
               },
               // 3rd param is the function to call when everything's done
-              function(err){
-                // All tasks are done now
+              function(err){                // All tasks are done now
                // console.log("ANSWER ID", formationArray.length);
                 return res.json(formationArray)
               }
             );
-          /*  promise = results.reduce(function (prev, iFormation) {
-              return prev.then(function () {
-                console.log(new ObjectID(iFormation.id))
-                Formation.findOne({id:new ObjectID(iFormation.id)})
-                  .populate('place')
-                  .populate('formationCenter')
-                  .exec(function placesFouded(err, placesFormation) {
-                    // body...
-                    formationsResponse = [];
-                    console.log("ANSWER", placesFormation);
-
-
-
-                    /!*                promiseResult = placesFormations.reduce(function (prev, iFormation) {
-                     return prev.then(function () {
-                     if (typeof iFormation.place != "undefined") {
-                     iFormation.formationCenter.city = iFormation.place.city;
-                     formationsResponse.push({
-                     formation: iFormation
-                     });
-                     }
-                     });
-                     }, Promise.resolve());
-
-                     promiseResult.then(function(array) {
-                     console.log("<--->", formationsResponse)
-                     return res.json(formationsResponse)
-
-                     });*!/
-                    formationArray.push(placesFormation);
-                  });
-                idstring =  new ObjectID (iFormation.id)
-                //console.log("ID formation " + iFormation.price)
-
-
-              });
-            }, Promise.resolve());
-
-            promise.then(function(array) {
-              console.log("ANSWER ID", formationArray);
-              return res.json(formationArray)
-
-
-              //.populate('place')
-              //.populate('formationCenter') {id: formationArray[0]}
-              //configquery = {id: informationArray}
-/!*              Formation.find({id:[formationArray[0],formationArray[1]]})
-                .populate('place')
-                .populate('formationCenter')
-                .exec(function placesFouded(err, placesFormations) {
-                  // body...
-                  formationsResponse = [];
-                  console.log("ANSWER", placesFormations);
-                  return res.json(placesFormations)
-
-
-  /!*                promiseResult = placesFormations.reduce(function (prev, iFormation) {
-                    return prev.then(function () {
-                      if (typeof iFormation.place != "undefined") {
-                        iFormation.formationCenter.city = iFormation.place.city;
-                        formationsResponse.push({
-                          formation: iFormation
-                        });
-                      }
-                    });
-                  }, Promise.resolve());
-
-                  promiseResult.then(function(array) {
-                    console.log("<--->", formationsResponse)
-                    return res.json(formationsResponse)
-
-                  });*!/
-
-                });*!/
-            });
-*/
-
-
-
           });
         });
       });
@@ -1358,7 +1362,7 @@ module.exports = {
             ///Make populate for all id formation to search place and formationcenter data
             formationArray = []
             async = require("async");
-            async.each(results,
+            async.forEach(results,
               // 2nd param is the function that each item is passed to
               function(iFormation, callback){
                 // Call an asynchronous function, often a save() to DB

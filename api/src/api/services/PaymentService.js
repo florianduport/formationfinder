@@ -3,6 +3,26 @@
  */
 module.exports = {
 
+  valudateFormatinCenterInformation : function ( formationcenterName, callback) {
+    FormationCenter.findOne({name:formationcenter}).exec(function (err, formationCenterData) {
+
+
+
+      if (err) {
+        callback(err, false)
+        return ;
+
+      }
+
+      if (typeof formationCenterData.walletid == "undefined" || typeof formationCenterData.walletid == "undefined") {
+        callback("Formation Center make payment", false)
+        return;
+      }
+
+      callback(null, true);
+    })
+  },
+
  findMangoPayConfiguration: function ( callback) {
 
    var appuser = 'inoid2016';
@@ -212,8 +232,8 @@ module.exports = {
 
     ///Validate user data parameters for developmet parameters
     if (typeof naturalUserValues == "undefined") {
-      callback(null, {response: "ERROR",
-        message: "NaturalUserValues value  undefined"})
+      callback({response: "ERROR",
+        message: "NaturalUserValues value  undefined"},null )
 
     }
     else { //Validate parameters
@@ -221,28 +241,28 @@ module.exports = {
       naturalUserData = naturalUserValues;
 
       if (typeof naturalUserData.FirstName == "undefined") {
-        callback(null, {response: "ERROR",
-          message: "User value firstname undefined"})
+        callback({response: "ERROR",
+          message: "User value firstname undefined"},null )
       }
       else if (typeof naturalUserData.LastName == "undefined") {
-        callback(null, {response: "ERROR",
-          message: "User value lastname undefined"})
+        callback({response: "ERROR",
+          message: "User value lastname undefined"}, null )
       }
       else if (typeof naturalUserData.FirstName == "undefined") {
-        callback(null, {response: "ERROR",
-          message: err})
+        callback({response: "ERROR",
+          message: err}, null )
       }
       else if(typeof naturalUserData.Birthday == "undefined") {
-        callback(null, {response: "ERROR",
-          message: "User value birthday undefined"})
+        callback( {response: "ERROR",
+          message: "User value birthday undefined"}, null)
       }
       else if(typeof naturalUserData.CountryOfResidence == "undefined") {
-        callback(null, {response: "ERROR",
-          message: "User value country of residence undefined"})
+        callback({response: "ERROR",
+          message: "User value country of residence undefined"}, null )
       }
       else if(typeof naturalUserData.Nationality == "undefined") {
-        callback(null, {response: "ERROR",
-          message: "User value nationality undefined"})
+        callback({response: "ERROR",
+          message: "User value nationality undefined"}, null)
       }
       ///Required paramenter view Mangopay documentation
 
@@ -261,9 +281,10 @@ module.exports = {
     //  Nationality: naturalUserData.Nationality,
     //  CountryOfResidence: naturalUserData.CountryOfResidence
     this.findMangoPayConfiguration( function(err, mango) {
-      if (err)   callback(null, {response: "ERROR",
-        message: err});
+      if (err)   callback({response: "ERROR",
+        message: err}, null);
 
+    console.log("COMUNICATION WINT MANGOPAY");
     mango.user.signup({
       FirstName: naturalUserData.FirstName, // Required
       LastName: naturalUserData.LastName,    // Required
@@ -282,7 +303,7 @@ module.exports = {
       console.log('err', err);
       console.log('user', user);
       console.log('wallet', wallet);
-
+      console.log("RESPONSE WINT MANGOPAY");
       if ( err ) {
         callback( {response: "ERROR",
           message: err}, null)
@@ -897,24 +918,28 @@ module.exports = {
 
 
       PaymentService.createwallet(config, legalUserData, function (err, result) {
-        if (err) callback({
-          response: "ERROR",
-          msg: "Couldn' t create mangopay wallet for Formation Center " + formationCenterName + ": " + err
-        }, null)
+        if (err) {
+          callback({
+            response: "ERROR",
+            msg: "Couldn' t create mangopay wallet for Formation Center " + formationCenterName + ": " + err
+          }, null)
+          return;
+        }
 
         ///Update formation center
         FormationCenter.update({name: formationCenterName}, {
           mangowallet: result.wallet,
           mangouser: result.user
         }).exec(function (err, Config) {
-          if (err) callback({
+          if (err){ callback({
             response: "ERROR",
             msg: "Couldn' t create mangopay wallet for Formation Center " + formationCenterName + ": " + err
           }, null);
-
+            return;
+          }
 
           callback(null, {response: "OK",  mangowallet: result.wallet, mangouser: result.user, name:formationCenterName })
-
+          return;
         });
 
       })

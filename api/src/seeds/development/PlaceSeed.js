@@ -22,7 +22,7 @@ module.exports = [{
 
   isActivated: faker.random.boolean(),
 
-  agreementNumber:faker.random.words(),
+  agreementNumber:faker.random.number(),
 
   agreementName:faker.random.words(),
 
@@ -46,7 +46,7 @@ module.exports = [{
 
     isActivated: faker.random.boolean(),
 
-    agreementNumber:faker.random.words(),
+    agreementNumber:faker.random.number(),
 
     agreementName:faker.random.words(),
     latitude : 47.98452935790991,
@@ -76,7 +76,7 @@ module.exports = [{
 
     isActivated: faker.random.boolean(),
 
-    agreementNumber:faker.random.words(),
+    agreementNumber:faker.random.number(),
 
     agreementName:faker.random.words(),
 
@@ -107,7 +107,7 @@ module.exports = [{
 
     isActivated: faker.random.boolean(),
 
-    agreementNumber:faker.random.words(),
+    agreementNumber:faker.random.number(),
 
     agreementName:faker.random.words(),
 
@@ -138,7 +138,7 @@ module.exports = [{
 
     isActivated: faker.random.boolean(),
 
-    agreementNumber:faker.random.words(),
+    agreementNumber:faker.random.number(),
 
     agreementName:faker.random.words(),
     latitude : 47.98452935790991,
@@ -168,7 +168,7 @@ module.exports = [{
 
     isActivated: faker.random.boolean(),
 
-    agreementNumber:faker.random.words(),
+    agreementNumber:faker.random.number(),
 
     agreementName:faker.random.words(),
 
@@ -200,7 +200,7 @@ module.exports = [{
 
     isActivated: faker.random.boolean(),
 
-    agreementNumber:faker.random.words(),
+    agreementNumber:faker.random.number(),
 
     agreementName:faker.random.words(),
 
@@ -231,7 +231,7 @@ module.exports = [{
 
     isActivated: faker.random.boolean(),
 
-    agreementNumber:faker.random.words(),
+    agreementNumber:faker.random.number(),
 
     agreementName:faker.random.words(),
     latitude : 46.98452935790991,
@@ -261,7 +261,7 @@ module.exports = [{
 
     isActivated: faker.random.boolean(),
 
-    agreementNumber:faker.random.words(),
+    agreementNumber:faker.random.number(),
 
     agreementName:faker.random.words(),
 
@@ -293,7 +293,7 @@ module.exports = [{
 
     isActivated: faker.random.boolean(),
 
-    agreementNumber:faker.random.words(),
+    agreementNumber:faker.random.number(),
 
     agreementName:faker.random.words(),
 
@@ -324,7 +324,7 @@ module.exports = [{
 
     isActivated: faker.random.boolean(),
 
-    agreementNumber:faker.random.words(),
+    agreementNumber:faker.random.number(),
 
     agreementName:faker.random.words(),
     latitude : 45.98452935790991,
@@ -354,7 +354,7 @@ module.exports = [{
 
     isActivated: faker.random.boolean(),
 
-    agreementNumber:faker.random.words(),
+    agreementNumber:faker.random.number(),
 
     agreementName:faker.random.words(),
 

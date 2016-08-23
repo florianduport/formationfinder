@@ -1,0 +1,334 @@
+<div class="container   admin-places">
+    <div class="row col-lg-8 col-sm-8 col-lg-8 col-xs-12 col-lg-offset-1 col-sm-offset-1 well">
+
+        <h2>{{'ADMIN_PAGE_BILL_HEAD'| translate}}</h2>
+        <p>{{'ADMIN_PAGE_BILL_HEAD_DESCRIPTION'| translate}}</p>
+
+        <!--Search form  admin-places -->
+        <div class="search-form  form-horizontal">
+
+
+            <div class="form-group">
+                <form name="simplesearch">
+
+                    <div class="input-group">
+                        <!--For geolocation uib-typeahead="address for address in getLocation($viewValue)"
+
+
+                               autofocus -->
+
+                        <input class="form-control"
+                               placeholder="{{'AMOUNT' | translate}}"
+                               type="text"
+                               uib-typeahead="iBill.amount for iBill in Bills | filter:$viewValue"
+                               ng-model="criteriaList"
+                               name="city_zipcode"
+                               maxlength="10"
+                               ng-pattern="numExpReg"
+                               tooltip-placement="top"
+                               tooltip-trigger="'none'"
+                               uib-tooltip="{{'AMOUNT_ERROR' | translate}}"
+                               tooltip-class="customClass"
+                               tooltip-is-open="simplesearch.city_zipcode.$dirty && simplesearch.city_zipcode.$invalid"
+
+                        >
+                       <span class="input-group-addon" ng-click="searchFuncList()"><span
+                               class="fa fa-search"></span></span>
+
+                    </div>
+                </form>
+
+                <div uib-alert ng-repeat="alert in alerts" dismiss-on-timeout=3000
+                     ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert()">{{ alert.msg }}
+                </div>
+                <div class="searchComponent" style="margin-top: 3px">
+                    <!--<button type="button" class="btn   btn-primary" ng-click="addPlace()">-->
+                    <!--{{'NEW_PLACE '| translate }}-->
+                    <!--</button>-->
+                    <button type="button" class="btn   btn-primary" ng-click="advanceSearch = !advanceSearch">
+                        {{'ADVANCED_SEARCH' | translate }}
+                    </button>
+                    <!--<button type="button" class="btn   btn-primary" ng-click="showMap($event)">-->
+                    <!--{{'VIEW_MAP' | translate }}-->
+                    <!--</button>-->
+                    <hr>
+                    <div uib-collapse="advanceSearch" horizontal>
+                        <div class="fadeInDown">
+
+                            <form name="advancedSearchPlace" class="form-horizontal" role="form">
+
+                                <!--<div class="form-group pull-left row col-xs-12 col-sm-12 col-md-12 col-lg-12">-->
+                                <!--<div class=" input-group ">-->
+                                <!--<span class="input-group-addon"-->
+                                <!--id="basic-addon1"><strong>Name:</strong></span>-->
+                                <!--<input class="form-control"-->
+                                <!--type="text"-->
+                                <!--name="name"-->
+                                <!--id="name"-->
+                                <!--maxlength="40"-->
+                                <!--placeholder="{{'NAME' | translate}}"-->
+                                <!--uib-typeahead="name as iplace.name for iplace in places | filter:$viewValue"-->
+                                <!--ng-model="seachPlace.name"-->
+                                <!--ng-pattern="usernameExpReg"-->
+                                <!--tooltip-placement="top"-->
+                                <!--tooltip-trigger="'none'"-->
+                                <!--uib-tooltip="{{'NAME_ERROR' | translate}}"-->
+                                <!--tooltip-class="customClass"-->
+                                <!--tooltip-is-open="advancedSearchPlace.name.$dirty && advancedSearchPlace.name.$invalid"-->
+                                <!--required aria-describedby="basic-addon1"/>-->
+
+                                <!--</div>-->
+                                <!--&lt;!&ndash;<span style="color:#cc0000"&ndash;&gt;-->
+                                <!--&lt;!&ndash;ng-show="advancedSearchPlace.name.$dirty && advancedSearchPlace.name.$invalid">&ndash;&gt;-->
+                                <!--&lt;!&ndash;<span ng-show="advancedSearchPlace.name.$error.required">Name is required.</span>&ndash;&gt;-->
+                                <!--&lt;!&ndash;<span ng-show="advancedSearchPlace.name.$error.pattern">Invalid name format. You should provide between 2 and 40 words characters.</span>&ndash;&gt;-->
+                                <!--&lt;!&ndash;</span>&ndash;&gt;-->
+                                <!--</div>-->
+
+                                <!--<div class="form-group pull-left row col-xs-12 col-sm-12 col-md-12 col-lg-12">-->
+                                <!--<div class=" input-group ">-->
+
+                                <!--<span class="input-group-addon"-->
+                                <!--id="basic-addon2"><strong>Address:</strong></span>-->
+                                <!--<input class="form-control" type="text"-->
+                                <!--name="address" id="address"-->
+                                <!--ng-model="seachPlace.address"-->
+                                <!--maxlength="100"-->
+                                <!--placeholder="{{'ADDRESS' | translate}}"-->
+                                <!--uib-typeahead="address as iplace.address for iplace in places | filter:$viewValue"-->
+                                <!--ng-pattern="usernameExpReg"-->
+                                <!--tooltip-placement="top"-->
+                                <!--tooltip-trigger="'none'"-->
+                                <!--uib-tooltip="{{'ADDRESS_ERROR' | translate}}"-->
+                                <!--tooltip-class="customClass"-->
+                                <!--tooltip-is-open="advancedSearchPlace.address.$dirty && advancedSearchPlace.address.$invalid"-->
+                                <!--aria-describedby="basic-addon2"/>-->
+                                <!--</div>-->
+
+                                <!--&lt;!&ndash;<span style="color:#cc0000"&ndash;&gt;-->
+                                <!--&lt;!&ndash;ng-show="advancedSearchPlace.address.$dirty && advancedSearchPlace.address.$invalid">&ndash;&gt;-->
+                                <!--&lt;!&ndash;<span ng-show="advancedSearchPlace.address.$error.required">First name is required.</span>&ndash;&gt;-->
+                                <!--&lt;!&ndash;<span ng-show="advancedSearchPlace.address.$error.pattern">Invalid first name format. You should provide between 2 and 40 words characters.</span>&ndash;&gt;-->
+                                <!--&lt;!&ndash;</span>&ndash;&gt;-->
+                                <!--</div>-->
+                                <div class=" form-group pull-left row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                    <label class="text-info"><strong>Date: </strong></label>
+                                    <div class=" input-group date ident-date">
+                                        <span class="input-group-addon"><span
+                                                class="text-info">Init  date:</span></span>
+                                        <input tooltip-placement="top" tooltip-trigger="'none'"
+                                               uib-tooltip="Init date field should be date" tooltip-class="customClass"
+                                               tooltip-is-open="myform.initDate.$dirty && myform.initDate.$invalid"
+                                               class="form-control md-datepicker-is-showing"
+                                               uib-datepicker-popup="{{format}}" is-open="popup1.opened" name="initDate"
+                                               ng-pattern="/^\d{2}-\w{3,9}-\d{4}$/"
+                                               datepicker-options="dateOptionsSearch"
+                                               placeholder="" type="text" ng-model="search.initialDate">
+                                    <span class="input-group-addon"><span id="datesearchInit" class="fa fa-calendar "
+                                                                          ng-click="open1()"></span></span>
+
+                                    </div>
+                                    <!--<span   class="error-message text-danger" ng-show="myform.initDate.$dirty && myform.initDate.$invalid"><p style="text-decoration-color:#f1a417;background: #afd9ee">Init date field should be date</p></span>-->
+
+                                    <div class=" input-group date ident-date">
+                                        <span class="input-group-addon"><span class="text-info">End date:</span></span>
+                                        <input tooltip-placement="bottom" tooltip-trigger="'none'"
+                                               uib-tooltip="End date field should be date" tooltip-class="customClass"
+                                               tooltip-is-open="myform.endDate.$dirty && myform.endDate.$invalid"
+                                               class="form-control" uib-datepicker-popup="{{format}}" name="endDate"
+                                               ng-pattern="/^\d{2}-\w{3,9}-\d{4}$/" is-open="popup2.opened"
+                                               datepicker-options="dateOptionsSearch" placeholder="" type="text"
+                                               ng-model="search.endDate">
+                                    <span class="input-group-addon"><span id="datesearchEnd" class="fa fa-calendar"
+                                                                          ng-click="open2()"></span></span>
+
+                                    </div>
+                                    <!--<span   class="error-message text-danger" ng-show="myform.endDate.$dirty && myform.endDate.$invalid"><p style="text-decoration-color:#f1a417;background: #afd9ee">End date field should be date</p></span>-->
+
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <!--<div uib-alert ng-repeat="alert in alerts" dismiss-on-timeout=3000-->
+        <!--ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert()">{{ alert.msg }}-->
+        <!--</div>-->
+        <!--Place table -->
+        <div class="">
+            <div align="right" style="color:#000066">
+                <!--<ul uib-pagination boundary-links="true" items-per-page="appBill.itemPerPageBill"-->
+                <!--total-items="appBill.totalItemsBill"-->
+                <!--ng-click="getBillRecords()" ng-model="appBill.currentPageBill" class="pagination-sm"-->
+                <!--previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;">-->
+                <!--</ul>-->
+                <ul uib-pagination boundary-links="true" items-per-page="appBill.itemPerPageBill"
+                    total-items="appBill.totalItemsBill" ng-click="getBillRecords()" force-ellipses="true"
+                    max-size="appBill.maxSizeBill" boundary-link-numbers="true" rotate="true"
+                    ng-model="appBill.currentPageBill" class="pagination-sm" previous-text="&lsaquo;"
+                    next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+
+            </div>
+
+            <table class="table table-responsive">
+                <thead style="font-size: 14px">
+                <tr>
+                    <th><strong>Amount</strong></th>
+                    <th><strong>Date</strong></th>
+                    <th><strong>Bill Number</strong></th>
+                    <th><strong>Paid</strong></th>
+                    <th><strong>Actions</strong></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="iBill in Bills | filter:criteriaList ">
+                    <td>{{iBill.amount}}</td>
+                    <td>{{ getReadableDate(iBill.date) }}</td>
+                    <td>{{iBill.billNumber}}</td>
+                    <td>
+                        <div class=" input-group ">
+                            <input type="checkbox" ng-checked="iBill.billState" ng-disabled="checkboxUnable">
+
+                        </div>
+                    </td>
+                    <td>
+                        <a class="btn btn-primary" ng-disabled="iBill.billState" ng-click="makePayment(iBill)">Pay</a>
+                        <a class="btn btn-danger" ng-click="deleteBill(iBill)">Delete</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div align="right" style="color:#000066">
+                <!--<ul uib-pagination boundary-links="true" items-per-page="appBill.itemPerPageBill"-->
+                <!--total-items="appBill.totalItemsBill"-->
+                <!--ng-click="getBillRecords()" ng-model="appBill.currentPageBill" class="pagination-sm"-->
+                <!--previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;">-->
+                <!--</ul>-->
+
+                <ul uib-pagination boundary-links="true" items-per-page="appBill.itemPerPageBill"
+                    total-items="appBill.totalItemsBill" ng-click="getBillRecords()" force-ellipses="true"
+                    max-size="appBill.maxSizeBill" boundary-link-numbers="true" rotate="true"
+                    ng-model="appBill.currentPageBill" class="pagination-sm" previous-text="&lsaquo;"
+                    next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+
+
+            </div>
+
+            <script type="text/ng-template" id="myModalMessage.html">
+                <div class="modal-header">
+                    <h3 class="modal-title">{{items.type}}</h3>
+                </div>
+                <div class="modal-body">
+                    <h3>{{items.message}}</h3>
+
+                    <!--Selected: <b>{{ selected.item }}</b>-->
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-warning" type="button" ng-click="cancel()">
+                        {{'CLOSE' | translate}}
+                    </button>
+                </div>
+                </div>
+            </script>
+        </div>
+        <!--<div ng-controller="PlaceEditcontroller">-->
+
+        <!--</div>-->
+        <script type="text/ng-template" id="customTemplateCard.html">
+            <a>
+                <img ng-src="payment/{{match.model.image}}" width="16">
+                <span ng-bind-html="match.label | uibTypeaheadHighlight:query"></span>
+            </a>
+        </script>
+        <script type="text/ng-template" id="myModalContentPayment.html">
+            <div class="modal-header">
+                <h3 class="modal-title">Payment data: </h3>
+            </div>
+            <div class="modal-body">
+                <form name="paymentdata" class="form-horizontal" role="form" novalidate>
+                    <div class="form-group">
+                        <label>{{'CARD_TYPE' | translate }}</label>
+                        <div class="input-group" data-toggle="tooltip" title="{{'CARD_TYPE' | translate }}">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-credit-card"></span></span>
+                            <select ng-model="selectedCard"
+                                    ng-options="icard as icard.name for icard in Cards"
+                                    class="form-control"
+                                    placeholder="icard.type"
+                                    template-url="customTemplateCard.html"
+                                    required>
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3 " for="number">{{'CARD_NUMBER' | translate }}</label>
+                        <div class="input-group date  ident-date">
+                            <input name="number" id="number"
+                                   ng-model="creditCardData.number" style="margin-right: 3px"
+                                   ng-pattern="numberRegExp"
+                                   maxlength="12"
+                                   class="form-control"
+                                   type="text"
+                                   required/>
+                            <span class="input-group-addon"><span class="fa fa-credit-card"></span></span>
+                        </div>
+                    </div>
+                          <span style="color:#cc0000"
+                                ng-show="paymentdata.number.$dirty && paymentdata.number.$invalid">
+            <span ng-show="paymentdata.number.$error.required">Card number is required.</span>
+            <span ng-show="paymentdata.number.$error.pattern">You sould provide digit.</span>
+        </span>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3 " for="numberCSV">{{'CARD_CSV' | translate }}</label>
+                        <div class="input-group ">
+                            <input name="csv" id="numberCSV"
+                                   ng-model="creditCardData.csv"
+                                   ng-pattern="numberRegExp"
+                                   maxlength="4"
+                                   class="form-control"
+                                   type="text"
+                                   required/>
+                            <span class="input-group-addon"><span class="fa fa-certificate"></span></span>
+                        </div>
+
+                    </div>
+    <span style="color:#cc0000" ng-show="paymentdata.csv.$dirty && paymentdata.csv.$invalid">
+            <span ng-show="paymentdata.csv.$error.required">Card number is required.</span>
+            <span ng-show="paymentdata.number.$error.pattern">You sould provide digit.</span>
+        </span>
+
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="dateOfProcuration">{{'CARD_DATE' | translate
+                            }}</label>
+                        <div class="input-group date  ident-date">
+                            <input name="dateOfProcuration" id="dateOfProcuration"
+                                   ng-model="creditCardData.dateOfExpiration"
+                                   class="form-control"
+                                   type="text" required
+                                   ng-pattern="dateRegExp"
+                                   uib-datepicker-popup="{{format}}"
+                                   is-open="popupCardCreditDate.opened"
+                                   datepicker-options="dateOptions"/>
+                            <span class="input-group-addon"><span id="procDateInit" class="fa fa-calendar"
+                                                                  ng-click="openCardCreditDate()"></span></span>
+                        </div>
+                    </div>
+                    <span class="error-message text-danger"
+                          ng-show="paymentdata.dateOfProcuration.$dirty && paymentdata.dateOfProcuration.$invalid">You should provide a valid date string.</span>
+
+                </form>
+                <!--<div uib-alert ng-repeat="message in vm.customerFoundMessages"-->
+                <!--ng-class="'alert-' + message.type">{{message.info}}</div>-->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="button" ng-click="ok()">Pay now</button>
+                <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+            </div>
+        </script>
+    </div>
+</div>

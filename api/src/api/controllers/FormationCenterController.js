@@ -87,6 +87,35 @@ module.exports = {
       });
 
   },
+  searchSimpleByName: function (req, res, next) {
+    // body...
+
+    name = req.param('name');
+
+    if(name === undefined) {
+      return res.json({err: 'Name parameter not provided'});
+    }
+
+    if (typeof(name) != 'string') {
+      name = name.toString();
+    }
+
+    FormationCenter.findOne({name: name})
+      .exec(function (err, formationCenterFounded) {
+        // body...
+
+        if(err){
+          return res.json({err: 'An error has ocurred searching database'});
+        }
+
+        if(formationCenterFounded === undefined) {
+          return res.json({err: 'No formation Center match that criteria: ' + name});
+        }
+
+        return res.json(formationCenterFounded);
+      });
+
+  },
   searchByNameEx: function (req, res, next) {
     // body...
 
@@ -104,6 +133,7 @@ module.exports = {
       .populate('animators')
       .populate('formations')
       .populate('places')
+      .populate('customers')
       .exec(function (err, formationCenterFounded) {
         // body...
 

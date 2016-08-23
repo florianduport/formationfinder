@@ -47,11 +47,12 @@ module.exports.routes = {
   '/Payment/createwallet':{
     controller: "PayController", action: "createwallet"
   },
-  '/Payment/createwalletex':{
-    controller: "PayController", action: "createwalletex"
-  },
-  '/Payment/makepayment':{
+   '/Payment/makepayment':{
     controller: "PayController", action: "makepaymentex"
+  },
+
+  '/Payment/mangopayment':{
+    controller: "PayController", action: "mangopayment"
   }
   ,
   '/Formation/searchbyname':{

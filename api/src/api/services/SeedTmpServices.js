@@ -54,7 +54,7 @@ module.exports = {
 
 
           console.log("-----")
-          async.each(formationCenters, function (formationCenter, callback) {
+          async.forEach(formationCenters, function (formationCenter, callback) {
             var formationid = formationCenter.id;
 
             var placeFormationAsociation = {
@@ -403,14 +403,49 @@ module.exports = {
 
       },
       five: function (callback) {
-        formationCenter = placeFormationAsociation.formationcenter[0]
-        if (typeof formationCenter != "undefined") {
-          Login.update({username: "root"}, {formationCenter: formationCenter}).exec(function (err, Formations) {
-            // console.log("Actualizando formacion con place ", iFormation, iPlace);
-            if (err)
-              console.log("Error update formationcenter")
-            console.log("Five formationcenter asociated with LOGIN ", formationCenter)
+
+        if (placeFormationAsociation.formationcenter.length == 0 || placeFormationAsociation.formation.length == 0) {
+          console.log("No information for update")
+          callback(null, placeFormationAsociation);
+        }
+        else {
+          formationCenter = placeFormationAsociation.formationcenter[0]
+          if (typeof formationCenter != "undefined") {
+            Login.update({username: "root"}, {formationCenter: formationCenter}).exec(function (err, Formations) {
+              // console.log("Actualizando formacion con place ", iFormation, iPlace);
+              if (err)
+                console.log("Error update formationcenter")
+              console.log("Five formationcenter asociated with LOGIN ", formationCenter)
+            })
+          }
+
+
+          Bill.find({}).exec(function (err, BillsAccounts) {
+
+            BillsAccounts.forEach(function (iBill, i) {
+
+              Bill.update({id: iBill.id}, {formationCenter: formationCenter}).exec(function (err, result) {
+
+                if (err) {
+                  callback(err);
+                }
+
+                console.log("Actualizando BILL ", iBill.id)
+              })
+
+            });
+
           })
+
+          Animator.update({},{formationCenter: formationCenter}).exec(function (err, Animators) {
+            if(err){
+              console.log("Error Updating Animator.");
+            }
+
+            console.log("************* Se actualizaron los animators: ", Animators);
+          });
+
+          callback(null, placeFormationAsociation);
         }
       },
       six: function (callback) {

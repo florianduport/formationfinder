@@ -1,0 +1,234 @@
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 col-sm-6 col-xs-12 ">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><strong>Management bank account</strong></h3>
+                </div>
+                <div class="panel-body ">
+
+                    <form name="editBanckAccount pull-left" class="form-horizontal" role="form">
+
+                        <div class="form-group pull-left  col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class=" input-group ">
+                                                            <span class="input-group-addon"
+                                                                  id="basic-addon00"><strong>Tag (*)</strong></span>
+                                <input name="name" id="name"
+                                       ng-model="vm.customerData.name"
+                                       ng-pattern="vm.nameRegExp"
+                                       maxlength="40"
+                                       placeholder="Guerin"
+                                       class="form-control"
+                                       type="text"
+                                       required aria-describedby="basic-addon00"/>
+                            </div>
+                                        <span style="color:#cc0000"
+                                              ng-show="editBanckAccount.name.$dirty && editBanckAccount.name.$invalid">
+                                            <span ng-show="editBanckAccount.name.$error.required">Name is required.</span>
+                                            <span ng-show="editBanckAccount.name.$error.pattern">Invalid name format. You should provide between 2 and 40 words characters.</span>
+                                        </span>
+                        </div>
+
+                        <div class="form-group pull-left  col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class=" input-group ">
+                                                            <span class="input-group-addon"
+                                                                  id="basic-addon0"><strong>Owner Name</strong></span>
+                                <input name="address" id="address"
+                                       ng-model="vm.customerData.address"
+                                       maxlength="100"
+                                       class="form-control" type="text" aria-describedby="basic-addon0"/>
+                            </div>
+                                    <span style="color:#cc0000"
+                                          ng-show="editBanckAccount.address.$dirty && editBanckAccount.address.$invalid">
+                                            <span ng-show="editBanckAccount.address.$error.pattern">Invalid city name. You should provide between 2 and 40 words characters.</span>
+                                        </span>
+                        </div>
+                        <div class="form-group pull-left col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class=" input-group ">
+                                                            <span class="input-group-addon"
+                                                                  id="basic-addon1"><strong>IBAN</strong></span>
+
+                                <input name="iban" id="iban"
+                                       ng-model="vm.customerData.city"
+                                       maxlength="16"
+                                       ng-pattern="vm.nameRegExp"
+                                       class="form-control" type="text" aria-describedby="basic-addon1"/>
+                            </div>
+                                        <span style="color:#cc0000"
+                                              ng-show="editBanckAccount.iban.$dirty && editBanckAccount.iban.$invalid">
+                                            <span ng-show="editBanckAccount.iban.$error.pattern">Invalid city name. You should provide between 2 and 40 words characters.</span>
+                                        </span>
+                        </div>
+
+                        <div class="form-group pull-left col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class=" input-group ">
+                                                            <span class="input-group-addon"
+                                                                  id="basic-addon2"><strong>BIC (*)</strong></span>
+
+
+                                <input name="bic" id="zipCode"
+                                       ng-model="vm.customerData.zipCode"
+                                       class="form-control"
+                                       ng-pattern="vm.zipcodeRegExp"
+                                       maxlength="5"
+                                       placeholder="33216"
+                                       required
+                                       type="text" aria-describedby="basic-addon2"/>
+                            </div>
+
+                                        <span style="color:#cc0000"
+                                              ng-show="editBanckAccount.bic.$dirty && editBanckAccount.bic.$invalid">
+                                            <span ng-show="editBanckAccount.bic.$error.required">Zipcode is required.</span>
+                                            <span ng-show="editBanckAccount.bic.$error.pattern">Invalid zipcode format. You must enter 5 digits.</span>
+                                        </span>
+                        </div>
+
+                        <div class="form-group pull-left">
+
+                            <div class="panel panel-primary " style="margin-left: 2px">
+                                <div class="panel-heading"><strong class="text-capitalize">Owner Address </strong></div>
+                                <div class="panel-body">
+                                    <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
+                                        <div class=" input-group ">
+                                                            <span class="input-group-addon"
+                                                                  id="basic-addon3"><strong>Adress  (*)</strong></span>
+                                            <input name="adress1" id="adress1"
+                                                   ng-model="seachPlace.nameAgrement"
+                                                   ng-pattern="vm.nameRegExp"
+                                                   maxlength="40"
+                                                   placeholder="Guerin"
+                                                   class="form-control"
+                                                   type="text"
+                                                   required aria-describedby="basic-addon3"/>
+                                        </div>
+
+                                                <span style="color:#cc0000"
+                                                      ng-show="advancedSearchPlace.adress1.$dirty && advancedSearchPlace.adress1.$invalid">
+                                                    <span ng-show="advancedSearchPlace.adress1.$error.required">Name is required.</span>
+                                                    <span ng-show="advancedSearchPlace.adress1.$error.pattern">Invalid name format. You should provide between 2 and 40 words characters.</span>
+                                                </span>
+                                    </div>
+
+                                    <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+                                        <div class=" input-group  ">
+                                                            <span class="input-group-addon"
+                                                                  id="basic-addon4"><strong>Second Address (*)</strong></span>
+                                            <input name="adress2" id="adress2"
+                                                   ng-model="seachPlace.numberAgrement"
+                                                   class="form-control"
+                                                   ng-pattern="vm.zipcodeRegExp"
+                                                   maxlength="5"
+                                                   placeholder="33216"
+                                                   required
+                                                   type="text" aria-describedby="basic-addon4"/>
+                                        </div>
+                                                <span style="color:#cc0000"
+                                                      ng-show="editBanckAccount.adress2.$dirty && editBanckAccount.adress2.$invalid">
+                                                    <span ng-show="editBanckAccount.adress2.$error.required">Zipcode is required.</span>
+                                                    <span ng-show="editBanckAccount.adress2.$error.pattern">Invalid zipcode format. You must enter 5 digits.</span>
+                                                </span>
+                                    </div>
+                                    <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+                                        <div class=" input-group  ">
+                                                            <span class="input-group-addon"
+                                                                  id="basic-addon5"><strong>City (*)</strong></span>
+                                            <input name="city" id="city"
+                                                   ng-model="seachPlace.numberAgrement"
+                                                   class="form-control"
+                                                   ng-pattern="vm.zipcodeRegExp"
+                                                   maxlength="5"
+                                                   placeholder="33216"
+                                                   required
+                                                   type="text" aria-describedby="basic-addon5"/>
+                                        </div>
+                                                <span style="color:#cc0000"
+                                                      ng-show="editBanckAccount.city.$dirty && editBanckAccount.city.$invalid">
+                                                    <span ng-show="editBanckAccount.city.$error.required">Zipcode is required.</span>
+                                                    <span ng-show="editBanckAccount.city.$error.pattern">Invalid zipcode format. You must enter 5 digits.</span>
+                                                </span>
+                                    </div>
+                                    <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+                                        <div class=" input-group  ">
+                                                            <span class="input-group-addon"
+                                                                  id="basic-addon6"><strong>Region (*)</strong></span>
+                                            <input name="region" id="region"
+                                                   ng-model="seachPlace.numberAgrement"
+                                                   class="form-control"
+                                                   ng-pattern="vm.zipcodeRegExp"
+                                                   maxlength="5"
+                                                   placeholder="33216"
+                                                   required
+                                                   type="text" aria-describedby="basic-addon6"/>
+                                        </div>
+                                                <span style="color:#cc0000"
+                                                      ng-show="editBanckAccount.region.$dirty && editBanckAccount.region.$invalid">
+                                                    <span ng-show="editBanckAccount.region.$error.required">Zipcode is required.</span>
+                                                    <span ng-show="editBanckAccount.region.$error.pattern">Invalid zipcode format. You must enter 5 digits.</span>
+                                                </span>
+                                    </div>
+                                    <div class="form-group pull-left col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <div class=" input-group ">
+                                                            <span class="input-group-addon"
+                                                                  id="basic-addon7"><strong>ZipCode (*)</strong></span>
+
+
+                                            <input name="zipCode" id="zipCode2"
+                                                   ng-model="vm.customerData.zipCode"
+                                                   class="form-control"
+                                                   ng-pattern="vm.zipcodeRegExp"
+                                                   maxlength="5"
+                                                   placeholder="33216"
+                                                   required
+                                                   type="text" aria-describedby="basic-addon7"/>
+                                        </div>
+
+                                        <span style="color:#cc0000"
+                                              ng-show="editBanckAccount.zipCode.$dirty && editPlace.zipCode.$invalid">
+                                            <span ng-show="editBanckAccount.zipCode.$error.required">Zipcode is required.</span>
+                                            <span ng-show="editBanckAccount.zipCode.$error.pattern">Invalid zipcode format. You must enter 5 digits.</span>
+                                        </span>
+                                    </div>
+                                    <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+                                        <div class=" input-group  ">
+                                                            <span class="input-group-addon"
+                                                                  id="basic-addon8"><strong>Contry (*)</strong></span>
+                                            <input name="country" id="country"
+                                                   ng-model="seachPlace.numberAgrement"
+                                                   class="form-control"
+                                                   ng-pattern="vm.zipcodeRegExp"
+                                                   maxlength="5"
+                                                   placeholder="33216"
+                                                   required
+                                                   type="text" aria-describedby="basic-addon8"/>
+                                        </div>
+                                                <span style="color:#cc0000"
+                                                      ng-show="editBanckAccount.country.$dirty && editBanckAccount.country.$invalid">
+                                                    <span ng-show="editBanckAccount.country.$error.required">Zipcode is required.</span>
+                                                    <span ng-show="editBanckAccount.country.$error.pattern">Invalid zipcode format. You must enter 5 digits.</span>
+                                                </span>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <button class="btn btn-primary pull-right" ng-click="uncheckable = !uncheckable">
+                            Save
+                        </button>
+                        <!--<div class="row">-->
+                        <!--<div class="col-xs-12 col-sm-12 col-md-10">-->
+                        <!--<div uib-alert ng-repeat="message in vm.validationMessages"-->
+                        <!--ng-class="'alert-' + message.type" close="vm.closeMessage($index)"-->
+                        <!--dismiss-on-timeout="4000">{{message.info}}-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                    </form>
+        </div>
+    </div>
+</div>

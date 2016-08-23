@@ -22,7 +22,7 @@ module.exports = [{
 
   isActivated: faker.random.boolean(),
 
-  agreementNumber:faker.random.words(),
+  agreementNumber:faker.random.number(),
 
   agreementName:faker.random.words(),
 

@@ -1,0 +1,139 @@
+<div class="container well createFormContainer">
+    <div class="row">
+        <div class="col col-sm-2">
+
+        </div>
+        <div class="col col-sm-8">
+            <h1>Edit Formation</h1>
+        </div>
+        <div class="col col-sm-2">
+
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col col-md-4">
+            <h4>Actual Values</h4>
+            <label>Place</label>
+            <div class="input-group" data-toggle="tooltip" title="Select a Place">
+                <span class="input-group-addon"><span class="glyphicon glyphicon-map-marker"></span></span>
+                <input type="text" class="form-control"
+                       disabled
+                       ng-model="formation.place.name">
+            </div>
+
+            <label>Price</label>
+            <div class="input-group" data-toggle="tooltip" title="Insert price">
+                <span class="input-group-addon"><span class="glyphicon glyphicon-euro"></span></span>
+                <input type="text" class="form-control"
+                       ng-model="formation.price"
+                       disabled>
+            </div>
+
+            <label>Max People</label>
+            <div class="input-group" data-toggle="tooltip" title="Insert Max People">
+                <span class="input-group-addon"><span class="glyphicon">#</span></span>
+                <input type="text" class="form-control"
+                       ng-model="formation.maxPeople"
+                       disabled>
+            </div>
+
+            <label>Psychologist</label>
+            <div class="input-group" data-toggle="tooltip" title="Select a Psychologist">
+                <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                <input type="text" class="form-control"
+                       ng-model="formation.maxPeople"
+                       disabled>
+            </div>
+
+            <label>BAFM/BAFCRI</label>
+            <div class="input-group" data-toggle="tooltip" title="Select a BAFM/BAFCRI">
+                <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                <input type="text" class="form-control"
+                       ng-model="formation.maxPeople"
+                       disabled>
+            </div>
+
+            <div class="form-group">
+                <label class="checkbox-inline">
+                    <input class="checkbox"
+                           type="checkbox"
+                           disabled
+                           ng-model="formation.isConfirmed"> Is Confirmed
+                </label>
+            </div>
+        </div>
+        <div class="col col-md-4">
+            <h4>New Values</h4>
+            <label>Select Place</label>
+            <div class="input-group" data-toggle="tooltip" title="Select a Place">
+                <span class="input-group-addon"><span class="glyphicon glyphicon-map-marker"></span></span>
+                <select ng-model="newFormationValues.place"
+                        ng-options="place.name for place in places"
+                        class="form-control"
+                        required>
+                </select>
+            </div>
+
+            <label>Insert Price</label>
+            <div class="input-group" data-toggle="tooltip" title="Insert price">
+                <span class="input-group-addon"><span class="glyphicon glyphicon-euro"></span></span>
+                <input type="text" class="form-control"
+                       autofocus
+                       maxlength="3"
+                       ng-model="newFormationValues.price"
+                       ng-pattern="numExpReg"
+                       required>
+            </div>
+
+            <label>Insert Max People</label>
+            <div class="input-group" data-toggle="tooltip" title="Insert Max People">
+                <span class="input-group-addon"><span class="glyphicon">#</span></span>
+                <input type="text" class="form-control"
+                       maxlength="3"
+                       ng-model="newFormationValues.maxPeople"
+                       ng-pattern="numExpReg"
+                       required>
+            </div>
+
+            <label>Select Psychologist</label>
+            <div class="input-group" data-toggle="tooltip" title="Select a Psychologist">
+                <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                <select ng-model="selectedPSY"
+                        ng-options="psy.name for psy in animatorsPSY"
+                        class="form-control"
+                        placeholder="Psychologist"
+                        required>
+                </select>
+            </div>
+
+            <label>Select BAFM/BAFCRI</label>
+            <div class="input-group" data-toggle="tooltip" title="Select a BAFM/BAFCRI">
+                <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                <select ng-model="selectedBAFM"
+                        ng-options="BAFM.name for BAFM in animatorsBAFM"
+                        class="form-control"
+                        placeholder="BAFM/BAFCRI"
+                        required>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="checkbox-inline">
+                    <input class="checkbox"
+                           type="checkbox"
+                           ng-model="newFormationValues.isConfirmed"> Is Confirmed
+                </label>
+            </div>
+
+            <button class="btn btn-primary btn-lg btn-block"
+                    type="submit"
+                    ng-disabled="createForm.$invalid"
+                    ng-click="updateFormation()">Update Formation
+            </button>
+        </div>
+        <div class="col col-md-4">
+
+        </div>
+    </div>
+</div>

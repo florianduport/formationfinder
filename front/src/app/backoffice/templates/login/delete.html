@@ -1,17 +1,15 @@
 <form class="login-form">
     <div class="login-wrap">
-        <p class="login-img"><i class="icon_lock_alt"></i></p>
-        <div class="input-group" data-toggle="tooltip" title="Insert user´s name">
+        <!--<p class="login-img"><i class="icon_lock_alt"></i></p>-->
+        <h4>Select the Username for delete</h4>
+        <div class="input-group" data-toggle="tooltip" title="Select the Username">
+
             <span class="input-group-addon"><i class="icon_profile"></i></span>
-            <input type="text" class="form-control" placeholder="Username"
-                   autofocus
-                   maxlength="40"
-                   ng-model="username"
-                   ng-pattern="usernameExpReg"
-                   ng-change="searchLoginNames()"
-                   uib-typeahead="name for name in usersnames | filter:$viewValue"
-                   required>
+            <select ng-model="username" class="form-control">
+                <option  ng-repeat="username in usersnames" value="{{username}}">{{username}}</option>
+            </select>
         </div>
+
         <div class="input-group" data-toggle="tooltip" title="Select a Formation Center">
             <span class="input-group-addon"><i class="icon_briefcase"></i></span>
             <input type="text" class="form-control" placeholder="Formation center"

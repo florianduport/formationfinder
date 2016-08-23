@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html  ng-app="FormationFinder" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+	<link rel='shortcut icon' type='image/vnd.microsoft.icon' href='img/icons/faviconqwe.ico'>
+    <title>Formationfinder - Search for people who are looking for a formation and a formation center nearby</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+
+    <!-- Fonts -->
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="css/angular-datepicker.css" />
+	<link rel="stylesheet" href="css/angular-material.css" />
+	<link rel="stylesheet" type="text/css" href="css/rzslider.css"/>
+	<link href="css/animate.css" rel="stylesheet" />
+    <!-- Squad theme CSS -->
+    <link href="css/style.css" rel="stylesheet">
+	<link href="css/datepicker3.css" rel="stylesheet">
+	<link href="color/default.css" rel="stylesheet">
+
+	<style>
+		#menu-item {
+			-webkit-transition: all .2s ease-in-out;
+			-moz-transition: all .2s ease-in-out;
+			transition: all .2s ease-in-out;
+			text-decoration: none;
+			color: #176e61;
+			outline: 0;
+		}
+		#ng-map-class{
+			width: 300px;
+			height: 200px;
+		}
+
+	</style>
+</head>
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-custom" ng-controller="CustomControlCtrl as vm">
+	<!-- Preloader -->
+	<div id="preloader">
+	  <div id="load"></div>
+	</div>
+
+    <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
+
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <a class="navbar-brand" href="index.html">
+                    <h1>FORMATIONFINDER</h1>
+                </a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+		<section id="menu"></section>
+            <div class="collapse navbar-collapse navbar-right navbar-main-collapse">
+      <ul class="nav navbar-nav">
+        <li ><a href="#intro">Home</a></li>
+        <li><a href="#about">Testimonies</a></li>
+		<li><a href="#service">Service</a></li>
+		  <li class="sub-menu" ><a  class=""  href="#/sitemap" data-target="#sitemap">Sitemap</a></li>
+	    <li class="sub-menu" ><a  class=""  href="#/faq" data-target="#faq">FAQ</a></li>
+		  <li class="sub-menu" ><a  class=""  href="#/legalmentions" data-target="#legalmentions">{{'LEGAL_MENTIONS' | translate}}</a></li>
+	    <li>	  <a href="#contact">Contact</a></li>
+		  <li>	  <a href="#menu" uib-dropdown is-open="false" id="menu-item-lang"><div   uib-dropdown-toggle id="lang-menu" > Language<b class="caret"></b></div>
+
+			  <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="lang-menu">
+				  <li>
+					  <div class=" input-group " >
+						  <span class="text-capitalize text-info" style="margin-left: 5px"  for="englishLanguague">English</span>
+						  <span id="englishLanguague" class="input-group-addon"  ><span class=" " ng-click="changeLanguage('en')" ><img src="img/united_states.png" style="height:18px; margin-top:-2px;"></span></span>
+
+					  </div>
+				  </li>
+				  <li class="divider"></li>
+				  <li>
+					  <div class=" input-group" >
+
+						  <span class="text-capitalize text-info" style="margin-left: 5px" for="frenchLanguague">French</span>
+						  <span id="frenchLanguague" class="input-group-addon"  ><span class=" " ng-click="changeLanguage('fr')" ><img src="img/france.png" style="height:18px; margin-top:-2px;"></span></span>
+
+					  </div>
+				  </li>
+				  <li>
+					  <div class=" input-group" >
+
+						  <span class="text-info" style="margin-left: 5px" for="spanishLanguague">Spanish</span>
+						  <span id="spanishLanguague" class="input-group-addon"  ><span class=" " ng-click="changeLanguage('es')" ><img src="img/spain1.png" style="height:18px; margin-top:-2px;"></span></span>
+
+					  </div>
+				  </li>
+
+				  <!--  <li><a href="#">Example menu</a></li>
+                    <li><a href="#">Example menu</a></li>-->
+			  </ul>
+		  </a>
+
+		  </li>
+		<li class="active">
+			  <a href="#menu" uib-dropdown is-open="status.isopen" id="menu-item"><div id="single-button"  uib-dropdown-toggle id="map-menu" > Geosearch<b class="caret"></b></div>
+
+				  <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
+					  <li>
+						  <div class=" input-group " >
+							 <label class="text-capitalize text-info" for="showall" style="margin-left: 5px" >Search all places</label>
+							  <span id="showall" class="input-group-addon"  ><span class="fa fa-search " ng-click="searchAllPlaces($event)" ></span></span>
+
+						  </div>
+					  </li>
+					  <li class="divider"></li>
+					  <li>
+						  <div id="ng-map-class">
+							  <ng-map  zoom="4" center="48.864716, 2.349014" on-center-changed="vm.centerChanged()" on-click="vm.click()">
+                                <marker position="48.864716, 2.349014"  title="Click to zoom"></marker>
+                               <div ng-repeat="iformationcenter in formationcenters">
+                                <div ng-repeat="iplace in iformationcenter.places">
+                                 <marker position="{{iplace.latitude}}, {{iplace.longitude}}"  title="Click to zoom"></marker>
+                               </div>
+                               </div>
+
+                                  </ng-map>
+						  </div>
+					  </li>
+
+					  <!--  <li><a href="#">Example menu</a></li>
+                        <li><a href="#">Example menu</a></li>-->
+				  </ul>
+			  </a>
+			  <!--<div class="btn-group" uib-dropdown is-open="status.isopen">-->
+				  <!--<button id="single-button" type="button" class="btn btn-primary" uib-dropdown-toggle >-->
+					  <!--Button dropdown <span class="caret"></span>-->
+				  <!--</button>-->
+				  <!--<ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">-->
+					  <!--<li role="menuitem"><button href="#menu"  ng-click="toggleDropdown($event)">Show all place</button></li>-->
+					  <!--<li role="menuitem"><a href="#">Another action</a></li>-->
+					  <!--<li role="menuitem"><a href="#">Something else here</a></li>-->
+					  <!--<li class="divider"></li>-->
+					  <!--<li role="menuitem"><a href="#">Separated link</a></li>-->
+				  <!--</ul>-->
+			  <!--</div>-->
+			 <!-- <a    uib-dropdown is-open="status.isopen">
+
+             <div id="single-button"   uib-dropdown-toggle ng-disabled="disabled">
+						  Test dropdown <span class="caret"></span>
+
+					  <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
+						  <li role="menuitem"><a href="#">Action</a></li>
+						  <li role="menuitem"><a href="#">Another action</a></li>
+						  <li role="menuitem"><a href="#">Something else here</a></li>
+						  <li class="divider"></li>
+						  <li role="menuitem"><a href="#">Separated link</a></li>
+					  </ul>
+			</div>
+			  </a>-->
+		  </li>
+      </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+
+        <!-- /.container -->
+    </nav>
+	<section id="top"></section>
+	<!--<div  ng-view>-->
+	<div  ng-view>
+	</div>
+
+	<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12 col-lg-12">
+					<div class="wow shake" data-wow-delay="0.4s">
+					<div class="page-scroll marginbot-30">
+						<a href="#top" id="totop" class="btn btn-circle">
+							<i class="fa fa-angle-double-up animated"></i>
+						</a>
+					</div>
+					</div>
+					<p>&copy;Copyright 2016 - Formationfinder. All rights reserved. <!--<a href="http://bootstraptaste.com/">Bootstrap Themes</a> by BootstrapTaste--></p>
+                    <!-- 
+                        All links in the footer should remain intact. 
+                        Licenseing information is available at: http://bootstraptaste.com/license/
+                        You can buy this theme without footer links online at: http://bootstraptaste.com/buy/?theme=Squadfree
+                    -->
+				</div>
+			</div>	
+		</div>
+	</footer>
+     <!--  Google Maps API   AIzaSyAhbZEULLv5kcXwrA_xrlYS8JU2QjyrjO8 	-->
+<!--	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?callback=initMap&signed_in=true&key=AIzaSyAhbZEULLv5kcXwrA_xrlYS8JU2QjyrjO8" async defer></script>
+	&lt;!&ndash;<script type="text/javascript" src="http://maps.google.com/maps/api/js??key=AIzaSyAhbZEULLv5kcXwrA_xrlYS8JU2QjyrjO8&amp;sensor=false&amp;language=es"></script>&ndash;&gt;
+	<script type="text/javascript" src="js/map.js"></script>-->
+    <!-- Core JavaScript Files -->
+    <!--<script src="js/jquery.min.js"></script>-->
+
+	<!-- javascripts -->
+	<script src="js/jquery.js"></script>
+	<script src="js/jquery-ui-1.10.4.min.js"></script>
+	<script src="js/jquery.min.js"></script>
+
+	<!--<script src="js/jquery-1.8.3.min.js"></script>-->
+	<script type="text/javascript" src="js/jquery-ui-1.9.2.custom.min.js"></script>
+
+
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.easing.min.js"></script>	
+	<script src="js/jquery.scrollTo.js"></script>
+
+	<!--Angular Scripts-->
+	<script src="js/angular/angular.min.js"></script>
+	<script src="js/angular/angular-resource.min.js"></script>
+	<script src="js/angular/angular-route.min.js"></script>
+	<script src="js/angular/angular-cookies.min.js"></script>
+	<script src="js/angular/angular-animate.min.js"></script>
+	<script src="js/angular/angular-datepicker.min.js"></script>
+	<script src="js/angular/angular-translate.js"></script>
+	<script src="js/angular/rzslider.min.js"></script>
+	<script src="js/angular/checklist-model.js"></script>
+	<script src="js/ui-bootstrap-tpls-2.0.0.min.js"></script>
+	<script src="js/bootstrap-datepicker.js"></script>
+
+	<script src="js/wow.min.js"></script>
+    <!-- Custom Theme JavaScript -->
+    <script src="js/custom.js"></script>
+
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAhbZEULLv5kcXwrA_xrlYS8JU2QjyrjO8"></script>
+	<!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?callback=initMap&signed_in=true&key=AIzaSyAhbZEULLv5kcXwrA_xrlYS8JU2QjyrjO8" async defer></script>-->
+	<script src="js/ng-map.min.js"></script>
+
+	<!--MyAPP Scripts -->
+	<script src="js/formationfinder/app.js"></script>
+	<script src="js/formationfinder/routes.js"></script>
+	<script src="js/formationfinder/language.js"></script>
+	<script src="js/formationfinder/services.js"></script>
+	<script src="js/formationfinder/controllers.js"></script>
+	<script>
+	$(document).ready(function() {
+	/*$("#owl-slider").owlCarousel({
+	navigation : true,
+	slideSpeed : 300,
+	paginationSpeed : 400,
+	singleItem : true
+
+	});*/
+
+
+	var date_input=$('button[name="date"]'); //our date input has the name "date"
+	// var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+	var options={
+	format: 'mm/dd/yyyy',
+	//    container: container,
+	todayHighlight: true,
+	autoclose: true,
+	};
+	date_input.datepicker(options);
+
+	});
+
+	</script>
+</body>
+
+</html>

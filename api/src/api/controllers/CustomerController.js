@@ -47,46 +47,87 @@ module.exports = {
 
             }
           ).then( function (Customers) {
+            //var tasks = [...]
+            //var promise = Promise.resolve();
+            //tasks.forEach(function(task) {
+            //  promise = promise.then(function() {
+            //    return task();
+            //  });
+            //});
+            //
+            //  promise.then(function() {  //All tasks completed
+            //     })
 
 
-            async.each(Customers, function (Customer, callback) {
-              // if any of the saves produced an error, err would equal that error
+              var promise = Customers.reduce(function(prev, Customer) {
+                return prev.then(function() {
 
-              console.log("------Usuario-------")
-              console.log(Customer)
+                  ///, {"createdAt" : { '<': date}}
+                  Formation.find({"id": Customer.formation}).exec(function formationFounded(err, formation) {
+
+                    for (iTr in formation) {
+                      formationsArray.push(formation[iTr])
+                      objectResult = {};
+                      objectResult.costumerid = Customer.id
+                      objectResult.formationcenterid = Customer.formationCenter
+                      objectResult.costumerid= Customer.id
+                      objectResult.placeid =  formation[iTr].place
+                      objectResult.email =  Customer.email
+                      resultFormation.push(objectResult);
+
+                    }
+
+                  return true;
 
 
-              ///, {"createdAt" : { '<': date}}
-              Formation.find({"id": Customer.formation}).exec(function formationFounded(err, formation) {
+                })
+              }); }, Promise.resolve());
+              promise.then(function() {  //All tasks completed
 
-                for (iTr in formation) {
-                  formationsArray.push(formation[iTr])
-                  objectResult = {};
-                  objectResult.costumerid = Customer.id
-                  objectResult.formationcenterid = Customer.formationCenter
-                  objectResult.costumerid= Customer.id
-                  objectResult.placeid =  formation[iTr].place
-                  objectResult.email =  Customer.email
-                  resultFormation.push(objectResult);
+                console.log("------- Formations ---------- ")
+                console.log(formationsArray)
+                callback(null, formationsArray);
+                 });
 
-                }
-                //console.log(formation)
-                callback();
-              })
-            }, function (err) {
-              if (err)
-                return next(err);
-              console.log("------- Formations ---------- ")
-              console.log(formationsArray)
-              callback(null, formationsArray);
-              //return formationsArray
 
-            });
+            //async.each(Customers, function (Customer, callback) {
+            //  // if any of the saves produced an error, err would equal that error
+            //
+            //  console.log("------Usuario-------")
+            //  console.log(Customer)
+            //
+            //
+            //  ///, {"createdAt" : { '<': date}}
+            //  Formation.find({"id": Customer.formation}).exec(function formationFounded(err, formation) {
+            //
+            //    for (iTr in formation) {
+            //      formationsArray.push(formation[iTr])
+            //      objectResult = {};
+            //      objectResult.costumerid = Customer.id
+            //      objectResult.formationcenterid = Customer.formationCenter
+            //      objectResult.costumerid= Customer.id
+            //      objectResult.placeid =  formation[iTr].place
+            //      objectResult.email =  Customer.email
+            //      resultFormation.push(objectResult);
+            //
+            //    }
+            //    //console.log(formation)
+            //    callback();
+            //  })
+            //}, function (err) {
+            //  if (err)
+            //    return next(err);
+            //  console.log("------- Formations ---------- ")
+            //  console.log(formationsArray)
+            //  callback(null, formationsArray);
+            //  //return formationsArray
+            //
+            //});
           });
         },
         two: function(callback){
 
-          async.each(resultFormation, function (iResultFormation, callback) {
+          async.forEach(resultFormation, function (iResultFormation, callback) {
             Place.findOne({id: iResultFormation.placeid}).exec (function placeFounded( err, Place) {
               console.log(Place)
               objectPlaceFormation = {}
@@ -172,7 +213,7 @@ module.exports = {
     updatemailnotify: function ( costumerArray) {
         ////Para cada elemento del arreglo  actualizar en la base de datoss
 
-      async.each(costumerArray, function (CustomerObject, callback) {
+      async.forEach(costumerArray, function (CustomerObject, callback) {
         // if any of the saves produced an error, err would equal that error
 
         console.log("------Usuario-------")

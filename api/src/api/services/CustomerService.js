@@ -38,7 +38,7 @@ module.exports  = {
           ).then( function (Customers) {
 
 
-            async.each(Customers, function (iCustomer, callback) {
+            async.forEach(Customers, function (iCustomer, callback) {
               // if any of the saves produced an error, err would equal that error
 
              // console.log("------Usuario-------")
@@ -75,7 +75,7 @@ module.exports  = {
         two: function(callback){
 
          // console.log("two  " , resultFormation)
-          async.each(resultFormation, function (iResultFormation, callback) {
+          async.forEach(resultFormation, function (iResultFormation, callback) {
             Place.findOne({id: iResultFormation.placeid}).exec (function placeFounded( err, Places) {
               if (err)
                 callback(err,placeFormationArray);
@@ -99,7 +99,7 @@ module.exports  = {
           });
         },
         three: function(callback){
-          async.each(resultFormation, function (iResultFormation, callback) {
+          async.forEach(resultFormation, function (iResultFormation, callback) {
             Customer.update({id: iResultFormation.costumerid}, {emailsend: 1}).exec(function customerUpdate(err, customerArray) {
               if (err)
                 console.log("Error ocurred when customer update " + err);
@@ -174,7 +174,7 @@ module.exports  = {
   updatemailnotify: function ( costumerArray) {
     ////Para cada elemento del arreglo  actualizar en la base de datoss
 
-    async.each(costumerArray, function (CustomerObject, callback) {
+    async.forEach(costumerArray, function (CustomerObject, callback) {
       // if any of the saves produced an error, err would equal that error
 
       console.log("------Usuario-------")

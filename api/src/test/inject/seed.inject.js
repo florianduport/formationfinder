@@ -24,7 +24,7 @@ describe('data seeding', function(){
 
     FormationCenter.find({}).then(function(formationCenters){
          ///Get id for formation
-             async.each(formationCenters, function (formationCenter, callback) {
+             async.forEach(formationCenters, function (formationCenter, callback) {
                var formationid = formationCenter.id;
 
                var placeFormationAsociation = {
@@ -374,10 +374,39 @@ describe('data seeding', function(){
               // It's very important to trigger this callack method when you are finished
               // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
               console.log("Index to 2dsphere location atributes in Place colection")
-              callback(null, placeFormationAsociation);
+
 
             });
           });
+
+          formationCenter = placeFormationAsociation.formationcenter[0]
+          if (typeof formationCenter != "undefined") {
+            Login.update({username: "root"}, {formationCenter: formationCenter}).exec(function (err, Formations) {
+              // console.log("Actualizando formacion con place ", iFormation, iPlace);
+              if (err)
+                console.log("Error update formationcenter")
+              console.log("Five formationcenter asociated with LOGIN ", formationCenter)
+            })
+          }
+
+
+          Bill.find({}).exec(function (err, BillsAccounts) {
+
+            BillsAccounts.forEach(function (iBill, i) {
+
+              Bill.update({id: iBill.id}, {formationCenter: formationCenter}).exec(function (err, result) {
+
+                if (err) {
+                  callback(err);
+                }
+
+               // console.log("Actualizando BILL ", iBill.id)
+              })
+
+            });
+
+          })
+          callback(null, placeFormationAsociation);
 
         }
     }

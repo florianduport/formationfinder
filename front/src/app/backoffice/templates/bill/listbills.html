@@ -1,0 +1,126 @@
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 col-sm-12 col-xs-12 ">
+           <form name="searchSingle">
+               <div class="search-form  form-horizontal">
+                <div class=" form-group">
+                    <label class="text-info" style="width: 50px">Search: </label>
+                    <div class=" input-group date ident-date" >
+                        <span class="input-group-addon"  ><span  class="text-info">Init  date:</span></span>
+                        <input   tooltip-placement="top" tooltip-trigger="'none'" uib-tooltip="Init date field should be date" tooltip-class="customClass" tooltip-is-open="searchSingle.initDate.$dirty && searchSingle.initDate.$invalid" class="form-control md-datepicker-is-showing"  uib-datepicker-popup="{{format}}"  is-open="popup1.opened" name="initDate" ng-pattern="/^\d{2}-\w{3,9}-\d{4}$/" datepicker-options="dateOptionsSearch" placeholder="" type="text" ng-model="search.initialDate">
+                        <span class="input-group-addon"  ><span id="datesearchInit" class="fa fa-calendar " ng-click="open1()"   ></span></span>
+
+                    </div>
+                    <!--<span   class="error-message text-danger" ng-show="myform.initDate.$dirty && myform.initDate.$invalid"><p style="text-decoration-color:#f1a417;background: #afd9ee">Init date field should be date</p></span>-->
+
+                    <div class=" input-group date ident-date" >
+                        <span class="input-group-addon"  ><span  class="text-info">End date:</span></span>
+                        <input  tooltip-placement="bottom" tooltip-trigger="'none'" uib-tooltip="End date field should be date" tooltip-class="customClass" tooltip-is-open="searchSingle.endDate.$dirty && searchSingle.endDate.$invalid" class="form-control" uib-datepicker-popup="{{format}}" name="endDate" ng-pattern="/^\d{2}-\w{3,9}-\d{4}$/" is-open="popup2.opened" datepicker-options="dateOptionsSearch" placeholder="" type="text" ng-model="search.endDate">
+                        <span class="input-group-addon"  ><span id="datesearchEnd" class="fa fa-calendar" ng-click="open2()"   ></span></span>
+
+                    </div>
+                    <!--<span   class="error-message text-danger" ng-show="myform.endDate.$dirty && myform.endDate.$invalid"><p style="text-decoration-color:#f1a417;background: #afd9ee">End date field should be date</p></span>-->
+
+                </div>
+                   <button type="button" class="btn   btn-primary pull-left" ng-click="advanceSearch = !advanceSearch">
+                       Advanced
+                       Search
+                   </button>
+                   <button type="button" class="btn   btn-info pull-left" >
+                       Search
+                   </button>
+                   <hr>
+                   <div uib-collapse="advanceSearch" horizontal >
+                       <div class="fadeInDown">
+                               <div class="form-group  row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                   <div class=" input-group ">
+                                       <span class="input-group-addon" id="basic-addon1"><strong>Amount:</strong></span>
+                                       <input name="name" id="name"
+                                              ng-model="seachPlace.name"
+                                              ng-pattern="vm.nameRegExp"
+                                              maxlength="40"
+                                              placeholder="Guerin"
+                                              class="form-control"
+                                              type="text"
+                                              required aria-describedby="basic-addon1"/>
+
+                                   </div>
+                                        <span style="color:#cc0000"
+                                              ng-show="searchSingle.name.$dirty && searchSingle.name.$invalid">
+                                            <span ng-show="searchSingle.name.$error.required">Name is required.</span>
+                                            <span ng-show="searchSingle.name.$error.pattern">Invalid name format. You should provide between 2 and 40 words characters.</span>
+                                        </span>
+                               </div>
+
+                               <div class="form-group  row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                   <div class=" input-group ">
+
+                                                <span class="input-group-addon"
+                                                      id="basic-addon2"><strong>Bill Number:</strong></span>
+                                       <input name="address" id="address"
+                                              ng-model="vm.customerData.address"
+                                              maxlength="100"
+                                              class="form-control" type="text"
+                                              aria-describedby="basic-addon2"/>
+                                   </div>
+
+                                    <span style="color:#cc0000"
+                                          ng-show="searchSingle.address.$dirty && searchSingle.address.$invalid">
+                                        <span ng-show="searchSingle.address.$error.required">First name is required.</span>
+                                        <span ng-show="searchSingle.address.$error.pattern">Invalid first name format. You should provide between 2 and 40 words characters.</span>
+                                    </span>
+                               </div>
+                               <!-- Bill State -->
+
+
+                       </div>
+                   </div>
+
+              </div>
+            </form>
+        </div>
+        <div uib-alert ng-repeat="alert in alerts" dismiss-on-timeout=3000
+             ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert()">{{ alert.msg }}
+        </div>
+           </form>
+
+
+
+            <div align="right" style="color:#000066">
+                <ul uib-pagination boundary-links="true" items-per-page="app.itemPerPage" total-items="app.totalItems"
+                    ng-click="getBillsRecords()" ng-model="app.currentPage" class="pagination-sm"
+                    previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+            </div>
+            <table class="table bootstrap-datatable table-responsive table-bordered table-striped" id="tablecontainer" >
+                <thead style="font-size: 14px">
+                <tr>
+                    <th><strong>Amount</strong></th>
+                    <th><strong>Date</strong></th>
+                    <th><strong>Bill Number</strong></th>
+                    <th><strong>Bill State</strong></th>
+                    <th><strong>Actions</strong></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="iBill in bills">
+                    <td>{{iBill.amount}}</td>
+                    <td>{{getReadableDate(iBill.date)}}</td>
+                    <td>{{iBill.billNumber}}</td>
+                    <td>{{iBill.billState}}</td>
+                    <td>
+                        <a class="btn btn-primary" ng-click="makePayment(iBill.id)">Edit</a>
+                        <a class="btn btn-danger" ng-click="deleteBill(iBill.id)">Delete</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div align="right" style="color:#000066">
+                <ul uib-pagination boundary-links="true" items-per-page="app.itemPerPage" total-items="app.totalItems"
+                    ng-click="getBillsRecords()" ng-model="app.currentPage" class="pagination-sm"
+                    previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+
+
+            </div>
+        </div>
+   </div>
+</div>

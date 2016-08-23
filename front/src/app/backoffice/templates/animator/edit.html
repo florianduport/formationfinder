@@ -1,0 +1,88 @@
+<div class="manage container-fluid well">
+    <div class="row">
+        <h3>Edit Animator Attributes</h3>
+        <form class="form-horizontal" name="editAnimForm" id="editAnimForm">
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="name">Name</label>
+                <div class="col-sm-3">
+                    <input type="text"
+                           id="name"
+                           ng-model="animator.name"
+                           ng-change="checkParameters()"
+                           required
+                           maxlength="30"
+                           ng-pattern="nameRegExp"
+                           class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="firstname">First Name</label>
+                <div class="col-sm-3">
+                    <input type="text"
+                           id="firstname"
+                           required
+                           ng-model="animator.firstName"
+                           ng-change="checkParameters()"
+                           ng-pattern="nameRegExp"
+                           maxlength="30"
+                           class="form-control"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="type">Type</label>
+                <div class="col-sm-3">
+                    <select id="type" ng-model="animator.type" class="form-control">
+                        <option value="PSY">Psychologist</option>
+                        <option value="BAFM">BAFM/BAFCRI</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="city">City</label>
+                <div class="col-sm-3">
+                    <input type="text"
+                           id="city"
+                           required
+                           ng-model="animator.city"
+                           ng-change="checkParameters()"
+                           ng-pattern="nameRegExp"
+                           maxlength="30"
+                           class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="zipcode">Zipcode</label>
+                <div class="col-sm-3">
+                    <input type="text"
+                           id="zipcode"
+                           ng-model="animator.zipCode"
+                           ng-change="checkParameters()"
+                           required
+                           ng-pattern="zipcodeRegExp"
+                           maxlength="5"
+                           class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-6 col-sm-offset-1">
+                    <div class="btn-group" role="group">
+                        <button type="reset"
+                                ng-click="clearAnimator()"
+                                class="btn btn-info">Clear
+                        </button>
+                        <button ng-disabled="invalidParameters"
+                                ng-click="editAnimator()"
+                                type="submit"
+                                class="btn btn-info">Edit Animator
+                        </button>
+                        <button type="button"
+                                ng-click="cancelEdit()"
+                                class="btn btn-info">Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

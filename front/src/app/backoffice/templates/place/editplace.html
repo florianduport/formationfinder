@@ -1,196 +1,209 @@
-<body>
 <div class="container">
     <div class="row">
-        <div class="col-lg-6 col-sm-6 col-xs-12 ">
-            <form name="customerForm" class="form-horizontal" role="form">
-                <div class="form-group">
-                    <label class="control-label col-xs-12 col-sm-4 col-md-4" for="civility">Civility</label>
-                    <div class="col-xs-12 col-sm-4 col-md-3">
-                        <select name="civility" id="civility" class="form-control" ng-model="vm.customerData.civility">
-                            <option value="M" selected>M</option>
-                            <option value="Mme">Mme</option>
-                            <option value="Mlle">Mlle</option>
-                        </select>
-                    </div>
-                </div>
+        <div class="col-lg-4 col-sm-4 col-lg-4 col-xs-12 col-lg-offset-1 col-sm-offset-1  ">
+            <form class="login-form" name="createForm">
+                <div class="login-wrap-place">
+                    <h4>{{ titleformplace }}</h4>
 
-                <div class="form-group">
-                    <label class="control-label col-xs-12 col-sm-4 col-md-4" for="name">Name (*)</label>
-                    <div class="col-xs-12 col-sm-6 col-md-6">
-                        <input name="name" id="name"
-                               ng-model="vm.customerData.name"
-                               ng-pattern="vm.nameRegExp"
+                    <div class="input-group" data-toggle="tooltip" title="Insert user´s name">
+                        <span class="input-group-addon"><i class="icon_profile"></i></span>
+                        <input type="text" class="form-control"
+                               name="name"
+                               placeholder="{{'NAME' | translate}}"
+                               uib-typeahead="iplace.name for iplace in places | filter:$viewValue"
+                               autofocus
                                maxlength="40"
-                               placeholder="Guerin"
-                               class="form-control"
-                               type="text"
-                               required />
+                               ng-model="place.name"
+                               ng-pattern="usernameExpReg"
+                               tooltip-placement="top"
+                               tooltip-trigger="'none'"
+                               uib-tooltip="{{'NAME_ERROR' | translate}}"
+                               tooltip-class="customClass"
+                               tooltip-is-open="createForm.name.$dirty && createForm.name.$invalid"
+                               required>
                     </div>
-        <span style="color:#cc0000" ng-show="customerForm.name.$dirty && customerForm.name.$invalid">
-            <span ng-show="customerForm.name.$error.required">Name is required.</span>
-            <span ng-show="customerForm.name.$error.pattern">Invalid name format. You should provide between 2 and 40 words characters.</span>
-        </span>
-                </div>
-
-                <div class="form-group">
-                    <label class="control-label col-xs-12 col-sm-4 col-md-4" for="firstName">First Name (*)</label>
-                    <div class="col-xs-12 col-sm-6 col-md-6">
-                        <input name="firstName" id="firstName"
-                               ng-model="vm.customerData.firstName"
-                               ng-pattern="vm.nameRegExp"
+                    <!--placeholder="{{ if ( place.city != '' ) {place.city} else ('CITY' | translate)}}"-->
+                    <div class="input-group" data-toggle="tooltip" title="Insert place´s city">
+                        <span class="input-group-addon"><i class="icon_profile"></i></span>
+                        <input type="text" class="form-control"
+                               name="city"
+                               placeholder="{{'CITY' | translate}}"
+                               uib-typeahead="iplace.city for iplace in places | filter:$viewValue"
+                               autofocus
                                maxlength="40"
-                               placeholder="Nathan"
-                               class="form-control"
-                               type="text" required/>
+                               ng-model="place.city"
+                               ng-pattern="usernameExpReg"
+                               tooltip-placement="top"
+                               tooltip-trigger="'none'"
+                               uib-tooltip="{{'CITY_ERROR' | translate}}"
+                               tooltip-class="customClass"
+                               tooltip-is-open="createForm.city.$dirty && createForm.city.$invalid"
+                               required>
                     </div>
-        <span style="color:#cc0000" ng-show="customerForm.firstName.$dirty && customerForm.firstName.$invalid">
-            <span ng-show="customerForm.firstName.$error.required">First name is required.</span>
-            <span ng-show="customerForm.firstName.$error.pattern">Invalid first name format. You should provide between 2 and 40 words characters.</span>
-        </span>
-                </div>
 
-                <div class="form-group">
-                    <label class="control-label col-xs-12 col-sm-4 col-md-4" for="phoneNumber">Phone Number (*)</label>
-                    <div class="col-xs-12 col-sm-6 col-md-6">
-                        <input name="phoneNumber" id="phoneNumber"
-                               class="form-control" type="text"
-                               placeholder="0913332109"
-                               ng-model="vm.customerData.phoneNumber"
-                               maxlength="10"
-                               required
-                               ng-pattern="vm.phoneRegExp" />
-                    </div>
-        <span style="color:#cc0000" ng-show="customerForm.phoneNumber.$dirty && customerForm.phoneNumber.$invalid">
-            <span ng-show="customerForm.phoneNumber.$error.required">Phone number is required.</span>
-            <span ng-show="customerForm.phoneNumber.$error.pattern">Invalid phone format. You must enter 10 digits starting with '0'.</span>
-        </span>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-12 col-sm-4 col-md-4" for="email">Email (*)</label>
-                    <div class="col-xs-12 col-sm-6 col-md-6">
-                        <input name="email" id="email"
-                               ng-model="vm.customerData.email"
-                               ng-pattern="vm.emailRedExp"
-                               placeholder="nathan.guerin@gmail.com"
-                               maxlength="50"
-                               class="form-control"
-                               type="text" required />
-                    </div>
-        <span style="color:#cc0000" ng-show="customerForm.email.$dirty && customerForm.email.$invalid">
-            <span ng-show="customerForm.email.$error.required">Email is required.</span>
-            <span ng-show="customerForm.email.$error.pattern">Invalid email address.</span>
-        </span>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-12 col-sm-4 col-md-4" for="birthDate">Birth Date (*)</label>
-                    <div class="input-group date col-xs-12 col-sm-6 col-md-6 ident-date">
-                        <input name="birthDate" id="birthDate"
-                               ng-model="vm.customerData.birthDate"
-                               ng-pattern="vm.dateRegExp"
-                               ng-change="vm.verifyBirthDate()"
-                               class="form-control"
-                               type="text"
-                               required
-                               placeholder="1998/05/23"
-                               uib-datepicker-popup="{{vm.format}}"
-                               is-open="vm.popupBirthDate.opened"
-                               datepicker-options="vm.BirthDateOptions"/>
-                        <span class="input-group-addon" ><span id="birthDateInit" class="fa fa-calendar" ng-click="vm.openBirthDate()"></span></span>
-                    </div>
-                    <span class="error-message text-danger" ng-show="customerForm.birthDate.$dirty && customerForm.birthDate.$invalid">You should provide a valid date string.</span>
-                    <span class="error-message text-danger" ng-show="vm.showBDerror">Invalid birth date, your age is out of range 16-80 years old.</span>
-                </div>
-
-                <div class="form-group">
-                    <label class="control-label col-xs-12 col-sm-4 col-md-4" for="birthCity">Birth City</label>
-                    <div class="col-xs-12 col-sm-6 col-md-6">
-                        <input name="birthCity" id="birthCity"
-                               ng-model="vm.customerData.birthCity"
+                    <div class="input-group" data-toggle="tooltip" title="Insert place´s address">
+                        <span class="input-group-addon"><i class="icon_profile"></i></span>
+                        <input type="text" class="form-control"
+                               name="address"
+                               placeholder="{{'ADDRESS' | translate}}"
+                               uib-typeahead="iplace.address for iplace in places | filter:$viewValue"
+                               autofocus
                                maxlength="40"
-                               ng-pattern="vm.nameRegExp"
-                               class="form-control" type="text" />
+                               ng-model="place.address"
+                               ng-pattern="usernameExpReg"
+                               tooltip-placement="top"
+                               tooltip-trigger="'none'"
+                               uib-tooltip="{{'ADDRESS_ERROR' | translate}}"
+                               tooltip-class="customClass"
+                               tooltip-is-open="createForm.address.$dirty && createForm.address.$invalid"
+                               required>
                     </div>
-        <span style="color:#cc0000" ng-show="customerForm.birthCity.$dirty && customerForm.birthCity.$invalid">
-            <span ng-show="customerForm.birthCity.$error.pattern">Invalid city name. You should provide between 2 and 40 words characters.</span>
-        </span>
-                </div>
 
-                <div class="form-group">
-                    <label class="control-label col-xs-12 col-sm-4 col-md-4" for="address">Address</label>
-                    <div class="col-xs-12 col-sm-8 col-md-7">
-                        <input name="address" id="address"
-                               ng-model="vm.customerData.address"
-                               maxlength="100"
-                               class="form-control" type="text" />
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="control-label col-xs-12 col-sm-4 col-md-4" for="city">City</label>
-                    <div class="col-xs-12 col-sm-6 col-md-6">
-                        <input name="city" id="city"
-                               ng-model="vm.customerData.city"
-                               maxlength="40"
-                               ng-pattern="vm.nameRegExp"
-                               class="form-control" type="text" />
-                    </div>
-        <span style="color:#cc0000" ng-show="customerForm.city.$dirty && customerForm.city.$invalid">
-            <span ng-show="customerForm.city.$error.pattern">Invalid city name. You should provide between 2 and 40 words characters.</span>
-        </span>
-                </div>
-
-                <div class="form-group">
-                    <label class="control-label col-xs-12 col-sm-4 col-md-4" for="zipCode">ZipCode (*)</label>
-                    <div class="col-xs-12 col-sm-6 col-md-6">
-                        <input name="zipCode" id="zipCode"
-                               ng-model="vm.customerData.zipCode"
-                               class="form-control"
-                               ng-pattern="vm.zipcodeRegExp"
+                    <div class="input-group" data-toggle="tooltip" title="Insert number">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-euro"></span></span>
+                        <input type="text" class="form-control"
+                               name="zipcode"
+                               placeholder="{{'ZIPCODE' | translate}}"
+                               uib-typeahead="iplace.zipcode for iplace in places | filter:$viewValue"
+                               autofocus
                                maxlength="5"
-                               placeholder="33216"
-                               required
-                               type="text" />
+                               ng-model="place.zipcode"
+                               ng-pattern="numExpReg"
+                               tooltip-placement="top"
+                               tooltip-trigger="'none'"
+                               uib-tooltip="{{'ZIPCODE_ERROR' | translate}}"
+                               tooltip-class="customClass"
+                               tooltip-is-open="createForm.zipcode.$dirty && createForm.zipcode.$invalid"
+                               required>
                     </div>
-        <span style="color:#cc0000" ng-show="customerForm.zipCode.$dirty && customerForm.zipCode.$invalid">
-            <span ng-show="customerForm.zipCode.$error.required">Zipcode is required.</span>
-            <span ng-show="customerForm.zipCode.$error.pattern">Invalid zipcode format. You must enter 5 digits.</span>
-        </span>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-md-10">
-                        <div uib-alert ng-repeat="message in vm.validationMessages" ng-class="'alert-' + message.type" close="vm.closeMessage($index)" dismiss-on-timeout="4000">{{message.info}}</div>
+
+                    <div class="input-group" data-toggle="tooltip" title="{{'INSERT_NAME'| translate}}">
+                        <span class="input-group-addon"><i class="icon_profile"></i></span>
+                        <input type="text" class="form-control"
+                               placeholder="{{'AGREMENTNAME' | translate}}"
+                               uib-typeahead="iplace.agreementName for iplace in places | filter:$viewValue"
+                               name="agreement"
+                               autofocus
+                               maxlength="40"
+                               ng-model="place.agreementName"
+                               ng-pattern="usernameExpReg"
+                               tooltip-placement="top"
+                               tooltip-trigger="'none'"
+                               uib-tooltip="{{'AGREMENTNAME_ERROR'| translate}}"
+                               tooltip-class="customClass"
+                               tooltip-is-open="createForm.agreement.$dirty && createForm.agreement.$invalid"
+                               >
                     </div>
+
+                    <div class="input-group" data-toggle="tooltip" title="Insert number">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-euro"></span></span>
+                        <input type="text" class="form-control"
+                               placeholder="{{'AGREMENTNUMBER' | translate}}"
+                               uib-typeahead="iplace.agreementNumber for iplace in places | filter:$viewValue"
+                               name="agrementnumber"
+                               autofocus
+                               maxlength="5"
+                               ng-model="place.agreementNumber"
+                               ng-pattern="numExpReg"
+                               tooltip-placement="top"
+                               tooltip-trigger="'none'"
+                               uib-tooltip="{{'AGREMENTNUMBER_ERROR' | translate}}"
+                               tooltip-class="customClass"
+                               tooltip-is-open="createForm.agrementnumber.$dirty && createForm.agrementnumber.$invalid"
+                               >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-inline">
+                            <input class="checkbox"
+                                   type="checkbox"
+                                   ng-checked="place.isActivated"
+                                   ng-model="place.isActivated"  > Is Activate
+                        </label>
+                    </div>
+
+                    <button class="btn btn-primary btn-lg btn-block"
+                            type="submit"
+                            ng-disabled="createForm.$invalid"
+                            ng-click="createPlace()">{{'SAVE_BUTTON' | translate}}
+                    </button>
+                        <button class="btn btn-primary btn-lg btn-block"
+                                type="button"
+
+                                ng-click="showAllPlace()">{{'SHOW_ALL_BUTTON' | translate}}
+                        </button>
+
+                    <div uib-alert ng-repeat="alert in alerts" dismiss-on-timeout=3000
+                         ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert()">{{ alert.msg }}
+                    </div>
+
                 </div>
             </form>
         </div>
-        <div class="col-lg-6 col-sm-6  hidden-xs">
+
+        <div class="col-lg-6 col-sm-6  hidden-xs" style="margin-top: 18px">
             <!--Map show-->
-            <ul >
-                <li>
-                    <div class=" input-group ">
-
-                        <label class="text-info" for="showall">Search all places</label>
-                                        <span id="showall" class="input-group-addon"><span class="fa fa-search "
-                                                                                           ng-click="searchAllPlaces($event)"></span></span>
-
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2><i class="fa fa-map-marker red"></i><strong></strong></h2>
+                    <div class="panel-actions">
+                        <a href="index.html#" class="btn-setting"><i class="fa fa-rotate-right"></i></a>
                     </div>
-                </li>
-                <li class="divider"></li>
-                <li>
-                    <div id="ng-map-class">
-                        <!--<ng-map  zoom="4" center="48.864716, 2.349014" on-center-changed="vm.centerChanged()" on-click="vm.click()">-->
-                        <!--<marker position="48.864716, 2.349014"  title="Click to zoom"></marker>-->
-                        <!--<div ng-repeat="iformationcenter in formationcenters">-->
-                        <!--<div ng-repeat="iplace in iformationcenter.places">-->
-                        <!--<marker position="{{iplace.latitude}}, {{iplace.longitude}}"  title="Click to zoom"></marker>-->
-                        <!--</div>-->
-                        <!--</div>-->
+                </div>
+                <div class="panel-body">
+                    <div id="map" style="height:460px;">
+                        <div id="">
+                            <ng-map  zoom="4" center="48.864716, 2.349014" on-center-changed="centerChanged()" on-click="click()">
+                            <marker position="48.864716, 2.349014"  title="Click to zoom"></marker>
+                                <marker position="{{place.latitude}}, {{place.longitude}}"  title="Click to zoom"></marker>
+                            <!--<div ng-repeat="iformationcenter in formationcenters">-->
+                            <!--<div ng-repeat="iplace in iformationcenter.places">-->
+                            <!--<marker position="{{iplace.latitude}}, {{iplace.longitude}}"  title="Click to zoom"></marker>-->
+                            <!--</div>-->
+                            <!--</div>-->
 
-                        <!--</ng-map>-->
+                            </ng-map>
+                        </div>
                     </div>
-                </li>
-            </ul>
+                </div>
+
+            </div>
         </div>
+
     </div>
 </div>
-</body>
+<script type="text/ng-template" id="myModalContent.html">
+    <div class="modal-header">
+        <h3 class="modal-title">{{items.message}}</h3>
+    </div>
+    <div class="modal-body">
+        <h4><strong>{{'NAME' | translate}}: </strong>{{ items.name}}</h4>
+        <h4><strong>{{'CITY' | translate}}: </strong>{{items.city}}</h4>
+        <h4><strong>{{'ADDRESS' | translate}}: </strong>{{items.address}}</h4>
+        <!--Selected: <b>{{ selected.item }}</b>-->
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-click="ok()">{{'ACCEPT' | translate}}</button>
+        <button class="btn btn-warning" type="button" ng-click="cancel()">
+            {{'CANCEL' | translate}}
+        </button>
+    </div>
+    </div>
+</script>
+<script type="text/ng-template" id="myModalMessageEditing.html">
+    <div class="modal-header">
+        <h3 class="modal-title">{{items.type}}</h3>
+    </div>
+    <div class="modal-body">
+        <h3>{{items.message}}</h3>
+
+        <!--Selected: <b>{{ selected.item }}</b>-->
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-warning" type="button" ng-click="cancel()">
+            {{'CLOSE' | translate}}
+        </button>
+    </div>
+    </div>
+</script>
+</div>

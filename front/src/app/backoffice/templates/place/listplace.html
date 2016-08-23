@@ -1,130 +1,308 @@
-<div class="container" style="">
-    <div class="row">
-        <div class="col-lg-6 col-sm-6 col-xs-12 ">
-            <br/>
-            <br/>
-            <br/>
-            <br/>
-            <br/>
-            <br/>
-           <!--Search form -->
-            <div class="search-form  form-horizontal">
-                <div class="form-group">
+<div class="container  well admin-places">
+    <div class="row col-lg-10 col-sm-10 col-lg-10 col-xs-12 col-lg-offset-1 col-sm-offset-1 well">
+        <h2>{{'ADMIN_PAGE_HEAD'| translate}}</h2>
+        <p>{{'ADMIN_PAGE_HEAD_DESCRIPTION'| translate}}</p>
 
-                    <div class="input-group" >
-                        <!--For geolocation uib-typeahead="address for address in getLocation($viewValue)"-->
-                        <input  class="form-control"  placeholder="Ville/Zip code" type="text"  uib-typeahead="state for state in states | filter:$viewValue" ng-model="criteriaList" maxlength="40">
-                        <span class="input-group-addon"  ng-click="searchFuncList()"><span class="fa fa-search"></span></span>
+        <!--Search form  admin-places -->
+        <div class="search-form  form-horizontal">
+
+
+            <div class="form-group">
+                <form name="simplesearch">
+
+                    <div class="input-group">
+                        <!--For geolocation uib-typeahead="address for address in getLocation($viewValue)"  -->
+
+                        <input class="form-control" placeholder="{{'CITY_ZIPCODE' | translate}}" type="text"
+                               uib-typeahead="iplace.city for iplace in placesData | filter:$viewValue"
+                               ng-model="criteriaList"
+                               name="city_zipcode"
+                               maxlength="40"
+                               autofocus
+                               ng-pattern="usernameExpReg"
+                               tooltip-placement="top"
+                               tooltip-trigger="'none'"
+                               uib-tooltip="{{'CITY_ZIPCODE_ERROR' | translate}}"
+                               tooltip-class="customClass"
+                               tooltip-is-open="simplesearch.city_zipcode.$dirty && simplesearch.city_zipcode.$invalid"
+                        >
+                       <span class="input-group-addon" ng-click="searchFuncList()"><span
+                               class="fa fa-search"></span></span>
 
                     </div>
-                    <div uib-alert ng-repeat="alert in alerts" dismiss-on-timeout=3000 ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert()">{{ alert.msg }}</div>
-                    <button type="button" class="btn   btn-primary" ng-click="advanceSearch = !advanceSearch">Advanced Search</button>
+                </form>
+
+                <div uib-alert ng-repeat="alert in alerts" dismiss-on-timeout=3000
+                     ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert()">{{ alert.msg }}
+                </div>
+                <div class="searchComponent" style="margin-top: 3px">
+                    <button type="button" class="btn   btn-primary" ng-click="addPlace()">
+                        {{'NEW_PLACE '| translate }}
+                    </button>
+                    <button type="button" class="btn   btn-primary" ng-click="advanceSearch = !advanceSearch">
+                        {{'ADVANCED_SEARCH' | translate }}
+                    </button>
+                    <!--<button type="button" class="btn   btn-primary" ng-click="showMap($event)">-->
+                        <!--{{'VIEW_MAP' | translate }}-->
+                    <!--</button>-->
                     <hr>
                     <div uib-collapse="advanceSearch" horizontal>
                         <div class="fadeInDown">
-                            <form name="myform" novalidate >
-                                <!--<div class=" animated " style="padding-left: 0"-->
-                                <!--ng-class="{'fadeInDown':advanceSearch,'hidden':!advanceSearch}">-->
-                                <div class=" form-group">
-                                    <label style="width: 50px; color: #cd0b1a">Date: </label>
-                                    <div class=" input-group date ident-date" >
-                                        <span class="input-group-addon"  ><span  class="text-danger">Init  date:</span></span>
-                                        <input   tooltip-placement="top" tooltip-trigger="'none'" uib-tooltip="Init date field should be date" tooltip-class="customClass" tooltip-is-open="myform.initDate.$dirty && myform.initDate.$invalid" class="form-control md-datepicker-is-showing"  uib-datepicker-popup="{{format}}"  is-open="popup1.opened" name="initDate" ng-pattern="/^\d{2}-\w{3,9}-\d{4}$/" datepicker-options="dateOptionsSearch" placeholder="" type="text" ng-model="search.initialDate">
-                                        <span class="input-group-addon"  ><span id="datesearchInit" class="fa fa-calendar " ng-click="open1()"   ></span></span>
+
+                            <form name="advancedSearchPlace" class="form-horizontal" role="form">
+
+                                <div class="form-group pull-left row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                    <div class=" input-group ">
+                                            <span class="input-group-addon"
+                                                  id="basic-addon1"><strong>Name:</strong></span>
+                                        <input class="form-control"
+                                               type="text"
+                                               name="name"
+                                               id="name"
+                                               maxlength="40"
+                                               placeholder="{{'NAME' | translate}}"
+                                               uib-typeahead="iplace.name for iplace in placesData | filter:$viewValue"
+                                               ng-model="seachPlace.name"
+                                               ng-pattern="usernameExpReg"
+                                               tooltip-placement="top"
+                                               tooltip-trigger="'none'"
+                                               uib-tooltip="{{'NAME_ERROR' | translate}}"
+                                               tooltip-class="customClass"
+                                               tooltip-is-open="advancedSearchPlace.name.$dirty && advancedSearchPlace.name.$invalid"
+                                               aria-describedby="basic-addon1"/>
 
                                     </div>
-                                    <!--<span   class="error-message text-danger" ng-show="myform.initDate.$dirty && myform.initDate.$invalid"><p style="text-decoration-color:#f1a417;background: #afd9ee">Init date field should be date</p></span>-->
-
-                                    <div class=" input-group date ident-date" >
-                                        <span class="input-group-addon"  ><span  class="text-danger">End date:</span></span>
-                                        <input  tooltip-placement="bottom" tooltip-trigger="'none'" uib-tooltip="End date field should be date" tooltip-class="customClass" tooltip-is-open="myform.endDate.$dirty && myform.endDate.$invalid" class="form-control" uib-datepicker-popup="{{format}}" name="endDate" ng-pattern="/^\d{2}-\w{3,9}-\d{4}$/" is-open="popup2.opened" datepicker-options="dateOptionsSearch" placeholder="" type="text" ng-model="search.endDate">
-                                        <span class="input-group-addon"  ><span id="datesearchEnd" class="fa fa-calendar" ng-click="open2()"   ></span></span>
-
-                                    </div>
-                                    <!--<span   class="error-message text-danger" ng-show="myform.endDate.$dirty && myform.endDate.$invalid"><p style="text-decoration-color:#f1a417;background: #afd9ee">End date field should be date</p></span>-->
-
+                                    <!--<span style="color:#cc0000"-->
+                                    <!--ng-show="advancedSearchPlace.name.$dirty && advancedSearchPlace.name.$invalid">-->
+                                    <!--<span ng-show="advancedSearchPlace.name.$error.required">Name is required.</span>-->
+                                    <!--<span ng-show="advancedSearchPlace.name.$error.pattern">Invalid name format. You should provide between 2 and 40 words characters.</span>-->
+                                    <!--</span>-->
                                 </div>
-                                <div class="form-group">
-                                    <label style="width: 50px; color: #cd0b1a">Price: </label>
-                                    <div class=" input-group " >
 
-                                        <input  class="form-control"  tooltip-placement="top" tooltip-trigger="'none'" uib-tooltip="Price field should be of 5 digits" tooltip-class="customClass" tooltip-is-open="myform.phoneNumber.$dirty && myform.phoneNumber.$invalid"  placeholder="" name="phoneNumber" type="number"  ng-pattern="/^\d{1,5}$/" ng-model="initialPrice">
-                                        <span class="input-group-addon"  > <span class="fa fa-money "    ></span></span>
+                                <div class="form-group pull-left row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                    <div class=" input-group ">
+
+                                                <span class="input-group-addon"
+                                                      id="basic-addon2"><strong>Address:</strong></span>
+                                        <input class="form-control" type="text"
+                                               name="address" id="address"
+                                               ng-model="seachPlace.address"
+                                               maxlength="100"
+                                               placeholder="{{'ADDRESS' | translate}}"
+                                               uib-typeahead=" iplace.address for iplace in placesData | filter:$viewValue"
+                                               ng-pattern="usernameExpReg"
+                                               tooltip-placement="top"
+                                               tooltip-trigger="'none'"
+                                               uib-tooltip="{{'ADDRESS_ERROR' | translate}}"
+                                               tooltip-class="customClass"
+                                               tooltip-is-open="advancedSearchPlace.address.$dirty && advancedSearchPlace.address.$invalid"
+                                               aria-describedby="basic-addon2"/>
                                     </div>
-                                    <!--<span   class="error-message text-danger" ng-show="myform.phoneNumber.$dirty && myform.phoneNumber.$invalid"><p style="text-decoration-color:#f1a417;background: #afd9ee">Price field should be of 5 digits</p></span>-->
+
+                                    <!--<span style="color:#cc0000"-->
+                                    <!--ng-show="advancedSearchPlace.address.$dirty && advancedSearchPlace.address.$invalid">-->
+                                    <!--<span ng-show="advancedSearchPlace.address.$error.required">First name is required.</span>-->
+                                    <!--<span ng-show="advancedSearchPlace.address.$error.pattern">Invalid first name format. You should provide between 2 and 40 words characters.</span>-->
+                                    <!--</span>-->
                                 </div>
-                                <!--</div>-->
+                                <div class="container">
+                                    <div class="row col-xs-10 col-sm-10 col-md-10 col-lg-10 ">
+                                        <div class="panel panel-primary" style="margin-right: 15px">
+                                            <div class="panel-heading"><strong class="text-capitalize">Agrement
+                                                data</strong></div>
+                                            <div class="panel-body">
+                                                <div class="container">
+                                                    <div class="form-group pull-left col-xs-8 col-sm-8 col-md-8 col-lg-8 "
+                                                         style="margin-left:1px;margin-right: 2px">
+                                                        <div class=" input-group ">
+                                                            <span class="input-group-addon"
+                                                                  id="basic-addon3"><strong>{{'NAME' | translate}}
+                                                                (*)</strong></span>
+                                                            <input class="form-control"
+                                                                   type="text"
+                                                                   id="nameAgreement"
+                                                                   placeholder="{{'AGREMENTNAME' | translate}}"
+                                                                   uib-typeahead="iplace.agreementName for iplace in placesData | filter:$viewValue"
+                                                                   name="agreement"
+                                                                   autofocus
+                                                                   maxlength="40"
+                                                                   ng-model="seachPlace.agreementName"
+                                                                   ng-pattern="usernameExpReg"
+                                                                   tooltip-placement="top"
+                                                                   tooltip-trigger="'none'"
+                                                                   uib-tooltip="{{'AGREMENTNAME_ERROR' | translate}}"
+                                                                   tooltip-class="customClass"
+                                                                   tooltip-is-open="advancedSearchPlace.agreement.$dirty && advancedSearchPlace.agreement.$invalid"
+
+                                                                   required aria-describedby="basic-addon3"/>
+                                                        </div>
+
+                                                        <!--<span style="color:#cc0000"-->
+                                                        <!--ng-show="advancedSearchPlace.nameAgrement.$dirty && advancedSearchPlace.nameAgrement.$invalid">-->
+                                                        <!--<span ng-show="advancedSearchPlace.nameAgrement.$error.required">Name is required.</span>-->
+                                                        <!--<span ng-show="advancedSearchPlace.nameAgrement.$error.pattern">Invalid name format. You should provide between 2 and 40 words characters.</span>-->
+                                                        <!--</span>-->
+                                                    </div>
+
+                                                    <div class="form-group pull-left col-xs-8 col-sm-8 col-md-8 col-lg-8"
+                                                         style="margin-left:1px;margin-right: 2px">
+
+                                                        <div class=" input-group ">
+                                                            <span class="input-group-addon"
+                                                                  id="basic-addon4"><strong>{{'NUMBER_TEXT' | translate
+                                                                }} (*)</strong></span>
+                                                            <input class="form-control" type="text"
+                                                                   name="agrementnumber" id="agrementnumber"
+                                                                   ng-model="seachPlace.agreementNumber"
+                                                                   ng-pattern="numExpReg"
+                                                                   maxlength="5"
+                                                                   placeholder="{{'AGREMENTNUMBER' | translate}}"
+                                                                   uib-typeahead="iplace.agreementNumber for iplace in placesData | filter:$viewValue"
+                                                                   tooltip-placement="top"
+                                                                   tooltip-trigger="'none'"
+                                                                   uib-tooltip="{{'AGREMENTNUMBER_ERROR' | translate}}"
+                                                                   tooltip-class="customClass"
+                                                                   tooltip-is-open="advancedSearchPlace.agrementnumber.$dirty && advancedSearchPlace.agrementnumber.$invalid"
+                                                                   aria-describedby="basic-addon4"/>
+                                                        </div>
+                                                        <!--<span style="color:#cc0000"-->
+                                                        <!--ng-show="customerForm.number.$dirty && customerForm.number.$invalid">-->
+                                                        <!--<span ng-show="customerForm.number.$error.required">Zipcode is required.</span>-->
+                                                        <!--<span ng-show="customerForm.number.$error.pattern">Invalid zipcode format. You must enter 5 digits.</span>-->
+                                                        <!--</span>-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </form>
+
                         </div>
                     </div>
-                    <div class=" advance-search  search-form  form-horizontal panel-group overlay">
-
-                    </div>
-
                 </div>
-
-
             </div>
-           <!--Place table -->
-            <table class="table bootstrap-datatable countries">
-                <thead>
+
+
+        </div>
+        <div uib-alert ng-repeat="alert in alerts" dismiss-on-timeout=3000
+             ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert()">{{ alert.msg }}
+        </div>
+        <!--Place table -->
+        <div class="table-responsive">
+            <div align="right" style="color:#000066">
+                <ul uib-pagination boundary-links="true" items-per-page="appPlace.itemPerPagePlace"
+                    total-items="appPlace.totalItemsPlace"
+                    ng-click="getPlaceRecords()" ng-model="appPlace.currentPagePlace" class="pagination-sm"
+                    previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;">
+                </ul>
+            </div>
+
+            <table class="table table-responsive ">
+                <thead style="font-size: 14px">
                 <tr>
-                    <th>Name</th>
-                    <th>Address</th>
-                    <th>Postal code</th>
-                    <th>City</th>
-                    <th>Agrement</th>
-                    <th>Activated</th>
+                    <th><strong>View</strong></th>
+                    <th><strong>Name</strong></th>
+                    <th><strong>Address</strong></th>
+                    <th><strong>Postal code</strong></th>
+                    <th><strong>City</strong></th>
+                    <th><strong>Agrement</strong></th>
+                    <th><strong>Activated</strong></th>
+                    <th><strong>Actions</strong></th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="iplace in places" >
-                    <td >{{iplace.name}}</td>
+                <tr ng-repeat="iplace in places | filter:criteriaList  ">
+                    <td>
+                        <form>
+                            <div class=" input-group ">
+                                <input type="checkbox" checklist-model="search.formation"
+                                       checklist-value="iplace">
+                            </div>
+                        </form>
+                    </td>
+                    <td>{{iplace.name}}</td>
                     <td>{{iplace.address}}</td>
                     <td>{{iplace.zipcode}}</td>
                     <td>{{iplace.city}}</td>
                     <td>
                         <!--Agrement's name-->
-                        <!--Agrement's number-->
+                        <div class="form-group">
+
+                            <div class="input-group">
+                                <!--For geolocation uib-typeahead="address for address in getLocation($viewValue)"-->
+                                <label> <strong>Name: </strong> {{iplace.agreementName}}</label>
+                                <!--<span class="input-group-addon" ><span-->
+                                <!--class="fa fa-photo"></span> </span>-->
+
+                            </div>
+                            <div class="input-group">
+                                <!--For geolocation uib-typeahead="address for address in getLocation($viewValue)"-->
+                                <label><strong>Number: </strong> {{iplace.agreementNumber}}</label>
+                                <!--<span class="input-group-addon" ><span-->
+                                <!--class="fa fa-linux"></span>  </span>-->
+
+                            </div>
+                        </div>
+
                     </td>
                     <td>
-                        <div class=" input-group " >
-                            <input type="checkbox" checklist-model="search.formation" checklist-value="iplace.isActivated" >
+                        <div class=" input-group ">
+                            <input type="checkbox" ng-checked="iplace.isActivated" ng-disabled="checkboxUnable">
 
                         </div>
+                    </td>
+                    <td>
+                        <a class="btn btn-primary" ng-click="editPlace(iplace)">{{'EDIT_PLACE' | translate}}</a>
+                        <a class="btn btn-danger" ng-click="deletePlace( iplace)">{{'DELETE'| translate}}</a>
                     </td>
                 </tr>
                 </tbody>
             </table>
+            <div align="right" style="color:#000066">
+                <ul uib-pagination boundary-links="true" items-per-page="appPlace.itemPerPagePlace"
+                    total-items="appPlace.totalItemsPlace"
+                    ng-click="getPlaceRecords()" ng-model="appPlace.currentPagePlace" class="pagination-sm"
+                    previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;">
+                </ul>
+            </div>
+            <script type="text/ng-template" id="myModalContent.html">
+                <div class="modal-header">
+                    <h3 class="modal-title">{{items.message}}</h3>
+                </div>
+                <div class="modal-body">
+                    <h4><strong>{{'NAME' | translate}}: </strong>{{ items.name}}</h4>
+                    <h4><strong>{{'CITY' | translate}}: </strong>{{items.city}}</h4>
+                    <h4><strong>{{'ADDRESS' | translate}}: </strong>{{items.address}}</h4>
+                    <!--Selected: <b>{{ selected.item }}</b>-->
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="button" ng-click="ok()">{{'ACCEPT' | translate}}</button>
+                    <button class="btn btn-warning" type="button" ng-click="cancel()">
+                        {{'CANCEL' | translate}}
+                    </button>
+                </div>
+                </div>
+            </script>
+            <script type="text/ng-template" id="myModalMessage.html">
+                <div class="modal-header">
+                    <h3 class="modal-title">{{items.type}}</h3>
+                </div>
+                <div class="modal-body">
+                    <h3>{{items.message}}</h3>
+
+                    <!--Selected: <b>{{ selected.item }}</b>-->
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-warning" type="button" ng-click="cancel()">
+                        {{'CLOSE' | translate}}
+                    </button>
+                </div>
+                </div>
+            </script>
         </div>
-        <div class="col-lg-6 col-sm-6  hidden-xs">
-            <!--Map show-->
-            <ul >
-                <li>
-                    <div class=" input-group ">
+        <!--<div ng-controller="PlaceEditcontroller">-->
 
-                        <label class="text-info" for="showall">Search all places</label>
-                                        <span id="showall" class="input-group-addon"><span class="fa fa-search "
-                                                                                           ng-click="searchAllPlaces($event)"></span></span>
-
-                    </div>
-                </li>
-                <li class="divider"></li>
-                <li>
-                    <div id="ng-map-class">
-                        <!--<ng-map  zoom="4" center="48.864716, 2.349014" on-center-changed="vm.centerChanged()" on-click="vm.click()">-->
-                        <!--<marker position="48.864716, 2.349014"  title="Click to zoom"></marker>-->
-                        <!--<div ng-repeat="iformationcenter in formationcenters">-->
-                        <!--<div ng-repeat="iplace in iformationcenter.places">-->
-                        <!--<marker position="{{iplace.latitude}}, {{iplace.longitude}}"  title="Click to zoom"></marker>-->
-                        <!--</div>-->
-                        <!--</div>-->
-
-                        <!--</ng-map>-->
-                    </div>
-                </li>
-            </ul>
-        </div>
+        <!--</div>-->
     </div>
 </div>
-

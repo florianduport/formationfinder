@@ -2,14 +2,18 @@
  * Created by dionis on 6/16/2016.
  */
 module.exports.cron = {
-  /*
+
   firstJob: {
-    schedule: '* * * * * *',
+    schedule: '* 5 * * 8 *',
     onTick: function() {
-      console.log('I am triggering every second');
-    }
+      console.log('I am triggering mountly for send Bills');
+    },
+   onComplete: function() {
+   console.log('End triggering mountly for send Bills');
+   },
+   start: true // Start task immediately
   },
- */
+
   secondJob: {
     schedule: '*/60 * * * * *',
     onTick: function() {
@@ -47,7 +51,7 @@ module.exports.cron = {
               ///Get all user to send mailed
 
 
-              async.each(UserToSendMails, function (Customerdata, callback) {
+              async.forEach(UserToSendMails, function (Customerdata, callback) {
                 var iResultCostumerUpdate = {}
                 iResultCostumerUpdate.costumerid = Customerdata.costumerid
                 if (Customerdata.email) {

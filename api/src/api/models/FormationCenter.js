@@ -74,6 +74,7 @@ module.exports = {
   		via: 'formationCenter'
   	},
 
+
     customerBills: {
       collection: 'customerBill',
       via: 'formationCenter'
@@ -86,6 +87,11 @@ module.exports = {
 
     customers: {
       collection: 'customer',
+      via: 'formationCenter'
+    },
+
+    alerts: {
+      collection: 'alert',
       via: 'formationCenter'
     }
 

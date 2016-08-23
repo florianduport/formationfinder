@@ -14,12 +14,22 @@ module.exports = {
   	billNumber: {
   		type: 'string',
   		required: true,
-  		unique: true
+
   	},
 
-  	billState: {
-  		type: 'string'
-  	},
+
+    //billState: {
+    //  type: 'string',
+    //  required: true,
+    //  enum: ['Paid', 'No'],
+    //  defaultsTo: 'No'
+    //  //Ver si existen un numero predefinido de estados conocidos
+    //  //Utilizar un enum y de ser posible poner valor por defecto del estado
+    //},
+
+    billState: {
+      type: 'boolean'
+    },
 
   	formationCenter:{
 		  model: 'formationCenter'
