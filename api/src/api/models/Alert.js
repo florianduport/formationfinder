@@ -28,6 +28,18 @@ module.exports = {
     formationCenter:{
       model: 'formationCenter'
     }
+  },
+
+
+  isValidType: function ( newType) {
+     isValid = false
+      this.enum.forEach(function ( iType, i){
+        if (iType == newType)
+          isValid = true
+    })
+
+     return isValid
+
   }
 };
 

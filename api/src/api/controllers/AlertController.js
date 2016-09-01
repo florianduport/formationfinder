@@ -34,7 +34,8 @@ module.exports = {
       objectToUpdate = {
         text:text,
         type:type,
-        formationCenter:resultObject.id
+        formationCenter:resultObject.id,
+        date:new Date()
       }
 
       Alert.create(objectToUpdate).exec(function(err, resultUpdate){
@@ -48,15 +49,105 @@ module.exports = {
     })
   },
 
-  deleteAlertToFormationCenter : function (req, res, next) {
+  createAlertIsFull : function (req, res, next) {
 
-    var idAlert = req.param("idAlert");
+    var nameFormation = req.param("nameformation");
+
+    typeIsFull = "Formation_Full"
+
+    if (!nameFormation || nameFormation == "")
+      return res.json({response:"ERROR", message:"Not defined Formation´s name"})
+
+    FormationCenter.findOne({name:nameFormation}).exec(function (err, resultObject) {
+      if (err) {
+        return res.json({response:"ERROR", message:err.message})
+      }
+
+      if ( typeof resultObject == "undefined")
+        return res.json({response:"ERROR", message:"Not exist Formation´s name"})
+
+      var text = req.param("text");
+
+      if (!text || text == "")
+        return res.json({response:"ERROR", message:"Not defined text parameter"})
+
+
+      objectToUpdate = {
+        text:text,
+        type: typeIsFull,
+        formationCenter:resultObject.id,
+        date:new Date()
+      }
+
+      Alert.create(objectToUpdate).exec(function(err, resultUpdate){
+        if (err) {
+          return res.json({response:"ERROR", message:err.message})
+        }
+
+        ///Send Mail to formation Center
+        mailSubjet = "Formation is full";
+        FormationCenterServices.sendAlertMailToFormationCenter(resultUpdate.type  , text, resultObject, mailSubjet)
+
+        return res.json({response:"OK", result:resultUpdate})
+
+      })
+    })
+  },
+
+  createAlertCustomerBooked : function (req, res, next) {
+
+    var nameFormation = req.param("nameformation");
+
+    typeIsFull = 'New_Costumer'
+
+    if (!nameFormation || nameFormation == "")
+      return res.json({response:"ERROR", message:"Not defined Formation´s name"})
+
+    FormationCenter.findOne({name:nameFormation}).exec(function (err, resultObject) {
+      if (err) {
+        return res.json({response:"ERROR", message:err.message})
+      }
+
+      if ( typeof resultObject == "undefined")
+        return res.json({response:"ERROR", message:"Not exist Formation´s name"})
+
+      var text = req.param("text");
+
+      if (!text || text == "")
+        return res.json({response:"ERROR", message:"Not defined text parameter"})
+
+
+      objectToUpdate = {
+        text:text,
+        type:typeIsFull,
+        formationCenter:resultObject.id,
+        date:new Date()
+      }
+
+      Alert.create(objectToUpdate).exec(function(err, resultUpdate){
+        if (err) {
+          return res.json({response:"ERROR", message:err.message})
+        }
+
+        ///Send Mail to formation Center
+        mailSubjet = "A client has booked a formation";
+        FormationCenterServices.sendAlertMailToFormationCenter(resultUpdate.type  , text, resultObject, mailSubjet)
+
+        return res.json({response:"OK", result:resultUpdate})
+
+      })
+    })
+  },
+
+  deleteAlertByFormationCenter : function (req, res, next) {
+
+    var idAlert = req.param("id");
 
     if (!idAlert || idAlert == "")
       return res.json({response:"ERROR", message:"Not defined alert id"})
 
     if(isNaN(parseInt(idAlert))){
-      return res.json({err: 'Alert idparameter is an invalid string number'});
+      return res.json({response:"ERROR", message: 'Alert id parameter is an invalid string number'});
     }
 
     Alert.destroy({id:idAlert}).exec(function (err) {
@@ -75,9 +166,9 @@ module.exports = {
 
   },
 
-  updateAlertToFormationCenter : function (req, res, next) {
+  updateAlertByFormationCenter : function (req, res, next) {
 
-    var idAlert = req.param("idAlert");
+    var idAlert = req.param("id");
 
     if (!idAlert || idAlert == "")
       return res.json({response:"ERROR", message:"Not defined alert id"})
@@ -124,7 +215,7 @@ module.exports = {
 
   },
 
-  countAlertToFormationCenter : function (req, res, next) {
+  countAlertByFormationCenter : function (req, res, next) {
 
 
     var page = 0;
@@ -143,7 +234,7 @@ module.exports = {
       }
       else
       {
-        return res.json({err: 'The page parameter is an invalid string number'});
+        return res.json({response:"ERROR", message: 'The page parameter is an invalid string number'});
       }
     }
 
@@ -153,7 +244,7 @@ module.exports = {
       }
       else
       {
-        return res.json({err: 'The len parameter is an invalid string number'});
+        return res.json({response:"ERROR", message: 'The len parameter is an invalid string number'});
       }
     }
 
@@ -173,12 +264,12 @@ module.exports = {
 
     if (initialDate && !_.isDate(initialDate)) {
 
-      return res.json({err: 'Invalid date format for initialDate'});
+      return res.json({response:"ERROR", message:'Invalid date format for initialDate'});
 
     }
 
     if (finalDate && !_.isDate(finalDate)) {
-      return res.json({err: 'Invalid date format for finalDate.'});
+      return res.json({response:"ERROR", message: 'Invalid date format for finalDate.'});
     }
 
     if (initialDate) {
@@ -201,19 +292,19 @@ module.exports = {
         return res.json({response:"ERROR", message:"Not exist Formation Center with name " + nameFormation})
 
       query.formationCenter = resultObject.id
-      console.log("Query count" + query)
+     // console.log("Query count" + query)
       Alert.count(query).exec(function (err, result ) {
         if (err) {
           return res.json({response:"ERROR", message:err});
         }
 
-        console.log("RESULT count" + result)
-        return res.json({res:"OK", size:result})
+       // console.log("RESULT count" + result)
+        return res.json({response:"OK", size:result})
       })
     })
   },
 
-  searchAlertToFormationCenter : function (req, res, next) {
+  searchAlertByFormationCenter : function (req, res, next) {
 
     var page = 0;
     var len = 10;
@@ -231,7 +322,7 @@ module.exports = {
       }
       else
       {
-        return res.json({err: 'The page parameter is an invalid string number'});
+        return res.json({response:"ERROR", message: 'The page parameter is an invalid string number'});
       }
     }
 
@@ -241,7 +332,7 @@ module.exports = {
       }
       else
       {
-        return res.json({err: 'The len parameter is an invalid string number'});
+        return res.json({response:"ERROR", message: 'The len parameter is an invalid string number'});
       }
     }
 
@@ -261,12 +352,12 @@ module.exports = {
 
     if (initialDate && !_.isDate(initialDate)) {
 
-      return res.json({err: 'Invalid date format for initialDate'});
+      return res.json({response:"ERROR", message: 'Invalid date format for initialDate'});
 
     }
 
     if (finalDate && !_.isDate(finalDate)) {
-      return res.json({err: 'Invalid date format for finalDate.'});
+      return res.json({response:"ERROR", message: 'Invalid date format for finalDate.'});
     }
 
     if (initialDate) {
@@ -279,6 +370,17 @@ module.exports = {
     if (finalDate) {
       query.date = {}
       query.date.lte = new Date(req.param('finalDate'))
+    }
+
+
+    if (req.param('text')  ) {
+      query.text = req.param('text')
+      //console.log("Create price restriction")
+    }
+
+    if (req.param('type')  ) {
+      query.type = req.param('type')
+      //console.log("Create price restriction")
     }
 
     var paginationlimit =  page * len;
@@ -294,14 +396,14 @@ module.exports = {
         return res.json({response:"ERROR", message:"Not exist Formation Center with name " + nameFormation})
 
       query.formationCenter = resultObject.id
-      console.log("Query count" + query)
+     // console.log("Query count" , query)
       Alert.find(query).limit(len).skip(skipv).exec(function (err, result ) {
         if (err) {
           return res.json({response:"ERROR", message:err});
         }
 
-        console.log("RESULT count" + result)
-        return res.json({res:"OK", size:result})
+      //  console.log("RESULT count",  result)
+        return res.json({response:"OK", result:result})
       })
     })
 

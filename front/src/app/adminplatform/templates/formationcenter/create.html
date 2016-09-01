@@ -1,0 +1,154 @@
+<div class="container well" id="createContainer">
+    <div class="row" style="backgro">
+        <div class="col col-xs-1 clearfix">
+
+        </div>
+        <div class="col col-xs-10">
+            <div class="page-header">
+                <h2><p class="text-center">Create Formation Center</p></h2>
+            </div>
+        </div>
+        <div class="col col-xs-1">
+
+        </div>
+    </div>
+
+    <!-- CREATE FORMATION CENTER FORM  -->
+    <div class="row">
+        <form class="form-horizontal" name="createFCform" id="createFCform">
+            <div class="form-group">
+                <label class="col-xs-3 control-label" for="name">Name</label>
+                <div class="col col-xs-6">
+                    <input class="form-control" type="text"
+                           maxlength="40"
+                           id="name"
+                           name="name"
+                           minlength="2"
+                           ng-model="formationcenter.name"
+                           ng-pattern="nameRegExp"
+                           required/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-xs-3 control-label" for="defaultLogin">Default Login</label>
+                <div class="col col-xs-6">
+                    <input class="form-control" type="text"
+                           maxlength="40"
+                           id="defaultLogin"
+                           name="defaultLogin"
+                           minlength="2"
+                           ng-model="formationcenter.defaultLogin"
+                           ng-pattern="usernameExpReg"
+                           required/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-xs-3 control-label" for="address">address</label>
+                <div class="col col-xs-8">
+                    <input class="form-control" type="text"
+                           maxlength="80"
+                           id="address"
+                           name="address"
+                           minlength="4"
+                           ng-model="formationcenter.address"
+                           required/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-xs-3 control-label" for="email">Email</label>
+                <div class="col col-xs-5">
+                    <input class="form-control" type="text"
+                           maxlength="40"
+                           id="email"
+                           name="email"
+                           minlength="5"
+                           ng-model="formationcenter.email"
+                           ng-pattern="emailRedExp"
+                           required/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-xs-3 control-label" for="zipcode">Zipcode</label>
+                <div class="col col-xs-4">
+                    <input class="form-control" type="text"
+                           maxlength="5"
+                           id="zipcode"
+                           name="zipcode"
+                           ng-model="formationcenter.zipCode"
+                           ng-pattern="zipcodeRegExp"
+                           required/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-xs-3 control-label" for="city">City</label>
+                <div class="col col-xs-6">
+                    <input class="form-control" type="text"
+                           maxlength="40"
+                           id="city"
+                           name="city"
+                           minlength="2"
+                           ng-pattern="nameRegExp"
+                           ng-model="formationcenter.city"
+                           required/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-xs-3 control-label" for="phonenumber">Phone Number</label>
+                <div class="col col-xs-4">
+                    <input class="form-control" type="text"
+                           maxlength="10"
+                           id="phonenumber"
+                           name="phonenumber"
+                           ng-model="formationcenter.phoneNumber"
+                           ng-pattern="phoneRegExp"
+                           required/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-xs-3"></label>
+                <div class="col col-xs-3">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" ng-model="formationcenter.isActivated"> Activated
+                    </label>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- END OF CREATE FORMATION CENTER FORM  -->
+    <br>
+    <div class="row">
+        <div class="col col-xs-2">
+
+        </div>
+        <div class="col-xs-8">
+            <div class="form-group">
+                <!--<div class="col col-xs-6 col-xs-offset-1">-->
+                <button type="submit" class="btn btn-primary btn-block"
+                        ng-click="createFormationCenter()"
+                        ng-disabled="createFCform.$invalid">
+                    Create Formation Center
+                </button>
+                <!--</div>-->
+            </div>
+            <div class="form-group">
+                <!--<div class="col col-xs-6 col-xs-offset-1">-->
+                <button type="button" class="btn btn-info btn-block"
+                        ng-click="gotoToFormationCenters()">
+                    Back to Formation Centers
+                </button>
+                <!--</div>-->
+            </div>
+        </div>
+        <div class="col col-xs-2">
+
+        </div>
+    </div>
+
+</div>

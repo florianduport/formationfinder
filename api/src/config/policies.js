@@ -49,8 +49,8 @@ module.exports.policies = {
 		// feed : ['isNiceToAnimals', 'hasRabbitFood']
 	// }
 
-  FormationCenterController: {
-    '*': true,
-    create: 'authenticated'
-  }
+  //FormationCenterController: {
+  //  '*': true,
+  //  create: 'authenticated'
+  //}
 };

@@ -67,11 +67,11 @@ module.exports.connections = {
 //'173.0.0.12'
      MongodbServer: {
      adapter: 'sails-mongo',
-     host: '192.168.56.102',
-     port: 27017,
-     user: 'root', //optional
-     password: 'root', //optional
-     database: 'formationfinder' //optional
+     host:  "173.0.0.12",
+     port:  27017,
+     user:  "root", //optional
+     password: "root", //optional
+     database:  "formationfinder"//optional
     },
 
 

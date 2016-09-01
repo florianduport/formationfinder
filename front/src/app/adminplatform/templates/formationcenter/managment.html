@@ -1,0 +1,111 @@
+<div class="container well">
+    <div class="row">
+        <div class="col col-xs-1">
+
+        </div>
+        <div class="col col-xs-10">
+            <div class="page-header">
+                <h1><p class="text-center">Formation Centers</p></h1>
+                <h4><p class="text-center">In this section you will be able to manage your formation centers</p></h4>
+            </div>
+        </div>
+        <div class="col col-xs-1">
+
+        </div>
+    </div>
+
+    <!-- CREATE NEW FC AREA -->
+    <div class="row">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-xs-3 control-label"><strong>Create Formation Center</strong></label>
+                <div class="col col-xs-1">
+                    <button type="button"
+                            ng-click="gotoCreateFormatioCenter()"
+                            class="btn btn-info btn-sm">Create
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- END CREATE NEW FC AREA -->
+    <br>
+    <!-- FILTER AREA -->
+    <div class="row" ng-show="showFormationCenter">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-xs-3 control-label" for="criteria"><strong>Search Formation Centers</strong></label>
+                <div class="col col-xs-4">
+                    <input type="text" class="form-control" id="criteria" ng-model="criteria">
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <!-- END FILTER AREA-->
+    <br>
+    <!-- DISPLAY THE FORMATION CENTERS  -->
+    <div class="row">
+        <!--<div class="col col-xs-1">-->
+
+        <!--</div>-->
+        <div class="col col-xs-12">
+            <div ng-show="!showFormationCenter">
+                <div class="alert alert-danger" role="alert">Nothig to show.</div>
+            </div>
+
+            <div class="table-responsive" ng-show="showFormationCenter">
+                <table class="table table-condensed">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>email</th>
+                        <th>Phone Number</th>
+                        <th>Zipcode</th>
+                        <th>City</th>
+                        <th>Address</th>
+                        <th>Activated</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="(key,formationCenter) in formationCenters | filter:criteria">
+                        <td>{{key + 1}}</td>
+                        <td>{{formationCenter.name}}</td>
+                        <td>{{formationCenter.email}}</td>
+                        <td>{{formationCenter.phoneNumber}}</td>
+                        <td>{{formationCenter.zipCode}}</td>
+                        <td>{{formationCenter.city}}</td>
+                        <td>{{formationCenter.address}}</td>
+                        <td>
+                            <span class="label label-success" ng-show="formationCenter.isActivated">
+                                <span class="glyphicon glyphicon-ok"></span>
+                            </span>
+                            <span class="label label-danger" ng-show="!formationCenter.isActivated">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </span>
+                        </td>
+                        <td>
+                            <button type="button"
+                                    class="btn btn-sm btn-primary"
+                                    ng-click="editFormationCenter(key)">Edit
+                            </button>
+                            <span></span>
+                            <button type="button"
+                                    class="btn btn-sm btn-danger"
+                                    ng-click="deleteFormationCenter(key)">Delete
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--<div class="col col-xs-1">-->
+
+        <!--</div>-->
+    </div>
+    <!-- END DISPLAY THE FORMATION CENTERS  -->
+
+</div>

@@ -238,10 +238,332 @@ module.exports = {
       return res.json({status: 'ok', result: names});
     })
   },
-  create: function (req, res) {
-    console.log("Creando formation center de prueba");
+// ----------- Actualizacion de Piterson -------------------//
 
-    return res.json({status: 'ok'});
+  create: function (req, res, next) {
+
+    //Validate parameters.
+    if (req.param('name') === undefined) {
+      return res.json({status: "error", info: "Name is required."});
+    }
+
+    if (req.param('address') === undefined) {
+      return res.json({status: "error", info: "Address is required."});
+    }
+
+    if (req.param('zipCode') === undefined) {
+      return res.json({status: "error", info: "ZipCode is required."});
+    }
+
+    if (req.param('city') === undefined) {
+      return res.json({status: "error", info: "City is required."});
+    }
+
+    if (req.param('email') === undefined) {
+      return res.json({status: "error", info: "Email is required."});
+    }
+
+    if (req.param('phoneNumber') === undefined) {
+      return res.json({status: "error", info: "Phone Number is required."});
+    }
+
+    if (req.param('defaultLogin') === undefined) {
+      return res.json({status: "error", info: "defaultLogin is required."});
+    }
+
+    var tFormationCenter = {};
+
+    tFormationCenter.name = req.param('name');
+    tFormationCenter.address = req.param('address');
+    tFormationCenter.zipCode = req.param('zipCode');
+    tFormationCenter.city = req.param('city');
+    tFormationCenter.email = req.param('email');
+    tFormationCenter.phoneNumber = req.param('phoneNumber');
+
+
+    //Activated default value is false and is not required, so check if was suplied.
+    if (req.param('isActivated') !== undefined) {
+
+      //Check if it is valid.
+      if (req.param('isActivated') !== true && req.param('isActivated') !== false) {
+        return res.json({status: "error", info: "Invalid isActivated parameter, only true or false."});
+      }
+
+      tFormationCenter.isActivated = (req.param('isActivated') === true);
+
+    } else {
+      tFormationCenter.isActivated = false;
+    }
+
+    //Check if there is other formation center with the same name, or email or phoneNumner.
+    FormationCenter.findOne({
+      OR: [
+        {name: tFormationCenter.name},
+        {email: tFormationCenter.email},
+        {phoneNumber: tFormationCenter.phoneNumber},
+      ]
+    }).exec(function (err, FormationCenterFounded) {
+
+      if (err) {
+        return res.json({status: "error", info: "Error searching Formation Center."});
+      }
+
+      if (FormationCenterFounded) {
+
+        if (FormationCenterFounded.name === tFormationCenter.name) {
+          return res.json({status: "error", info: "There is other Formation Center with that Name."});
+        }
+
+        if (FormationCenterFounded.email === tFormationCenter.email) {
+          return res.json({status: "error", info: "There is other Formation Center with that Email."});
+        }
+
+        if (FormationCenterFounded.phoneNumber === tFormationCenter.phoneNumber) {
+          return res.json({status: "error", info: "There is other Formation Center with that Phone Number."});
+        }
+
+      }
+
+      //If i get here, everything is ok, a can create the formation center.
+
+      FormationCenter.create(tFormationCenter).exec(function (err, FormationCenterCreated) {
+
+        if (err || !FormationCenterCreated) {
+          return res.json({status: "error", info: "Error creating Formation Center."});
+        }
+
+        //Now create de Admin Login in the formation center.
+        Login.create({username: req.param('defaultLogin'), password: req.param('defaultLogin'), formationCenter: FormationCenterCreated.id})
+          .exec(function (err, LoginCreated) {
+            if(err || !LoginCreated){
+              return res.json({status: "error", info: "Error creating default login."});
+            }
+
+            return res.json({status: "ok", info: "Formation Center created.", data: FormationCenterCreated});
+          });
+      }); //End of FormationCenter.create.
+    }); //End of FormationCenter.findOne.
+  },
+
+  searchAllNoPopulate: function (req, res, next) {
+    FormationCenter.find().exec(function (err, FormationCentersFounded) {
+      if (err) {
+        return res.json({status: "error", info: "Error searching Formation Centers."});
+      }
+
+      if (FormationCentersFounded.length === 0) {
+        return res.json({status: "error", info: "There are not Formation Centers."});
+      }
+
+      return res.json({status: "ok", data: FormationCentersFounded});
+    });
+  },
+
+  delete: function (req, res, next) {
+    if (req.param('id') === undefined) {
+      return res.json({status: "error", info: "Formation Center id is required."});
+    }
+
+    FormationCenter.findOne({id: req.param('id')})
+      .exec(function (err, FormationCenterFounded) {
+
+        if (err) {
+          return res.json({status: "error", info: "Error searching Formation Center."});
+        }
+
+        if (!FormationCenterFounded) {
+          return res.json({status: "error", info: "There isn't a Formation Center with that id."});
+        }
+
+        /*******************************************************************/
+        /**   Now delete all object asociated with this formation center. **/
+        /*******************************************************************/
+
+        //Delete animators.
+        Animator.destroy({formationCenter: FormationCenterFounded.id})
+          .exec(function (err) {
+            if (err) {
+              return res.json({status: "error", info: "Error deleting Animators."});
+            }
+
+            //Delete places.
+            Place.destroy({formationCenter: FormationCenterFounded.id})
+              .exec(function (err) {
+                if (err) {
+                  return res.json({status: "error", info: "Error deleting Places."});
+                }
+
+                //Delete Bills.
+                Bill.destroy({formationCenter: FormationCenterFounded.id})
+                  .exec(function (err) {
+                    if (err) {
+                      return res.json({status: "error", info: "Error deleting Bills."});
+                    }
+
+                    //Delete Customers.
+                    Customer.destroy({formationCenter: FormationCenterFounded.id})
+                      .exec(function (err) {
+                        if (err) {
+                          return res.json({status: "error", info: "Error deleting Customers."});
+                        }
+
+                        //Delete CustomerBills.
+                        CustomerBill.destroy({formationCenter: FormationCenterFounded.id})
+                          .exec(function (err) {
+                            if (err) {
+                              return res.json({status: "error", info: "Error deleting CustomerBills."});
+                            }
+
+                            //Delete Formations.
+                            Formation.destroy({formationCenter: FormationCenterFounded.id})
+                              .exec(function (err) {
+                                if (err) {
+                                  return res.json({status: "error", info: "Error deleting Formations."});
+                                }
+
+                                //Delete Logins.
+                                Login.destroy({formationCenter: FormationCenterFounded.id})
+                                  .exec(function (err) {
+                                    if (err) {
+                                      return res.json({status: "error", info: "Error deleting Logins."});
+                                    }
+
+                                    /****************************************************/
+                                    /**  Finally Destroy the Fromation Center Object   **/
+                                    /****************************************************/
+
+                                    FormationCenter.destroy({id: FormationCenterFounded.id})
+                                      .exec(function (err) {
+                                        if (err) {
+                                          return res.json({status: "error", info: "Error deleting Formation Center."});
+                                        }
+
+                                        return res.json({status: "ok", info: "Formation Center deleted."});
+                                      })
+                                  });//End of Login destroy.
+                              });//End of Formation destroy.
+                          });//End of CustomerBill destroy.
+                      });//End of Customer destroy.
+                  });//End of Bill destroy.
+              });//End of Place destroy.
+          });//End of Animator destroy.
+      });//End of FormationCenter.findOne.
+  },//End of delete Action.
+
+  update: function (req, res, next) {
+    if (req.param('id') === undefined) {
+      return res.json({status: "error", info: "Formation Center id is required."});
+    }
+
+    if (req.param('attributes') === undefined) {
+      return res.json({status: "error", info: "attributes parameter is required."});
+    }
+
+    FormationCenter.findOne({id: req.param('id')})
+      .exec(function (err, FCfounded) {
+        if (err) {
+          return res.json({status: "error", info: "Error searching Formation Center."});
+        }
+
+        if (!FCfounded) {
+          return res.json({status: "error", info: "That Formation Center doesn't exist."});
+        }
+
+        //Validate that the new attributes (name, email, phonenumber) are not in use.
+        var ORcriteria = [];
+        var attributes = req.param('attributes');
+        var uniqueParameters = false;
+
+        console.log("Los atributos pasados fueron: ",attributes);
+
+        if (attributes.name) {
+          ORcriteria.push({name: attributes.name});
+          uniqueParameters = true;
+        }
+
+        if (attributes.email) {
+          ORcriteria.push({email: attributes.email});
+          uniqueParameters = true;
+        }
+
+        if (attributes.phoneNumber) {
+          ORcriteria.push({phoneNumber: attributes.phoneNumber});
+          uniqueParameters = true;
+        }
+
+        if (uniqueParameters) {
+
+          FormationCenter.findOne({
+              OR: ORcriteria
+            })
+            .exec(function (err, FormationCenterFounded) {
+
+              console.log("Entre a search OR: ");
+
+              if (err) {
+                return res.json({status: "error", info: "Error OR searching Formation Center."});
+              }
+
+              if (FormationCenterFounded) {
+
+                console.log("Encontre a alguien con el mismo atributo unico");
+
+                if (FormationCenterFounded.name === attributes.name) {
+                  return res.json({status: "error", info: "Name parameter is in use."});
+                }
+
+                if (FormationCenterFounded.email === attributes.email) {
+                  return res.json({status: "error", info: "Email parameter is in use."});
+                }
+
+                if (FormationCenterFounded.phoneNumber === attributes.phoneNumber) {
+                  return res.json({status: "error", info: "PhoneNumber parameter is in use."});
+                }
+              }
+
+              //If a get here, everything is ok, then update formation center.
+              FormationCenter.update({id: FCfounded.id}, attributes)
+                .exec(function (err, FCupdated) {
+                  if (err || !FCupdated) {
+                    return res.json({status: "error", info: "Error updating Formation Center."});
+                  }
+
+                  return res.json({status: "ok", info: "Formation Center updated.", data: FCupdated});
+                });
+            });//End of FormationCenter.findOne with OR criteria.
+        }//End if(uniqueParameters)
+        else {
+          FormationCenter.update({id: FCfounded.id}, attributes)
+            .exec(function (err, FCupdated) {
+              if (err || !FCupdated) {
+                return res.json({status: "error", info: "Error updating Formation Center."});
+              }
+
+              return res.json({status: "ok", info: "Formation Center updated.", data: FCupdated});
+            });
+        }
+      });
+  },
+
+  searchByID: function (req, res, next) {
+    //In this search i do not use populate, i only need the Formation Center attributes.
+
+    if (req.param('id') === undefined) {
+      return res.json({status: "error", info: "Formation Center id is required."});
+    }
+
+    FormationCenter.findOne({id: req.param('id')})
+      .exec(function (err, FCfounded) {
+        if (err) {
+          return res.json({status: "error", info: "Error searching Formation Center."});
+        }
+
+        if (!FCfounded) {
+          return res.json({status: "error", info: "That Formation Center doesn't exist."});
+        }
+
+        return res.json({status: "ok", data: FCfounded});
+      });
   }
 };
 

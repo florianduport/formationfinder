@@ -216,7 +216,7 @@ module.exports = {
         }
 
         if (!loginFounded) {
-          return res.json({status: "error", info: "Invalid username/password convination."});
+          return res.json({status: "error", info: "Invalid username/password combination."});
         }
 
         resulToken = LoginService.generateLoginToken(loginFounded.id);

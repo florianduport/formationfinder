@@ -505,6 +505,7 @@ module.exports = {
     }
 
   },
+
   bookFormation: function (req, res, next) {
     // body...
 
@@ -538,11 +539,11 @@ module.exports = {
     }
 
     //Search the formation.
-    Formation.findOne(formationID)
+    Formation.findOne(formationID).populate(place)
       .exec(function (err, formationFounded) {
         // body...
 
-        console.log("Estoy en formation find one");
+        //console.log("Estoy en formation find one");
 
         if(err){
           return res.json(err);
@@ -563,7 +564,7 @@ module.exports = {
         }).exec(function (err, customerFouded) {
           // body...
 
-          console.log("Estoy en customer find one");
+          //console.log("Estoy en customer find one");
 
           if(err){
             return res.json(err);
@@ -572,39 +573,80 @@ module.exports = {
           //if the customer does'nt exist, create and register one.
           if(customerFouded === undefined){
 
-            console.log("Customer no escontrado");
+           // console.log("Customer no escontrado");
 
-            Customer.create(customerData)
-              .exec(function (err, customerCreated) {
-                // body...
+            ////Validate is Full
+            ////If Formation.maxPeople if < current Formation´s customer + 1 then
+            ///formation is Full and update its
+            ///not insert Customer
 
-                console.log("Creando Customer");
+            FormationService.isFormationFull(formationFounded, function (err, result){
 
-                if(err){
-                  return res.json(err);
-                }
+              if (err) {
+                return res.json({err: err.message});
+              }
 
-                if(customerCreated === undefined){
-                  return res.json({err: 'An error has ocurred when creating the customer'});
-                }
+              if (result ) {
+                return res.json({err: "Formation is full"});
+              }
 
-                formationFounded.customers.add(customerCreated.id);
 
-                console.log("Mostrando la cantidad de customers de la formacion " +
-                  formationFounded.customers.length);
 
-                if(formationFounded.customers.length == formationFounded.maxPeople)
-                  formationFounded.isFull = true;
 
-                formationFounded.save();
+              Customer.create(customerData)
+                .exec(function (err, customerCreated) {
+                  // body...
 
-                return res.json({ok: 'book proces complit.'});
-              });
+                  console.log("Creando Customer");
+
+                  if (err) {
+                    return res.json(err);
+                  }
+
+                  if (customerCreated === undefined) {
+                    return res.json({err: 'An error has ocurred when creating the customer'});
+                  }
+
+
+                  isPaid = false
+
+                  /////Create Customer Bill
+                  FormationServices.createCustomerBill(customerCreated, formationFounded, isPaid, function (err, result) {
+
+                    if (err) {
+                      console.log("ERROR in created Customer Bill" , err.message )
+                    }
+                  })
+
+
+                 ////Create Customer Alert
+                  FormationServices.costumerBooked( formationFounded, function (err, result) {
+
+                    if (err) {
+                      console.log("ERROR in created Customer booked Alert" , err.message )
+                    }
+                  })
+
+                  formationFounded.customers.add(customerCreated.id);
+
+                  console.log("Mostrando la cantidad de customers de la formacion " +
+                    formationFounded.customers.length);
+
+                  if (formationFounded.customers.length == formationFounded.maxPeople)
+                    formationFounded.isFull = true;
+
+                  formationFounded.save();
+
+
+
+                  return res.json({ok: 'book proces complit.'});
+                });
+            });
           }
           //else, the customer exist. Search if there is a formation with that customer registered.
           else {
 
-            console.log("Customer escontrado");
+           //console.log("Customer escontrado");
 
             Formation.findOne(customerFouded.formation)
               .exec(function (err, formFounded) {
@@ -635,7 +677,6 @@ module.exports = {
         });
       });
   },
-
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -762,7 +803,7 @@ module.exports = {
 
          }*/
 
-        console.log("QUERY: " , query)
+       /// console.log("QUERY: " , query)
         Formation.native(function(err, collection) {
           if (err) return res.serverError(err);
           //console.log("---")
@@ -938,7 +979,7 @@ module.exports = {
 
          }*/
 
-        console.log("QUERY: " , query)
+       /// console.log("QUERY: " , query)
         Formation.native(function(err, collection) {
           if (err) return res.serverError(err);
           //console.log("---")
@@ -1091,7 +1132,7 @@ module.exports = {
 
    // query.isFull = false
     ///---------------------------------------------------------------------------------
-    console.log("City name search: ", cityname)
+   // console.log("City name search: ", cityname)
 
     var ObjectID = require('mongodb').ObjectID
     queryPlace = {}
@@ -1105,7 +1146,7 @@ module.exports = {
       promise = resulFormation.reduce(function (prev, iPlace) {
         return prev.then(function () {
           object = iPlace.id
-          console.log("Data", iPlace)
+         // console.log("Data", iPlace)
           arrayData.push( new ObjectID(iPlace.id));
         });
       }, Promise.resolve());
@@ -1129,7 +1170,7 @@ module.exports = {
 
         }*/
 
-        console.log("QUERY: " , query)
+       /// console.log("QUERY: " , query)
         Formation.native(function(err, collection) {
           if (err) return res.serverError(err);
           //console.log("---")
@@ -1345,7 +1386,7 @@ module.exports = {
 
          }*/
 
-        console.log("QUERY: " , query)
+     ///  console.log("QUERY: " , query)
         Formation.native(function(err, collection) {
           if (err) return res.serverError(err);
           //console.log("---")
@@ -1718,32 +1759,6 @@ module.exports = {
       // There are 1 users called 'Flynn'
       // Don't forget to handle your errors
     });
-  },
-
-  // probando: function (req, res, next) {
-  // 	// body...
-
-  // 	Formation.findOne(req.param('id'))
-  // 	.exec(function (err, formationFounded) {
-  // 		// body...
-
-  // 		if(err){
-  // 			return res.json('An error has ocurred searching the formation.');
-  // 		}
-
-  // 		if(formationFounded === undefined){
-  // 			return res.json('No formation match that ID: ' + id.toString());
-  // 		}
-
-  // 		console.log(formationFounded.isNotFull());
-
-  // 		console.log('fecha menor: ' + formationFounded.initialDate());
-
-  // 		console.log('fecha mayor: ' + formationFounded.finalDate());
-
-  // 		return res.json(formationFounded);
-
-  // 	});
-  // }
+  }
 };
 

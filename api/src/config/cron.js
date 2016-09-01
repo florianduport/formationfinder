@@ -4,19 +4,121 @@
 module.exports.cron = {
 
   firstJob: {
-    schedule: '* 5 * * 8 *',
-    onTick: function() {
+    schedule: '00 01 00 1 * *',
+    onTick: function () {
       console.log('I am triggering mountly for send Bills');
+      var faker;
+      faker = require('faker');
+      ///Find all Formation Center
+      var endAllTask = true
+      FormationCenter.find().exec(function (err, arrayResult) {
+        if (err) { ///End function
+          console.log("Error ", err)
+          return;
+        }
+        async.forEach(arrayResult, function (iFormationCenter, callback) {
+
+          ////Calculate current date - 1 and built date first day in mounth
+          daySegmentContainer = 30
+          ///For each Formation Center create mountly bill for our system Paid
+          newDate = new Date();
+         // initDate = new Date( newDate.getDay() - 30  ) ///Date for search all Bill
+          initDate = new Date()
+          initDate.setDate(initDate.getDate() - daySegmentContainer);
+          Configuration.findOne({systempaid: {ne: undefined}}).exec(function (err, configObject) {
+
+            if (err) { ///End function
+              console.log("Error ", err)
+              callback();
+            }
+            paidValue = 120; ///System default Paid Value
+            paidValueDefault = 125
+            if (typeof configObject == "undefined") {
+              ///Use defaul paid value
+              paidValue = paidValueDefault
+            }
+            else
+              paidValue = configObject.systempaid
+
+
+            Bill.create({
+              formationCenter: iFormationCenter.id,
+              date: newDate,
+              amount: paidValue,
+              billNumber: faker.finance.account(),
+              billState: false
+            }).exec(function (err, iBillObject) {
+              if (err) { ///End function
+                console.log("Error create  Formation Center´payment bill ", err)
+                callback();
+              }
+
+              console.log("Created Bill for Formation Center mountly with name " +  iBillObject.billNumber )
+
+              ///For each Formation Center read all bill not paid and save in array
+              query = {}
+              query.formationCenter = iFormationCenter.id
+              query.sort = 'date ASC'
+              query.billState = false
+              query.date= { '<=' : newDate,
+                            '>=': initDate}
+
+              console.log("Query", query)
+
+              ////OJOOOOO
+              //OJJOOOOOOOOOO  It must compare with today and 30 day before
+
+              Bill.find(query).exec(function (err, resultBillArray) {
+                if (err) { ///End function
+                  console.log("Error find all bill ", err)
+                  callback();
+                }
+                // console.log("RESULT", query)
+                if (typeof resultBillArray == "undefined" || resultBillArray.length == 0) {
+                  console.log("Not exits Bill for FormationCenter :", iFormationCenter.name)
+                  callback();
+                }
+
+
+                ///Mail  subject
+
+                subjetToEmail = "Mountly bill´s payment"
+                ///For array of bill built html table and with Formation Center´s email send email for paid notification
+                FormationCenterServices.sendBillMailToFormationCenter(resultBillArray, iFormationCenter, subjetToEmail)
+                console.log( "SEND REPORT TO email  " + iFormationCenter.email  +  " Formation Center " + iFormationCenter.name  )
+                callback();
+
+              })
+
+
+
+
+            })
+          })
+
+
+        }, function (err) {
+          if (err)
+            return next(err);
+          console.log("**********  End FormationCenter Bill analyces **********************************")
+          //console.log(resultCostumerUpdate)
+           //callback(null, endAllTask);
+        });
+
+
+      });
+
+
     },
-   onComplete: function() {
-   console.log('End triggering mountly for send Bills');
-   },
-   start: true // Start task immediately
+    onComplete: function () {
+      console.log('End triggering mountly for send Bills');
+    },
+    start: true // Start task immediately
   },
 
   secondJob: {
     schedule: '*/60 * * * * *',
-    onTick: function() {
+    onTick: function () {
       console.log('I am triggering every five seconds');
 
       resultCostumerUpdate = [];
@@ -24,7 +126,7 @@ module.exports.cron = {
       ////Find the costumer to notified
       ///Find all register user  if your course almost init
       ///5 hours before
-     // var EmailServices = require('../api/services/EmailService')
+      // var EmailServices = require('../api/services/EmailService')
       var CustomerServices = require('../api/services/CustomerService')
 
       ///Validate asociations
@@ -33,7 +135,7 @@ module.exports.cron = {
       SeedTmpServices.validateaAssociationsTMP()
       console.log("****************** End validate asociations ****************************")
       var findData = ["buscar"]
-      CustomerServices.searchbyclosedformation( function ( result ){
+      CustomerServices.searchbyclosedformation(function (result) {
 
         ///Consumer to received mailed set status in 2 indicated mail in process
         UserToSendMails = result;
@@ -46,7 +148,7 @@ module.exports.cron = {
         async.series({
 
 
-            sendmail: function(callback) {
+            sendmail: function (callback) {
 
               ///Get all user to send mailed
 
@@ -64,16 +166,16 @@ module.exports.cron = {
                   var initDate = Customerdata.date
                   var mailSubjet = "Your formation almost started  ";
                   var mailHtmlBody = "<b>Formationfinde notify you your coruse in Formation Center in adress almas started " + initDate + "</b>"
-                  var config ={}
+                  var config = {}
                   config = {
                     to: Customerdata.email,
                     subject: mailSubjet,
                     html: mailHtmlBody
                   };
 
-                  config.costumerid =  Customerdata.id;
+                  config.costumerid = Customerdata.id;
 
-                  result = EmailService.send(config, function ( err, result ) {
+                  result = EmailService.send(config, function (err, result) {
                     ///If not error when send mail
                     ///0 Ok, 1 Error, 5 all intent
                     iResultCostumerUpdate.mailstatus = 5;
@@ -84,10 +186,12 @@ module.exports.cron = {
                       iResultCostumerUpdate.mailstatus = 1;
                       emailstatus = 1;
                       ///Update  costumer like the started formation´s mail is sended if not error
-                      Costumer.update({id:options.costumerid},{emailsend:emailsend + emailstatus}).exec(function(err, Costumers){})
+                      Costumer.update({id: options.costumerid}, {emailsend: emailsend + emailstatus}).exec(function (err, Costumers) {
+                      })
                     }
                     else
-                      Costumer.update({id:options.costumerid},{emailsend:mailstatus}).exec(function(err, Costumers){})
+                      Costumer.update({id: options.costumerid}, {emailsend: mailstatus}).exec(function (err, Costumers) {
+                      })
 
                     resultCostumerUpdate.push(iResultCostumerUpdate)
 
@@ -95,23 +199,23 @@ module.exports.cron = {
                   });
                 }
 
-              }, function ( err) {
+              }, function (err) {
                 if (err)
                   return next(err);
                 console.log("********************************************")
                 console.log(resultCostumerUpdate)
-                callback(null,resultCostumerUpdate);
+                callback(null, resultCostumerUpdate);
               });
             }
-          //,
+            //,
 
-          /*  updatemaileSatatus: function(callback){
-              console.log("----- Actualizando valores de mensajes enviados -----");
-              CustomerServices.updatemailnotify(resultCostumerUpdate);
-              callback(null,"updatemaileSatatus");
-            }*/
+            /*  updatemaileSatatus: function(callback){
+             console.log("----- Actualizando valores de mensajes enviados -----");
+             CustomerServices.updatemailnotify(resultCostumerUpdate);
+             callback(null,"updatemaileSatatus");
+             }*/
           },
-          function(err, results) {
+          function (err, results) {
             // results is now equal to: {one: 1, two: 2}
             if (err)
               return next(err);
@@ -124,40 +228,39 @@ module.exports.cron = {
       })
 
 
+      /* UserToSendMails = CustomerController.searchbyclosedformation();
 
-     /* UserToSendMails = CustomerController.searchbyclosedformation();
-
-      for ( iCostumer in UserToSendMails) {
-        var Customerdata = UserToSendMails[iCostumer];
-        resultCostumerUpdate.costumerid = Customerdata.costumerid
-        if (Customerdata.email) {
-          ///Update all costumer like the started formation´s mail will send
+       for ( iCostumer in UserToSendMails) {
+       var Customerdata = UserToSendMails[iCostumer];
+       resultCostumerUpdate.costumerid = Customerdata.costumerid
+       if (Customerdata.email) {
+       ///Update all costumer like the started formation´s mail will send
 
 
-          ////If exist send Mail with text
-          ///Your course estarted at   in
-          ///and GMail link with extact adress
-          var mailSubjet = "Your formation almost started  ";
-          var mailHtmlBody = "<b>Formationfinde notify you your coruse in Formation Center in adress almas started " + date + "</b>"
-          var config = {
-            to: Customerdata.email,
-            subject: mailSubjet,
-            html: mailHtmlBody
-          };
-          result = EmailController.send(config);
-          ///If not error when send mail
-          ///0 Ok, 1 Error, 3 all intent
-          resultCostumerUpdate.mailstatus = 0;
-          if (result.response != "OK") {
+       ////If exist send Mail with text
+       ///Your course estarted at   in
+       ///and GMail link with extact adress
+       var mailSubjet = "Your formation almost started  ";
+       var mailHtmlBody = "<b>Formationfinde notify you your coruse in Formation Center in adress almas started " + date + "</b>"
+       var config = {
+       to: Customerdata.email,
+       subject: mailSubjet,
+       html: mailHtmlBody
+       };
+       result = EmailController.send(config);
+       ///If not error when send mail
+       ///0 Ok, 1 Error, 3 all intent
+       resultCostumerUpdate.mailstatus = 0;
+       if (result.response != "OK") {
 
-            resultCostumerUpdate.mailstatus = 1;
-            ///Update all costumer like the started formation´s mail is sended if not error
-          }
-        }
-      }*/
+       resultCostumerUpdate.mailstatus = 1;
+       ///Update all costumer like the started formation´s mail is sended if not error
+       }
+       }
+       }*/
 
     },
-    onComplete: function() {
+    onComplete: function () {
       console.log('I am triggering when job is complete');
     },
     start: true // Start task immediately

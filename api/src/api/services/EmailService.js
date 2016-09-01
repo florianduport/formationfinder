@@ -80,21 +80,22 @@ module.exports  = {
          return res.json({err:"Don´t have smtp server configuration."});
          */
 
+        console.log("Read configuration ", configuration)
 
-         Configuration.create( {
-         name:"mail",
-         type:"smtp",
-         emailsystemadress:"formationfinder@localhost.cu",
-         emailport:"25",
-         emailhost:"127.0.0.1",
-         emailuser:"dionis@localhost.com",
-         emailpassword:"",
-         emailsecure:false
-         }).then(function (err, createConfiguration){
-         configuration = createConfiguration;
-         console.log("Creado el objeto en BD");
-         });
-
+         //Configuration.create( {
+         //name:"mail",
+         //type:"smtp",
+         //emailsystemadress:"formationfinder@localhost.cu",
+         //emailport:"25",
+         //emailhost:"127.0.0.1",
+         //emailuser:"dionis@localhost.com",
+         //emailpassword:"",
+         //emailsecure:false
+         //}).then(function (err, createConfiguration){
+         //configuration = createConfiguration;
+         //console.log("Creado el objeto en BD");
+         //});
+        callback({response:"ERROR", response:"Are not  smtp servers configuration."});
         console.log("Se ejecuto el codigo de error");
       }
 
@@ -102,7 +103,7 @@ module.exports  = {
       if ( !configuration || configuration == "")
          return{response:"Don´t have smtp server configuration."};
       if (configuration.length > 1)
-        return res.json({err:"There are many smtp servers configuration."});
+        callback({response:"ERROR", response:"There are many smtp servers configuration."});
       ///Take first  element in array
       ConfigurationObject = configuration[0];
 
@@ -127,7 +128,7 @@ module.exports  = {
           port: emailportFormation , // The port to connect to
           host: emailhostFormation, // The hostname to connect to
           name: "" , // Options hostname of the client
-          localAddress: emailhostFormation, // Local interface to bind to for network connections
+          localAddress: "", // Local interface to bind to for network connections
           connectionTimeout: 2000, // How many ms to wait for the connection to establish
           greetingTimeout: 2000, // How many ms to wait for the greeting after connection
           socketTimeout: 2000, // How many ms of inactivity to allow
@@ -156,7 +157,17 @@ module.exports  = {
 
         }
       }
+      mailconfig.auth = { // Defines authentication data
+        user: emailuserFormation, // Username
+        pass: emailpassFormation, // Password
 
+      }
+
+      mailconfig.provider.auth = { // Defines authentication data
+        user: emailuserFormation, // Username
+        pass: emailpassFormation, // Password
+
+      }
 
       /*
        if (!emailpass && !emailuser) {

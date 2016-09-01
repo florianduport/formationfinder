@@ -1,0 +1,48 @@
+<form class="login-form" id="createForm" name="createForm">
+    <div class="login-wrap">
+        <p class="login-img"><i class="icon_lock_alt"></i></p>
+        <div class="input-group" data-toggle="tooltip" title="Insert user´s name">
+            <span class="input-group-addon"><i class="icon_profile"></i></span>
+            <input type="text" class="form-control" placeholder="Username"
+                   autofocus
+                   maxlength="40"
+                   ng-model="credentials.username"
+                   ng-pattern="usernameExpReg"
+                   required>
+        </div>
+        <div class="input-group" data-toggle="tooltip" title="Insert password">
+            <span class="input-group-addon"><i class="icon_key_alt"></i></span>
+            <input type="password" class="form-control" placeholder="Password"
+                   maxlength="40"
+                   ng-model="credentials.password"
+                   required>
+        </div>
+        <div class="input-group" data-toggle="tooltip" title="Select a Formation Center">
+            <span class="input-group-addon"><i class="icon_briefcase"></i></span>
+            <input type="text" class="form-control" placeholder="Formation center"
+                   maxlength="40"
+                   ng-model="credentials.formationCenter"
+                   disabled>
+                   <!--uib-typeahead="FCname for FCname in formationCentersNames | filter:$viewValue">-->
+        </div>
+        <div class="form-group">
+            <label class="checkbox-inline">
+                <input class="checkbox"
+                       type="checkbox"
+                       ng-model="credentials.isMainLogin"> Is main login
+            </label>
+            <label class="checkbox-inline">
+                <input class="checkbox"
+                       type="checkbox"
+                       ng-model="credentials.isActivated"> Is Activated
+            </label>
+        </div>
+        <button class="btn btn-primary btn-lg btn-block"
+                type="submit"
+                ng-disabled="createForm.$invalid"
+                ng-click="createLogin()">{{loginButtonText}}
+        </button>
+        <button class="btn btn-info btn-lg btn-block" type="button" ng-click="gotoManage()">Back to Manage
+        </button>
+    </div>
+</form>

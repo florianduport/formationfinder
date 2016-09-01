@@ -437,6 +437,7 @@ module.exports = {
 
           })
 
+          ///Seed all Animator to First Formation Center
           Animator.update({},{formationCenter: formationCenter}).exec(function (err, Animators) {
             if(err){
               console.log("Error Updating Animator.");
@@ -445,6 +446,22 @@ module.exports = {
             console.log("************* Se actualizaron los animators: ", Animators);
           });
 
+          ///Seed all Alert to First Formation Center
+          Alert.find({}).exec(function (err, AlertsAccounts) {
+
+            AlertsAccounts.forEach(function (iAlert, i) {
+
+              Alert.update({id: iAlert.id}, {formationCenter: formationCenter}).exec(function (err, result) {
+
+                if (err) {
+                  callback(err);
+                }
+
+                // console.log("Actualizando BILL ", iBill.id)
+              })
+
+            });
+          });
           callback(null, placeFormationAsociation);
         }
       },

@@ -23,7 +23,7 @@ var app = angular.module("FormationFinder", ["ngResource", "ngRoute", "ngCookies
         $rootScope.relative = true;
         $rootScope.fullwidth = true;
         $rootScope.align = "left";
-        $rootScope.urlBase = "http://137.74.172.230:1337";
+        $rootScope.urlBase = "http://137.74.172.220:1337";
         $rootScope.$on('$routeChangeStart', function (event, next) {
             $rootScope.transparent = $rootScope.relative =  $rootScope.fullwidth = true;
             $rootScope.align = "left";

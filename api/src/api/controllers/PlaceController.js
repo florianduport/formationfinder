@@ -137,7 +137,7 @@ module.exports = {
 
      }*/
 
-    console.log("QUERY: ", query)
+   /// console.log("QUERY: ", query)
     Place.native(function (err, collection) {
       if (err) return res.serverError(err);
       //console.log("---")
@@ -162,7 +162,7 @@ module.exports = {
 
     namePlace = "";
     namePlace = req.param("name");
-    console.log("PARAMETERS", req.param)
+   // console.log("PARAMETERS", req.param)
     if (namePlace == "" || typeof namePlace == "undefined")
       return res.json({response: "ERROR", message: "Place´s name undefined"})
 
@@ -561,12 +561,12 @@ module.exports = {
     query = {};
 
 
-    idnamePlace = req.param("idplace");
-    if (idnamePlace != "" && typeof idnamePlace != "undefined") {
-      query.id = idnamePlace
-    }
+    idnamePlace = req.param("id");
+    if (idnamePlace == "" || typeof idnamePlace == "undefined")
+      return res.json({response: "ERROR", message: "Place´s id undefined"})
     else
-      return res.json({response: "ERROR", message: "Not exist id for delete Place"})
+      query.id = idnamePlace
+
 
     namePlace = "";
     namePlace = req.param("name");
@@ -588,6 +588,7 @@ module.exports = {
         return res.json({response: "ERROR", message: " Not exist place with name " + namePlace})
       }
 
+      console.log("DESTROY " ,query)
       Place.destroy(query).exec(function (err) {
         if (err) {
           return res.json({response: "ERROR", message: " Not delete place"})
@@ -762,7 +763,7 @@ module.exports = {
       query.name = {contains: req.param('name')};
     }
 
-    console.log("QUERY",query )
+   /// console.log("QUERY",query )
     Place.find(query).limit(len).skip(skipv).exec(function (err, resulFormation) {
 
       if (err) {
