@@ -10,22 +10,22 @@ module.exports = {
   searchByFormationCenter: function (req, res) {
 
     if (req.param('formationCenter') === undefined) {
-      return res.json({status: "error", info: "Formation Center Name is required."});
+      return res.json({status: "error", info: sails.__("FORMATION_CENTER_NAME_REQUIRED")});
     }
 
     FormationCenter.findOne({name: req.param('formationCenter')})
       .exec(function (err, FC) {
         if (err) {
-          return res.json({status: "error", info: "An error has ocurred searching formation Center."});
+          return res.json({status: "error", info: sails.__("ERROR_SEARCHING_FORMATION_CENTER")});
         }
 
         if (!FC) {
-          return res.json({status: "error", info: "No Formation Center with that name."});
+          return res.json({status: "error", info: sails.__("FORMATION_CENTER_NO_FOUNDED")});
         }
 
         Login.find({formationCenter: FC.id}).exec(function (err, Logins) {
           if (err) {
-            return res.json({status: "error", info: "An error has ocurred searching Logins."});
+            return res.json({status: "error", info: sails.__("ERROR_SEARCHING_LOGIN")});
           }
           return res.json({status: "ok", data: Logins});
         });
@@ -34,17 +34,17 @@ module.exports = {
 
   searchByID: function (req, res, next) {
     if (req.param('id') === undefined) {
-      return res.json({status: "error", info: "Login id is required."});
+      return res.json({status: "error", info: sails.__("LOGIN_ID_REQUIRED")});
     }
 
     Login.findOne({id: req.param('id')})
       .exec(function (err, LoginFounded) {
         if (err) {
-          return res.json({status: "error", info: "Error searching Login."});
+          return res.json({status: "error", info: sails.__("ERROR_SEARCHING_LOGIN")});
         }
 
         if (!LoginFounded) {
-          return res.json({status: "error", info: "no Login with id."});
+          return res.json({status: "error", info: sails.__("LOGIN_NO_FOUNDED")});
         }
 
         return res.json({status: "ok", data: LoginFounded});
@@ -56,15 +56,15 @@ module.exports = {
 
     //Validate parameters.
     if (req.param('username') === undefined) {
-      return res.json({status: "error", info: "Username is required."});
+      return res.json({status: "error", info: sails.__("USERNAME_REQUIRED")});
     }
 
     if (req.param('password') === undefined) {
-      return res.json({status: "error", info: "Password is required."});
+      return res.json({status: "error", info: sails.__("PASSWORD_REQUIRED")});
     }
 
     if (req.param('formationCenter') === undefined) {
-      return res.json({status: "error", info: "Formation Center Name is required."});
+      return res.json({status: "error", info: sails.__("FORMATION_CENTER_NAME_REQUIRED")});
     }
 
     //Create a temporal login variable.
@@ -77,7 +77,7 @@ module.exports = {
     if (req.param('isMainLogin')) {
       tmpML = req.param('isMainLogin');
       if (tmpML !== true && tmpML !== false) {
-        return res.json({status: "error", info: "Invalid isMainLogin attribute, only true o false options."});
+        return res.json({status: "error", info: sails.__("INVALID_ISMAINLOGIN")});
       }
       else {
         cLogin.isMainLogin = (tmpML === true);
@@ -87,7 +87,7 @@ module.exports = {
     if (req.param('isActivated')) {
       tmpAct = req.param('isActivated');
       if (tmpAct !== true && tmpAct !== false) {
-        return res.json({status: "error", info: "Invalid isActivated attribute, only true o false options."});
+        return res.json({status: "error", info: sails.__("INVALID_ISACTIVATED")});
       }
       else {
         cLogin.isActivated = (tmpAct === true);
@@ -98,7 +98,7 @@ module.exports = {
     FormationCenter.findOne({name: req.param('formationCenter')})
       .exec(function (err, FC) {
         if (err) {
-          return res.json({status: "error", info: "An error has ocurred searching formation Center."});
+          return res.json({status: "error", info: sails.__("ERROR_SEARCHING_FORMATION_CENTER")});
         }
 
         if (FC) {
@@ -111,11 +111,11 @@ module.exports = {
           }).exec(function (err, loginFounded) {
 
             if (err) {
-              return res.json({status: "error", info: "An error has ocurred searching the Login."});
+              return res.json({status: "error", info: sails.__("ERROR_SEARCHING_LOGIN")});
             }
 
             if (loginFounded) {
-              return res.json({status: "error", info: "The username already exist."});
+              return res.json({status: "error", info: sails.__("USERNAME_IN_USE")});
             }
             else {
               //Create the Login.
@@ -123,60 +123,45 @@ module.exports = {
               Login.create(cLogin)
                 .exec(function (err, logincreated) {
                   if (err) {
-                    return res.json({status: "error", info: "An error has ocurred creating the Login."});
+                    return res.json({status: "error", info: sails.__("ERROR_SEARCHING_LOGIN")});
                   }
 
                   if (logincreated) {
-                    return res.json({status: "ok", info: "Login created.", data: logincreated});
+                    return res.json({status: "ok", info: sails.__("LOGIN_CREATED"), data: logincreated});
                   }
 
-                  return res.json({status: "error", info: "An error has ocurred creating the Login."});
+                  return res.json({status: "error", info: sails.__("ERROR_CREATING_CREDENTIAL")});
                 });
             }
 
           });
         }
         else {
-          return res.json({status: "error", info: "No Formation Center with that Name."});
+          return res.json({status: "error", info: sails.__("FORMATION_CENTER_NO_FOUNDED")});
         }
 
       });
-
   },
 
   update: function (req, res) {
     if (req.param('id') === undefined) {
-      return res.json({status: "error", info: "Login id is required."});
+      return res.json({status: "error", info: sails.__("USERNAME_REQUIRED")});
     }
-
-    //if (req.param('formationCenter') === undefined) {
-    //  return res.json({status: "error", info: "Formation Center Name is required."});
-    //}
 
     if (req.param('newCredentials') === undefined) {
-      return res.json({status: "error", info: "newCredentials parameter is required."});
+      return res.json({status: "error", info: sails.__("NEWCREDENTIALS_REQUIRED")});
     }
-
-    //FormationCenter.findOne({name: req.param('formationCenter')})
-    //  .exec(function (err, FC) {
-    //    if (err) {
-    //      return res.json({status: "error", info: "An error has ocurred searching the Formation Center."});
-    //    }
-    //
-    //    if (!FC) {
-    //      return res.json({status: "error", info: "No Formation Center with that name."});
-    //    }
 
         var newCredentials = req.param('newCredentials');
 
         //Validate that the new username doesn´t exist.
         Login.findOne({username: newCredentials.username}).exec(function (err, LoginFounded) {
           if (err) {
-            return res.json({status: "error", info: "Error searching Login."});
+            return res.json({status: "error", info: sails.__("ERROR_SEARCHING_LOGIN")});
           }
 
           if (LoginFounded) {
-            return res.json({status: "error", info: "Error username already exist."});
+            return res.json({status: "error", info: sails.__("USERNAME_IN_USE")});
           }
 
           Login.update({
@@ -185,23 +170,22 @@ module.exports = {
             }, newCredentials)
             .exec(function (err, updated) {
               if (err) {
-                return res.json({status: "error", info: "An error has ocurred updating the Login."});
+                return res.json({status: "error", info: sails.__("ERROR_UPDATING_CREDENTIAL")});
               }
-              return res.json({status: "ok", info: "Login updated."});
+              return res.json({status: "ok", info: sails.__("CREDENTIAL_UPDATED")});
             });
         });
-      //});
   },
 
   check: function (req, res, next) {
 
     //Validate parameters.
     if (req.param('username') === undefined) {
-      return res.json({status: "error", info: "Username is required."});
+      return res.json({status: "error", info: sails.__("USERNAME_REQUIRED")});
     }
 
     if (req.param('password') === undefined) {
-      return res.json({status: "error", info: "Password is required."});
+      return res.json({status: "error", info: sails.__("PASSWORD_REQUIRED")});
     }
 
     Login.findOne({
@@ -212,11 +196,11 @@ module.exports = {
       .exec(function (err, loginFounded) {
 
         if (err) {
-          return res.json({status: "error", info: "An error has ocurred searching Login."});
+          return res.json({status: "error", info: sails.__("ERROR_SEARCHING_LOGIN")});
         }
 
         if (!loginFounded) {
-          return res.json({status: "error", info: "Invalid username/password combination."});
+          return res.json({status: "error", info: sails.__("INVALID_USERNAME_PASSWORD")});
         }
 
         resulToken = LoginService.generateLoginToken(loginFounded.id);
@@ -228,9 +212,9 @@ module.exports = {
            return res.json({status: "ok", data: result});
           }
           else
-            return res.json({status: "error", info: "Error generated at generateLoginToken."});
+            return res.json({status: "error", info: sails.__("GENERATE_LOGIN_TOKEN_ERROR")});
         } else {
-          return res.json({status: "error", info: "Error generated at generateLoginToken."});
+            return res.json({status: "error", info: sails.__("GENERATE_LOGIN_TOKEN_ERROR")});
         }
 
       });
@@ -248,21 +232,21 @@ module.exports = {
   delete: function (req, res) {
 
     if (req.param('username') === undefined) {
-      return res.json({status: "error", info: "Username is required."});
+      return res.json({status: "error", info: sails.__("USERNAME_REQUIRED")});
     }
 
     if (req.param('formationCenter') === undefined) {
-      return res.json({status: "error", info: "Formation Center Name is required."});
+      return res.json({status: "error", info: sails.__("FORMATION_CENTER_NAME_REQUIRED")});
     }
 
     FormationCenter.findOne({name: req.param('formationCenter')})
       .exec(function (err, FC) {
         if (err) {
-          return res.json({status: "error", info: "An error has ocurred searching the Formation Center."});
+          return res.json({status: "error", info: sails.__("ERROR_SEARCHING_FORMATION_CENTER")});
         }
 
         if (!FC) {
-          return res.json({status: "error", info: "No Formation Center with that name."});
+          return res.json({status: "error", info: sails.__("FORMATION_CENTER_NO_FOUNDED")});
         }
 
         Login.findOne({
@@ -271,18 +255,18 @@ module.exports = {
         }).exec(function (err, loginFounded) {
 
           if (err) {
-            return res.json({status: "error", info: "An error has ocurred searching Login."});
+            return res.json({status: "error", info: sails.__("ERROR_SEARCHING_LOGIN")});
           }
 
           if (!loginFounded) {
-            return res.json({status: "error", info: "That username doesn't exist in the formation center provided."});
+            return res.json({status: "error", info: sails.__("LOGIN_NO_FOUNDED")});
           }
 
           Login.destroy({id: loginFounded.id}).exec(function (err) {
             if (err) {
-              return res.json({status: "error", info: "An error has ocurred deleting Login."});
+              return res.json({status: "error", info: sails.__("ERROR_DELETING_CREDENTIAL")});
             }
-            return res.json({status: "ok", info: "Login deleted."});
+            return res.json({status: "ok", info: sails.__("CREDENTIAL_DELETED")});
           });
         });
       });
@@ -292,23 +276,23 @@ module.exports = {
   searchUserNamesByFormationCenter: function (req, res) {
 
     if (req.param('formationCenter') === undefined) {
-      return res.json({status: "error", info: "Formation Center Name is required."});
+      return res.json({status: "error", info: sails.__("FORMATION_CENTER_NAME_REQUIRED")});
     }
 
     FormationCenter.findOne({name: req.param('formationCenter')})
       .exec(function (err, FC) {
         if (err) {
-          return res.json({status: "error", info: "An error has ocurred searching the Formation Center."});
+          return res.json({status: "error", info: sails.__("ERROR_SEARCHING_FORMATION_CENTER")});
         }
 
         if (!FC) {
-          return res.json({status: "error", info: "No Formation Center with that name."});
+          return res.json({status: "error", info: sails.__("FORMATION_CENTER_NO_FOUNDED")});
         }
 
         Login.find({formationCenter: FC.id})
           .exec(function (err, Logins) {
             if (err) {
-              return res.json({status: "error", info: "An error has ocurred searching Login."});
+              return res.json({status: "error", info: sails.__("ERROR_SEARCHING_LOGIN")});
             }
             names = [];
             lgth = Logins.length;
@@ -325,7 +309,7 @@ module.exports = {
   //-------------------------------------------------------------------------------------
   searchByFormationCenterWithPagination: function (req, res, next) {
     if (req.param('formationCenter') === undefined) {
-      return res.json({status: "error", info: "Formation Center Name is required."});
+      return res.json({status: "error", info: sails.__("FORMATION_CENTER_NAME_REQUIRED")});
     }
 
     var page = 0;
@@ -335,7 +319,7 @@ module.exports = {
       if (!isNaN(parseInt(req.param('page')))) {
         page = Math.abs(parseInt(req.param('page')));
       } else {
-        return res.json({err: 'The page parameter is an invalid string number'});
+        return res.json({err: sails.__("INVALID_PAGE_PARAMETER")});
       }
     }
 
@@ -343,18 +327,18 @@ module.exports = {
       if (!isNaN(parseInt(req.param('len')))) {
         len = Math.abs(parseInt(req.param('len')));
       } else {
-        return res.json({err: 'The len parameter is an invalid string number'});
+        return res.json({err: sails.__("INVALID_LEN_PARAMETER")});
       }
     }
 
     FormationCenter.findOne({name: req.param('formationCenter')})
       .exec(function (err, FC) {
         if (err) {
-          return res.json({status: "error", info: "An error has ocurred searching the Formation Center."});
+          return res.json({status: "error", info: sails.__("ERROR_SEARCHING_FORMATION_CENTER")});
         }
 
         if (!FC) {
-          return res.json({status: "error", info: "No Formation Center with that name."});
+          return res.json({status: "error", info: sails.__("FORMATION_CENTER_NO_FOUNDED")});
         }
 
         var query = {
@@ -366,19 +350,19 @@ module.exports = {
 
         Login.find(query).exec(function (err, Logins) {
           if (err) {
-            return res.json({status: "error", info: "Error searching Credentials."});
+            return res.json({status: "error", info: sails.__("ERROR_SEARCHING_LOGIN")});
           }
 
           Login.count({ formationCenter: FC.id }).exec(function (err, LoginsCounted) {
             if (err) {
-              return res.json({status: "error", info: "Error counting Credentials."});
+              return res.json({status: "error", info: sails.__("ERROR_COUNTING_CREDENTIALS")});
             }
 
             return res.json({status: "ok", data: Logins, maxSize: LoginsCounted});
 
           });//Login count.
         });//Login find.
-      })//Formation Center findOne.
+      });//Formation Center findOne.
   }
 };
 

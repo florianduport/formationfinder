@@ -20,7 +20,8 @@ module.exports = [
   birthCity:faker.address.city(),
   reasonOfFormation:faker.lorem.paragraph(),
   civility:"M",
-  number:  faker.random.number()
+  number:  faker.random.number(),
+    emailsend:0
 
 },
 
@@ -36,7 +37,8 @@ module.exports = [
     birthCity:faker.address.city(),
     reasonOfFormation:faker.lorem.paragraph(),
     civility:"M",
-    number:  faker.random.number()
+    number:  faker.random.number(),
+    emailsend:0
 
   },
   {
@@ -51,7 +53,8 @@ module.exports = [
     birthCity:faker.address.city(),
     reasonOfFormation:faker.lorem.paragraph(),
     civility:"M",
-    number:  faker.random.number()
+    number:  faker.random.number(),
+    emailsend:0
 
   },
   {
@@ -66,6 +69,7 @@ module.exports = [
     birthCity:faker.address.city(),
     reasonOfFormation:faker.lorem.paragraph(),
     civility:"M",
-    number:  faker.random.number()
+    number:  faker.random.number(),
+    emailsend:0
   }
 ];

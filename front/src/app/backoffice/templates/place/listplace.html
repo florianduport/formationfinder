@@ -62,7 +62,7 @@
                                                maxlength="40"
                                                placeholder="{{'NAME' | translate}}"
                                                uib-typeahead="iplace.name for iplace in placesData | filter:$viewValue"
-                                               ng-model="seachPlace.name"
+                                               ng-model="seachPlaceAux.name"
                                                ng-pattern="usernameExpReg"
                                                tooltip-placement="top"
                                                tooltip-trigger="'none'"
@@ -86,7 +86,7 @@
                                                       id="basic-addon2"><strong>Address:</strong></span>
                                         <input class="form-control" type="text"
                                                name="address" id="address"
-                                               ng-model="seachPlace.address"
+                                               ng-model="seachPlaceAux.address"
                                                maxlength="100"
                                                placeholder="{{'ADDRESS' | translate}}"
                                                uib-typeahead=" iplace.address for iplace in placesData | filter:$viewValue"
@@ -126,7 +126,7 @@
                                                                    name="agreement"
                                                                    autofocus
                                                                    maxlength="40"
-                                                                   ng-model="seachPlace.agreementName"
+                                                                   ng-model="seachPlaceAux.agreementName"
                                                                    ng-pattern="usernameExpReg"
                                                                    tooltip-placement="top"
                                                                    tooltip-trigger="'none'"
@@ -153,7 +153,7 @@
                                                                 }} (*)</strong></span>
                                                             <input class="form-control" type="text"
                                                                    name="agrementnumber" id="agrementnumber"
-                                                                   ng-model="seachPlace.agreementNumber"
+                                                                   ng-model="seachPlaceAux.agreementNumber"
                                                                    ng-pattern="numExpReg"
                                                                    maxlength="5"
                                                                    placeholder="{{'AGREMENTNUMBER' | translate}}"

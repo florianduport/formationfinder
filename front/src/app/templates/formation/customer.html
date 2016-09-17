@@ -23,11 +23,12 @@
                    class="form-control" 
                    type="text"
                    required />
+            <span style="color:#cc0000" ng-show="customerForm.name.$dirty && customerForm.name.$invalid">
+                <span ng-show="customerForm.name.$error.required">Name is required.</span>
+                <span ng-show="customerForm.name.$error.pattern">Invalid name format. You should provide between 2 and 40 words characters.</span>
+            </span>
         </div>
-        <span style="color:#cc0000" ng-show="customerForm.name.$dirty && customerForm.name.$invalid">
-            <span ng-show="customerForm.name.$error.required">Name is required.</span>
-            <span ng-show="customerForm.name.$error.pattern">Invalid name format. You should provide between 2 and 40 words characters.</span>
-        </span>
+
     </div>
 
     <div class="form-group">
@@ -40,11 +41,12 @@
                    placeholder="Nathan"
                    class="form-control" 
                    type="text" required/>
+
+            <span style="color:#cc0000" ng-show="customerForm.firstName.$dirty && customerForm.firstName.$invalid">
+                <span ng-show="customerForm.firstName.$error.required">First name is required.</span>
+                <span ng-show="customerForm.firstName.$error.pattern">Invalid first name format. You should provide between 2 and 40 words characters.</span>
+            </span>
         </div>
-        <span style="color:#cc0000" ng-show="customerForm.firstName.$dirty && customerForm.firstName.$invalid">
-            <span ng-show="customerForm.firstName.$error.required">First name is required.</span>
-            <span ng-show="customerForm.firstName.$error.pattern">Invalid first name format. You should provide between 2 and 40 words characters.</span>
-        </span>
     </div>
 
     <div class="form-group">
@@ -57,11 +59,11 @@
                    maxlength="10"
                    required
                    ng-pattern="vm.phoneRegExp" />
+            <span style="color:#cc0000" ng-show="customerForm.phoneNumber.$dirty && customerForm.phoneNumber.$invalid">
+                <span ng-show="customerForm.phoneNumber.$error.required">Phone number is required.</span>
+                <span ng-show="customerForm.phoneNumber.$error.pattern">Invalid phone format. You must enter 10 digits starting with '0'.</span>
+            </span>
         </div>
-        <span style="color:#cc0000" ng-show="customerForm.phoneNumber.$dirty && customerForm.phoneNumber.$invalid">
-            <span ng-show="customerForm.phoneNumber.$error.required">Phone number is required.</span>
-            <span ng-show="customerForm.phoneNumber.$error.pattern">Invalid phone format. You must enter 10 digits starting with '0'.</span>
-        </span>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-4 col-md-4" for="email">Email (*)</label>
@@ -73,30 +75,33 @@
                    maxlength="50"
                    class="form-control" 
                    type="text" required />
+            <span style="color:#cc0000" ng-show="customerForm.email.$dirty && customerForm.email.$invalid">
+                <span ng-show="customerForm.email.$error.required">Email is required.</span>
+                <span ng-show="customerForm.email.$error.pattern">Invalid email address.</span>
+            </span>
         </div>
-        <span style="color:#cc0000" ng-show="customerForm.email.$dirty && customerForm.email.$invalid">
-            <span ng-show="customerForm.email.$error.required">Email is required.</span>
-            <span ng-show="customerForm.email.$error.pattern">Invalid email address.</span>
-        </span>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-4 col-md-4" for="birthDate">Birth Date (*)</label>
-        <div class="input-group date col-xs-12 col-sm-6 col-md-6 ident-date">
-            <input name="birthDate" id="birthDate" 
-                   ng-model="vm.customerData.birthDate"
-                   ng-pattern="vm.dateRegExp"
-                   ng-change="vm.verifyBirthDate()"
-                   class="form-control"
-                   type="text"
-                   required
-                   placeholder="{{ ( 'DATE_PLACEHOLDER' | translate) }}"
-                   uib-datepicker-popup="{{vm.format}}"
-                   is-open="vm.popupBirthDate.opened"
-                   datepicker-options="vm.BirthDateOptions"/>
-            <span class="input-group-addon" ><span id="birthDateInit" class="fa fa-calendar" ng-click="vm.openBirthDate()"></span></span>
+        <div class="col-xs-12 col-sm-6 col-md-6">
+            <div class="input-group date ident-date">
+                <input name="birthDate" id="birthDate"
+                       ng-model="vm.customerData.birthDate"
+                       ng-pattern="vm.dateRegExp"
+                       ng-change="vm.verifyBirthDate()"
+                       class="form-control"
+                       type="text"
+                       required
+                       placeholder="{{ ( 'DATE_PLACEHOLDER' | translate) }}"
+                       uib-datepicker-popup="{{vm.format}}"
+                       is-open="vm.popupBirthDate.opened"
+                       datepicker-options="vm.BirthDateOptions"/>
+                <span class="input-group-addon" ><span id="birthDateInit" class="fa fa-calendar" ng-click="vm.openBirthDate()"></span></span>
+            </div>
+
+            <span class="error-message text-danger" ng-show="customerForm.birthDate.$dirty && customerForm.birthDate.$invalid">You should provide a valid date string.</span>
+            <span class="error-message text-danger" ng-show="vm.showBDerror">Invalid birth date, your age is out of range 16-80 years old.</span>
         </div>
-        <span class="error-message text-danger" ng-show="customerForm.birthDate.$dirty && customerForm.birthDate.$invalid">You should provide a valid date string.</span>
-        <span class="error-message text-danger" ng-show="vm.showBDerror">Invalid birth date, your age is out of range 16-80 years old.</span>
     </div>
 
     <div class="form-group">
@@ -107,15 +112,16 @@
                    maxlength="40"
                    ng-pattern="vm.nameRegExp"
                    class="form-control" type="text" />
+
+            <span style="color:#cc0000" ng-show="customerForm.birthCity.$dirty && customerForm.birthCity.$invalid">
+                <span ng-show="customerForm.birthCity.$error.pattern">Invalid city name. You should provide between 2 and 40 words characters.</span>
+            </span>
         </div>
-        <span style="color:#cc0000" ng-show="customerForm.birthCity.$dirty && customerForm.birthCity.$invalid">
-            <span ng-show="customerForm.birthCity.$error.pattern">Invalid city name. You should provide between 2 and 40 words characters.</span>
-        </span>
     </div>
 
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-4 col-md-4" for="address">Address</label>
-        <div class="col-xs-12 col-sm-8 col-md-7">
+        <div class="col-xs-12 col-sm-6 col-md-6">
             <input name="address" id="address" 
                    ng-model="vm.customerData.address" 
                    maxlength="100"
@@ -131,10 +137,11 @@
                    maxlength="40"
                    ng-pattern="vm.nameRegExp"
                    class="form-control" type="text" />
+
+            <span style="color:#cc0000" ng-show="customerForm.city.$dirty && customerForm.city.$invalid">
+                <span ng-show="customerForm.city.$error.pattern">Invalid city name. You should provide between 2 and 40 words characters.</span>
+            </span>
         </div>
-        <span style="color:#cc0000" ng-show="customerForm.city.$dirty && customerForm.city.$invalid">
-            <span ng-show="customerForm.city.$error.pattern">Invalid city name. You should provide between 2 and 40 words characters.</span>
-        </span>
     </div>
 
     <div class="form-group">
@@ -148,11 +155,11 @@
                    placeholder="33216"
                    required
                    type="text" />
+            <span style="color:#cc0000" ng-show="customerForm.zipCode.$dirty && customerForm.zipCode.$invalid">
+                <span ng-show="customerForm.zipCode.$error.required">Zipcode is required.</span>
+                <span ng-show="customerForm.zipCode.$error.pattern">Invalid zipcode format. You must enter 5 digits.</span>
+            </span>
         </div>
-        <span style="color:#cc0000" ng-show="customerForm.zipCode.$dirty && customerForm.zipCode.$invalid">
-            <span ng-show="customerForm.zipCode.$error.required">Zipcode is required.</span>
-            <span ng-show="customerForm.zipCode.$error.pattern">Invalid zipcode format. You must enter 5 digits.</span>
-        </span>
     </div>
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-10">

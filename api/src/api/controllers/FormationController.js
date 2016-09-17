@@ -622,7 +622,7 @@ module.exports = {
 
                   ////Create Customer Alert
 
-                  FormationService.costumerBooked(formationFounded, function (err, resultV) {
+                  FormationService.costumerBooked(formationFounded,customerCreated, function (err, resultV) {
                     //console.log("Create booked Alert")
                     if (err) {
                       console.log("ERROR in created Customer booked Alert", err.message)

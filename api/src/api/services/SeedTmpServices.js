@@ -238,16 +238,23 @@ module.exports = {
         else {
           formationData = placeFormationAsociation.formation[0]
           formationCenter = placeFormationAsociation.formationcenter[0]
-          Customer.update({}, {
-            formationCenter: formationCenter, formation: formationData,
-            emailsend: 0
-          }).exec(function (err, Customers) {
-            if (err)
-              console.log(err)
+          Customer.find().exec(function (err,resultArray){
+            ///---------------------------------------------
+            resultArray.forEach(function (iCustomer, i) {
+              Customer.update({id:iCustomer.id}, {
+                formationCenter: formationCenter, formation: formationData,
+                emailsend: 0
+              }).exec(function (err, Customers) {
+                if (err)
+                  console.log(err)
+                console.log("Three step update Costumer")
 
-            console.log("Three step update Costumer")
+              })
+            })
+              ///---------------------------------------------
             callback(null, placeFormationAsociation);
           })
+
         }
       },
 

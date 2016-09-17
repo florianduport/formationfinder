@@ -149,7 +149,7 @@
                                                    tooltip-is-open="myform.phoneNumber.$dirty && myform.phoneNumber.$invalid"
                                                    placeholder="" name="phoneNumber" type="number"
                                                    ng-pattern="/^\d{1,5}$/"
-                                                   ng-model="initialPrice">
+                                                   ng-model="search.initialPrice">
                                             <span class="input-group-addon"> <span class="fa fa-money "></span></span>
                                         </div>
                                         <!--<span   class="error-message text-danger" ng-show="myform.phoneNumber.$dirty && myform.phoneNumber.$invalid"><p style="text-decoration-color:#f1a417;background: #afd9ee">Price field should be of 5 digits</p></span>-->
@@ -391,10 +391,10 @@
                                             >
                                         <!--<div> {{iplace.name}} </div>-->
                                     </marker>
-
-                                    <!--<custom-marker id="end" position="{{iplace.latitude}}, {{iplace.longitude}}">-->
                                     <!--<div> {{iplace.name}} </div>-->
-                                <!--</custom-marker>-->
+                                    <custom-marker  id="end" position="{{iplace.latitude}}, {{iplace.longitude}}">
+                                    <span  > <span class="badge" style="border-radius: 50%">{{iplace.price}} </span></span>
+                                </custom-marker>
                                 </div>
                             </div>
 

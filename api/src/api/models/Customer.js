@@ -81,7 +81,8 @@ module.exports = {
   	},
 
     emailsend: {
-      type: 'integer'
+      type: 'integer',
+      defaultsTo:0
     },
 
   	customerBills: {

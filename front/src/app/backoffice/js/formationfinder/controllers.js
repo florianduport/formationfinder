@@ -517,45 +517,14 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     return;
                 }
 
-                var confirmation = confirm("You are going to delete this Credential. Continue?");
+                var config = {
+                    messageType: "Confirmation",
+                    message: "You are going to delete this Credential. Continue?",
+                    objectData: iLogin
+                };
 
-                if (confirmation) {
+                $scope.showModalConfirmDelete(config)
 
-                    //como voy a eliminar, si estoy en la ultima pagina y elimino el ultimo
-                    //elemento de esa pagina, reinicio la paginacion, para que no se quede vacia.
-                    $scope.currentPage = 1;
-
-                    $http.post($rootScope.urlBase + "/login/delete", {
-                            username: iLogin.username,
-                            formationCenter: $scope.formationCenter,
-                        })
-                        .success(function (data) {
-                            if (data.status === "ok") {
-
-                                var objeData = {type: "Info"};
-                                $scope.showModalMessage("Credential deleted.", objeData);
-                                //alert('Credential deleted.');
-                                //$scope.initCredentials();
-                            } else {
-
-                                var objeData = {type: "Error"};
-                                $scope.showModalMessage("Error deleting credential: " + data.info, objeData);
-
-                                //alert("Error deleting credential: " + data.info);
-                                //$scope.initCredentials();
-                            }
-                        })
-                        .error(function (err) {
-
-                            var objeData = {type: "Error"};
-                            $scope.showModalMessage("Error deleting credential: " + err, objeData);
-
-                            //alert("Error deleting credential: " + err);
-                        })
-                        .finally(function () {
-                            $scope.searchLogins();
-                        });
-                }
             };
 
             $scope.gotoCreate = function () {
@@ -576,6 +545,75 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.clearCriteria = function () {
                 $scope.criteria = "";
+            };
+
+            $scope.showModalConfirmDelete = function (config) {
+
+                $scope.items.messageType = config.messageType;
+                $scope.items.message = config.message;
+                $scope.items.objectData = config.objectData;
+
+                var modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: 'ModalConfirmMessage.html',
+                    controller: 'ModalConfirmCtrl',
+                    size: "",
+                    resolve: {
+                        items: function () {
+                            return $scope.items;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+
+                    $scope.selected = selectedItem;
+
+                    if (typeof $scope.selected !== undefined && $scope.selected.action == "OK") {
+
+                        //como voy a eliminar, si estoy en la ultima pagina y elimino el ultimo
+                        //elemento de esa pagina, reinicio la paginacion, para que no se quede vacia.
+                        $scope.currentPage = 1;
+
+                        $http.post($rootScope.urlBase + "/login/delete", {
+                                username: $scope.selected.objectData.username,
+                                formationCenter: $scope.formationCenter,
+                            })
+                            .success(function (data) {
+                                if (data.status === "ok") {
+
+                                    var objeData = {type: "Info"};
+                                    $scope.showModalMessage("Credential deleted.", objeData);
+                                    //alert('Credential deleted.');
+                                    //$scope.initCredentials();
+                                } else {
+
+                                    var objeData = {type: "Error"};
+                                    $scope.showModalMessage("Error deleting credential: " + data.info, objeData);
+
+                                    //alert("Error deleting credential: " + data.info);
+                                    //$scope.initCredentials();
+                                }
+                            })
+                            .error(function (err) {
+
+                                var objeData = {type: "Error"};
+                                $scope.showModalMessage("Error deleting credential: " + err, objeData);
+
+                                //alert("Error deleting credential: " + err);
+                            })
+                            .finally(function () {
+                                $scope.searchLogins();
+                            });
+
+                        //return true;
+                    } else {
+                        return false;
+                    }
+
+                }, function () {
+
+                });
             };
 
             $scope.showModalMessage = function (messageshow, objectData) {
@@ -600,7 +638,25 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 }, function () {
                     //Empty promise fault
                 });
-            }
+            };
+        }])
+    .controller('ModalConfirmCtrl', ["$scope", "$uibModalInstance", "items",
+        function ($scope, $uibModalInstance, items) {
+
+            $scope.items = items;
+            $scope.selected = {
+                objectData: $scope.items.objectData
+            };
+
+            $scope.ok = function () {
+                $scope.selected.action = "OK"
+                $uibModalInstance.close($scope.selected);
+            };
+
+            $scope.cancel = function () {
+                $uibModalInstance.dismiss('cancel');
+                //$scope.formationCenterName = ""
+            };
         }])
     .controller("UpdateLogincontroller", ["$scope", "$rootScope", "$routeParams", "$location", "$http", "$uibModal",
         function ($scope, $rootScope, $routeParams, $location, $http, $uibModal) {
@@ -668,43 +724,21 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 }
             };
 
+            var config = {
+                messageType: "Confirmation",
+                message: "You are going to update this Credential. Continue?",
+                objectData: $scope.Login
+            };
+
             $scope.updateLogin = function () {
 
                 if (prepareUpdate()) {
-                    $http.post($rootScope.urlBase + "/login/update", {
-                            id: $routeParams.id,
-                            newCredentials: $scope.Login
-                        })
-                        .success(function (result) {
-                            if (result.status === "ok") {
-
-                                objeData = {type: "Info"};
-                                $scope.showModalMessage("Credential updated.", objeData);
-
-                                //alert("Credential updated.");
-                                $location.path('/login/admin');
-                            } else {
-                                console.log(result.info);
-                                objeData = {type: "Error"};
-                                $scope.showModalMessage("Credential not updated: " + result.info, objeData);
-                                //alert("Credential not updated: " + result.info);
-                            }
-                        })
-                        .error(function (err) {
-                            console.log(err);
-                            objeData = {type: "Error"};
-                            $scope.showModalMessage(err, objeData);
-                        })
-                        .finally(function () {
-                            $scope.searchLogin();
-                        });
+                    $scope.showUpdateConfirmModal();
                 } else {
                     objeData = {type: "Error"};
                     $scope.showModalMessage("Enter valid new parameters, or make some chance.", objeData);
-                    //alert("Enter valid new parameters, or make some chance.");
                     $scope.searchLogin();
                 }
-
 
             };
 
@@ -712,10 +746,69 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 $location.path('/login/admin');
             };
 
+            $scope.showUpdateConfirmModal = function () {
+
+                $scope.items.messageType = "Confirmation";
+                $scope.items.message = "You are going to update this Credential. Continue?";
+                $scope.items.objectData = $scope.Login;
+
+                var modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: 'ModalConfirmMessage.html',
+                    controller: 'ModalConfirmCtrl',
+                    size: "",
+                    resolve: {
+                        items: function () {
+                            return $scope.items;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+
+                    $scope.selected = selectedItem;
+
+                    if (typeof $scope.selected !== undefined && $scope.selected.action == "OK") {
+
+                        $http.post($rootScope.urlBase + "/login/update", {
+                                id: $routeParams.id,
+                                newCredentials: $scope.selected.objectData
+                            })
+                            .success(function (result) {
+                                if (result.status === "ok") {
+
+                                    objeData = {type: "Info"};
+                                    $scope.showModalMessage("Credential updated.", objeData);
+
+                                    //alert("Credential updated.");
+                                    $location.path('/login/admin');
+                                } else {
+                                    console.log(result.info);
+                                    objeData = {type: "Error"};
+                                    $scope.showModalMessage("Credential not updated: " + result.info, objeData);
+                                    //alert("Credential not updated: " + result.info);
+                                }
+                            })
+                            .error(function (err) {
+                                console.log(err);
+                                objeData = {type: "Error"};
+                                $scope.showModalMessage(err, objeData);
+                            })
+                            .finally(function () {
+                                $scope.searchLogin();
+                            });
+                    }
+
+                }, function () {
+                    $scope.searchLogin();
+                });
+
+            };
+
             $scope.showModalMessage = function (messageshow, objectData) {
 
                 $scope.items = objectData;
-                $scope.items.message = messageshow
+                $scope.items.message = messageshow;
 
                 var modalInstance = $uibModal.open({
                     animation: $scope.animationsEnabled,
@@ -735,7 +828,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                 });
 
-            }
+            };
         }])
     .controller("DeleteLogincontroller", ["$scope", "$rootScope", "$location", "$http",
         function ($scope, $rootScope, $location, $http) {
@@ -852,46 +945,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.deleteFormation = function (iFormation) {
 
-                var confirmation = confirm("You are going to delete this Formation. Continue?");
-
-                if (confirmation) {
-
-                    //como voy a eliminar, si estoy en la ultima pagina y elimino el ultimo
-                    //elemento de esa pagina, reinicio la paginacion, para que no se quede vacia.
-                    $scope.currentPage = 1;
-
-                    //var formation = $scope.formations[index];
-
-                    $http.post($rootScope.urlBase + "/formation/deleteByID", {
-                            id: iFormation.id
-                        })
-                        .success(function (result) {
-                            if (result.status === "ok") {
-
-                                $scope.searchFormations();
-
-                                objeData = {type: "Info"};
-                                $scope.showModalMessage("Formation deleted.", objeData);
-
-                                //alert("Formation deleted.");
-                            } else {
-
-                                objeData = {type: "Error"};
-                                $scope.showModalMessage("Error deleting the Formation.", objeData);
-
-                                //alert("An error has ocurred deleting the Formation.");
-                            }
-                        })
-                        .error(function (err) {
-                            console.log("An error has ocurred deleting the Formation.");
-                            console.log(err);
-
-                            objeData = {type: "Error"};
-                            $scope.showModalMessage("Error deleting the Formation.", objeData);
-
-                            //alert("An error has ocurred deleting the Formation.");
-                        });
-                }
+                $scope.showModalConfirmDelete(iFormation);
             };
 
             $scope.gotoCreate = function () {
@@ -904,6 +958,72 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.clearCriteria = function () {
                 $scope.criteria = "";
+            };
+
+            $scope.showModalConfirmDelete = function (iFormation) {
+
+                $scope.items.messageType = "Confirmation";
+                $scope.items.message = "You are going to delete this formation, continue?";
+                $scope.items.objectData = iFormation;
+
+                var modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: 'ModalConfirmMessage.html',
+                    controller: 'ModalConfirmCtrl',
+                    size: "",
+                    resolve: {
+                        items: function () {
+                            return $scope.items;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+
+                    $scope.selected = selectedItem;
+
+                    if (typeof $scope.selected !== undefined && $scope.selected.action == "OK") {
+
+                        //como voy a eliminar, si estoy en la ultima pagina y elimino el ultimo
+                        //elemento de esa pagina, reinicio la paginacion, para que no se quede vacia.
+                        $scope.currentPage = 1;
+
+                        //var formation = $scope.formations[index];
+
+                        $http.post($rootScope.urlBase + "/formation/deleteByID", {
+                                id: $scope.selected.objectData.id
+                            })
+                            .success(function (result) {
+                                if (result.status === "ok") {
+
+                                    $scope.searchFormations();
+
+                                    objeData = {type: "Info"};
+                                    $scope.showModalMessage("Formation deleted.", objeData);
+
+                                    //alert("Formation deleted.");
+                                } else {
+
+                                    objeData = {type: "Error"};
+                                    $scope.showModalMessage("Error deleting the Formation.", objeData);
+
+                                    //alert("An error has ocurred deleting the Formation.");
+                                }
+                            })
+                            .error(function (err) {
+                                console.log("An error has ocurred deleting the Formation.");
+                                console.log(err);
+
+                                objeData = {type: "Error"};
+                                $scope.showModalMessage("Error deleting the Formation.", objeData);
+
+                                //alert("An error has ocurred deleting the Formation.");
+                            });
+                    }
+
+                }, function () {
+
+                });
             };
 
             $scope.showModalMessage = function (messageshow, objectData) {
@@ -1115,7 +1235,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             };
 
             $scope.insert_or_update = function () {
-                if ($scope.index !== null) {
+                if ($scope.indexDate !== null) {
                     $scope.updateDate();
                 } else {
                     $scope.insertDate();
@@ -1123,8 +1243,6 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             };
 
             $scope.updateDate = function () {
-
-                console.log("********** entre a udateDAte ************");
 
                 //Create the Formation Date Object.
                 $scope.fDate.morning = {
@@ -1137,20 +1255,14 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     hourEnd: $scope.AfternoonEndH + ":" + $scope.AfternoonEndM
                 };
 
-                console.log("Fdate tiene: ", $scope.fDate);
-
-                console.log("Arreglo de fechas antes del splice: ", $scope.formation.dates);
-
                 //Replace in the array the element in the index position.
                 $scope.formation.dates.splice($scope.indexDate, 1, {
-                    date: new Date($scope.fDate.date).setHours(0,0,0,0),
+                    date: new Date($scope.fDate.date).setHours(0, 0, 0, 0),
                     morning: {hourStart: $scope.fDate.morning.hourStart, hourEnd: $scope.fDate.morning.hourEnd},
                     afternoon: {
                         hourStart: $scope.fDate.afternoon.hourStart, hourEnd: $scope.fDate.afternoon.hourEnd
                     }
                 });
-
-                console.log("Arreglo de fechas despues del splice: ", $scope.formation.dates);
 
                 //Now check if the new date is the same that other Formation date object
                 //If true, then eliminate that element.
@@ -1158,8 +1270,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 for (var i = 0; i < lgth; i++) {
 
                     //Do not compare with my self.
-                    if (i == $scope.index) {
-                        console.log("entre al if the i == $scope.index: ", i);
+                    if (i == $scope.indexDate) {
+                        console.log("entre al if the i == $scope.indexDate: ", i);
                         continue;
                     }
 
@@ -1169,13 +1281,13 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         break;
                     }
 
-                    console.log("final del ciclo i: ", i);
                 }
+
 
                 $scope.InvalidDateParameters = false;
 
                 $scope.showUpdateDate = false;
-                $scope.index = null;
+                $scope.indexDate = null;
 
                 $scope.formation.dates.sort(compareFormationDates);
 
@@ -1364,7 +1476,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             var newAttributes = null;
 
-            var prepareForUpdate = function () {
+            $scope.prepareForUpdate = function () {
 
                 //Prepare the new Formation attributes for update.
                 newAttributes = {
@@ -1399,39 +1511,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             };
 
             $scope.updateFormation = function () {
-
-                var confirmation = confirm("You are going to update this Formation. Continue?");
-
-                if (confirmation) {
-
-                    prepareForUpdate();
-
-                    $http.post($rootScope.urlBase + "/formation/updateByID", {
-                            id: $routeParams.id,
-                            formationCenter: $rootScope.formationCenter,
-                            formationValues: newAttributes
-                        })
-                        .success(function (result) {
-                            if (result.status === "ok") {
-
-                                objeData = {type: "Info"};
-                                $scope.showModalMessage("Formation updated.", objeData);
-                                //alert("Formation updated.");
-                            } else {
-                                console.log("******* ERROR ********");
-                                console.log(result.info);
-                            }
-
-                        })
-                        .error(function (err) {
-                            console.log("******* ERROR ********");
-                            console.log(err);
-                        })
-                        .finally(function () {
-                            $scope.gotoManage();
-                        });
-                }
-
+                $scope.showUpdateConfirmModal();
             };
 
             $scope.gotoManage = function () {
@@ -1442,6 +1522,73 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 if ($scope.formation.dates[index]) {
                     $scope.formation.dates.splice(index, 1);
                 }
+            };
+
+            $scope.showUpdateConfirmModal = function () {
+
+                $scope.prepareForUpdate();
+
+                $scope.items.messageType = "Confirmation";
+                $scope.items.message = "You are going to update this formation, continue?";
+                $scope.items.objectData = {
+                    formationID: $routeParams.id,
+                    newAttributes: newAttributes
+                };
+
+                var modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: 'ModalConfirmMessage.html',
+                    controller: 'ModalConfirmCtrl',
+                    size: "",
+                    resolve: {
+                        items: function () {
+                            return $scope.items;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+
+                    $scope.selected = selectedItem;
+
+                    if (typeof $scope.selected !== undefined && $scope.selected.action == "OK") {
+
+                        $http.post($rootScope.urlBase + "/formation/updateByID", {
+                                id: $scope.selected.objectData.formationID,
+                                formationCenter: $rootScope.formationCenter,
+                                formationValues: $scope.selected.objectData.newAttributes
+                            })
+                            .success(function (result) {
+                                if (result.status === "ok") {
+
+                                    objeData = {type: "Info"};
+                                    $scope.showModalMessage("Formation updated.", objeData);
+                                    //alert("Formation updated.");
+                                } else {
+                                    console.log("******* ERROR ********");
+                                    console.log(result.info);
+
+                                    objeData = {type: "Error"};
+                                    $scope.showModalMessage(result.info, objeData);
+                                }
+
+                            })
+                            .error(function (err) {
+                                console.log("******* ERROR ********");
+                                console.log(err);
+
+                                objeData = {type: "Error"};
+                                $scope.showModalMessage("Error updating formation", objeData);
+                            })
+                            .finally(function () {
+                                $scope.gotoManage();
+                            });
+                    }
+
+                }, function () {
+                    $scope.searchFormation();
+                });
+
             };
 
             $scope.showModalMessage = function (messageshow, objectData) {
@@ -2100,36 +2247,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.deleteAnimator = function (Aminator) {
 
-                var confirmation = confirm("You are going to delete this Animator. Continue?");
+                $scope.showModalConfirmDelete(Aminator);
 
-                if (confirmation) {
-
-                    //como voy a eliminar, si estoy en la ultima pagina y elimino el ultimo
-                    //elemento de esa pagina, reinicio la paginacion, para que no se quede vacia.
-                    $scope.currentPage = 1;
-
-                    $http.post($rootScope.urlBase + "/animator/deleteByID", {
-                            id: Aminator.id
-                        })
-                        .success(function (result) {
-                            if (result.status === "ok") {
-                                //$scope.animators.splice(index, 1);
-
-                                $scope.searchAnimators();
-
-                                objeData = {type: "Info"};
-                                $scope.showModalMessage("Animator deleted.", objeData);
-
-                                //alert("Animator deleted");
-                                console.log("Animator deleted");
-                            } else {
-                                console.log("Error deleting Animator: ", result.info);
-                            }
-                        })
-                        .error(function (err) {
-                            console.log("Error deleting Animator: ", err);
-                        });
-                }
             };
 
             $scope.editAnimator = function (Aminator) {
@@ -2142,6 +2261,68 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.clearCriteria = function () {
                 $scope.criteria = "";
+            };
+
+            $scope.showModalConfirmDelete = function (Aminator) {
+
+                $scope.items.messageType = "Confirmation";
+                $scope.items.message = "You are going to delete this animator, continue?";
+                $scope.items.objectData = Aminator;
+
+                var modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: 'ModalConfirmMessage.html',
+                    controller: 'ModalConfirmCtrl',
+                    size: "",
+                    resolve: {
+                        items: function () {
+                            return $scope.items;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+
+                    $scope.selected = selectedItem;
+
+                    if (typeof $scope.selected !== undefined && $scope.selected.action == "OK") {
+
+                        //como voy a eliminar, si estoy en la ultima pagina y elimino el ultimo
+                        //elemento de esa pagina, reinicio la paginacion, para que no se quede vacia.
+                        $scope.currentPage = 1;
+
+                        $http.post($rootScope.urlBase + "/animator/deleteByID", {
+                                id: $scope.selected.objectData.id
+                            })
+                            .success(function (result) {
+                                if (result.status === "ok") {
+                                    //$scope.animators.splice(index, 1);
+
+                                    $scope.searchAnimators();
+
+                                    objeData = {type: "Info"};
+                                    $scope.showModalMessage("Animator deleted.", objeData);
+
+                                    //alert("Animator deleted");
+                                    console.log("Animator deleted");
+                                } else {
+                                    console.log("Error deleting Animator: ", result.info);
+
+                                    objeData = {type: "Error"};
+                                    $scope.showModalMessage(result.info, objeData);
+                                }
+                            })
+                            .error(function (err) {
+                                console.log("Error deleting Animator: ", err);
+
+                                objeData = {type: "Error"};
+                                $scope.showModalMessage("Error deleting Animator.", objeData);
+                            });
+                    }
+
+                }, function () {
+
+                });
             };
 
             $scope.showModalMessage = function (messageshow, objectData) {
@@ -2216,45 +2397,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             };
 
             $scope.editAnimator = function () {
-
-                var attributes = {
-                    name: $scope.animator.name,
-                    firstName: $scope.animator.firstName,
-                    type: $scope.animator.type,
-                    city: $scope.animator.city,
-                    zipCode: $scope.animator.zipCode,
-                    formationCenter: $scope.animator.formationCenter
-                };
-
-                $http.post($rootScope.urlBase + "/animator/update", {
-                        id: $scope.animator.id,
-                        attributes: attributes
-                    })
-                    .success(function (result) {
-                        if (result.status === "ok") {
-
-                            objeData = {type: "Info"};
-                            $scope.showModalMessage("Animator updated.", objeData);
-
-                            //alert("Animator updated.");
-                            $location.path("/animator/manage");
-                        } else {
-
-                            objeData = {type: "Error"};
-                            $scope.showModalMessage("Error updating Animator.", objeData);
-
-                            console.log("Error updating Animator.", result.info);
-                            //alert(result.info);
-                        }
-                    })
-                    .error(function (err) {
-                        console.log("Error updating Animator.", err);
-
-                        objeData = {type: "Error"};
-                        $scope.showModalMessage("Error updating Animator.", objeData);
-
-                        //alert("Error updating Animator." + result.info);
-                    });
+                $scope.showModalConfirm();
             };
 
             $scope.gotoManageAminator = function () {
@@ -2269,6 +2412,75 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 $scope.animator.zipCode = null;
 
                 $scope.invalidParameters = true;
+            };
+
+            $scope.showModalConfirm = function () {
+
+                $scope.items.messageType = "Confirmation";
+                $scope.items.message = "You are going to update this animator, continue?";
+                $scope.items.objectData = "";
+
+                var modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: 'ModalConfirmMessage.html',
+                    controller: 'ModalConfirmCtrl',
+                    size: "",
+                    resolve: {
+                        items: function () {
+                            return $scope.items;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+
+                    $scope.selected = selectedItem;
+
+                    if (typeof $scope.selected !== undefined && $scope.selected.action == "OK") {
+
+                        var attributes = {
+                            name: $scope.animator.name,
+                            firstName: $scope.animator.firstName,
+                            type: $scope.animator.type,
+                            city: $scope.animator.city,
+                            zipCode: $scope.animator.zipCode,
+                            formationCenter: $scope.animator.formationCenter
+                        };
+
+                        $http.post($rootScope.urlBase + "/animator/update", {
+                                id: $scope.animator.id,
+                                attributes: attributes
+                            })
+                            .success(function (result) {
+                                if (result.status === "ok") {
+
+                                    objeData = {type: "Info"};
+                                    $scope.showModalMessage("Animator updated.", objeData);
+
+                                    //alert("Animator updated.");
+                                    $location.path("/animator/manage");
+                                } else {
+
+                                    objeData = {type: "Error"};
+                                    $scope.showModalMessage("Error updating Animator.", objeData);
+
+                                    console.log("Error updating Animator.", result.info);
+                                    //alert(result.info);
+                                }
+                            })
+                            .error(function (err) {
+                                console.log("Error updating Animator.", err);
+
+                                objeData = {type: "Error"};
+                                $scope.showModalMessage("Error updating Animator.", objeData);
+
+                                //alert("Error updating Animator." + result.info);
+                            });
+                    }
+
+                }, function () {
+
+                });
             };
 
             $scope.showModalMessage = function (messageshow, objectData) {
@@ -2336,7 +2548,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             } else {
 
                                 objeData = {type: "Error"};
-                                $scope.showModalMessage("Error creating Animator: "+result.info, objeData);
+                                $scope.showModalMessage("Error creating Animator: " + result.info, objeData);
 
                                 //alert("Error creating Animator: " + result.info);
                                 //console.log("Error creating Animator: ", result.info);
@@ -3873,6 +4085,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             console.log("Traduccion")
             $scope.checkboxUnable = true
             $scope.seachPlace = {}
+            $scope.seachPlaceAux = {}
             $scope.formationcenterName = $rootScope.formationCenter
 
             // local configurations
@@ -3889,6 +4102,17 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             $scope.appPlace.smallnumPages = 5
 
             $scope.alerts = [];
+
+            $scope.clearSearchField = function () {
+                $scope.seachPlaceAux.name = null
+                $scope.seachPlaceAux.agreementName = null
+                $scope.seachPlaceAux.agreementName = null
+                $scope.seachPlaceAux.address = null
+                $scope.criteriaList = ""
+
+
+
+            }
 
             $scope.showMessagePlace = function (type, message) {
 
@@ -4031,6 +4255,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 if (typeof $scope.criteriaList == "undefined" || $scope.criteriaList == "")
                     $scope.criteriaList = ""
 
+                $scope.seachPlace = $scope.seachPlaceAux
                 $scope.search.name = $scope.criteriaList;
                 $scope.appPlace.currentPagePlace = 0;
 
@@ -4060,14 +4285,11 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     config.address = $scope.seachPlace.address
                 }
 
-                if (typeof $scope.seachPlace.agrementname != "undefined")
-                    config.agrementname = $scope.seachPlace.agrementname
+                if (typeof $scope.seachPlace.agreementName != "undefined")
+                    config.agrementname = $scope.seachPlace.agreementName
 
-                if (typeof $scope.seachPlace.agrementname != "undefined")
-                    config.agrementname = $scope.seachPlace.agrementname
-
-                if (typeof $scope.seachPlace.agrementnumber != "undefined")
-                    config.agrementnumber = $scope.seachPlace.agrementnumber
+                if (typeof $scope.seachPlace.agreementNumber != "undefined")
+                    config.agrementnumber = $scope.seachPlace.agreementNumber
 
                 if ($scope.search.name != 'undefined') {
                     //console.log("ddddddnnnn"+ !isNaN(parseInt ($scope.search.name )))
@@ -4216,7 +4438,9 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         console.log("Cantidad de objetos --- obtenidos", data_result.length)
                         // $scope.appPlace.currentPagePlace = 0;
                         $scope.places = data_result
+
                         $scope.activatedPlace = []
+                        $scope.clearSearchField()
                         ///Review if clean al parameter
                         return;
                         // console.log("RESULTADOS", data_result)
@@ -5148,6 +5372,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             $scope.dateRegExp = /^\d{2}\/\d{2}\/\d{4}$/;
 
             $scope.search = {};
+            $scope.searchAux = {};
             $scope.open1 = function () {
                 $scope.popup1.opened = true;
             };
@@ -5171,6 +5396,13 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 //    minDate: new Date(),
                 startingDay: 1
             };
+
+            $scope.clearSearchField = function (){
+                $scope.searchAux.name = null
+                $scope.searchAux.initialDate = null
+                $scope.searchAux.endDate = null
+                $scope.criteriaList = ""
+            }
 
             $scope.dateOptionsSearch = {
                 dateDisabled: disabled,
@@ -5476,6 +5708,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         $scope.Alerts = data_result.result
                         console.log("Rsults", $scope.Alerts)
                         $scope.activatedAlert = []
+
+                        $scope.clearSearchField()
                         ///Review if clean al parameter
                         return;
                         // console.log("RESULTADOS", data_result)
@@ -5673,13 +5907,13 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 if (typeof $scope.criteriaList == "undefined" || $scope.criteriaList == "")
                     $scope.criteriaList = ""
 
-                $scope.search.name = $scope.criteriaList;
+                $scope.searchAux.name = $scope.criteriaList;
                 $scope.appAlert.currentPageAlert = 0
 
 
                 // console.log("El valor de la forama ", $scope.myform)
 
-                if ($scope.search.initialDate != "" || typeof $scope.search.endDate != "") {
+                if ($scope.searchAux.initialDate != "" || typeof $scope.searchAux.endDate != "") {
                     //if ($scope.advancedSearchPlace.$invalid) {
                     //
                     //    $scope.errorValid = true
@@ -5697,10 +5931,10 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     //}
 
                     console.log("Hour Init vv " , $scope.timeInit, $scope.timeEnd)
-                    if (($scope.search.initialDate != "" && $scope.search.initialDate != null)&& ( $scope.search.endDate != "" && $scope.search.endDate != null)) {
+                    if (($scope.searchAux.initialDate != "" && $scope.searchAux.initialDate != null)&& ( $scope.searchAux.endDate != "" && $scope.searchAux.endDate != null)) {
 
 
-                        initDateAndTime = $scope.search.initialDate //new Date( $scope.search.initialDate)
+                        initDateAndTime = $scope.searchAux.initialDate //new Date( $scope.search.initialDate)
                         //initTime =
                         console.log("Simple Hour", $scope.timeInit.getHours())
                         console.log("Simple Hour", $scope.timeInit.getUTCHours())
@@ -5710,7 +5944,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                         timestampInit = initDateAndTime.getTime()
 
-                        endDateAndTime =  $scope.search.endDate
+                        endDateAndTime =  $scope.searchAux.endDate
                         endDateAndTime.setUTCHours($scope.timeEnd.getHours())
                         endDateAndTime.setUTCMinutes($scope.timeEnd.getMinutes())
                         endDateAndTime.setUTCSeconds($scope.timeEnd.getSeconds())
@@ -5734,7 +5968,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     }
                 }
 
-
+                $scope.search   = $scope.searchAux
 
                 console.log("Search elements")
                 $scope.countRecordsAlert();

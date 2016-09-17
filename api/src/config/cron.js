@@ -141,25 +141,19 @@ module.exports.cron = {
         UserToSendMails = result;
         console.log("------- Obteniendo datos -----------");
 
-        //console.log(UserToSendMails)
+        console.log(UserToSendMails)
 
         console.log("------- ************* -----------");
+        console.log("------" )
 
         async.series({
-
-
             sendmail: function (callback) {
-
               ///Get all user to send mailed
-
-
               async.forEach(UserToSendMails, function (Customerdata, callback) {
-
                 console.log("Send mail to user")
                 CustomerServices.sendMailToCostumer(Customerdata, function (result) {
                   ///resultCostumerUpdate.push(iResultCostumerUpdate)
                   callback();
-
                 })
 
               }, function (err) {
@@ -170,22 +164,13 @@ module.exports.cron = {
                 callback(null, resultCostumerUpdate);
               });
             }
-            //,
-
-            /*  updatemaileSatatus: function(callback){
-             console.log("----- Actualizando valores de mensajes enviados -----");
-             CustomerServices.updatemailnotify(resultCostumerUpdate);
-             callback(null,"updatemaileSatatus");
-             }*/
           },
           function (err, results) {
-            // results is now equal to: {one: 1, two: 2}
             if (err)
               return next(err);
 
             console.log("**** Ejecucion de la ultima instruccion**** ")
-            //var valResult = {resultFormation }
-            //return valResult
+
           });
 
       })

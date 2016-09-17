@@ -51,5 +51,20 @@
         <button class="btn btn-info btn-lg btn-block" type="button" ng-click="gotoManage()">
             {{'GO_BACK' | translate}}
         </button>
+
+        <script type="text/ng-template" id="ModalConfirmMessage.html">
+            <div class="modal-header">
+                <h3 class="modal-title">{{items.messageType}}</h3>
+            </div>
+            <div class="modal-body">
+                <h4>{{ items.message}}</h4>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="button" ng-click="ok()">{{'ACCEPT' | translate}}</button>
+                <button class="btn btn-warning" type="button" ng-click="cancel()">
+                    {{'CANCEL' | translate}}
+                </button>
+            </div>
+        </script>
     </div>
 </form>

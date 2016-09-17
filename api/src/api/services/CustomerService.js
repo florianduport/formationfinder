@@ -3,14 +3,14 @@
  */
 module.exports = {
 
-  getReadableDate:  function  (dateParmt) {
+  getReadableDate: function (dateParmt) {
     weekDay = ["Sunday", "Monday", "Tuesday", "Wensday", "Thuesday", "Friday", "Saturday"]
     value = new Date(dateParmt);
     resultDate = weekDay[value.getDay()] + ": " + value.getDate() + "/" + value.getMonth() + "/" + value.getFullYear();
 
     return resultDate
 
-   },
+  },
 
   searchbyclosedformation: function (callbackFunction) {
     //localhost:1337/Formationcenter/create?name=Paris"&adress="rue 15"&zipCode=21231&city="Paris"&email="dionis@uo.edu.cu"&phoneNumber="02131231231"
@@ -25,6 +25,8 @@ module.exports = {
 
 
     //
+
+    console.log("Internacionalization ",  sails.__('DEAR'))
     var resultFormation = [];
     var date = new Date();
 
@@ -37,42 +39,49 @@ module.exports = {
     formationsArray = []
     placeFormationArray = []
     console.log("Date to compare ", date)
+
+    sendnotify = 5
     //
-    Formation.find({"dates.date":{"lte":date}}).populate('customers').populate("place").exec(function (err, resultArray) {
-    //  console.log("Formation results ", resultArray.length)
+    Formation.find({"dates.date": {"lte": date}}).populate('customers').populate("place").exec(function (err, resultArray) {
+       console.log("Formation results ", resultArray.length)
       for (iTrForm in resultArray) {
         formation = resultArray[iTrForm]
-       // console.log("Update data customer ", formation)
-        if (typeof formation.customers != "undefined" && formation.customers.length > 0) {
+        // console.log("Update data customer ", formation)
+       if (typeof formation.customers != "undefined" && formation.customers.length > 0) {
           for (iTr in formation.customers) {
 
             iCustomer = formation.customers[iTr]
+            if (iCustomer.emailsend < sendnotify) {
+              //  console.log("Update data customer ", iCustomer)
+              console.log("Copy value to send request")
+              objectResult = {};
+              objectResult.id = iCustomer.id
+              objectResult.formationcenterid = iCustomer.formationCenter
 
-          //  console.log("Update data customer ", iCustomer)
-            objectResult = {};
-            objectResult.id = iCustomer.id
-            objectResult.formationcenterid = iCustomer.formationCenter
-
-            objectResult.costumername = iCustomer.name
-            objectResult.email = iCustomer.email
-            objectResult.date = formation.dates[0].date
-            iPlace = formation.place
-            if (typeof  iPlace != "undefined") {
-              objectResult.placeid = iPlace.place
-              objectResult.place = iPlace;
-              objectResult.placename = iPlace.name
-              objectResult.address = iPlace.address
-              resultFormation.push(objectResult);
+              objectResult.costumername = iCustomer.name
+              objectResult.email = iCustomer.email
+              objectResult.date = formation.dates[0].date
+              iPlace = formation.place
+              if (typeof  iPlace != "undefined") {
+                objectResult.placeid = iPlace.place
+                objectResult.place = iPlace;
+                objectResult.placename = iPlace.name
+                objectResult.address = iPlace.address
+                resultFormation.push(objectResult);
+              }
+              else
+                console.log("Undefined place for formation ", formation.place)
             }
-            else
-             console.log("Undefined place for formation " ,formation.place)
+            else {
+              //console.log("Sended all oportunity " , iCustomer)
+              console.log("Sended all oportunity " , iCustomer.emailsend)
+            }
           }
         }
-      }
+     }
       //console.log("Verify formation for send Mail ", resultFormation.length)
       callbackFunction(resultFormation)
     })
-
 
 
     /*
@@ -170,7 +179,7 @@ module.exports = {
       callback(iResultCostumerUpdate)
     }
     else {
-      Customer.findOne({id: customerData.id }).populate("formationCenter").exec(function (err, resultObject) {
+      Customer.findOne({id: customerData.id}).populate("formationCenter").exec(function (err, resultObject) {
 
         if (err) {
           iResultCostumerUpdate.err = err.message
@@ -182,7 +191,7 @@ module.exports = {
         }
 
         iResultCostumerUpdate.costumerid = customerData.id
-        if (customerData.email ) {
+        if (customerData.email) {
           ///Update all costumer like the started formation´s mail will send
 
 
@@ -195,8 +204,8 @@ module.exports = {
           ///Set systemurladdress in Configuration collection
 
           ///INTERNACIONALIZATION
-          var mailHtmlBody = "<b><h4><a hrf=\""+ sails.config.globals.configsystem.systemurladdress+"\">Formationfinder</a> notify :</h4></b><br />"
-          mailHtmlBody +=  "<b><h3> Formation in address " + customerData.address + " almost started at " + CustomerService.getReadableDate( initDate ) + "</h3></b><br />"
+          var mailHtmlBody = "<b><h4><a hrf=\"" + sails.config.globals.configsystem.systemurladdress + "\">Formationfinder</a> notify :</h4></b><br />"
+          mailHtmlBody += "<b><h3> Formation in address " + customerData.address + " almost started at " + CustomerService.getReadableDate(initDate) + "</h3></b><br />"
           mailHtmlBody += "<b>Formation Center : " + resultObject.formationCenter.name + "</b><br />"
           mailHtmlBody += "<b>Formation Center (phone number): " + resultObject.formationCenter.phoneNumber + "</b><br />"
           mailHtmlBody += "<b>Formation Center (email): " + resultObject.formationCenter.email + "</b><br />"
@@ -210,24 +219,24 @@ module.exports = {
 
           config.costumerid = customerData.id;
 
-         // console.log("REGISTERED MAIL ", config)
+          // console.log("REGISTERED MAIL ", config)
 
           result = EmailService.send(config, function (err, result) {
             ///If not error when send mail
             ///0 Ok, 1 Error, 5 all intent
             iResultCostumerUpdate.mailstatus = 5;
             var emailstatus = 5;
-           // console.log("Mail send answer ", result.response)
+            // console.log("Mail send answer ", result.response)
             if (result.response != "OK") {
-              Customer.update({id: customerData.id }, {emailsend:(resultObject.emailsend+1)}).exec(function (err, resultObject){
-                console.log("Update Customer",resultObject )
+              Customer.update({id: customerData.id}, {emailsend: (resultObject.emailsend + 1)}).exec(function (err, resultObject) {
+                console.log("Update Customer", resultObject)
               })
-             console.log("Not sended customer email registered")
+              console.log("Not sended customer email registered")
             }
-            else{
+            else {
 
-              Customer.update({id: customerData.id }, {emailsend:emailstatus}).exec(function (err, resultObject){
-                console.log("Update Customer",resultObject )
+              Customer.update({id: customerData.id}, {emailsend: emailstatus}).exec(function (err, resultObject) {
+                console.log("Update Customer", resultObject)
               })
               console.log("Sended customer email registered")
             }
@@ -251,9 +260,9 @@ module.exports = {
       callback(iResultCostumerUpdate)
     }
     else {
-      Customer.findOne({id: customerData.id }).populate("formationCenter").populate("formation").exec(function (err, resultObject) {
+      Customer.findOne({id: customerData.id}).populate("formationCenter").populate("formation").exec(function (err, resultObject) {
 
-       if (err) {
+        if (err) {
           iResultCostumerUpdate.err = err.message
           callback(iResultCostumerUpdate, null)
         }
@@ -263,12 +272,11 @@ module.exports = {
         }
 
 
-
         iResultCostumerUpdate.costumerid = customerData.id
-        if (customerData.email ) {
+        if (customerData.email) {
           ///Update all costumer like the started formation´s mail will send
 //Fin place information
-          Place.findOne({id:resultObject.formation.place}).exec( function ( err, resultPlace){
+          Place.findOne({id: resultObject.formation.place}).exec(function (err, resultPlace) {
             if (err) {
               iResultCostumerUpdate.err = err.message
               callback(iResultCostumerUpdate, null)
@@ -288,14 +296,15 @@ module.exports = {
             ///Set systemurladdress in Configuration collection
 
             ///INTERNACIONALIZATION
-            var mailHtmlBody = "<b><h4><a hrf=\""+ sails.config.globals.configsystem.systemurladdress+"\">Formationfinder</a> notify :</h4></b><br />"
-            mailHtmlBody +=  "<b><h3>"+  sails.__('DEAR') +"  " + resultObject.name +  "</h3></b><br />"
-            mailHtmlBody +=  "<b><h3>" + sails.__('MAIL_CUSTOMER_REGISTERED_HEAD') + "</h3></b><br />"
-            mailHtmlBody +=  "<b><h3>" + sails.__('IN_ADRESS') + resultPlace.address +  "</h3></b><br />"
+            var mailHtmlBody = "<b><h4><a hrf=\"" + sails.config.globals.configsystem.systemurladdress + "\">Formationfinder</a> notify :</h4></b><br />"
+            mailHtmlBody += "<b><h3>" + sails.__('DEAR') + "  " + resultObject.name + "</h3></b><br />"
+            mailHtmlBody += "<b><h3>" + sails.__("MAIL_CUSTOMER_REGISTERED_HEAD") + "</h3></b><br />"
+            mailHtmlBody += "<b><h3>" + sails.__('IN_ADRESS') +" " + resultPlace.address + "</h3></b><br />"
             mailHtmlBody += "<b>Formation Center : " + resultObject.formationCenter.name + "</b><br />"
             mailHtmlBody += "<b>Formation Center (phone number): " + resultObject.formationCenter.phoneNumber + "</b><br />"
             mailHtmlBody += "<b>Formation Center (email): " + resultObject.formationCenter.email + "</b><br />"
 
+            console.log("MAIL SENDED ", mailHtmlBody)
             var config = {}
             config = {
               to: resultObject.email,
@@ -312,7 +321,7 @@ module.exports = {
               ///0 Ok, 1 Error, 5 all intent
               iResultCostumerUpdate.mailstatus = 5;
               var emailstatus = 5;
-            //  console.log("Mail send answer ", result.response)
+              //  console.log("Mail send answer ", result.response)
               if (result.response != "OK") {
 
                 iResultCostumerUpdate.message = result.message

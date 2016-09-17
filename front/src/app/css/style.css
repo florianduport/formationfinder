@@ -897,13 +897,29 @@ Parallax
 	
 }
 
-
-input[name="location"] {
+#searchinput {
     height: auto;
-    width: 400px;
-    padding: 19.5px 0px 19.5px 48px;
+
     border: 0px none;
     outline: 0px none;
     box-sizing: border-box;
-    font-size: 20dpx;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 13px 0px;
+    padding: 19.5px 0px 19.5px 48px;
+    transition: background 200ms ease 0s, color 200ms ease 0s;
+    width: 400px;
+}
+/*     width: 400px;
+    padding: 19.5px 0px 19.5px 48px; */
+input[name="location"] {
+    height: auto;
+
+    border: 0px none;
+    outline: 0px none;
+    box-sizing: border-box;
+    font-size: 20px;
+    font-weight: 600;
+    padding: 19.5px 19.5px 19.5px 19.5px;
+    width: 400px;
 }

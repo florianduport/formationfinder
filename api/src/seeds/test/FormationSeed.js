@@ -9,14 +9,14 @@ faker.locale = "fr"
 module.exports = [{
 
   dates: [{
-    date: faker.date.future(),
+    date: faker.date.past([], new Date("12/12/2015")),
     morning: {
       hourStart: "07:00",
       hourEnd: "12:00"
     },
     afternoon: {
-      hourStart: "14:00",
-      hourEnd: "18:00"
+      hourStart: "04:00",
+      hourEnd: "06:00"
     }
   }, {
     date: faker.date.future(),
@@ -25,8 +25,8 @@ module.exports = [{
       hourEnd: "12:00"
     },
     afternoon: {
-      hourStart: "15:00",
-      hourEnd: "18:00"
+      hourStart: "03:00",
+      hourEnd: "06:00"
     }
   }],
 
@@ -41,7 +41,7 @@ module.exports = [{
 
   agreementName:faker.random.words(),
 
-  initdate:faker.date.past()
+  initdate:faker.date.past([], new Date())
 
 
 
@@ -49,24 +49,64 @@ module.exports = [{
 },
   {
     dates: [{
-      date: faker.date.future(),
+      date: faker.date.past([], new Date("12/12/2015")),
       morning: {
         hourStart: "07:00",
         hourEnd: "12:00"
       },
       afternoon: {
-        hourStart: "14:00",
-        hourEnd: "18:00"
+        hourStart: "02:00",
+        hourEnd: "06:00"
       }
     }, {
-      date: faker.date.future(),
+      date: faker.date.past([], new Date("12/12/2015")),
       morning: {
         hourStart: "08:00",
         hourEnd: "12:00"
       },
       afternoon: {
-        hourStart: "15:00",
-        hourEnd: "18:00"
+        hourStart: "02:00",
+        hourEnd: "06:00"
+      }
+    }],
+
+    maxPeople: faker.random.number({max:20, min:5}),
+
+    isConfirmed: faker.random.boolean(),
+
+    isFull: false,
+
+     price:faker.commerce.price(50, 250),
+
+    agreementName:faker.random.words(),
+
+    initdate:faker.date.past([], new Date())
+
+
+
+
+  },
+  {
+
+    dates: [{
+      date: faker.date.past([], new Date("12/12/2015")),
+      morning: {
+        hourStart: "07:00",
+        hourEnd: "12:00"
+      },
+      afternoon: {
+        hourStart: "02:00",
+        hourEnd: "06:00"
+      }
+    }, {
+      date: faker.date.past([], new Date("12/12/2015")),
+      morning: {
+        hourStart: "08:00",
+        hourEnd: "12:00"
+      },
+      afternoon: {
+        hourStart: "02:00",
+        hourEnd: "06:00"
       }
     }],
 
@@ -80,7 +120,7 @@ module.exports = [{
 
     agreementName:faker.random.words(),
 
-    initdate:faker.date.past()
+    initdate:faker.date.past([], new Date()),
 
 
 
@@ -89,64 +129,24 @@ module.exports = [{
   {
 
     dates: [{
-      date: faker.date.future(),
+      date: faker.date.past([], new Date("12/12/2015")),
       morning: {
         hourStart: "07:00",
         hourEnd: "12:00"
       },
       afternoon: {
-        hourStart: "14:00",
-        hourEnd: "18:00"
+        hourStart: "02:00",
+        hourEnd: "06:00"
       }
     }, {
-      date: faker.date.future(),
+      date: faker.date.past([], new Date("12/12/2015")),
       morning: {
         hourStart: "08:00",
         hourEnd: "12:00"
       },
       afternoon: {
-        hourStart: "15:00",
-        hourEnd: "18:00"
-      }
-    }],
-
-    maxPeople: faker.random.number({max:20, min:5}),
-
-    isConfirmed: faker.random.boolean(),
-
-    isFull: false,
-
-    price:faker.commerce.price(50, 250),
-
-    agreementName:faker.random.words(),
-
-    initdate:faker.date.past(),
-
-
-
-
-  },
-  {
-
-    dates: [{
-      date: faker.date.future(),
-      morning: {
-        hourStart: "07:00",
-        hourEnd: "12:00"
-      },
-      afternoon: {
-        hourStart: "14:00",
-        hourEnd: "18:00"
-      }
-    }, {
-      date: faker.date.future(),
-      morning: {
-        hourStart: "08:00",
-        hourEnd: "12:00"
-      },
-      afternoon: {
-        hourStart: "15:00",
-        hourEnd: "18:00"
+        hourStart: "02:00",
+        hourEnd: "06:00"
       }
     }],
 
@@ -160,7 +160,7 @@ module.exports = [{
     price:faker.commerce.price(50, 250),
     agreementName:faker.random.words(),
 
-    initdate:faker.date.past()
+    initdate:faker.date.past([], new Date())
 
 
 
@@ -168,24 +168,63 @@ module.exports = [{
   },
   {
     dates: [{
-      date: faker.date.future(),
+      date: faker.date.past([], new Date("12/12/2015")),
       morning: {
         hourStart: "07:00",
         hourEnd: "12:00"
       },
       afternoon: {
-        hourStart: "14:00",
-        hourEnd: "18:00"
+        hourStart: "02:00",
+        hourEnd: "06:00"
       }
     }, {
-      date: faker.date.future(),
+      date: faker.date.past([], new Date("12/12/2015")),
       morning: {
         hourStart: "08:00",
         hourEnd: "12:00"
       },
       afternoon: {
-        hourStart: "15:00",
-        hourEnd: "18:00"
+        hourStart: "02:00",
+        hourEnd: "06:00"
+      }
+    }],
+    maxPeople: faker.random.number({max:20, min:5}),
+
+    isConfirmed: faker.random.boolean(),
+
+    isFull: false,
+
+    price:faker.commerce.price(50, 250),
+
+    agreementName:faker.random.words(),
+
+    initdate:faker.date.past([], new Date())
+
+
+
+
+  },
+  {
+
+    dates: [{
+      date: faker.date.past([], new Date("12/12/2015")),
+      morning: {
+        hourStart: "07:00",
+        hourEnd: "12:00"
+      },
+      afternoon: {
+        hourStart: "02:00",
+        hourEnd: "06:00"
+      }
+    }, {
+      date: faker.date.past([], new Date("12/12/2015")),
+      morning: {
+        hourStart: "08:00",
+        hourEnd: "12:00"
+      },
+      afternoon: {
+        hourStart: "02:00",
+        hourEnd: "06:00"
       }
     }],
 
@@ -199,7 +238,7 @@ module.exports = [{
 
     agreementName:faker.random.words(),
 
-    initdate:faker.date.past()
+    initdate:faker.date.past([], new Date()),
 
 
 
@@ -208,184 +247,24 @@ module.exports = [{
   {
 
     dates: [{
-      date: faker.date.future(),
+      date: faker.date.past([], new Date("12/12/2015")),
       morning: {
         hourStart: "07:00",
         hourEnd: "12:00"
       },
       afternoon: {
-        hourStart: "14:00",
-        hourEnd: "18:00"
+        hourStart: "02:00",
+        hourEnd: "06:00"
       }
     }, {
-      date: faker.date.future(),
+      date: faker.date.past([], new Date("12/12/2015")),
       morning: {
         hourStart: "08:00",
         hourEnd: "12:00"
       },
       afternoon: {
-        hourStart: "15:00",
-        hourEnd: "18:00"
-      }
-    }],
-
-    maxPeople: faker.random.number({max:20, min:5}),
-
-    isConfirmed: faker.random.boolean(),
-
-    isFull: false,
-
-    price:faker.commerce.price(50, 250),
-
-    agreementName:faker.random.words(),
-
-    initdate:faker.date.past(),
-
-
-
-
-  },
-  {
-
-    dates: [{
-      date: faker.date.future(),
-      morning: {
-        hourStart: "07:00",
-        hourEnd: "12:00"
-      },
-      afternoon: {
-        hourStart: "14:00",
-        hourEnd: "18:00"
-      }
-    }, {
-      date: faker.date.future(),
-      morning: {
-        hourStart: "08:00",
-        hourEnd: "12:00"
-      },
-      afternoon: {
-        hourStart: "15:00",
-        hourEnd: "18:00"
-      }
-    }],
-
-    maxPeople: faker.random.number({max:20, min:5}),
-
-    isConfirmed: faker.random.boolean(),
-
-    isFull:  false,
-//faker.random.boolean(),
-
-    price:faker.commerce.price(50, 250),
-
-    agreementName:faker.random.words(),
-
-    initdate:faker.date.past()
-
-
-
-
-  },
-  {
-    dates: [{
-      date: faker.date.future(),
-      morning: {
-        hourStart: "07:00",
-        hourEnd: "12:00"
-      },
-      afternoon: {
-        hourStart: "14:00",
-        hourEnd: "18:00"
-      }
-    }, {
-      date: faker.date.future(),
-      morning: {
-        hourStart: "08:00",
-        hourEnd: "12:00"
-      },
-      afternoon: {
-        hourStart: "15:00",
-        hourEnd: "18:00"
-      }
-    }],
-
-    maxPeople: faker.random.number({max:20, min:5}),
-
-    isConfirmed: faker.random.boolean(),
-
-    isFull: false,
-
-    price:faker.commerce.price(50, 250),
-
-    agreementName:faker.random.words(),
-
-    initdate:faker.date.past()
-
-
-
-
-  },
-  {
-
-    dates: [{
-      date: faker.date.future(),
-      morning: {
-        hourStart: "07:00",
-        hourEnd: "12:00"
-      },
-      afternoon: {
-        hourStart: "14:00",
-        hourEnd: "18:00"
-      }
-    }, {
-      date: faker.date.future(),
-      morning: {
-        hourStart: "08:00",
-        hourEnd: "12:00"
-      },
-      afternoon: {
-        hourStart: "15:00",
-        hourEnd: "18:00"
-      }
-    }],
-
-    maxPeople: faker.random.number({max:20, min:5}),
-
-    isConfirmed: faker.random.boolean(),
-
-    isFull: false,
-
-    price:faker.commerce.price(50, 250),
-
-    agreementName:faker.random.words(),
-
-    initdate:faker.date.past(),
-
-
-
-
-  },
-  {
-
-    dates: [{
-      date: faker.date.future(),
-      morning: {
-        hourStart: "07:00",
-        hourEnd: "12:00"
-      },
-      afternoon: {
-        hourStart: "14:00",
-        hourEnd: "18:00"
-      }
-    }, {
-      date: faker.date.future(),
-      morning: {
-        hourStart: "08:00",
-        hourEnd: "12:00"
-      },
-      afternoon: {
-        hourStart: "15:00",
-        hourEnd: "18:00"
+        hourStart: "02:00",
+        hourEnd: "06:00"
       }
     }],
 
@@ -400,7 +279,7 @@ module.exports = [{
 
     agreementName:faker.random.words(),
 
-    initdate:faker.date.past()
+    initdate:faker.date.past([], new Date())
 
 
 
@@ -408,24 +287,63 @@ module.exports = [{
   },
   {
     dates: [{
-      date: faker.date.future(),
+      date: faker.date.past([], new Date("12/12/2015")),
       morning: {
         hourStart: "07:00",
         hourEnd: "12:00"
       },
       afternoon: {
-        hourStart: "14:00",
-        hourEnd: "18:00"
+        hourStart: "02:00",
+        hourEnd: "06:00"
       }
     }, {
-      date: faker.date.future(),
+      date: faker.date.past([], new Date("12/12/2015")),
       morning: {
         hourStart: "08:00",
         hourEnd: "12:00"
       },
       afternoon: {
-        hourStart: "15:00",
-        hourEnd: "18:00"
+        hourStart: "02:00",
+        hourEnd: "06:00"
+      }
+    }],
+    maxPeople: faker.random.number({max:20, min:5}),
+
+    isConfirmed: faker.random.boolean(),
+
+    isFull: false,
+
+    price:faker.commerce.price(50, 250),
+
+    agreementName:faker.random.words(),
+
+    initdate:faker.date.past([], new Date())
+
+
+
+
+  },
+  {
+
+    dates: [{
+      date: faker.date.past([], new Date("12/12/2015")),
+      morning: {
+        hourStart: "07:00",
+        hourEnd: "12:00"
+      },
+      afternoon: {
+        hourStart: "02:00",
+        hourEnd: "06:00"
+      }
+    }, {
+      date: faker.date.past([], new Date("12/12/2015")),
+      morning: {
+        hourStart: "08:00",
+        hourEnd: "12:00"
+      },
+      afternoon: {
+        hourStart: "02:00",
+        hourEnd: "06:00"
       }
     }],
 
@@ -439,7 +357,7 @@ module.exports = [{
 
     agreementName:faker.random.words(),
 
-    initdate:faker.date.past()
+    initdate:faker.date.past([], new Date()),
 
 
 
@@ -448,24 +366,64 @@ module.exports = [{
   {
 
     dates: [{
-      date: faker.date.future(),
+      date: faker.date.past([], new Date("12/12/2015")),
       morning: {
         hourStart: "07:00",
         hourEnd: "12:00"
       },
       afternoon: {
-        hourStart: "14:00",
-        hourEnd: "18:00"
+        hourStart: "02:00",
+        hourEnd: "06:00"
       }
     }, {
-      date: faker.date.future(),
+      date: faker.date.past([], new Date("12/12/2015")),
       morning: {
         hourStart: "08:00",
         hourEnd: "12:00"
       },
       afternoon: {
-        hourStart: "15:00",
-        hourEnd: "18:00"
+        hourStart: "02:00",
+        hourEnd: "06:00"
+      }
+    }],
+
+    maxPeople: faker.random.number({max:20, min:5}),
+
+    isConfirmed: faker.random.boolean(),
+
+    isFull:  false,
+//faker.random.boolean(),
+
+    price:faker.commerce.price(50, 250),
+
+    agreementName:faker.random.words(),
+
+    initdate:faker.date.past([], new Date())
+
+
+
+
+  },
+  {
+    dates: [{
+      date: faker.date.past([], new Date("12/12/2015")),
+      morning: {
+        hourStart: "07:00",
+        hourEnd: "12:00"
+      },
+      afternoon: {
+        hourStart: "02:00",
+        hourEnd: "06:00"
+      }
+    }, {
+      date: faker.date.past([], new Date("12/12/2015")),
+      morning: {
+        hourStart: "08:00",
+        hourEnd: "12:00"
+      },
+      afternoon: {
+        hourStart: "02:00",
+        hourEnd: "06:00"
       }
     }],
 
@@ -479,7 +437,47 @@ module.exports = [{
 
     agreementName:faker.random.words(),
 
-    initdate:faker.date.past(),
+    initdate:faker.date.past([], new Date())
+
+
+
+
+  },
+  {
+
+    dates: [{
+      date: faker.date.past([], new Date("12/12/2015")),
+      morning: {
+        hourStart: "07:00",
+        hourEnd: "12:00"
+      },
+      afternoon: {
+        hourStart: "02:00",
+        hourEnd: "06:00"
+      }
+    }, {
+      date: faker.date.past([], new Date("12/12/2015")),
+      morning: {
+        hourStart: "08:00",
+        hourEnd: "12:00"
+      },
+      afternoon: {
+        hourStart: "02:00",
+        hourEnd: "06:00"
+      }
+    }],
+
+    maxPeople: faker.random.number({max:20, min:5}),
+
+    isConfirmed: faker.random.boolean(),
+
+    isFull: false,
+
+    price:faker.commerce.price(50, 250),
+
+    agreementName:faker.random.words(),
+
+    initdate:faker.date.past([], new Date()),
 
 
 

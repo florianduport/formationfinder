@@ -382,6 +382,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
             $scope.map = false;
             $scope.searchResullt = null;
             $scope.search = {};
+            $scope.searchServices = {};
             $scope.search.name = $routeParams.criteria;
             $scope.app = {}
             $scope.app.currentPage = 0;
@@ -420,7 +421,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
 
                 console.log("El valor de la forama ", $scope.myform)
 
-                if ($scope.search.initialDate != "" || typeof $scope.search.endDate != "" || $scope.initialPrice != "") {
+                if ($scope.search.initialDate != "" || typeof $scope.search.endDate != "" || $scope.search.initialPrice != "") {
                     if (!$scope.myform.$valid) {
 
                         $scope.errorValid = true
@@ -451,6 +452,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
 
                 }
 
+                $scope.copyValues();
 
                 $scope.countRecords();
                 $scope.getPagableRecords();
@@ -476,8 +478,10 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.countRecords = function () {
                 config = {}
-                if (typeof $scope.search.initialDate != "undefined") {
-                    /*  if ( !Date.isDate($scope.search.initialDate)) {
+
+                console.log("Count Data ----")
+                if (typeof  $scope.searchServices.initialDate != "undefined") {
+                    /*  if ( !Date.isDate( $scope.searchServices.initialDate)) {
                      $scope.errorValid = true ;
                      /// alert(data_result.err );
                      // $location.path("/");
@@ -489,12 +493,12 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                      });
                      return;
                      }*/
-                    config.initialDate = $scope.search.initialDate
+                    config.initialDate =  $scope.searchServices.initialDate
 
                 }
 
-                if (typeof $scope.search.endDate != "undefined") {
-                    /* if ( !_.isDate($scope.search.endDate)) {
+                if (typeof  $scope.searchServices.endDate != "undefined") {
+                    /* if ( !_.isDate( $scope.searchServices.endDate)) {
                      $scope.errorValid = true ;
                      /// alert(data_result.err );
                      // $location.path("/");
@@ -506,22 +510,23 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                      });
                      return;
                      }*/
-                    config.finalDate = $scope.search.endDate
+                    config.finalDate =  $scope.searchServices.endDate
 
                 }
 
+                console.log("Count Data")
 
                 ///Date validate and if initialDate is more than that end date not search
 
                 ///Price validate an if not a number or number < 0 not search
-                if (typeof $scope.initialPrice != "undefined")
-                    config.price = $scope.initialPrice
+                if (typeof $scope.searchServices.initialPrice != "undefined")
+                    config.price = $scope.searchServices.initialPrice
 
-                if ($scope.search.name != 'undefined') {
-                    //console.log("ddddddnnnn"+ !isNaN(parseInt ($scope.search.name )))
-                    if (!isNaN(parseInt($scope.search.name))) {
+                if ( $scope.searchServices.name != 'undefined') {
+                    //console.log("ddddddnnnn"+ !isNaN(parseInt ( $scope.searchServices.name )))
+                    if (!isNaN(parseInt( $scope.searchServices.name))) {
                         //countbyzipcode
-                        config.zipcode = $scope.search.name
+                        config.zipcode =  $scope.searchServices.name
                         console.log("Call services ", config)
                         $http.post($rootScope.urlBase + "/Formation/countByZipcodeMongoEx", config)
                             .success(function (data_result) {
@@ -545,15 +550,16 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                 }
 
 
-                if ($scope.search.name == "undefined")
-                    $scope.search.name = ""
+                if ( typeof $scope.searchServices.name == "undefined")
+                     $scope.searchServices.name = ""
 
-                config.city = $scope.search.name
+                config.city =  $scope.searchServices.name
                 //countbycity
                 console.log("Call services ", config)
                 $http.post($rootScope.urlBase + '/Formation/countByCityMongoEx', config)
                     .success(function (data_result) {
                         if (data_result.res != "OK") {
+                            console.log("ERROR",data_result );
                             $scope.app.totalItems = 0;
                             return;
                         }
@@ -565,7 +571,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                     .error(function (error) {
                         //@action mostrar error
                         $scope.errorMessage = error
-                        console.log(error);
+                        console.log("BAD",error);
                         return
                     })
 
@@ -589,7 +595,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.getReadableDate = function (dateParmt) {
                 value = new Date(dateParmt);
-                resultDate = $scope.weekDay[value.getDay()] + ": " + value.getDate() + "/" + value.getMonth() + "/" + value.getFullYear();
+                resultDate = $scope.weekDay[value.getDay()] + ": " + value.getDate() + "/" + (value.getMonth()+1) + "/" + value.getFullYear();
 
                 return resultDate
 
@@ -623,8 +629,8 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                     len: $scope.app.itemPerPage
                 }
 
-                if (typeof $scope.search.initialDate != "undefined" || $scope.search.initialDate == "") {
-                    /*                    if ( !_.isDate($scope.search.initialDate)) {
+                if (typeof  $scope.searchServices.initialDate != "undefined" ||  $scope.searchServices.initialDate == "") {
+                    /*                    if ( !_.isDate( $scope.searchServices.initialDate)) {
                      $scope.errorValid = true ;
                      /// alert(data_result.err );
                      // $location.path("/");
@@ -636,12 +642,13 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                      });
                      return;
                      }*/
-                    config.initialDate = $scope.search.initialDate
+                    config.initialDate =  $scope.searchServices.initialDate
 
                 }
 
-                if (typeof $scope.search.endDate != "undefined" || $scope.search.endDate == "") {
-                    /*if ( !Date.isDate($scope.search.endDate)) {
+                if (typeof  $scope.searchServices.endDate != "undefined" ||  $scope.searchServices.endDate == "") {
+
+                    /*if ( !Date.isDate( $scope.searchServices.endDate)) {
                      $scope.errorValid = true ;
                      /// alert(data_result.err );
                      // $location.path("/");
@@ -653,7 +660,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                      });
                      return;
                      }*/
-                    config.finalDate = $scope.search.endDate
+                    config.finalDate =  $scope.searchServices.endDate
 
                 }
 
@@ -661,18 +668,18 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                 ///Date validate and if initialDate is more than that end date not search
 
                 ///Price validate an if not a number or number < 0 not search
-                if (typeof $scope.initialPrice != "undefined")
-                    config.price = $scope.initialPrice
+                if (typeof $scope.searchServices.initialPrice != "undefined")
+                    config.price = $scope.searchServices.initialPrice
 
-                //console.log("Pagination " ,pageData )
-
-                if ($scope.search.name != undefined) {
-                    //console.log("ddddddnnnn"+ !isNaN(parseInt ($scope.search.name )))
-                    if (!isNaN(parseInt($scope.search.name))) {
+                console.log("Pagination " , $scope.search )
+                console.log("Pagination " , $scope.searchServices )
+                if ( $scope.searchServices.name != undefined) {
+                    //console.log("ddddddnnnn"+ !isNaN(parseInt ( $scope.searchServices.name )))
+                    if (!isNaN(parseInt( $scope.searchServices.name))) {
                         console.log("Es un numero")
                         ///Validar si es un numero postal angular.isNumber(value)
 
-                        config.zipcode = $scope.search.name
+                        config.zipcode =  $scope.searchServices.name
 
                         //searchbyzipcode
 
@@ -715,10 +722,13 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                                     iFormationcenter.name = iFormationcenter.formationCenter.name;
                                     iFormationcenter.city = iFormationcenter.place.city;
                                     iFormationcenter.address = iFormationcenter.place.address;
+                                    iFormationcenter.place.price = iFormationcenter.price;
                                     iFormationcenter.datetime = new Date(iFormationcenter.dates[0].date).getTime()
                                     console.log("Valor ", iFormationcenter.datetime)
                                     $scope.formations.push(iFormationcenter)
                                 })
+
+                                $scope.clearSearchField ();
 
                                 // console.log("RESULTADOS", data_result)
                             })
@@ -741,7 +751,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                     else {
                         ///Validar si es un numero postal angular.isNumber(value)
 
-                        config.city = $scope.search.name
+                        config.city =  $scope.searchServices.name
                         // searchbycity
 
                         console.log("Call services", config)
@@ -782,7 +792,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
 
                                 }
                                 // console.log("Resultados", data_result[0].formation.formationCenter)
-                                console.log("RESULTADOS", data_result)
+                                console.log("RESULTADOS nn", data_result)
 
                                 data_result.forEach(function (iFormationcenter, ivalue) {
 
@@ -790,6 +800,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                                     iFormationcenter.name = iFormationcenter.formationCenter.name;
                                     iFormationcenter.city = iFormationcenter.place.city;
                                     iFormationcenter.address = iFormationcenter.place.address;
+                                    iFormationcenter.place.price = iFormationcenter.price;
                                     iFormationcenter.datetime = new Date(iFormationcenter.dates[0].date).getTime()
                                     console.log("Valor ", iFormationcenter.datetime)
                                     $scope.formations.push(iFormationcenter)
@@ -799,10 +810,13 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                                     //console.log("Valor ",iFormation)
 
                                 })
-
+                               // console.log("RESULTADOS formations", $scope.formations)
+                                $scope.clearSearchField();
                                 $scope.showmap = true
-                                $scope.showMap(null)
-                                // console.log("RESULTADOS", data_result)
+                               $scope.showMap(null)
+                                //console.log("RESULTADOS formations", $scope.formations)
+
+
                             })
                             .error(function (error) {
                                 //@action mostrar error
@@ -863,19 +877,22 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                                 }
                             }
 
-                            console.log("RESULTADOS", data_result)
+                            console.log("RESULTADOS nn", data_result)
                             data_result.forEach(function (iFormationcenter, ivalue) {
 
 
                                 iFormationcenter.name = iFormationcenter.formationCenter.name;
                                 iFormationcenter.city = iFormationcenter.place.city;
                                 iFormationcenter.address = iFormationcenter.place.address;
+                                iFormationcenter.place.price = iFormationcenter.price;
                                 iFormationcenter.datetime = new Date(iFormationcenter.dates[0].date).getTime()
                                 console.log("Valor ", iFormationcenter.datetime)
                                 $scope.formations.push(iFormationcenter)
                             })
                             $scope.showmap = true
+                           // console.log("INSERTED DATA", $scope.formations)
                             $scope.showMap(null)
+
 
 
                         })
@@ -909,7 +926,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
 
                 /* if (formationToReserve == "") {
                  // @action mensaje de  error
-                 $scope.searchResullt = null;
+                  $scope.searchServicesResullt = null;
                  return;
                  }*/
 
@@ -920,12 +937,12 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
 //-------------------------------------------------------------------------------------------------------------------
             //Checkbox controler use with button
             $scope.checkAll = function () {
-                $scope.search.formation = $scope.formations.map(function (item) {
+                $scope.searchServices.formation = $scope.formations.map(function (item) {
                     return item.name;
                 });
             };
             $scope.uncheckAll = function () {
-                $scope.search.formation = [];
+                 $scope.searchServices.formation = [];
             };
             /*
 
@@ -939,42 +956,62 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                 $scope.alerts.push({type: type, msg: message});
             }
 
+            $scope.copyValues = function(){
+                $scope.searchServices.name =  $scope.search.name;
+                $scope.searchServices.initialDate  =  $scope.search.initialDate;
+                $scope.searchServices.endDate  =  $scope.search.endDate;
+                $scope.searchServices.initialPrice  = $scope.search.initialPrice;
 
-            $scope.search = {formation: []}
+            }
+
+
+            $scope.clearSearchField = function () {
+                $scope.search.name = null;
+                $scope.search.initialDate = null
+                $scope.search.endDate = null;
+                $scope.search.initialPrice = null;
+                $scope.criteriaList = "";
+            }
+             $scope.searchServices = {formation: []}
+            //$scope.searchServices = {formation: []}
             // functions
             $scope.showMap = function ($event) {
 
 
                 console.log(domElement + $scope.showmap);
                 var domElement = document.getElementById('menu-item');
-                console.log(domElement + $scope.showmap, $scope.search.formation.length);
-                console.log("ddd", $scope.search.formation.length);
+                console.log(domElement + $scope.showmap, $scope.formations.length );
+                console.log("ddd", $scope.formations.length);
                 unicdata = []
-                if ($scope.search.formation.length > 0) {
-                    for (iName in $scope.search.formation) {
-                        console.log("Selecionado la formacion ", $scope.search.formation[iName].city)
-                        cityName = $scope.search.formation[iName].city
-                        unicdata.push($scope.search.formation[iName].city)
-                        /*    unicdata = $scope.search.formation.filter( function ( item) {
+                places = []
+                if ( $scope.formations.length > 0) {
+                    console.log("Values")
+                    $scope.formations.forEach( function (iFormation, ivalue){
+                        console.log("Selecionado la formacion 1",  iFormation.place)
+                        cityName =  iFormation.city
+                        unicdata.push(  iFormation.city)
+                        places.push(iFormation.place)
+                        /*    unicdata =  $scope.searchServices.formation.filter( function ( item) {
                          return item != cityName
                          })*/
 
-                    }
+                    })
                 }
                 else {
                     ////Search by all object Formation in Window
                     for (iName in  $scope.formations) {
-                        console.log("Selecionado la formacion ", $scope.formations[iName].city)
+                        console.log("Selecionado la formacion 2", $scope.formations[iName].place.price)
                         cityName = $scope.formations[iName].city
                         unicdata.push($scope.formations[iName].city)
-                        /*    unicdata = $scope.search.formation.filter( function ( item) {
+                        places.push($scope.formations[iName].place)
+                        /*    unicdata =  $scope.searchServices.formation.filter( function ( item) {
                          return item != cityName
                          })*/
 
                     }
                 }
                 console.log("Places to search", unicdata)
-
+                console.log("Places to search", places)
                 if (unicdata.length == 0) {
                     ///Show inicial points
                     console.log("INSERTANDO ALERTA")
@@ -986,47 +1023,48 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                     places: unicdata
                 }
 
-
+                $scope.formationcenters = [{places: []}]
+                $scope.formationcenters[0].places = places
                 ///Search al city with name in array an return places
                 ///if no place return empty and not  show anything
-                $http.post($rootScope.urlBase + "/Place/searchByCities", config)
-                    .success(function (data_result) {
-                        if (data_result.length == 0) {
-                            ///Mostrar mensaje en ventana modal de que no existe centros de formacion
-                            ///regresar a la pagina inicial
-                            $scope.errorValid = true;
-                            /// alert(data_result.err );
-                            // $location.path("/");
-                            console.log("INSERTANDO ALERTA")
-                            message = "Sorry, can´t get places results"
-                            $scope.showMessage('danger', message);
-                            return;
-                        }
-
-
-                        formationcenters = [{places: []}]
-
-                        formationcenters[0].places = data_result;
-
-                        console.log("Places to search", formationcenters)
-                        ///Show new positions
-                        $scope.toggleDropdownTrue($event, formationcenters);
-                        ///Clear chexk box
-                        $scope.search.formation = []
-                        //console.log("RESULTADOS", data_result)
-
-
-                    })
-                    .error(function (error) {
-                        //@action mostrar error
-                        $scope.errorMessage = error
-                        console.log(error);
-
-                        console.log("INSERTANDO ALERTA")
-                        message = "Sorry, can´t get places results"
-                        $scope.showMessage('danger', message);
-                        return
-                    })
+                //$http.post($rootScope.urlBase + "/Place/searchByCities", config)
+                //    .success(function (data_result) {
+                //        if (data_result.length == 0) {
+                //            ///Mostrar mensaje en ventana modal de que no existe centros de formacion
+                //            ///regresar a la pagina inicial
+                //            $scope.errorValid = true;
+                //            /// alert(data_result.err );
+                //            // $location.path("/");
+                //            console.log("INSERTANDO ALERTA")
+                //            message = "Sorry, can´t get places results"
+                //            $scope.showMessage('danger', message);
+                //            return;
+                //        }
+                //
+                //
+                //        formationcenters = [{places: []}]
+                //
+                //        formationcenters[0].places = data_result;
+                //
+                //        console.log("Places to search", formationcenters)
+                //        ///Show new positions
+                //        $scope.toggleDropdownTrue($event, formationcenters);
+                //        ///Clear chexk box
+                //         $scope.searchServices.formation = []
+                //        //console.log("RESULTADOS", data_result)
+                //
+                //
+                //    })
+                //    .error(function (error) {
+                //        //@action mostrar error
+                //        $scope.errorMessage = error
+                //        console.log(error);
+                //
+                //        console.log("INSERTANDO ALERTA")
+                //        message = "Sorry, can´t get places results"
+                //        $scope.showMessage('danger', message);
+                //        return
+                //    })
 
                 /// Only unic name
 
@@ -1218,28 +1256,28 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
             ///Find formationcenter by position
 
 
-            $http.post($rootScope.urlBase + "/formationcenter/searchallformationcenters")
-                .success(function (data_result) {
-                    if (data_result.err) {
-                        ///Mostrar mensaje en ventana modal de que no existe centros de formacion
-                        ///regresar a la pagina inicial
-                        $scope.errorMessage = data_result.err;
-                        alert(data_result.err);
-                        // $location.path("/");
-                        return;
-                    }
-
-                    $scope.formationcenters = data_result;
-                    console.log("formationcenters ", $scope.formationcenters)
-                    console.log("Se obtienen resultados")
-                    //$location.path("/search/" + $scope.criteria);
-                })
-                .error(function (error) {
-                    //@action mostrar error
-                    $scope.errorMessage = error
-                    console.log(error);
-                })
-            ;
+            //$http.post($rootScope.urlBase + "/formationcenter/searchallformationcenters")
+            //    .success(function (data_result) {
+            //        if (data_result.err) {
+            //            ///Mostrar mensaje en ventana modal de que no existe centros de formacion
+            //            ///regresar a la pagina inicial
+            //            $scope.errorMessage = data_result.err;
+            //            alert(data_result.err);
+            //            // $location.path("/");
+            //            return;
+            //        }
+            //
+            //        $scope.formationcenters = data_result;
+            //        console.log("formationcenters ", $scope.formationcenters)
+            //        console.log("Se obtienen resultados")
+            //        //$location.path("/search/" + $scope.criteria);
+            //    })
+            //    .error(function (error) {
+            //        //@action mostrar error
+            //        $scope.errorMessage = error
+            //        console.log(error);
+            //    })
+            //;
 
             console.log("Buscando")
             vm.click = function (event) {
@@ -1491,28 +1529,28 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
         ///Find formationcenter by position
 
 
-        $http.post($rootScope.urlBase + "/formationcenter/searchallformationcenters")
-            .success(function (data_result) {
-                if (data_result.err) {
-                    ///Mostrar mensaje en ventana modal de que no existe centros de formacion
-                    ///regresar a la pagina inicial
-                    $scope.errorMessage = data_result.err;
-                    alert(data_result.err);
-                    // $location.path("/");
-                    return;
-                }
-
-                $scope.formationcenters = data_result;
-                console.log("formationcenters ", $scope.formationcenters)
-                console.log("Se obtienen resultados")
-                //$location.path("/search/" + $scope.criteria);
-            })
-            .error(function (error) {
-                //@action mostrar error
-                $scope.errorMessage = error
-                console.log(error);
-            })
-        ;
+        //$http.post($rootScope.urlBase + "/formationcenter/searchallformationcenters")
+        //    .success(function (data_result) {
+        //        if (data_result.err) {
+        //            ///Mostrar mensaje en ventana modal de que no existe centros de formacion
+        //            ///regresar a la pagina inicial
+        //            $scope.errorMessage = data_result.err;
+        //            alert(data_result.err);
+        //            // $location.path("/");
+        //            return;
+        //        }
+        //
+        //        $scope.formationcenters = data_result;
+        //        console.log("formationcenters ", $scope.formationcenters)
+        //        console.log("Se obtienen resultados")
+        //        //$location.path("/search/" + $scope.criteria);
+        //    })
+        //    .error(function (error) {
+        //        //@action mostrar error
+        //        $scope.errorMessage = error
+        //        console.log(error);
+        //    })
+        //;
 
         console.log("Buscando")
         vm.click = function (event) {
@@ -2890,6 +2928,10 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
 
             return '';
         }
+
+        vm.gotoSearch = function () {
+            $location.path('/search/undefined');
+        };
 
     })
     .controller('ModalInstanceCtrlWizard', function ($scope, $uibModalInstance, $rootScope, $routeParams, $http, customerData, $translate) {

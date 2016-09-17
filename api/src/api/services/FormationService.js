@@ -71,7 +71,7 @@ module.exports = {
   },
 
 
-  costumerBooked: function (formationFounded, callback) {
+  costumerBooked: function (formationFounded, customerObject, callback) {
 
     if (typeof formationFounded == "undefined") {
       callback({message: "Formation undefined"}, null)
@@ -84,7 +84,18 @@ module.exports = {
         callback(err, false)
        return;
       }
-      alertText = "A client has booked to Formation Center " + resultObject.name
+      alertText = "<h3>" + sails.__("CUSTMOMER_BOOKED_HEAD") + resultObject.name + "</h3><br />"
+
+      if (typeof customerObject != "undefined") {
+        alertText += "<h4>" +sails.__("CUSTMOMER_NAME")+ " "+  customerObject.firstName+"</h4><br />"
+        alertText += "<h4>" +sails.__("CUSTMOMER_FIRSTNAME")+ " "+  customerObject.name+"</h4><br />"
+        alertText += "<h4>" +sails.__("CUSTMOMER_MAIL")+ " "+  customerObject.email+"</h4><br />"
+        alertText += "<h4>" +sails.__("CUSTMOMER_PHONE")+ " "+  customerObject.phoneNumber+"</h4><br />"
+        alertText += "<h4>" +sails.__("CUSTMOMER_ADRESS")+ " "+  customerObject.address+"</h4><br />"
+
+      }
+
+      console.log( "BOOKED MAIL ", alertText);
       AlertService.createAlertCustomerBooked(resultObject.name, alertText, function (err, result) {
         callback(err, result)
         return;
