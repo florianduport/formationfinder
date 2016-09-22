@@ -358,6 +358,18 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                     status: 'partially'
                 }
             ];
+            $scope.selectedRow = null;
+            $scope.mouseoverPoint = function(formationid){
+
+               $scope.selectedRow = formationid;
+                console.log("Formation id")
+               $scope.hover = true
+            }
+
+            $scope.mouseoffsidePoint = function(){
+
+                $scope.hover = false
+            }
 
             function getDayClass(data) {
                 var date = data.date,
@@ -880,7 +892,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                             console.log("RESULTADOS nn", data_result)
                             data_result.forEach(function (iFormationcenter, ivalue) {
 
-
+                                ///Formation get FormationCenter's name
                                 iFormationcenter.name = iFormationcenter.formationCenter.name;
                                 iFormationcenter.city = iFormationcenter.place.city;
                                 iFormationcenter.address = iFormationcenter.place.address;
@@ -990,6 +1002,8 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                         console.log("Selecionado la formacion 1",  iFormation.place)
                         cityName =  iFormation.city
                         unicdata.push(  iFormation.city)
+                        iFormation.place.formationid = iFormation.id
+                        iFormation.place.formationcentername = iFormation.name
                         places.push(iFormation.place)
                         /*    unicdata =  $scope.searchServices.formation.filter( function ( item) {
                          return item != cityName
@@ -1234,7 +1248,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                     click: function (e, map) {
                         ///call find place services
 
-                        /// alert(e.latLng.lat() + " " + e.latLng.lng());
+                        alert(e.latLng.lat() + " " + e.latLng.lng());
                     }
                 }
             };
@@ -1280,7 +1294,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
             //;
 
             console.log("Buscando")
-            vm.click = function (event) {
+            clickMap = function (event) {
                 console.log("Buscando")
                 vm.map.setZoom(9);
 
@@ -1291,6 +1305,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                 possArray = String(event.latLng).split(",")
                 latitud = possArray[0]
                 longitud = possArray[1]
+
 
 
                 ///
@@ -1326,8 +1341,8 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                 ///else find Formation-Place near position
 
                 ///if not there show alert o windows
-                // alert('this is at ' + latitud + " :" + longitud);
-                // alert(arg1+arg2);
+                 alert('this is at ' + latitud + " :" + longitud);
+                 alert(arg1+arg2);
             }
 
         }])
@@ -1553,9 +1568,9 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
         //;
 
         console.log("Buscando")
-        vm.click = function (event) {
+        $scope.click = function (event) {
             console.log("Buscando")
-            vm.map.setZoom(9);
+            //vm.map.setZoom(9);
 
             ///With all point compute ceontroide and show map
             // vm.map.setCenter(marker.getPosition());
@@ -2197,6 +2212,86 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                         $log.info('Modal dismissed at: ' + new Date());
                     });
 
+                })
+                .error(function (error) {
+                    //@action mostrar error
+                    $scope.errorMessage = error
+                    console.log(error);
+                })
+
+
+        };
+
+
+        $scope.openFormationCenterMapInfo = function (formationCenterName, formationcenterid) {
+
+            console.log("Formation center name", formationCenterName)
+            $scope.formationCenterName = formationCenterName
+            ///Find formation center iformation
+            $http.post($rootScope.urlBase + "/formationcenter/searchbyname", {
+                    name: formationCenterName
+                })
+                .success(function (data_result) {
+                    if (data_result.err) {
+                        ///Mostrar mensaje en ventana modal de que no existe centros de formacion
+                        ///regresar a la pagina inicial
+                        $scope.errorMessage = data_result.err;
+                        console.log("Error " , data_result)
+                        // alert($scope.errorMessage);
+                        // $location.path("/");
+                        return;
+                    }
+
+
+
+                    $http.post($rootScope.urlBase + "/formation/searchByID", {
+                            id: formationcenterid
+                        })
+                        .success(function (data_result_formation) {
+                            if (data_result_formation.err || data_result_formation.status != "ok") {
+                                ///Mostrar mensaje en ventana modal de que no existe centros de formacion
+                                ///regresar a la pagina inicial
+                                $scope.errorMessage = data_result.err;
+                                console.log("Error ", data_result)
+                                // alert($scope.errorMessage);
+                                // $location.path("/");
+                                return;
+                            }
+
+                            data_result.formation = data_result_formation.data
+
+                            data_result.formation.address =  data_result.formation.place.address
+                            ///Search formation by id
+
+
+                            $scope.items = data_result;
+                            console.log("Result ", $scope.items)
+
+                            //size = "" | "lg" | "sm"
+                            var modalInstance = $uibModal.open({
+                                animation: $scope.animationsEnabled,
+                                templateUrl: 'myModalContent.html',
+                                controller: 'ModalInstanceCtrl',
+                                size: "",
+                                resolve: {
+                                    items: function () {
+                                        return $scope.items;
+                                    }
+                                }
+                            });
+
+                            modalInstance.result.then(function (selectedItem) {
+                                $scope.selected = selectedItem;
+                            }, function () {
+                                $log.info('Modal dismissed at: ' + new Date());
+                            });
+
+
+                        }).error(function (error) {
+                                //@action mostrar error
+                                $scope.errorMessage = error
+                                console.log(error);
+                            })
                 })
                 .error(function (error) {
                     //@action mostrar error

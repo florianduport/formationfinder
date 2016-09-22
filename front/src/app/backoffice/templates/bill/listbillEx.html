@@ -124,7 +124,7 @@
                                                uib-datepicker-popup="{{format}}" is-open="popup1.opened" name="initDate"
                                                ng-pattern="dateRegExp"
                                                datepicker-options="dateOptionsSearch"
-                                               placeholder="" type="text" ng-model="search.initialDate">
+                                               placeholder="" type="text" ng-model="searchAux.initialDate">
                                     <span class="input-group-addon"><span id="datesearchInit" class="fa fa-calendar "
                                                                           ng-click="open1()"></span></span>
                                     </div>
@@ -152,7 +152,7 @@
                                                class="form-control" uib-datepicker-popup="{{format}}" name="endDate"
                                                ng-pattern="dateRegExp" is-open="popup2.opened"
                                                datepicker-options="dateOptionsSearch" placeholder="" type="text"
-                                               ng-model="search.endDate">
+                                               ng-model="searchAux.endDate">
                                     <span class="input-group-addon"><span id="datesearchEnd" class="fa fa-calendar"
                                                                           ng-click="open2()"></span></span>
 

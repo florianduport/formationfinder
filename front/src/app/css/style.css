@@ -923,3 +923,9 @@ input[name="location"] {
     padding: 19.5px 19.5px 19.5px 19.5px;
     width: 400px;
 }
+
+.selected {
+    background-color:#5fa4cd;
+    color:white;
+    font-weight:bold;
+}

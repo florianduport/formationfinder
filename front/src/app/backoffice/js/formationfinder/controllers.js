@@ -4721,6 +4721,18 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             var tomorrow = new Date();
             tomorrow.setDate(tomorrow.getDate() + 1);
 
+
+            $scope.clearSearchField = function (){
+                $scope.searchAux.name = null
+                console.log("Clear FIELD")
+                $scope.searchAux.initialDate = null
+                $scope.searchAux.initialDate = ""
+                $scope.searchAux.endDate = null
+                $scope.criteriaList = ""
+                $scope.timeInit = new Date();
+                $scope.timeEnd = new Date();
+            }
+
             $scope.tomorrow = function () {
                 $scope.search.endDate = tomorrow;
             };
@@ -4771,7 +4783,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             }
 
             $scope.search = {};
-
+            $scope.searchAux = {};
             $scope.formationcenterName = $rootScope.formationCenter;
 
             $scope.searchAllBills = function () {
@@ -4952,6 +4964,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         $scope.Bills = data_result
                         $scope.activatedBill = []
                         ///Review if clean al parameter
+                        $scope.clearSearchField()
                         return;
                         // console.log("RESULTADOS", data_result)
                     })
@@ -5108,13 +5121,13 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 // $scope.errorMessage = "Probando "
                 if (typeof $scope.criteriaList == "undefined" || $scope.criteriaList == "")
                     $scope.criteriaList = ""
-                $scope.search.name = $scope.criteriaList;
+                $scope.searchAux.name = $scope.criteriaList;
                 $scope.appBill.currentPageBill = 0
 
 
                 // console.log("El valor de la forama ", $scope.myform)
 
-                if ($scope.search.initialDate != "" || typeof $scope.search.endDate != "" ) {
+                if ($scope.searchAux.initialDate != "" || typeof $scope.searchAux.endDate != "" ) {
                     //if ($scope.advancedSearchPlace.$invalid) {
                     //
                     //    $scope.errorValid = true
@@ -5131,10 +5144,10 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     //    return;
                     //}
 
-                    if (($scope.search.initialDate != "" && $scope.search.initialDate != null)&& ( $scope.search.endDate != "" && $scope.search.endDate != null)) {
+                    if (($scope.searchAux.initialDate != "" && $scope.searchAux.initialDate != null)&& ( $scope.searchAux.endDate != "" && $scope.searchAux.endDate != null)) {
 
 
-                        initDateAndTime = $scope.search.initialDate //new Date( $scope.search.initialDate)
+                        initDateAndTime = $scope.searchAux.initialDate //new Date( $scope.searchAux.initialDate)
                         //initTime =
                         console.log("Simple Hour", $scope.timeInit.getHours())
                         console.log("Simple Hour", $scope.timeInit.getUTCHours())
@@ -5144,7 +5157,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                         timestampInit = initDateAndTime.getTime()
 
-                        endDateAndTime =  $scope.search.endDate
+                        endDateAndTime =  $scope.searchAux.endDate
                         endDateAndTime.setUTCHours($scope.timeEnd.getHours())
                         endDateAndTime.setUTCMinutes($scope.timeEnd.getMinutes())
                         endDateAndTime.setUTCSeconds($scope.timeEnd.getSeconds())
@@ -5153,7 +5166,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                         if (timestampEnd < timestampInit) {
                             $scope.errorValid = true
-                            console.log("INSERTANDO ALERTA",$scope.search.endDate )
+                            console.log("INSERTANDO ALERTA",$scope.searchAux.endDate )
                             message = $translate.instant("ERROR_END_DATE")  ;
                             //$scope.alerts.push({
                             //    type: 'danger',
@@ -5170,6 +5183,10 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                 }
                 $scope.advancedSearchPlace.$setPristine()
+                $scope.search =  $scope.searchAux
+
+
+
                 $scope.countRecordsBill();
                 $scope.getBillRecords();
             }

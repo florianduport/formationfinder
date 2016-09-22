@@ -12,7 +12,7 @@
     }
 </style>
 <div class="searchresult searchlist">
-    <div class="container">
+    <div class="container" ng-controller="ModalDemoCtrl">
         <div class="row row-eq-height ">
             <div class="col-sm-6 col-md-6 col-xs-12 col-lg-6 ">
                 <div class="sidebarformation">
@@ -173,31 +173,35 @@
                             ng-click="getPagableRecords()" ng-model="app.currentPage" class="pagination-sm"
                             previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
                     </div>
-                    <ul class="list-group">
+                    <ul class="list-group" >
                         <li class="list-group-item"
-                            ng-repeat="iformation in formations | filter:criteriaList | orderBy:sortType ">
+                            ng-repeat="iformation in formations | filter:criteriaList | orderBy:sortType "  ng-class="{'selected':iformation.id == selectedRow}" >
                             <div class="row">
                                 <div class="col-sm-6 col-xs-6 col-lg-6  clearfix ">
                                     <form>
                                         <div class=" input-group ">
-                                            <input type="checkbox" checklist-model="search.formation"
-                                                   checklist-value="iformation">
-                    <span class="input-group-addon pull-left"> <div
-                            style="margin-left: 30px;font-style: italic;font-size: large;text-decoration-color: #0e0e0e"
-                            class="centered text-info bold" title="Formation center´s name">
+
+                    <div class="pull-left" >
+                        <!--<input type="checkbox" checklist-model="search.formation"-->
+                               <!--checklist-value="iformation"><input type="checkbox" checklist-model="search.formation"-->
+                               <!--checklist-value="iformation">-->
+                        <span
+                            style="margin-left: 0px;font-style: italic;font-size: large;text-decoration-color: #0e0e0e"
+                            class="text-info bold" title="Formation center´s name">
                         <strong>{{iformation.name}}</strong>
-                    </div></span>
+                    </span>
+                    </div>
                                         </div>
                                     </form>
-                    <span uib-rating tooltip-placement="top-right" tooltip="Popularity" ng-model="rate"
-                          max="5" read-only="isReadonly"
-                    ></span>
+                    <!--<span uib-rating tooltip-placement="top-right" tooltip="Popularity" ng-model="rate"-->
+                          <!--max="5" read-only="isReadonly"-->
+                    <!--&gt;</span>-->
 
                                     <div class="text-left proximite pcolorbox">
                                         <a href="" ng-click="searchPlusInformation(iformation.id)" rel="nofollow"
                                            class="popup-fiche cboxElement">
                                             <div class="icons puce-active pcolorbox"></div>
-                                            <div ng-controller="ModalDemoCtrl">
+                                            <div >
                                                 <script type="text/ng-template" id="myModalContent.html">
                                                     <div class="modal-header">
                                                         <h3 class="modal-title">{{'FORMATION_CENTER' | translate }}: {{items.name}}</h3>
@@ -369,9 +373,9 @@
                             <!--<input type="checkbox" checklist-model="searchInMap" >-->
                         <!--</div>-->
                     </form>
-                    <div style="height: 750px;">
+                    <div style="height: 820px;">
                         <ng-map zoom="8" center="48.864716, 2.349014"
-                                on-click="vm.click()" style="height:100%;">
+                                on-click="click()" style="height:100%;">
                             <marker position="48.864716, 2.349014" title="Click to zoom"
                                     icon="img/icons/paris.png"></marker>
                             <!--  on-center-changed="vm.centerChanged()" class="map-canvas" id="ng-map-class" <custom-marker id="foo" position="10 pennsylvania ave, washington DC" on-click="vm.closeCustomMarker()">-->
@@ -388,12 +392,12 @@
                             <div ng-repeat="iformationcenter in formationcenters">
                                 <div ng-repeat="iplace in iformationcenter.places">
                                     <marker position="{{iplace.latitude}}, {{iplace.longitude}}"
-                                            >
+                                          >
                                         <!--<div> {{iplace.name}} </div>-->
                                     </marker>
                                     <!--<div> {{iplace.name}} </div>-->
-                                    <custom-marker  id="end" position="{{iplace.latitude}}, {{iplace.longitude}}">
-                                    <span  > <span class="badge" style="border-radius: 50%">{{iplace.price}} </span></span>
+                                    <custom-marker    id="end" position="{{iplace.latitude}}, {{iplace.longitude}}">
+                                    <span ng-mouseover="mouseoverPoint(iplace.formationid)" ng-click="openFormationCenterMapInfo(iplace.formationcentername,iplace.formationid)"> <span class="badge" style="border-radius: 50%">{{iplace.price}} </span></span>
                                 </custom-marker>
                                 </div>
                             </div>
