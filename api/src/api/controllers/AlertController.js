@@ -271,8 +271,8 @@ module.exports = {
       finalDate = new Date(finalDate);
 
 
-    //console.log("INITIAL:", initialDate)
-    // console.log("FINAL:", finalDate)
+    console.log("INITIAL:", initialDate)
+    console.log("FINAL:", finalDate)
 
 
     if (initialDate && !_.isDate(initialDate)) {
@@ -315,13 +315,13 @@ module.exports = {
         return res.json({response:"ERROR", message:"Not exist Formation Center with name " + nameFormation})
 
       query.formationCenter = resultObject.id
-     // console.log("Query count" + query)
+      console.log("Query count" + query)
       Alert.count(query).exec(function (err, result ) {
         if (err) {
           return res.json({response:"ERROR", message:err});
         }
 
-       // console.log("RESULT count" + result)
+        console.log("RESULT count" + result)
         return res.json({response:"OK", size:result})
       })
     })
@@ -426,13 +426,13 @@ module.exports = {
 
       query.formationCenter = resultObject.id
       query.sort = 'date ASC'
-       console.log("Query count" , query)
+       console.log("Query count search" , query)
       Alert.find(query).limit(len).skip(skipv).exec(function (err, result ) {
         if (err) {
           return res.json({response:"ERROR", message:err});
         }
 
-      //  console.log("RESULT count",  result)
+    console.log("RESULT count",  result.length)
         return res.json({response:"OK", result:result})
       })
     })

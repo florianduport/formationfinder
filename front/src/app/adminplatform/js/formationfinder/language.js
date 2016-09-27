@@ -35,16 +35,14 @@ app.config(function ($translateProvider) {
             EDIT: "Edit",
             ACCEPT: "OK",
             CLOSE: "CLOSE",
-            CANCEL: "CANCELAR",
+            CANCEL: "CANCEL",
             EDIT_PLACE: "Edit",
-            //------
             LOGOUT: "LOGOUT",
             LOGOUT_USER: "Logout user",
             GEOSEARCH: "Geosearch",
             LANGUAGE: "Language",
             USER_TOOLTIP: "User´s name",
             FORMATION_TOOLTIP: "Formation´s size",
-
             CUSTOMER_TOOLTIP: "Customer´s size",
             GEOSEARCH_TOOLTIP: "View maps",
             LANGUAGE_TOOLTIP: "Change site languages",
@@ -64,7 +62,6 @@ app.config(function ($translateProvider) {
             ADMIN_PAGE_ALERT_HEAD_DESCRIPTION: "In this window you can admin formation center's alerts.",
             TEXT: "Text",
             TEXT_ERROR: "Text invalid",
-
             //---- Piterson -------------
             REQUIRED_FIELD: "Required field",
             USERNAME: "Username",
@@ -124,10 +121,23 @@ app.config(function ($translateProvider) {
             PHONE_NUMBER_ERROR: "Enter 10 digits starting with '0'",
             AT_LEAST_2_CHARACTERS: "Enter at least 2 characters",
             UPDATE_FORMATION_CENTER: "Update Formation Center",
-
-            //------------------------------------------------------------
             ITEMS_PER_PAGE: "Items per page",
-
+            ERROR: "Error",
+            CONFIRMATION: "Confirmation",
+            INFO: "Info",
+            INVALID_USERNAME_PASSWORD: "Invalid username/password combination. Please check and try again",
+            ERROR_USING_AUTH_SERVICE: "Error using auth service",
+            ERROR_SEARCHING_FORMATION_CENTERS: "Error searching formation centers",
+            ERROR_SEARCHING_FORMATION_CENTER: "Error searching formation center",
+            DELETE_FORMATION_CENTER_CONFIRMATION: "You are going to delete this formation center. Continue?",
+            FORMATION_CENTER_DELETED: "Formation center deleted",
+            ERROR_DELETING_FORMATION_CENTER: "Error deleting formation center",
+            FORMATION_CENTER_CREATED: "Formation center created",
+            ERROR_CREATING_FORMATION_CENTER: "Error creating formation center",
+            ENTER_VALID_NEW_PARAMETERS: "Enter valid new parameters",
+            UPDATE_FORMATION_CENTER_CONFIRMATION: "You are going to update this formation center. Continue?",
+            FORMATION_CENTER_UPDATED: "Formation center updated",
+            ERROR_UPDATING_FORMATION_CENTER: "Error updating formation center"
 
         })
         .translations('fr', {
@@ -164,7 +174,6 @@ app.config(function ($translateProvider) {
             CLOSE: "FERMER",
             CANCEL: "CANCELAR",
             EDIT_PLACE: "Edit",
-            //------
             LOGOUT: "LOGOUT",
             LOGOUT_USER: "Logout user",
             GEOSEARCH: "Geolocalisation",
@@ -190,8 +199,6 @@ app.config(function ($translateProvider) {
             ADMIN_PAGE_ALERT_HEAD_DESCRIPTION: "In this window you can admin formation center's alerts.",
             TEXT: "Text",
             TEXT_ERROR: "Text invalid",
-
-            //---- Piterson -------------
             REQUIRED_FIELD: "Required field",
             USERNAME: "Username",
             PASSWORD: "Password",
@@ -236,7 +243,6 @@ app.config(function ($translateProvider) {
             PSYCHOLOGIST: "Psychologist",
             EDIT_ANIMATOR: "Edit Animator",
             NOTHING_TO_SHOW: "Nothing to show",
-
             //******************* ADMIN PLATFORM **********************
             WELLCOME: "Wellcome to the ADMIN PLATFORM",
             FORMATION_CENTERS: "Formation Centers",
@@ -250,9 +256,25 @@ app.config(function ($translateProvider) {
             PHONE_NUMBER_ERROR: "Enter 10 digits starting with '0'",
             AT_LEAST_2_CHARACTERS: "Enter at least 2 characters",
             UPDATE_FORMATION_CENTER: "Update Formation Center",
-
-            //------------------------------------------------------------
             ITEMS_PER_PAGE: "Items per page",
+
+            ERROR: "Error",
+            CONFIRMATION: "Confirmation",
+            INFO: "Info",
+            INVALID_USERNAME_PASSWORD: "Invalid username/password combination. Please check and try again",
+            ERROR_USING_AUTH_SERVICE: "Error using auth service",
+            ERROR_SEARCHING_FORMATION_CENTERS: "Error searching formation centers",
+            ERROR_SEARCHING_FORMATION_CENTER: "Error searching formation center",
+            DELETE_FORMATION_CENTER_CONFIRMATION: "You are going to delete this formation center. Continue?",
+            FORMATION_CENTER_DELETED: "Formation center deleted",
+            ERROR_DELETING_FORMATION_CENTER: "Error deleting formation center",
+            FORMATION_CENTER_CREATED: "Formation center created",
+            ERROR_CREATING_FORMATION_CENTER: "Error creating formation center",
+            ENTER_VALID_NEW_PARAMETERS: "Enter valid new parameters",
+            UPDATE_FORMATION_CENTER_CONFIRMATION: "You are going to update this formation center. Continue?",
+            FORMATION_CENTER_UPDATED: "Formation center updated",
+            ERROR_UPDATING_FORMATION_CENTER: "Error updating formation center"
+
 
         })
         .translations('es', {
@@ -291,7 +313,6 @@ app.config(function ($translateProvider) {
             CLOSE: "CERRAR",
             CANCEL: "CANCELAR",
             EDIT_PLACE: "Edit",
-            //------
             LOGOUT: "SALIR",
             LOGOUT_USER: "Deslogear",
             GEOSEARCH: "Geolocalización",
@@ -317,7 +338,6 @@ app.config(function ($translateProvider) {
             ADMIN_PAGE_ALERT_HEAD_DESCRIPTION: "En esta vista se podra administrar las alertas de un Centro de Formación.",
             TEXT: "Texto",
             TEXT_ERROR: "Texto invalido",
-
             //---- Piterson -------------
             REQUIRED_FIELD: "Campo requerido",
             USERNAME: "Usuario",
@@ -377,9 +397,24 @@ app.config(function ($translateProvider) {
             PHONE_NUMBER_ERROR: "Entre 10 dígitos comenzando por '0'",
             AT_LEAST_2_CHARACTERS: "Entre al menos 2 caracteres",
             UPDATE_FORMATION_CENTER: "Actualizar Centro de Formación",
-
-            //------------------------------------------------------------
             ITEMS_PER_PAGE: "Items per page",
+
+            ERROR: "Error",
+            CONFIRMATION: "Confirmación",
+            INFO: "Info",
+            INVALID_USERNAME_PASSWORD: "Combinación usuario/contraseña inválida. Verifique y trate otra vez.",
+            ERROR_USING_AUTH_SERVICE: "Error usando servicio de autenticación",
+            ERROR_SEARCHING_FORMATION_CENTERS: "Error buscando centros de formación",
+            ERROR_SEARCHING_FORMATION_CENTER: "Error buscando centro de formación",
+            DELETE_FORMATION_CENTER_CONFIRMATION: "Está a punto de eliminar este centro de formación. Continuar?",
+            FORMATION_CENTER_DELETED: "Centro de formación eliminado",
+            ERROR_DELETING_FORMATION_CENTER: "Error eliminando centro de formación",
+            FORMATION_CENTER_CREATED: "Centro de formación creado",
+            ERROR_CREATING_FORMATION_CENTER: "Error creando centro de formación",
+            ENTER_VALID_NEW_PARAMETERS: "Entre nuevos parámetros válidos",
+            UPDATE_FORMATION_CENTER_CONFIRMATION: "Está a punto de actualizar este centro de formación. Continuar?",
+            FORMATION_CENTER_UPDATED: "Centro de formación actualizado",
+            ERROR_UPDATING_FORMATION_CENTER: "Error actualizando centro de formación"
 
         });
     ;

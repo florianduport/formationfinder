@@ -24,7 +24,7 @@ module.exports = {
       }
       else
       {
-        return res.json({err: 'The page parameter is an invalid string number'});
+        return res.json({err: sails.__("ERROR_PAGE_INVALID")});
       }
     }
 
@@ -34,7 +34,7 @@ module.exports = {
       }
       else
       {
-        return res.json({err: 'The len parameter is an invalid string number'});
+        return res.json({err: sails.__("ERROR_LEN_INVALID")});
       }
     }
     console.log("Buscando " , page + " ==== " + len)
@@ -61,7 +61,7 @@ module.exports = {
     name = req.param('name');
 
     if(name === undefined) {
-      return res.json({err: 'Name parameter not provided'});
+      return res.json({err: sails.__("NAME_PARAMETER_REQUIRED")});
     }
 
     if (typeof(name) != 'string') {
@@ -76,11 +76,11 @@ module.exports = {
         // body...
 
         if(err){
-          return res.json({err: 'An error has ocurred searching database'});
+          return res.json({err: sails.__("ERROR_SEARCHING_FORMATION_CENTER")});
         }
 
         if(formationCenterFounded === undefined) {
-          return res.json({err: 'No formation Center match that criteria: ' + name});
+          return res.json({err: sails.__("FORMATION_CENTER_NO_FOUNDED")});
         }
 
         return res.json(formationCenterFounded);
@@ -93,7 +93,7 @@ module.exports = {
     name = req.param('name');
 
     if(name === undefined) {
-      return res.json({err: 'Name parameter not provided'});
+      return res.json({err: sails.__("NAME_PARAMETER_REQUIRED")});
     }
 
     if (typeof(name) != 'string') {
@@ -105,11 +105,11 @@ module.exports = {
         // body...
 
         if(err){
-          return res.json({err: 'An error has ocurred searching database'});
+          return res.json({err: sails.__("ERROR_SEARCHING_FORMATION_CENTER")});
         }
 
         if(formationCenterFounded === undefined) {
-          return res.json({err: 'No formation Center match that criteria: ' + name});
+          return res.json({err: sails.__("FORMATION_CENTER_NO_FOUNDED")});
         }
 
         return res.json(formationCenterFounded);
@@ -122,7 +122,7 @@ module.exports = {
     name = req.param('name');
 
     if(name === undefined) {
-      return res.json({err: 'Name parameter not provided'});
+      return res.json({err: sails.__("NAME_PARAMETER_REQUIRED")});
     }
 
     if (typeof(name) != 'string') {
@@ -138,11 +138,11 @@ module.exports = {
         // body...
 
         if(err){
-          return res.json({err: 'An error has ocurred searching database'});
+          return res.json({err: sails.__("ERROR_SEARCHING_FORMATION_CENTER")});
         }
 
         if(formationCenterFounded === undefined) {
-          return res.json({err: 'No formation Center match that criteria: ' + name});
+          return res.json({err: sails.__("FORMATION_CENTER_NO_FOUNDED")});
         }
 
 
@@ -167,7 +167,7 @@ module.exports = {
     name = req.param('name');
 
     if(name === undefined) {
-      return res.json({err: 'Name parameter not provided'});
+      return res.json({err: sails.__("NAME_PARAMETER_REQUIRED")});
     }
 
     if (typeof(name) != 'string') {
@@ -182,11 +182,11 @@ module.exports = {
         // body...
 
         if(err){
-          return res.json({err: 'An error has ocurred searching database'});
+          return res.json({err: sails.__("ERROR_SEARCHING_FORMATION_CENTER")});
         }
 
         if(formationCenterFounded === undefined) {
-          return res.json({err: 'No formation Center match that criteria: ' + name});
+          return res.json({err: sails.__("FORMATION_CENTER_NO_FOUNDED")});
         }
 
         return res.json(formationCenterFounded);
@@ -199,7 +199,7 @@ module.exports = {
     name = req.param('name');
 
     if(name === undefined) {
-      return res.json({err: 'Name parameter not provided'});
+      return res.json({err: sails.__("NAME_PARAMETER_REQUIRED")});
     }
 
     if (typeof(name) != 'string') {
@@ -211,11 +211,11 @@ module.exports = {
         // body...
 
         if(err){
-          return res.json({err: 'An error has ocurred searching database'});
+          return res.json({err: sails.__("ERROR_SEARCHING_FORMATION_CENTER")});
         }
 
         if(formationCenterFounded === undefined) {
-          return res.json({err: 'No formation Center match that criteria: ' + name});
+          return res.json({err: sails.__("FORMATION_CENTER_NO_FOUNDED")});
         }
 
         return res.json(formationCenterFounded);
@@ -225,7 +225,7 @@ module.exports = {
   searchAllFormationCentersNames: function (req, res) {
     FormationCenter.find().exec(function (err, formationCenters) {
       if(err){
-        return res.json({status: 'error', info: 'An error has ocurred searching all Formation Centers.'})
+        return res.json({status: 'error', info: sails.__("ERROR_SEARCHING_FORMATION_CENTERS")})
       }
 
       names = [];
@@ -244,31 +244,31 @@ module.exports = {
 
     //Validate parameters.
     if (req.param('name') === undefined) {
-      return res.json({status: "error", info: "Name is required."});
+      return res.json({status: "error", info: sails.__("NAME_PARAMETER_REQUIRED")});
     }
 
     if (req.param('address') === undefined) {
-      return res.json({status: "error", info: "Address is required."});
+      return res.json({status: "error", info: sails.__("ADDRESS_PARAMETER_REQUIRED")});
     }
 
     if (req.param('zipCode') === undefined) {
-      return res.json({status: "error", info: "ZipCode is required."});
+      return res.json({status: "error", info: sails.__("ZIPCODE_PARAMETER_REQUIRED")});
     }
 
     if (req.param('city') === undefined) {
-      return res.json({status: "error", info: "City is required."});
+      return res.json({status: "error", info: sails.__("CITY_PARAMETER_REQUIRED")});
     }
 
     if (req.param('email') === undefined) {
-      return res.json({status: "error", info: "Email is required."});
+      return res.json({status: "error", info: sails.__("EMAIL_PARAMETER_REQUIRED")});
     }
 
     if (req.param('phoneNumber') === undefined) {
-      return res.json({status: "error", info: "Phone Number is required."});
+      return res.json({status: "error", info: sails.__("PHONENUMBER_PARAMETER_REQUIRED")});
     }
 
     if (req.param('defaultLogin') === undefined) {
-      return res.json({status: "error", info: "defaultLogin is required."});
+      return res.json({status: "error", info: sails.__("DEFAULTLOGIN_PARAMETER_REQUIRED")});
     }
 
     var tFormationCenter = {};
@@ -355,7 +355,7 @@ module.exports = {
       if (!isNaN(parseInt(req.param('page')))) {
         page = Math.abs(parseInt(req.param('page')));
       } else {
-        return res.json({err: 'The page parameter is an invalid string number'});
+        return res.json({err: sails.__("ERROR_PAGE_INVALID")});
       }
     }
 
@@ -363,7 +363,7 @@ module.exports = {
       if (!isNaN(parseInt(req.param('len')))) {
         len = Math.abs(parseInt(req.param('len')));
       } else {
-        return res.json({err: 'The len parameter is an invalid string number'});
+        return res.json({err: sails.__("ERROR_LEN_INVALID")});
       }
     }
 
@@ -376,17 +376,17 @@ module.exports = {
 
     FormationCenter.find(query).exec(function (err, FormationCentersFounded) {
       if (err) {
-        return res.json({status: "error", info: "Error searching Formation Centers."});
+        return res.json({status: "error", info: sails.__("ERROR_SEARCHING_FORMATION_CENTERS")});
       }
 
       if (FormationCentersFounded.length === 0) {
-        return res.json({status: "error", info: "There are not Formation Centers."});
+        return res.json({status: "error", info: sails.__("NO_FORMATION_CENTERS_FOUNDED")});
       }
 
       FormationCenter.count(query).exec(function (err, FCcounted){
 
         if (err) {
-          return res.json({status: "error", info: "Error counting Formation Centers."});
+          return res.json({status: "error", info: sails.__("ERROR_COUNTING_FORMATION_CENTERS")});
         }
 
         return res.json({status: "ok", data: FormationCentersFounded, maxSize: FCcounted});
@@ -397,18 +397,18 @@ module.exports = {
 
   delete: function (req, res, next) {
     if (req.param('id') === undefined) {
-      return res.json({status: "error", info: "Formation Center id is required."});
+      return res.json({status: "error", info: sails.__("ID_PARAMETER_REQUIRED")});
     }
 
     FormationCenter.findOne({id: req.param('id')})
       .exec(function (err, FormationCenterFounded) {
 
         if (err) {
-          return res.json({status: "error", info: "Error searching Formation Center."});
+          return res.json({status: "error", info: sails.__("ERROR_SEARCHING_FORMATION_CENTER")});
         }
 
         if (!FormationCenterFounded) {
-          return res.json({status: "error", info: "There isn't a Formation Center with that id."});
+          return res.json({status: "error", info: sails.__("FORMATION_CENTER_NO_FOUNDED")});
         }
 
         /*******************************************************************/
@@ -419,49 +419,49 @@ module.exports = {
         Animator.destroy({formationCenter: FormationCenterFounded.id})
           .exec(function (err) {
             if (err) {
-              return res.json({status: "error", info: "Error deleting Animators."});
+              return res.json({status: "error", info: sails.__("ERROR_DELETING_ANIMATORS")});
             }
 
             //Delete places.
             Place.destroy({formationCenter: FormationCenterFounded.id})
               .exec(function (err) {
                 if (err) {
-                  return res.json({status: "error", info: "Error deleting Places."});
+                  return res.json({status: "error", info: sails.__("ERROR_DELETING_PLACES")});
                 }
 
                 //Delete Bills.
                 Bill.destroy({formationCenter: FormationCenterFounded.id})
                   .exec(function (err) {
                     if (err) {
-                      return res.json({status: "error", info: "Error deleting Bills."});
+                      return res.json({status: "error", info: sails.__("ERROR_DELETING_BILLS")});
                     }
 
                     //Delete Customers.
                     Customer.destroy({formationCenter: FormationCenterFounded.id})
                       .exec(function (err) {
                         if (err) {
-                          return res.json({status: "error", info: "Error deleting Customers."});
+                          return res.json({status: "error", info: sails.__("ERROR_DELETING_CUSTOMERS")});
                         }
 
                         //Delete CustomerBills.
                         CustomerBill.destroy({formationCenter: FormationCenterFounded.id})
                           .exec(function (err) {
                             if (err) {
-                              return res.json({status: "error", info: "Error deleting CustomerBills."});
+                              return res.json({status: "error", info: sails.__("ERROR_DELETING_CUSTOMERS_BILLS")});
                             }
 
                             //Delete Formations.
                             Formation.destroy({formationCenter: FormationCenterFounded.id})
                               .exec(function (err) {
                                 if (err) {
-                                  return res.json({status: "error", info: "Error deleting Formations."});
+                                  return res.json({status: "error", info: sails.__("ERROR_DELETING_FORMATIONS")});
                                 }
 
                                 //Delete Logins.
                                 Login.destroy({formationCenter: FormationCenterFounded.id})
                                   .exec(function (err) {
                                     if (err) {
-                                      return res.json({status: "error", info: "Error deleting Logins."});
+                                      return res.json({status: "error", info: sails.__("ERROR_DELETING_LOGINS")});
                                     }
 
                                     /****************************************************/
@@ -471,10 +471,10 @@ module.exports = {
                                     FormationCenter.destroy({id: FormationCenterFounded.id})
                                       .exec(function (err) {
                                         if (err) {
-                                          return res.json({status: "error", info: "Error deleting Formation Center."});
+                                          return res.json({status: "error", info: sails.__("ERROR_DELETING_FORMATION_CENTER")});
                                         }
 
-                                        return res.json({status: "ok", info: "Formation Center deleted."});
+                                        return res.json({status: "ok", info: sails.__("FORMATION_CENTER_DELETED")});
                                       })
                                   });//End of Login destroy.
                               });//End of Formation destroy.
@@ -488,29 +488,27 @@ module.exports = {
 
   update: function (req, res, next) {
     if (req.param('id') === undefined) {
-      return res.json({status: "error", info: "Formation Center id is required."});
+      return res.json({status: "error", info: sails.__("ID_PARAMETER_REQUIRED")});
     }
 
     if (req.param('attributes') === undefined) {
-      return res.json({status: "error", info: "attributes parameter is required."});
+      return res.json({status: "error", info: sails.__("ATTRIBUTE_PARAMETER_REQUIRED")});
     }
 
     FormationCenter.findOne({id: req.param('id')})
       .exec(function (err, FCfounded) {
         if (err) {
-          return res.json({status: "error", info: "Error searching Formation Center."});
+          return res.json({status: "error", info: sails.__("ERROR_SEARCHING_FORMATION_CENTER")});
         }
 
         if (!FCfounded) {
-          return res.json({status: "error", info: "That Formation Center doesn't exist."});
+          return res.json({status: "error", info: sails.__("FORMATION_CENTER_NO_FOUNDED")});
         }
 
         //Validate that the new attributes (name, email, phonenumber) are not in use.
         var ORcriteria = [];
         var attributes = req.param('attributes');
         var uniqueParameters = false;
-
-        console.log("Los atributos pasados fueron: ",attributes);
 
         if (attributes.name) {
           ORcriteria.push({name: attributes.name});
@@ -537,7 +535,7 @@ module.exports = {
               console.log("Entre a search OR: ");
 
               if (err) {
-                return res.json({status: "error", info: "Error OR searching Formation Center."});
+                return res.json({status: "error", info: sails.__("ERROR_SEARCHING_FORMATION_CENTER")});
               }
 
               if (FormationCenterFounded) {
@@ -545,15 +543,15 @@ module.exports = {
                 console.log("Encontre a alguien con el mismo atributo unico");
 
                 if (FormationCenterFounded.name === attributes.name) {
-                  return res.json({status: "error", info: "Name parameter is in use."});
+                  return res.json({status: "error", info: sails.__("NAME_IN_USE")});
                 }
 
                 if (FormationCenterFounded.email === attributes.email) {
-                  return res.json({status: "error", info: "Email parameter is in use."});
+                  return res.json({status: "error", info: sails.__("EMAIL_IN_USE")});
                 }
 
                 if (FormationCenterFounded.phoneNumber === attributes.phoneNumber) {
-                  return res.json({status: "error", info: "PhoneNumber parameter is in use."});
+                  return res.json({status: "error", info: sails.__("PHONENUMBER_IN_USE")});
                 }
               }
 
@@ -561,10 +559,10 @@ module.exports = {
               FormationCenter.update({id: FCfounded.id}, attributes)
                 .exec(function (err, FCupdated) {
                   if (err || !FCupdated) {
-                    return res.json({status: "error", info: "Error updating Formation Center."});
+                    return res.json({status: "error", info: sails.__("ERROR_UPDATING_FORMATION_CENTER")});
                   }
 
-                  return res.json({status: "ok", info: "Formation Center updated.", data: FCupdated});
+                  return res.json({status: "ok", info: sails.__("FORMATION_CENTER_UPDATED"), data: FCupdated});
                 });
             });//End of FormationCenter.findOne with OR criteria.
         }//End if(uniqueParameters)
@@ -572,10 +570,10 @@ module.exports = {
           FormationCenter.update({id: FCfounded.id}, attributes)
             .exec(function (err, FCupdated) {
               if (err || !FCupdated) {
-                return res.json({status: "error", info: "Error updating Formation Center."});
+                return res.json({status: "error", info: sails.__("ERROR_UPDATING_FORMATION_CENTER")});
               }
 
-              return res.json({status: "ok", info: "Formation Center updated.", data: FCupdated});
+              return res.json({status: "ok", info: sails.__("FORMATION_CENTER_UPDATED"), data: FCupdated});
             });
         }
       });
@@ -585,17 +583,17 @@ module.exports = {
     //In this search i do not use populate, i only need the Formation Center attributes.
 
     if (req.param('id') === undefined) {
-      return res.json({status: "error", info: "Formation Center id is required."});
+      return res.json({status: "error", info: sails.__("ID_PARAMETER_REQUIRED")});
     }
 
     FormationCenter.findOne({id: req.param('id')})
       .exec(function (err, FCfounded) {
         if (err) {
-          return res.json({status: "error", info: "Error searching Formation Center."});
+          return res.json({status: "error", info: sails.__("ERROR_SEARCHING_FORMATION_CENTER")});
         }
 
         if (!FCfounded) {
-          return res.json({status: "error", info: "That Formation Center doesn't exist."});
+          return res.json({status: "error", info: sails.__("FORMATION_CENTER_NO_FOUNDED")});
         }
 
         return res.json({status: "ok", data: FCfounded});

@@ -367,7 +367,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
             }
 
             $scope.mouseoffsidePoint = function(){
-
+                $scope.selectedRow = null;
                 $scope.hover = false
             }
 
@@ -402,6 +402,15 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
             $scope.app.itemPerPage = 3;
             $scope.app.totalItems = 0;
             $scope.searchText = "";
+
+            $scope.lens = [3,5, 10, 15, 20];
+
+            $scope.itemsPerPageChance = function () {
+                $scope.app.currentPage = 0;
+                $scope.countRecords();
+                $scope.getPagableRecords();
+            };
+
 
             /*$scope.$watch(function() {
              return $scope.searchText;
@@ -446,7 +455,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                         return;
                     }
 
-                    if ($scope.search.initialDate != "" || $scope.search.endDate != "") {
+                    if ($scope.search.initialDate != "" && typeof  $scope.search.initialDate == undefined && $scope.search.endDate != ""&& typeof  $scope.search.endDate == undefined) {
 
                         timestampInit = new Date($scope.search.initialDate).getTime()
                         timestampEnd = new Date($scope.search.endDate).getTime()
@@ -464,8 +473,9 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
 
                 }
 
+                console.log("Search value insert ", $scope.search);
                 $scope.copyValues();
-
+                console.log("Copy search value insert ", $scope.search);
                 $scope.countRecords();
                 $scope.getPagableRecords();
                 /*if ($scope.formations.length == 0 ) {
@@ -683,8 +693,8 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                 if (typeof $scope.searchServices.initialPrice != "undefined")
                     config.price = $scope.searchServices.initialPrice
 
-                console.log("Pagination " , $scope.search )
-                console.log("Pagination " , $scope.searchServices )
+                //console.log("Pagination " , $scope.search )
+                //console.log("Pagination " , $scope.searchServices )
                 if ( $scope.searchServices.name != undefined) {
                     //console.log("ddddddnnnn"+ !isNaN(parseInt ( $scope.searchServices.name )))
                     if (!isNaN(parseInt( $scope.searchServices.name))) {
@@ -944,6 +954,17 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
 
                 //$location.path("/formation/book/" + formationToReserve);
 
+                ///Take a photo to pagination and request status
+
+                searchStatusRequest = {}
+
+                ///Page
+                ///Request data
+                searchStatusRequest.searchServices = $scope.searchStatusRequest
+
+                searchStatusRequest.formationToReserve = formationToReserve
+                searchStatusRequest.currentPage = $scope.app.currentPage
+
                 $location.path("/formation/book/" + formationToReserve);
             };
 //-------------------------------------------------------------------------------------------------------------------
@@ -999,7 +1020,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                 if ( $scope.formations.length > 0) {
                     console.log("Values")
                     $scope.formations.forEach( function (iFormation, ivalue){
-                        console.log("Selecionado la formacion 1",  iFormation.place)
+                       // console.log("Selecionado la formacion 1",  iFormation.place)
                         cityName =  iFormation.city
                         unicdata.push(  iFormation.city)
                         iFormation.place.formationid = iFormation.id
@@ -2928,7 +2949,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
 
         // BirthDate options
         vm.BirthDateOptions = {
-            dateDisabled: disabled,
+            dateDisabled: disabledBirthDateOptions,
             formatYear: 'yyyy',
             maxDate: new Date(actDate.getFullYear() - $scope.initialBirthDateYear, actDate.getMonth(), actDate.getDate()),
             minDate: new Date(actDate.getFullYear() - 80, 0, 1),
@@ -2951,6 +2972,11 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                 mode = data.mode;
             return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
         }
+
+        function disabledBirthDateOptions(data) {
+            return false;
+        }
+
 
         vm.toggleMin = function () {
             vm.inlineOptions.minDate = vm.inlineOptions.minDate ? null : new Date();
@@ -3025,6 +3051,8 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
         }
 
         vm.gotoSearch = function () {
+
+            ////Set paramater in $routeParams
             $location.path('/search/undefined');
         };
 
@@ -3032,9 +3060,11 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
     .controller('ModalInstanceCtrlWizard', function ($scope, $uibModalInstance, $rootScope, $routeParams, $http, customerData, $translate) {
 // Disable weekend selection
         function disabled(data) {
-            var date = data.date,
-                mode = data.mode;
-            return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
+            //var date = data.date,
+            //    mode = data.mode;
+            //return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
+
+            return false;
         }
 
         $scope.weekDay = ["Sunday", "Monday", "Tuesday", "Wensday", "Thuesday", "Friday", "Saturday"]

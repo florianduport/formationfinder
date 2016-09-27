@@ -33,7 +33,7 @@ module.exports = {
     }
     else
     {
-      return res.json({err: 'The page parameter is an invalid string number'});
+      return res.json({err: sails.__("ERROR_PAGE_INVALID")});
     }
 
 
@@ -43,12 +43,12 @@ module.exports = {
       }
       else
       {
-        return res.json({err: 'The len parameter is an invalid string number'});
+        return res.json({err: sails.__("ERROR_LEN_INVALID")});
       }
     }
     else
     {
-      return res.json({err:'The len parameter is an invalid string number'});
+      return res.json({err: sails.__("ERROR_LEN_INVALID")});
     }
 
 
@@ -105,14 +105,13 @@ module.exports = {
 
   },
 
-
 	findTestimoniesByFormation: function (req, res, next) {
 
 		formationId = req.param('id');
 
 		if(formationId === undefined){
 			return res.json({
-				err: 'No Id provided'
+				err: sails.__("ID_PARAMETER_REQUIRED")
 			});
 		}
 
@@ -142,7 +141,7 @@ module.exports = {
 
 		if(customerId === undefined || formationId === undefined || text === undefined){
 			return res.json({
-				err: 'Missing Data'
+				err: sails.__("MISSING_DATA")
 			});
 		}
 
@@ -163,7 +162,7 @@ module.exports = {
 			}
 			else {
 				return res.json({
-							err: 'An error has ocurred at create Testimony'
+							err: sails.__("ERROR_CREATING_TESTIMONY")
 						});
 			}
 		});

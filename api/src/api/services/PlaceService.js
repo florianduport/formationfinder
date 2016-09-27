@@ -25,7 +25,7 @@ module.exports   = {
           $geometry: { type: "Point",  coordinates: [ longitude, latitude] }, $maxDistance: distance}
         }
 
-      }).limit(len).skip(skip).toArray(function (err, results) {
+      }).toArray(function (err, results) {
      // console.log("Get data in DB -- ", (err))
       if (err) {
         console.log("Error -- ", (err))

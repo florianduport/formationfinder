@@ -53,4 +53,45 @@ module.exports.policies = {
   //  '*': true,
   //  create: 'authenticated'
   //}
+
+  PlaceController: {
+    '*': true,
+    create: 'authenticated',
+    update:'authenticated',
+    activate:'authenticated',
+    updateLocation:'authenticated',
+    updateFormationCenter:'authenticated',
+    delete:'authenticated',
+  },
+  FormationCenterController: {
+    '*': 'authenticated',
+    'searchAllFormationCenters':true,
+    'searchSimpleByName':true,
+    'searchAllFormationCentersNames':true,
+    'searchbyname':true
+  },
+  BillController: {
+    '*': false,
+    searchBillByFormationCenter: 'authenticated',
+    countBillByFormationCenter:'authenticated',
+  },
+   AlertController: {
+    '*': 'authenticated'
+
+  },
+  AnimatorController: {
+    '*': 'authenticated'
+
+  },
+  CustomerController: {
+    '*': 'authenticated',
+    'searchByLicenceInYear':true
+
+  },
+
+  FormationController: {
+    'create': 'authenticated',
+    'deleteByID': 'authenticated',
+    'updateByID': 'authenticated'
+  }
 };

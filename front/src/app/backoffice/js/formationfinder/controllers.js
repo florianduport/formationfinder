@@ -11,7 +11,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 $rootScope.userToken = null;
                 $rootScope.userAuthenticated = false;
                 $rootScope.formationCenter = null;
-
+                localStorage.removeItem('id_token');
                 $location.path('/');
 
                 console.log("El path ahora es: " + $location.url());
@@ -258,6 +258,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.login = function () {
 
+                console.log("Lo que llega al login es: ", $scope.credentials);
+
                 $http.post($rootScope.urlBase + "/login/check", {
                         username: $scope.credentials.username,
                         password: $scope.credentials.password
@@ -267,7 +269,14 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             $rootScope.userToken = result.data.token;
                             $rootScope.userAuthenticated = true;
                             $rootScope.formationCenter = result.data.formationCenter;
-                            $rootScope.username = $scope.credentials.username;
+                            //$rootScope.username = $scope.credentials.username;
+
+                            $rootScope.username = result.data.username;
+                            $rootScope.userIsMain = result.data.isMainLogin;
+
+                            //************** Set the token for authentication ************************
+                            localStorage.setItem('id_token', result.data.token);
+
                             console.log($rootScope.userToken);
 
                             ////Calculate formation size and costumer size and update
@@ -287,16 +296,16 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                                     else {
                                         //alert("Error using auth services.");
                                         //$scope.loginButtonText = "Login";
-                                        objeData = {type: "Error"}
-                                        $scope.showModalMessage("Error using auth services.", objeData)
+                                        objeData = {type: $translate.instant('ERROR')}
+                                        $scope.showModalMessage($translate.instant('ERROR_USING_AUTH_SERVICE'), objeData);
                                     }
 
                                 }).error(function (err) {
                                 // alert("Error using auth services.");
                                 //$scope.loginButtonText = "Login";
 
-                                objeData = {type: "Error"}
-                                $scope.showModalMessage("Error using auth services." + err, objeData)
+                                objeData = {type: $translate.instant('ERROR')}
+                                $scope.showModalMessage($translate.instant('ERROR_USING_AUTH_SERVICE'), objeData)
                             })
 
 
@@ -309,13 +318,13 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             //Show modal
 
                             //alert("Invalid intent. Please verify your credentials and try again.");
-                            objeData = {type: "Error"}
-                            $scope.showModalMessage("Invalid intent. Please verify your credentials and try again.", objeData)
+                            objeData = {type: $translate.instant('ERROR')}
+                            $scope.showModalMessage($translate.instant('INVALID_USERNAME_PASSWORD'), objeData)
                         }
                     })
                     .error(function (err) {
-                        objeData = {type: "Error"}
-                        $scope.showModalMessage("Error using auth services.", objeData)
+                        objeData = {type: $translate.instant('ERROR')}
+                        $scope.showModalMessage($translate.instant('ERROR_USING_AUTH_SERVICE'), objeData)
                         //$scope.loginButtonText = "Login";
                     });
             };
@@ -390,14 +399,14 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     //$scope.selected = selectedItem;
 
                 }, function () {
-                    $log.info('Close modal: ' + new Date());
+                    //$log.info('Close modal: ' + new Date());
                 });
 
             }
 
         }])
-    .controller("CreateLogincontroller", ["$scope", "$rootScope", "$location", "$http", "$uibModal",
-        function ($scope, $rootScope, $location, $http, $uibModal) {
+    .controller("CreateLogincontroller", ["$scope", "$rootScope", "$location", "$http", "$uibModal", "$translate",
+        function ($scope, $rootScope, $location, $http, $uibModal, $translate) {
 
             $scope.initCredentials = function () {
                 $scope.credentials = {};
@@ -423,18 +432,18 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     })
                     .success(function (data) {
                         if (data.status === "ok") {
-                            objeData = {type: "Info"};
-                            $scope.showModalMessage("Credential created.", objeData);
+                            objeData = {type: $translate.instant('INFO')};
+                            $scope.showModalMessage($translate.instant('CREDENTIAL_CREATED'), objeData);
 
                             $scope.gotoManage();
                         } else {
-                            objeData = {type: "Error"};
+                            objeData = {type: $translate.instant('ERROR')};
                             $scope.showModalMessage(data.info, objeData);
                         }
                     })
                     .error(function (err) {
-                        objeData = {type: "Error"};
-                        $scope.showModalMessage("Error using auth services.", objeData);
+                        objeData = {type: $translate.instant('ERROR')};
+                        $scope.showModalMessage($translate.instant('ERROR_USING_SERVICE'), objeData);
                         //alert("Error using auth services.");
                     })
                     .finally(function () {
@@ -470,8 +479,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 });
             };
         }])
-    .controller("AdminLoginController", ["$scope", "$rootScope", "$location", "$http", "$uibModal",
-        function ($scope, $rootScope, $location, $http, $uibModal) {
+    .controller("AdminLoginController", ["$scope", "$rootScope", "$location", "$http", "$uibModal", "$translate",
+        function ($scope, $rootScope, $location, $http, $uibModal, $translate) {
 
             $scope.logins = [];
             $scope.len = 5;
@@ -513,13 +522,13 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 if ($rootScope.username === iLogin.username) {
 
                     var objeData = {type: "Error"};
-                    $scope.showModalMessage("Can´t delete the actual Credential", objeData);
+                    $scope.showModalMessage($translate.instant('ERROR_DELETE_ACTUAL_CREDENTIAL'), objeData);
                     return;
                 }
 
                 var config = {
                     messageType: "Confirmation",
-                    message: "You are going to delete this Credential. Continue?",
+                    message: $translate.instant('DELETE_CREDENTIAL_CONFIRMATION'),
                     objectData: iLogin
                 };
 
@@ -536,7 +545,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 if ($rootScope.username === iLogin.username) {
 
                     var objeData = {type: "Error"};
-                    $scope.showModalMessage("Can´t update the actual Credential", objeData);
+                    $scope.showModalMessage($translate.instant('ERROR_UPDATE_ACTUAL_CREDENTIAL'), objeData);
                     return;
                 }
 
@@ -583,13 +592,13 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                                 if (data.status === "ok") {
 
                                     var objeData = {type: "Info"};
-                                    $scope.showModalMessage("Credential deleted.", objeData);
+                                    $scope.showModalMessage($translate.instant('CREDENTIAL_DELETED'), objeData);
                                     //alert('Credential deleted.');
                                     //$scope.initCredentials();
                                 } else {
 
-                                    var objeData = {type: "Error"};
-                                    $scope.showModalMessage("Error deleting credential: " + data.info, objeData);
+                                    objeData = {type: "Error"};
+                                    $scope.showModalMessage($translate.instant('ERROR_DELETING_CREDENTIAL') + data.info, objeData);
 
                                     //alert("Error deleting credential: " + data.info);
                                     //$scope.initCredentials();
@@ -598,7 +607,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             .error(function (err) {
 
                                 var objeData = {type: "Error"};
-                                $scope.showModalMessage("Error deleting credential: " + err, objeData);
+                                $scope.showModalMessage($translate.instant('ERROR_DELETING_CREDENTIAL') + err, objeData);
 
                                 //alert("Error deleting credential: " + err);
                             })
@@ -640,8 +649,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 });
             };
         }])
-    .controller('ModalConfirmCtrl', ["$scope", "$uibModalInstance", "items",
-        function ($scope, $uibModalInstance, items) {
+    .controller('ModalConfirmCtrl', ["$scope", "$uibModalInstance", "items", "$translate",
+        function ($scope, $uibModalInstance, items, $translate) {
 
             $scope.items = items;
             $scope.selected = {
@@ -654,12 +663,12 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             };
 
             $scope.cancel = function () {
-                $uibModalInstance.dismiss('cancel');
+                $uibModalInstance.dismiss($translate.instant('CANCEL'));
                 //$scope.formationCenterName = ""
             };
         }])
-    .controller("UpdateLogincontroller", ["$scope", "$rootScope", "$routeParams", "$location", "$http", "$uibModal",
-        function ($scope, $rootScope, $routeParams, $location, $http, $uibModal) {
+    .controller("UpdateLogincontroller", ["$scope", "$rootScope", "$routeParams", "$location", "$http", "$uibModal", "$translate",
+        function ($scope, $rootScope, $routeParams, $location, $http, $uibModal, $translate) {
 
             //$scope.formationCenter = $rootScope.formationCenter;
             $scope.usernameExpReg = /^([ê|µ|ç|ùàè|áéíóú|a-z|A-Z]*)([\w|\d])*([_|\s]*[\.|\-|\'|ê|ç|ùàè|áéíóú|A-Z|a-z|\d])*$/;
@@ -683,15 +692,15 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             $scope.Login = result.data;
                             copyToOldLogin();
                         } else {
-                            var objeData = {type: "Error"};
+                            var objeData = {type: $translate.instant('ERROR')};
                             $scope.showModalMessage(result.info, objeData);
                             //alert("Error: " + result.info);
                         }
                     })
                     .error(function (err) {
                         //console.log("Error searching Credential: ", err);
-                        var objeData = {type: "Error"};
-                        $scope.showModalMessage("Error searching Credential", objeData);
+                        var objeData = {type: $translate.instant('ERROR')};
+                        $scope.showModalMessage($translate.instant('ERROR_SEARCHING_CREDENTIAL'), objeData);
                     });
             };
             $scope.searchLogin();
@@ -725,8 +734,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             };
 
             var config = {
-                messageType: "Confirmation",
-                message: "You are going to update this Credential. Continue?",
+                messageType: $translate.instant('CONFIRMATION'),
+                message: $translate.instant('UPDATE_CREDENTIAL_CONFIRMATION'),
                 objectData: $scope.Login
             };
 
@@ -735,8 +744,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 if (prepareUpdate()) {
                     $scope.showUpdateConfirmModal();
                 } else {
-                    objeData = {type: "Error"};
-                    $scope.showModalMessage("Enter valid new parameters, or make some chance.", objeData);
+                    objeData = {type: $translate.instant('ERROR')};
+                    $scope.showModalMessage($translate.instant('ENTER_VALID_PARAMETER_OR_MAKE_CHANGES'), objeData);
                     $scope.searchLogin();
                 }
 
@@ -748,8 +757,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.showUpdateConfirmModal = function () {
 
-                $scope.items.messageType = "Confirmation";
-                $scope.items.message = "You are going to update this Credential. Continue?";
+                $scope.items.messageType = $translate.instant('CONFIRMATION');
+                $scope.items.message = $translate.instant('UPDATE_CREDENTIAL_CONFIRMATION');
                 $scope.items.objectData = $scope.Login;
 
                 var modalInstance = $uibModal.open({
@@ -777,21 +786,21 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             .success(function (result) {
                                 if (result.status === "ok") {
 
-                                    objeData = {type: "Info"};
-                                    $scope.showModalMessage("Credential updated.", objeData);
+                                    objeData = {type: $translate.instant('INFO')};
+                                    $scope.showModalMessage($translate.instant('CREDENTIAL_UPDATED'), objeData);
 
                                     //alert("Credential updated.");
                                     $location.path('/login/admin');
                                 } else {
                                     console.log(result.info);
-                                    objeData = {type: "Error"};
-                                    $scope.showModalMessage("Credential not updated: " + result.info, objeData);
+                                    objeData = {type: $translate.instant('ERROR')};
+                                    $scope.showModalMessage($translate.instant('CREDENTIAL_NOT_UPDATED')+ ": " + result.info, objeData);
                                     //alert("Credential not updated: " + result.info);
                                 }
                             })
                             .error(function (err) {
                                 console.log(err);
-                                objeData = {type: "Error"};
+                                objeData = {type: $translate.instant('ERROR')};
                                 $scope.showModalMessage(err, objeData);
                             })
                             .finally(function () {
@@ -830,62 +839,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             };
         }])
-    .controller("DeleteLogincontroller", ["$scope", "$rootScope", "$location", "$http",
-        function ($scope, $rootScope, $location, $http) {
-
-            $scope.initCredentials = function () {
-                $scope.username = null;
-                $scope.formationCenter = $rootScope.formationCenter;
-                $scope.loginButtonText = "Delete";
-            };
-            $scope.initCredentials();
-
-            $scope.index = null;
-            $scope.usernameExpReg = /^([ê|µ|ç|ùàè|áéíóú|a-z|A-Z]*)([\w|\d])*([_|\s]*[\.|\-|\'|ê|ç|ùàè|áéíóú|A-Z|a-z|\d])*$/;
-
-
-            $scope.usersnames = [];
-            $scope.searchLoginNames = function () {
-                $http.post($rootScope.urlBase + "/login/searchUserNamesByFormationCenter", {
-                        formationCenter: $scope.formationCenter
-                    })
-                    .success(function (result) {
-                        if (result.status === "ok") {
-                            $scope.usersnames = result.data;
-                        }
-                    })
-                    .error(function (err) {
-                        console.log(err);
-                    });
-            };
-            $scope.searchLoginNames();
-
-            $scope.deleteLogin = function () {
-
-                $scope.loginButtonText = "Deleting ...";
-
-                $http.post($rootScope.urlBase + "/login/delete", {
-                        username: $scope.username,
-                        formationCenter: $scope.formationCenter,
-                    })
-                    .success(function (data) {
-                        if (data.status === "ok") {
-                            alert('Credential deleted.');
-                        } else {
-                            alert("Error deleting credential: " + data.info);
-                        }
-                    })
-                    .error(function (err) {
-                        alert("Error using auth services.");
-                    })
-                    .finally(function () {
-                        $scope.searchLoginNames();
-                        $scope.initCredentials();
-                    });
-            };
-        }])
-    .controller("AdminFormationController", ["$scope", "$rootScope", "$location", "$http", "$uibModal",
-        function ($scope, $rootScope, $location, $http, $uibModal) {
+    .controller("AdminFormationController", ["$scope", "$rootScope", "$location", "$http", "$uibModal", "$translate",
+        function ($scope, $rootScope, $location, $http, $uibModal, $translate) {
 
             $scope.formations = [];
 
@@ -923,8 +878,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                         } else {
 
-                            objeData = {type: "Error"};
-                            $scope.showModalMessage("Error searching Formations.", objeData);
+                            objeData = {type: $translate.instant('ERROR')};
+                            $scope.showModalMessage($translate.instant('ERROR_SEARCHING_FORMATIONS'), objeData);
 
                             console.log("An error has ocurred searching Formations.");
                             $scope.showFormations = false;
@@ -933,8 +888,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     })
                     .error(function (error) {
 
-                        objeData = {type: "Error"};
-                        $scope.showModalMessage("Error searching Formations.", objeData);
+                        objeData = {type: $translate.instant('ERROR')};
+                        $scope.showModalMessage($translate.instant('ERROR_SEARCHING_FORMATIONS'), objeData);
 
                         console.log("Error searching Formations.");
                         console.log(error);
@@ -962,8 +917,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.showModalConfirmDelete = function (iFormation) {
 
-                $scope.items.messageType = "Confirmation";
-                $scope.items.message = "You are going to delete this formation, continue?";
+                $scope.items.messageType = $translate.instant('CONFIRMATION');
+                $scope.items.message = $translate.instant('DELETE_FORMATION_CONFIRMATION');
                 $scope.items.objectData = iFormation;
 
                 var modalInstance = $uibModal.open({
@@ -998,14 +953,14 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                                     $scope.searchFormations();
 
-                                    objeData = {type: "Info"};
-                                    $scope.showModalMessage("Formation deleted.", objeData);
+                                    objeData = {type: $translate.instant('INFO')};
+                                    $scope.showModalMessage($translate.instant('FORMATION_DELETED'), objeData);
 
                                     //alert("Formation deleted.");
                                 } else {
 
-                                    objeData = {type: "Error"};
-                                    $scope.showModalMessage("Error deleting the Formation.", objeData);
+                                    objeData = {type: $translate.instant('ERROR')};
+                                    $scope.showModalMessage($translate.instant('ERROR_DELETING_FORMATION'), objeData);
 
                                     //alert("An error has ocurred deleting the Formation.");
                                 }
@@ -1014,8 +969,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                                 console.log("An error has ocurred deleting the Formation.");
                                 console.log(err);
 
-                                objeData = {type: "Error"};
-                                $scope.showModalMessage("Error deleting the Formation.", objeData);
+                                objeData = {type: $translate.instant('ERROR')};
+                                $scope.showModalMessage($translate.instant('ERROR_DELETING_FORMATION'), objeData);
 
                                 //alert("An error has ocurred deleting the Formation.");
                             });
@@ -1052,8 +1007,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             }
 
         }])
-    .controller("UpdateFormationController", ["$scope", "$routeParams", "$rootScope", "$location", "$http", "$uibModal",
-        function ($scope, $routeParams, $rootScope, $location, $http, $uibModal) {
+    .controller("UpdateFormationController", ["$scope", "$routeParams", "$rootScope", "$location", "$http", "$uibModal", "$translate",
+        function ($scope, $routeParams, $rootScope, $location, $http, $uibModal, $translate) {
 
             $scope.numExpReg = /^[\d]+$/;
             $scope.dateRegExp = /^\d{2}\/\d{2}\/\d{4}$/;
@@ -1131,16 +1086,16 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         } else {
                             console.log("Error searching Formation: ", result.info);
 
-                            objeData = {type: "Error"};
-                            $scope.showModalMessage("Error searching Formation: " + result.info, objeData);
+                            objeData = {type: $translate.instant('ERROR')};
+                            $scope.showModalMessage($translate.instant('ERROR_SEARCHING_FORMATION') +": "+ result.info, objeData);
                             //alert("Error searching Formation: " + result.info);
                         }
                     })
                     .error(function (err) {
                         console.log("Error searching Formation: ", err);
 
-                        objeData = {type: "Error"};
-                        $scope.showModalMessage("Error searching Formation: " + err, objeData);
+                        objeData = {type: $translate.instant('ERROR')};
+                        $scope.showModalMessage($translate.instant('ERROR_SEARCHING_FORMATION') +": "+ err, objeData);
 
                         //alert("Error searching Formation: " + err);
                     });
@@ -1396,8 +1351,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             $scope.places = result.data;
                         } else {
 
-                            objeData = {type: "Error"};
-                            $scope.showModalMessage("Error searching Places.", objeData);
+                            objeData = {type: $translate.instant('ERROR')};
+                            $scope.showModalMessage($translate.instant('ERROR_SEARCHING_PLACES'), objeData);
                             //alert("An error has ocurred searching Places.");
                         }
                     })
@@ -1405,8 +1360,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         console.log("An error has ocurred searching Places.");
                         console.log(err);
 
-                        objeData = {type: "Error"};
-                        $scope.showModalMessage("Error searching Places.", objeData);
+                        objeData = {type: $translate.instant('ERROR')};
+                        $scope.showModalMessage($translate.instant('ERROR_SEARCHING_PLACES'), objeData);
 
                         //alert("An error has ocurred searching Places.");
                     });
@@ -1429,8 +1384,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             $scope.animatorsPSY = result.data;
                         } else {
 
-                            objeData = {type: "Error"};
-                            $scope.showModalMessage("Error searching Animators PSY.", objeData);
+                            objeData = {type: $translate.instant('ERROR')};
+                            $scope.showModalMessage($translate.instant('ERROR_SEARCHING_ANIMATORS_PSY'), objeData);
                             //alert("An error has ocurred searching Animators PSY.");
                         }
                     })
@@ -1438,8 +1393,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         console.log("An error has ocurred searching Animators PSY.");
                         console.log(err);
 
-                        objeData = {type: "Error"};
-                        $scope.showModalMessage("Error searching Animators PSY.", objeData);
+                        objeData = {type: $translate.instant('ERROR')};
+                        $scope.showModalMessage($translate.instant('ERROR_SEARCHING_ANIMATORS_PSY'), objeData);
                         //alert("An error has ocurred searching Animators PSY.");
                     });
             };
@@ -1457,8 +1412,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             $scope.animatorsBAFM = result.data;
                         } else {
 
-                            objeData = {type: "Error"};
-                            $scope.showModalMessage("Error searching Animators BAFM.", objeData);
+                            objeData = {type: $translate.instant('ERROR')};
+                            $scope.showModalMessage($translate.instant('ERROR_SEARCHING_ANIMATORS_BAFM'), objeData);
                             // alert("An error has ocurred searching Animators BAFM.");
                         }
                     })
@@ -1466,8 +1421,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         console.log("An error has ocurred searching Animators BAFM.");
                         console.log(err);
 
-                        objeData = {type: "Error"};
-                        $scope.showModalMessage("Error searching Animators BAFM.", objeData);
+                        objeData = {type: $translate.instant('ERROR')};
+                        $scope.showModalMessage($translate.instant('ERROR_SEARCHING_ANIMATORS_BAFM'), objeData);
                         //alert("An error has ocurred searching Animators BAFM.");
                     });
             };
@@ -1528,8 +1483,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                 $scope.prepareForUpdate();
 
-                $scope.items.messageType = "Confirmation";
-                $scope.items.message = "You are going to update this formation, continue?";
+                $scope.items.messageType = $translate.instant('CONFIRMATION');
+                $scope.items.message = $translate.instant('UPDATE_FORMATION_CONFIRMATION');
                 $scope.items.objectData = {
                     formationID: $routeParams.id,
                     newAttributes: newAttributes
@@ -1561,14 +1516,14 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             .success(function (result) {
                                 if (result.status === "ok") {
 
-                                    objeData = {type: "Info"};
-                                    $scope.showModalMessage("Formation updated.", objeData);
+                                    objeData = {type: $translate.instant('INFO')};
+                                    $scope.showModalMessage($translate.instant('FORMATION_UPDATED'), objeData);
                                     //alert("Formation updated.");
                                 } else {
                                     console.log("******* ERROR ********");
                                     console.log(result.info);
 
-                                    objeData = {type: "Error"};
+                                    objeData = {type: $translate.instant('ERROR')};
                                     $scope.showModalMessage(result.info, objeData);
                                 }
 
@@ -1577,8 +1532,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                                 console.log("******* ERROR ********");
                                 console.log(err);
 
-                                objeData = {type: "Error"};
-                                $scope.showModalMessage("Error updating formation", objeData);
+                                objeData = {type: $translate.instant('ERROR')};
+                                $scope.showModalMessage($translate.instant('ERROR_UPDATING_FORMATION'), objeData);
                             })
                             .finally(function () {
                                 $scope.gotoManage();
@@ -1720,8 +1675,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             }
 
         }])
-    .controller("CreateFormationController", ["$scope", "$rootScope", "$location", "$http", "$uibModal",
-        function ($scope, $rootScope, $location, $http, $uibModal) {
+    .controller("CreateFormationController", ["$scope", "$rootScope", "$location", "$http", "$uibModal", "$translate",
+        function ($scope, $rootScope, $location, $http, $uibModal, $translate) {
 
             $scope.numExpReg = /^[\d]+$/;
             $scope.dateRegExp = /^\d{2}\/\d{2}\/\d{4}$/;
@@ -1783,8 +1738,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                                 $scope.selectedPlace = $scope.places[0];
                             } else {
-                                objeData = {type: "Error"};
-                                $scope.showModalMessage("An error has ocurred searching Places.", objeData);
+                                objeData = {type: $translate.instant('ERROR')};
+                                $scope.showModalMessage($translate.instant('ERROR_SEARCHING_PLACES'), objeData);
                                 //alert("An error has ocurred searching Places.");
                             }
                         })
@@ -1792,8 +1747,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             console.log("An error has ocurred searching Places.");
                             console.log(err);
 
-                            objeData = {type: "Error"};
-                            $scope.showModalMessage("Error searching Places.", objeData);
+                            objeData = {type: $translate.instant('ERROR')};
+                            $scope.showModalMessage($translate.instant('ERROR_SEARCHING_PLACES'), objeData);
                             //alert("An error has ocurred searching Places.");
                         });
 
@@ -1813,8 +1768,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                             } else {
 
-                                objeData = {type: "Error"};
-                                $scope.showModalMessage("Error searching Animators PSY.", objeData);
+                                objeData = {type: $translate.instant('ERROR')};
+                                $scope.showModalMessage($translate.instant('ERROR_SEARCHING_ANIMATORS_PSY'), objeData);
 
                                 //alert("An error has ocurred searching Animators PSY.");
                             }
@@ -1823,8 +1778,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             console.log("An error has ocurred searching Animators PSY.");
                             console.log(err);
 
-                            objeData = {type: "Error"};
-                            $scope.showModalMessage("Error searching Animators PSY.", objeData);
+                            objeData = {type: $translate.instant('ERROR')};
+                            $scope.showModalMessage($translate.instant('ERROR_SEARCHING_ANIMATORS_PSY'), objeData);
                             //alert("An error has ocurred searching Animators PSY.");
                         });
                 };
@@ -1843,8 +1798,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                             } else {
 
-                                objeData = {type: "Error"};
-                                $scope.showModalMessage("Error searching Animators BAFM.", objeData);
+                                objeData = {type: $translate.instant('ERROR')};
+                                $scope.showModalMessage($translate.instant('ERROR_SEARCHING_ANIMATORS_BAFM'), objeData);
                                 //alert("An error has ocurred searching Animators BAFM.");
                             }
                         })
@@ -1852,8 +1807,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             console.log("An error has ocurred searching Animators BAFM.");
                             console.log(err);
 
-                            objeData = {type: "Error"};
-                            $scope.showModalMessage("Error searching Animators BAFM.", objeData);
+                            objeData = {type: $translate.instant('ERROR')};
+                            $scope.showModalMessage($translate.instant('ERROR_SEARCHING_ANIMATORS_BAFM'), objeData);
                             //alert("An error has ocurred searching Animators BAFM.");
                         });
                 };
@@ -2018,8 +1973,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     .success(function (result) {
                         if (result.status === "ok") {
 
-                            objeData = {type: "Info"};
-                            $scope.showModalMessage("Formation Created.", objeData);
+                            objeData = {type: $translate.instant('INFO')};
+                            $scope.showModalMessage($translate.instant('FORMATION_CREATED'), objeData);
                             //alert("Formation Created.");
 
                             console.log("Formation Created.");
@@ -2027,8 +1982,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             $scope.gotoManage();
                         } else {
 
-                            objeData = {type: "Error"};
-                            $scope.showModalMessage("Error creating the Formation: " + result.info, objeData);
+                            objeData = {type: $translate.instant('ERROR')};
+                            $scope.showModalMessage($translate.instant('ERROR_CREATING_FORMATION') + ": " + result.info, objeData);
 
                             //alert("Error creating the Formation.");
                         }
@@ -2037,8 +1992,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         console.log("Error creating the Formation.");
                         console.log(err);
 
-                        objeData = {type: "Error"};
-                        $scope.showModalMessage("Error creating the Formation. " + err, objeData);
+                        objeData = {type: $translate.instant('ERROR')};
+                        $scope.showModalMessage($translate.instant('ERROR_CREATING_FORMATION') + ": " + err, objeData);
                         //alert("Error creating the Formation.");
                     })
                     .finally(function () {
@@ -2190,8 +2145,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             }
 
         }])
-    .controller("ManageAnimatorController", ["$scope", "$rootScope", "$location", "$http", "$uibModal",
-        function ($scope, $rootScope, $location, $http, $uibModal) {
+    .controller("ManageAnimatorController", ["$scope", "$rootScope", "$location", "$http", "$uibModal", "$translate",
+        function ($scope, $rootScope, $location, $http, $uibModal, $translate) {
 
             $scope.animators = [];
             $scope.len = 5;
@@ -2230,8 +2185,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         } else {
                             $scope.showAnimators = false;
 
-                            objeData = {type: "Error"};
-                            $scope.showModalMessage("Error searching Animators", objeData);
+                            objeData = {type: $translate.instant('ERROR')};
+                            $scope.showModalMessage($translate.instant('ERROR_SEARCHING_ANIMATORS'), objeData);
 
                             //alert("Error searching Animators.");
                             console.log("Error searching Animators: ", result.info);
@@ -2265,8 +2220,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.showModalConfirmDelete = function (Aminator) {
 
-                $scope.items.messageType = "Confirmation";
-                $scope.items.message = "You are going to delete this animator, continue?";
+                $scope.items.messageType = $translate.instant('CONFIRMATION');
+                $scope.items.message = $translate.instant('DELETE_ANIMATOR_CONFIRMATION');
                 $scope.items.objectData = Aminator;
 
                 var modalInstance = $uibModal.open({
@@ -2300,23 +2255,23 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                                     $scope.searchAnimators();
 
-                                    objeData = {type: "Info"};
-                                    $scope.showModalMessage("Animator deleted.", objeData);
+                                    objeData = {type: $translate.instant('INFO')};
+                                    $scope.showModalMessage($translate.instant('ANIMATOR_DELETED'), objeData);
 
                                     //alert("Animator deleted");
                                     console.log("Animator deleted");
                                 } else {
                                     console.log("Error deleting Animator: ", result.info);
 
-                                    objeData = {type: "Error"};
+                                    objeData = {type: $translate.instant('ERROR')};
                                     $scope.showModalMessage(result.info, objeData);
                                 }
                             })
                             .error(function (err) {
                                 console.log("Error deleting Animator: ", err);
 
-                                objeData = {type: "Error"};
-                                $scope.showModalMessage("Error deleting Animator.", objeData);
+                                objeData = {type: $translate.instant('ERROR')};
+                                $scope.showModalMessage($translate.instant('ERROR_DELETING_ANIMATOR'), objeData);
                             });
                     }
 
@@ -2350,8 +2305,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             };
 
         }])
-    .controller("EditAnimatorController", ["$scope", "$rootScope", "$routeParams", "$location", "$http", "$uibModal",
-        function ($scope, $rootScope, $routeParams, $location, $http, $uibModal) {
+    .controller("EditAnimatorController", ["$scope", "$rootScope", "$routeParams", "$location", "$http", "$uibModal", "$translate",
+        function ($scope, $rootScope, $routeParams, $location, $http, $uibModal, $translate) {
 
             $scope.nameRegExp = /^[A-Za-z][A-Za-z\s]+$/;
             $scope.zipcodeRegExp = /^\d{5}$/;
@@ -2369,14 +2324,17 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         if (result.status === "ok") {
                             $scope.animator = result.data;
                         } else {
-                            objeData = {type: "Error"};
-                            $scope.showModalMessage("Error searching the Animator.", objeData);
+                            objeData = {type: $translate.instant('ERROR')};
+                            $scope.showModalMessage($translate.instant('ERROR_SEARCHING_ANIMATOR'), objeData);
 
                             console.log("Error searching the Animator.", result.info);
                         }
                     })
                     .error(function (err) {
                         console.log("Error searching the Animator.", err);
+
+                        objeData = {type: $translate.instant('ERROR')};
+                        $scope.showModalMessage($translate.instant('ERROR_SEARCHING_ANIMATOR'), objeData);
                     });
             };
 
@@ -2416,8 +2374,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.showModalConfirm = function () {
 
-                $scope.items.messageType = "Confirmation";
-                $scope.items.message = "You are going to update this animator, continue?";
+                $scope.items.messageType = $translate.instant('CONFIRMATION');
+                $scope.items.message = $translate.instant('UPDATE_ANIMATOR_CONFIRMATION');
                 $scope.items.objectData = "";
 
                 var modalInstance = $uibModal.open({
@@ -2454,15 +2412,15 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             .success(function (result) {
                                 if (result.status === "ok") {
 
-                                    objeData = {type: "Info"};
-                                    $scope.showModalMessage("Animator updated.", objeData);
+                                    objeData = {type: $translate.instant('INFO')};
+                                    $scope.showModalMessage($translate.instant('ANIMATOR_UPDATED'), objeData);
 
                                     //alert("Animator updated.");
                                     $location.path("/animator/manage");
                                 } else {
 
-                                    objeData = {type: "Error"};
-                                    $scope.showModalMessage("Error updating Animator.", objeData);
+                                    objeData = {type: $translate.instant('ERROR')};
+                                    $scope.showModalMessage($translate.instant('ERROR_UPDATING_ANIMATOR'), objeData);
 
                                     console.log("Error updating Animator.", result.info);
                                     //alert(result.info);
@@ -2471,8 +2429,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             .error(function (err) {
                                 console.log("Error updating Animator.", err);
 
-                                objeData = {type: "Error"};
-                                $scope.showModalMessage("Error updating Animator.", objeData);
+                                objeData = {type: $translate.instant('ERROR')};
+                                $scope.showModalMessage($translate.instant('ERROR_UPDATING_ANIMATOR'), objeData);
 
                                 //alert("Error updating Animator." + result.info);
                             });
@@ -2538,8 +2496,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                                 $scope.initParameters();
 
-                                objeData = {type: "Info"};
-                                $scope.showModalMessage("Animator created.", objeData);
+                                objeData = {type: $translate.instant('INFO')};
+                                $scope.showModalMessage($translate.instant('ANIMATOR_CREATED'), objeData);
 
                                 //alert("Animator created.");
                                 //console.log("Animator created.", result.data);
@@ -2547,8 +2505,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                             } else {
 
-                                objeData = {type: "Error"};
-                                $scope.showModalMessage("Error creating Animator: " + result.info, objeData);
+                                objeData = {type: $translate.instant('ERROR')};
+                                $scope.showModalMessage($translate.instant('ERROR_CREATING_ANIMATOR') + ": " + result.info, objeData);
 
                                 //alert("Error creating Animator: " + result.info);
                                 //console.log("Error creating Animator: ", result.info);
@@ -2556,6 +2514,9 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         })
                         .error(function (err) {
                             console.log("Error creating Animator: ", err);
+
+                            objeData = {type: $translate.instant('ERROR')};
+                            $scope.showModalMessage($translate.instant('ERROR_CREATING_ANIMATOR') + ": " + err, objeData);
                         });
                 }
             };
@@ -2930,63 +2891,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             console.log($scope.testimonies);
         };
     }])
-    .controller("FaqController", ['$scope', '$http', '$timeout', '$rootScope', function ($scope, $http, $timeout, $rootScope) {
 
-        app = this;
-        $scope.app = {}
-        $scope.app.currentPage = 1;
-        $scope.app.maxSize = 5;
-        $scope.app.itemPerPage = 5;
-        $scope.app.totalItems = 0;
 
-        $scope.countRecords = function () {
-            $http.get($rootScope.urlBase + "/Faq/count")
-                .success(function (data, status, headers, config) {
-
-                    if (data.res != "OK") {
-                        $scope.app.totalItems = 0;
-                        return;
-                    }
-                    $scope.app.totalItems = data.size
-                })
-                .error(function (data, status, header, config) {
-                    console.log(data);
-                });
-        };
-
-        $scope.getPagableRecords = function () {
-            var param = {
-                page: $scope.app.currentPage,
-                len: $scope.app.itemPerPage
-            };
-            $http.get($rootScope.urlBase + "/Faq/findFaq", {params: param})
-                .success(function (data, status, headers, config) {
-                    $scope.FaqList = data;
-                    //console.log("Resultados ",  $scope.FaqList)
-                })
-                .error(function (data, status, header, config) {
-                    console.log(data);
-                });
-        };
-
-        $scope.countRecords();
-        $scope.getPagableRecords();
-
-    }])
-    .controller('AlertDemoCtrl', function ($scope) {
-        $scope.alerts = [
-            {type: 'danger', msg: 'Oh snap! Change a few things up and try submitting again.'},
-            {type: 'success', msg: 'Well done! You successfully read this important alert message.'}
-        ];
-
-        $scope.addAlert = function () {
-            $scope.alerts.push({msg: 'Another alert!'});
-        };
-
-        $scope.closeAlert = function (index) {
-            $scope.alerts.splice(index, 1);
-        };
-    })
     .controller('ModalDemoCtrl', ["$scope", "$uibModal", "$log", "$rootScope", "$http", "$location", "$routeParams", function ($scope, $uibModal, $log, $rootScope, $http, $location, $routeParams) {
 
         $scope.items = {}; //['item1', 'item2', 'item3'];
@@ -3088,7 +2994,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             $uibModalInstance.dismiss('cancel');
             $scope.formationCenterName = ""
         };
-    }).controller("WizardController", function ($rootScope, $http, $routeParams, $scope, $uibModal, $log, $location) {
+    })
+    .controller("WizardController", function ($rootScope, $http, $routeParams, $scope, $uibModal, $log, $location) {
 
         var vm = this;
 
@@ -3714,7 +3621,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
     .controller("PlaceEditcontroller", ["$scope", "$rootScope", "$http", "$location", "$routeParams", "$timeout", "NavigatorGeolocation", "NgMap", "$uibModal", "$log", "$translate",
         function ($scope, $rootScope, $http, $location, $routeParams, $timeout, NavigatorGeolocation, NgMap, $uibModal, $log, $translate) {
 
-            $scope.usernameExpReg = /^([ê|µ|ç|ùàè|áéíóú|a-z|A-Z]*)([\w|\d])*([_|\s]*[\.|\-|\'|ê|ç|ùàè|áéíóú|A-Z|a-z|\d])*$/;
+            $scope.usernameExpReg = /^([ê|µ|ç|ùàè|áéíóú|a-z|A-Z|ñ|Ñ]*)([\w|\d])*([_|\s]*[\.|\-|\'|ê|ç|ùàè|áéíóú|A-Z|a-z|ñ|Ñ|\d])*$/;
             ///^[a-z][a-z\d]*[_.\s]*[a-z\d]*$/;
             $scope.numExpReg = /^[\d]+$/;
             ///Data Structure for insert
@@ -4077,7 +3984,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
         function ($scope, $rootScope, $http, $location, $routeParams, $timeout, NavigatorGeolocation, NgMap, $uibModal, $log, $translate) {
             $scope.advanceSearch = true
             ///^[a-z][a-z\d]*[_.\s]*[a-z\d]*$/;
-            $scope.usernameExpReg = /^([ê|µ|ç|ùàè|áéíóú|a-z|A-Z]*)([\w|\d])*([_|\s]*[\.|\-|\'|ê|ç|ùàè|áéíóú|A-Z|a-z|\d])*$/;
+            $scope.usernameExpReg = /^([ê|µ|ç|ùàè|áéíóú|a-z|A-Z|ñ|Ñ]*)([\w|\d])*([_|\s]*[\.|\-|\'|ê|ç|ùàè|áéíóú|A-Z|a-z|ñ|Ñ|\d])*$/;
 
             $scope.numExpReg = /^[\d]+$/;
             $scope.placetoEditID = 0
@@ -4255,9 +4162,15 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 if (typeof $scope.criteriaList == "undefined" || $scope.criteriaList == "")
                     $scope.criteriaList = ""
 
-                $scope.seachPlace = $scope.seachPlaceAux
+                //$scope.seachPlace = $scope.seachPlaceAux
+
                 $scope.search.name = $scope.criteriaList;
                 $scope.appPlace.currentPagePlace = 0;
+
+                $scope.seachPlace.name =  $scope.seachPlaceAux.name
+                $scope.seachPlace.agreementName =  $scope.seachPlaceAux.agreementName
+                $scope.seachPlace.agreementNumber =   $scope.seachPlaceAux.agreementNumber
+                $scope.seachPlace.address =  $scope.seachPlaceAux.address
 
                 $scope.countRecordsPlace()
                 $scope.getPlaceRecords();
@@ -4944,6 +4857,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 console.log("Call services ", config)
                 $http.post($rootScope.urlBase + '/Bill/searchBillByFormationCenter', config)
                     .success(function (data_result) {
+
+
                         if (data_result.length == 0 || typeof data_result.length == "undefined") {
                             //$scope.appBill.currentPageBill = 0;
                             message = $translate.instant("ERROR_ALERT_SEARCH")
@@ -4959,6 +4874,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             return;
 
                         }
+
+
                         console.log("Cantidad de objetos --- obtenidos", data_result.length)
                         // $scope.appBill.currentPageBill = 0;
                         $scope.Bills = data_result
@@ -5183,8 +5100,11 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                 }
                 $scope.advancedSearchPlace.$setPristine()
-                $scope.search =  $scope.searchAux
 
+
+                $scope.search.name =   $scope.searchAux.name
+                $scope.search.initialDate = $scope.searchAux.initialDate
+                $scope.search.endDate =  $scope.searchAux.endDate
 
 
                 $scope.countRecordsBill();
@@ -5375,7 +5295,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
     .controller("AlertListController", ["$scope", "$rootScope", "$http", "$location", "$routeParams", "$timeout", "NavigatorGeolocation", "NgMap", "$uibModal", "$log", "$translate",
         function ($scope, $rootScope, $http, $location, $routeParams, $timeout, NavigatorGeolocation, NgMap, $uibModal, $log, $translate) {
             $scope.weekDay = ["Sunday", "Monday", "Tuesday", "Wensday", "Thuesday", "Friday", "Saturday"]
-            $scope.usernameExpReg = /^([ê|µ|ç|ùàè|áéíóú|a-z|A-Z]*)([\w|\d])*([_|\s]*[\.|\-|\'|ê|ç|ùàè|áéíóú|A-Z|a-z|\d])*$/;
+            $scope.usernameExpReg =/^([ê|µ|ç|ùàè|áéíóú|a-z|A-Z|ñ|Ñ]*)([\w|\d])*([_|\s]*[\.|\-|\'|ê|ç|ùàè|áéíóú|A-Z|a-z|ñ|Ñ|\d])*$/;
 
 
             $scope.advanceSearch = true
@@ -5434,7 +5354,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 var date = data.date,
                     mode = data.mode;
                 //
-                return mode === 'day' && (date.getDay() === 0 || date.getDay() === 7);
+                //return mode === 'day' && (date.getDay() === 0 || date.getDay() === 7);
+                return false
             }
 
             $scope.today = function () {
@@ -5603,7 +5524,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 //
                 //config.city = $scope.search.name
                 //countbycity
-                console.log("Call services ", config)
+                console.log("Call services ===>", config)
                 $http.post($rootScope.urlBase + '/Alert/countAlertByFormationCenter', config)
                     .success(function (data_result) {
                         // console.log("RESULT ", data_result)
@@ -5611,7 +5532,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             $scope.appAlert.totalItemsAlert = 0;
                             return;
                         }
-                        //console.log("Cantidad de objetos ---", data_result.size)
+                        console.log("Cantidad ---", data_result.size)
                         $scope.appAlert.totalItemsAlert = data_result.size
                         return;
                         // console.log("RESULTADOS", data_result)
@@ -5725,8 +5646,9 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         $scope.Alerts = data_result.result
                         console.log("Rsults", $scope.Alerts)
                         $scope.activatedAlert = []
-
+                        console.log("Beafore Data ", $scope.search)
                         $scope.clearSearchField()
+                        console.log("Data ", $scope.search)
                         ///Review if clean al parameter
                         return;
                         // console.log("RESULTADOS", data_result)
@@ -5739,7 +5661,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         objectType = {type: "Error"};
                         console.log("Error show form")
                         $scope.showModalMessage(message, objectType);
-                        return;
+
                         return
                     })
 
@@ -5985,14 +5907,16 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     }
                 }
 
-                $scope.search   = $scope.searchAux
+                $scope.search.name = $scope.searchAux.name
+                $scope.search.initialDate =  $scope.searchAux.initialDate
+                $scope.search.endDate =  $scope.searchAux.endDate
+
 
                 console.log("Search elements")
                 $scope.countRecordsAlert();
                 $scope.getAlertRecords();
                 console.log("Search elements")
-                console.log("Search elements")
-                console.log("Search elements")
+
             }
 
 

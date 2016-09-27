@@ -9,7 +9,7 @@ module.exports = {
   searchByID: function (req, res, next) {
 
     if (req.param('id') === undefined) {
-      return res.json({status: "error", info:sails.__("ERROR_FORMATION_REQUIRED") });
+      return res.json({status: "error", info: sails.__("ERROR_FORMATION_REQUIRED")});
     }
 
     Formation.findOne({id: req.param('id')})
@@ -17,11 +17,11 @@ module.exports = {
       .populate('animators')
       .exec(function (err, FormationFounded) {
         if (err) {
-          return res.json({status: "error", info:sails.__("ERROR_FORMATION_SEARCHING") });
+          return res.json({status: "error", info: sails.__("ERROR_FORMATION_SEARCHING")});
         }
 
         if (!FormationFounded) {
-          return res.json({status: "error", info:  sails.__("ERROR_FORMATION_NOTFOUND") });
+          return res.json({status: "error", info: sails.__("ERROR_FORMATION_NOTFOUND")});
         }
 
         return res.json({status: "ok", data: FormationFounded});
@@ -87,7 +87,7 @@ module.exports = {
     var nameFormation = reg.param("name");
 
     if (!name || name == "")
-      return next(sails.__("ERROR_FORMATION_NOTDEFINED")  )
+      return next(sails.__("ERROR_FORMATION_NOTDEFINED"))
 
     var page = reg.param("page")
 
@@ -110,7 +110,7 @@ module.exports = {
 
   searchByFormationCenter: function (req, res) {
     if (req.param('formationCenter') === undefined) {
-      return res.json({status: "error", info: sails.__("ERROR_FORMATIONCENTER_NAME_REQUIRED") });
+      return res.json({status: "error", info: sails.__("ERROR_FORMATIONCENTER_NAME_REQUIRED")});
     }
 
     FormationCenter.findOne({name: req.param('formationCenter')})
@@ -120,7 +120,7 @@ module.exports = {
         }
 
         if (!FC) {
-          return res.json({status: "error", info:sails.__("ERROR_FORMATIONCENTER_WITHNAME") });
+          return res.json({status: "error", info: sails.__("ERROR_FORMATIONCENTER_WITHNAME")});
         }
 
         Formation.find({formationCenter: FC.id})
@@ -129,7 +129,7 @@ module.exports = {
           //probar .sort(updatedAt: 'DESC')
           .exec(function (err, formationsFounded) {
             if (err) {
-              return res.json({status: "error", info:sails.__("ERROR_FORMATION_SEARCH_DATA")});
+              return res.json({status: "error", info: sails.__("ERROR_FORMATION_SEARCH_DATA")});
             }
 
             return res.json({status: "ok", data: formationsFounded});
@@ -148,7 +148,7 @@ module.exports = {
         if (err) {
           return res.json({status: "error", info: sails.__("ERROR_FORMATION_DELETED")});
         }
-        return res.json({status: "ok", info: sails.__("SUCESSFUL_FORMATION_DELETED") });
+        return res.json({status: "ok", info: sails.__("SUCESSFUL_FORMATION_DELETED")});
       });
   },
 
@@ -181,7 +181,7 @@ module.exports = {
     var nameFormation = req.param("name");
 
     if (!nameFormation || nameFormation == "")
-      return   res.json({err: sails.__("ERROR_FORMATION_NAME_REQUIRED")})
+      return res.json({err: sails.__("ERROR_FORMATION_NAME_REQUIRED")})
 
     Formation.find({
         isFull: false,
@@ -210,7 +210,7 @@ module.exports = {
         if (formationTemp.formationCenter == "undefined")
           return res.json({
             err: "ERROR",
-            message:sails.__("ERROR_NOT_RESULT")
+            message: sails.__("ERROR_NOT_RESULT")
           });
         formationsResponse = Formations;
 
@@ -523,7 +523,7 @@ module.exports = {
 
     //Check the formation ID
     if (formationID === undefined) {
-      return res.json({err: sails.__("ERROR_FORMATION_ID_REQUIED") });
+      return res.json({err: sails.__("ERROR_FORMATION_ID_REQUIED")});
     }
 
     //Get the customer data, an object with this estructure:
@@ -540,7 +540,7 @@ module.exports = {
 
     //Validate de customer data
     if (customerData === undefined || !CustomerService.isValidCustomerData(customerData)) {
-      return res.json({err: sails.__("ERROR_FORMATION_CUSTOMER_REQUIED")  });
+      return res.json({err: sails.__("ERROR_FORMATION_CUSTOMER_REQUIED")});
     }
 
     //Search the formation.
@@ -556,11 +556,11 @@ module.exports = {
 
         //If the formation does'nt exist or is full send an error.
         if (formationFounded === undefined) {
-          return res.json({err:sails.__("ERROR_FORMATION_SEARCH_ID")  + formationID.toString()});
+          return res.json({err: sails.__("ERROR_FORMATION_SEARCH_ID") + formationID.toString()});
         }
 
         if (formationFounded.isFull == true) {
-          return res.json({err:sails.__("ERROR_FORMATION_FULL") });
+          return res.json({err: sails.__("ERROR_FORMATION_FULL")});
         }
 
         //if there is a formation, verify if the customer exist or is a new one.
@@ -572,7 +572,7 @@ module.exports = {
           //console.log("Estoy en customer find one");
 
           if (err) {
-            console.log("ERRROR data problem" , err)
+            console.log("ERRROR data problem", err)
             return res.json(err);
           }
 
@@ -592,7 +592,7 @@ module.exports = {
               .exec(function (err, customerCreated) {
                 // body...
 
-               // console.log("Creando Customer");
+                // console.log("Creando Customer");
 
                 if (err) {
                   console.log("ERRROR data ", err)
@@ -600,29 +600,29 @@ module.exports = {
                 }
 
                 if (customerCreated === undefined) {
-                  return res.json({err: sails.__("ERROR_FORMATION_CREATING_CUSTOMER") });
+                  return res.json({err: sails.__("ERROR_FORMATION_CREATING_CUSTOMER")});
                 }
 
 
                 isPaid = false
                 if (req.param('paid') !== undefined) {
                   isPaid = req.param('paid')
-                  if (isPaid != true ||isPaid != true )
+                  if (isPaid != true || isPaid != true)
                     isPaid = false
                 }
                 /////Create Customer Bill
 
                 FormationService.createCustomerBill(customerCreated, formationFounded, isPaid, function createCustomer(err, result) {
-                //  console.log("Create Stimulus Bill")
+                  //  console.log("Create Stimulus Bill")
                   if (err) {
                     console.log("ERROR in created Customer Bill", err.message)
                   }
 
-                 // console.log("Create Customer Bill and send payment stimulus")
+                  // console.log("Create Customer Bill and send payment stimulus")
 
                   ////Create Customer Alert
 
-                  FormationService.costumerBooked(formationFounded,customerCreated, function (err, resultV) {
+                  FormationService.costumerBooked(formationFounded, customerCreated, function (err, resultV) {
                     //console.log("Create booked Alert")
                     if (err) {
                       console.log("ERROR in created Customer booked Alert", err.message)
@@ -632,30 +632,30 @@ module.exports = {
 
 
                     ///Send mail to new Customer
-                   // console.log("SEND MAILLL")
-                   CustomerService.sendMailBooked(customerCreated, function(err, resultData){
-                     if (err)
-                      console.log("Error in send Mail to Customer", err)
-                     else if (resultData){
-                       console.log("Sended mail to new Customer", resultData)
-                     }
+                    // console.log("SEND MAILLL")
+                    CustomerService.sendMailBooked(customerCreated, function (err, resultData) {
+                      if (err)
+                        console.log("Error in send Mail to Customer", err)
+                      else if (resultData) {
+                        console.log("Sended mail to new Customer", resultData)
+                      }
 
 
-                     if (formationFounded.customers.length >= formationFounded.maxPeople) {
-                       formationFounded.isFull = true;
-                     }
+                      if (formationFounded.customers.length >= formationFounded.maxPeople) {
+                        formationFounded.isFull = true;
+                      }
 
-                     Formation.update({id: formationFounded.id},  formationFounded).exec(function (err, resultObject) {
+                      Formation.update({id: formationFounded.id}, formationFounded).exec(function (err, resultObject) {
 
-                       FormationService.isFormationFull(formationFounded, function (err, result) {
-                         //
-                         //  formationFounded.save()
+                        FormationService.isFormationFull(formationFounded, function (err, result) {
+                          //
+                          //  formationFounded.save()
 
-                         console.log("Update Formation")
-                         return res.json({ok:sails.__("SUCESSFUL_FORMATION_CREATING_CUSTOMER") });
-                       })
-                     })
-                   })
+                          console.log("Update Formation")
+                          return res.json({ok: sails.__("SUCESSFUL_FORMATION_CREATING_CUSTOMER")});
+                        })
+                      })
+                    })
 
                   })
                 })
@@ -687,7 +687,7 @@ module.exports = {
                   return res.json({ok: sails.__("SUCESSFUL_FORMATION_CREATING_CUSTOMER")});
                 }
                 else {
-                  return res.json({err: sails.__("ERROR_FORMATION_EXIST_CUSTOMER") });
+                  return res.json({err: sails.__("ERROR_FORMATION_EXIST_CUSTOMER")});
                 }
               });
           }
@@ -705,7 +705,7 @@ module.exports = {
 
     // console.log("Call Services")
     if (cityname === undefined) {
-      return res.json({err: sails.__("ERROR_CITY_REQUIRED") });
+      return res.json({err: sails.__("ERROR_CITY_REQUIRED")});
     }
 
 
@@ -719,7 +719,7 @@ module.exports = {
       finalDate = new Date(finalDate);
 
     if (initialDate && !_.isDate(initialDate)) {
-      return res.json({err: sails.__("ERROR_INITIALDATE_INVALID") });
+      return res.json({err: sails.__("ERROR_INITIALDATE_INVALID")});
     }
 
     if (finalDate && !_.isDate(finalDate)) {
@@ -733,7 +733,7 @@ module.exports = {
         page = Math.abs(parseInt(req.param('page')));
       }
       else {
-        return res.json({err:sails.__("ERROR_PAGE_INVALID") });
+        return res.json({err: sails.__("ERROR_PAGE_INVALID")});
       }
     }
 
@@ -901,7 +901,7 @@ module.exports = {
         page = Math.abs(parseInt(req.param('page')));
       }
       else {
-        return res.json({err:sails.__("ERROR_PAGE_INVALID")});
+        return res.json({err: sails.__("ERROR_PAGE_INVALID")});
       }
     }
 
@@ -952,7 +952,7 @@ module.exports = {
       query.dates.$elemMatch.date.$lte = new Date(req.param('finalDate'))
     }
 
-     query.isFull = false
+    query.isFull = false
     ///---------------------------------------------------------------------------------
 
 
@@ -1066,7 +1066,7 @@ module.exports = {
     }
 
     if (finalDate && !_.isDate(finalDate)) {
-      return res.json({err:  sails.__("ERROR_FINALDATE_INVALID")});
+      return res.json({err: sails.__("ERROR_FINALDATE_INVALID")});
     }
 
     var page = 0;
@@ -1647,7 +1647,7 @@ module.exports = {
     finalDate = new Date(finalDate);
 
     if (!_.isDate(initialDate) || !_.isDate(finalDate)) {
-      return res.json({err: sails.__("ERROR_FINAL_INITIAL_DATE") });
+      return res.json({err: sails.__("ERROR_FINAL_INITIAL_DATE")});
     }
 
     resultFormations = [];
@@ -1691,7 +1691,7 @@ module.exports = {
     formationDate = req.param('formationDate');
 
     if (id === undefined || formationDate === undefined) {
-      return res.json({err: sails.__("ERROR_FORMATIONDATE_ID_NODATA")  });
+      return res.json({err: sails.__("ERROR_FORMATIONDATE_ID_NODATA")});
     }
 
     if (!FormationService.isValidFormationDate(formationDate)) {
@@ -1701,7 +1701,7 @@ module.exports = {
     formationDate.date = new Date(formationDate.date);
 
     if (!_.isDate(formationDate.date)) {
-      return res.json({err: sails.__("ERROR_DATE_NODATA") });
+      return res.json({err: sails.__("ERROR_DATE_NODATA")});
     }
 
     Formation.findOne(id)
@@ -1713,7 +1713,7 @@ module.exports = {
         }
 
         if (formationFounded === undefined) {
-          return res.json(sails.__("ERROR_FORMATION_SEARCH_ID")  + id.toString());
+          return res.json(sails.__("ERROR_FORMATION_SEARCH_ID") + id.toString());
         }
 
         formationFounded.dates.push(formationDate);
@@ -1744,7 +1744,7 @@ module.exports = {
 
   searchByFormationCenterWithPagination: function (req, res, next) {
     if (req.param('formationCenter') === undefined) {
-      return res.json({status: "error", info:sails.__("ERROR_FORMATIONCENTER_REQUIRED") });
+      return res.json({status: "error", info: sails.__("ERROR_FORMATIONCENTER_REQUIRED")});
     }
 
     var page = 0;
@@ -1754,7 +1754,7 @@ module.exports = {
       if (!isNaN(parseInt(req.param('page')))) {
         page = Math.abs(parseInt(req.param('page')));
       } else {
-        return res.json({err:  sails.__("ERROR_PAGE_INVALID")});
+        return res.json({err: sails.__("ERROR_PAGE_INVALID")});
       }
     }
 
@@ -1769,11 +1769,11 @@ module.exports = {
     FormationCenter.findOne({name: req.param('formationCenter')})
       .exec(function (err, FC) {
         if (err) {
-          return res.json({status: "error", info:sails.__("ERROR_SEARCH_FORMATIONCENTER")});
+          return res.json({status: "error", info: sails.__("ERROR_SEARCH_FORMATIONCENTER")});
         }
 
         if (!FC) {
-          return res.json({status: "error", info:sails.__("ERROR_NAME_FORMATIONCENTER")});
+          return res.json({status: "error", info: sails.__("ERROR_NAME_FORMATIONCENTER")});
         }
 
         var query = {
@@ -1787,12 +1787,12 @@ module.exports = {
           .populate('place')
           .exec(function (err, Formations) {
             if (err) {
-              return res.json({status: "error", info: sails.__("ERROR_FORMATION_SEARCHING") });
+              return res.json({status: "error", info: sails.__("ERROR_FORMATION_SEARCHING")});
             }
 
-            Formation.count({ formationCenter: FC.id }).exec(function (err, FormationsCounted) {
+            Formation.count({formationCenter: FC.id}).exec(function (err, FormationsCounted) {
               if (err) {
-                return res.json({status: "error", info:sails.__("ERROR_FORMATION_COUNTING")});
+                return res.json({status: "error", info: sails.__("ERROR_FORMATION_COUNTING")});
               }
 
               return res.json({status: "ok", data: Formations, maxSize: FormationsCounted});

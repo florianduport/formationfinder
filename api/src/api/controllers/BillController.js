@@ -118,6 +118,8 @@ console.log("Query bill ", query)
     var len = 10;
      query = {}
 
+    console.log("Request parameters" , req)
+
     var nameFormation = req.param("nameformation");
 
     if (!nameFormation || nameFormation == "")

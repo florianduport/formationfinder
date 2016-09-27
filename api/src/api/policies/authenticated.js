@@ -9,15 +9,28 @@ module.exports = function (req, res, next) {
    *
    **/
 
-  var authorization = req.headers['authorization'] || req.param('token');
+  //console.log("************************* AUTH POLICIE ****************************");
+  //
+  //console.log(req.headers['authorization']);
+  //
+  //console.log(req.param('token'));
 
-  if(!authorization){
+  // var authorization = req.headers['authorization'] || req.param('token');
+
+  var authorization = req.headers['authorization'];
+
+  if (!authorization) {
     return res.forbidden('Error: no token provided.');
   }
 
+  // In authorization a get a string with this format: "Bearer TOKEN"
+  // example: "Bearer adfdsfsdfsdfsdfsdffdfsdfsdfsdfdsfdsfsdfdsf"
+  // So a get the token with ....
+  authorization = authorization.substr(7);
+
   var decoded = LoginService.verifyLoginToken(authorization);
 
-  if(decoded.status === 'error' || decoded.data === undefined){
+  if (decoded.status === 'error' || decoded.data === undefined) {
     return res.forbidden('Error: Invalid token provided.');
   }
 

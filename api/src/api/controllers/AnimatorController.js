@@ -10,17 +10,17 @@ module.exports = {
   searchByFormationCenter: function (req, res, next) {
 
     if (req.param('formationCenter') === undefined) {
-      return res.json({status: "error", info: "Formation Center Name is required."});
+      return res.json({status: "error", info: sails.__("FORMATION_CENTER_NAME_REQUIRED")});
     }
 
     FormationCenter.findOne({name: req.param('formationCenter')})
       .exec(function (err, FC) {
         if (err) {
-          return res.json({status: "error", info: "An error has ocurred searching the Formation Center."});
+          return res.json({status: "error", info: sails.__("ERROR_SEARCHING_FORMATION_CENTER")});
         }
 
         if (!FC) {
-          return res.json({status: "error", info: "No Formation Center with that name."});
+          return res.json({status: "error", info: sails.__("FORMATION_CENTER_NO_FOUNDED")});
         }
 
         var where = {
@@ -34,15 +34,14 @@ module.exports = {
           if (req.param('type') === "PSY" || req.param('type') === "BAFM") {
             where.type = req.param('type');
 
-            console.log("Buscando Animator por formation center y type: " + JSON.stringify(where));
           } else {
-            return res.json({status: "error", info: "Invalid 'type' parameter."});
+            return res.json({status: "error", info: sails.__("INVALID_TYPE_PARAMETER")});
           }
         }
 
         Animator.find({where, sort: 'type'}).exec(function (err, Animators) {
           if (err) {
-            return res.json({status: "error", info: "Error searching Animators."});
+            return res.json({status: "error", info: sails.__("ERROR_SEARCHING_ANIMATORS")});
           }
 
           return res.json({status: "ok", data: Animators});
@@ -54,21 +53,21 @@ module.exports = {
 
   searchFormationCenterAndID: function (req, res, next) {
     if (req.param('id') === undefined) {
-      return res.json({status: "error", info: "Animator 'ID' parameter is required."});
+      return res.json({status: "error", info: sails.__("ID_PARAMETER_REQUIRED")});
     }
 
     if (req.param('formationCenter') === undefined) {
-      return res.json({status: "error", info: "Formation Center Name is required."});
+      return res.json({status: "error", info: sails.__("FORMATION_CENTER_NAME_REQUIRED")});
     }
 
     FormationCenter.findOne({name: req.param('formationCenter')})
       .exec(function (err, FC) {
         if (err) {
-          return res.json({status: "error", info: "An error has ocurred searching the Formation Center."});
+          return res.json({status: "error", info: sails.__("ERROR_SEARCHING_FORMATION_CENTER")});
         }
 
         if (!FC) {
-          return res.json({status: "error", info: "No Formation Center with that name."});
+          return res.json({status: "error", info: sails.__("FORMATION_CENTER_NO_FOUNDED")});
         }
 
         Animator.findOne({
@@ -77,11 +76,11 @@ module.exports = {
           })
           .exec(function (err, AnimatorFounded) {
             if (err) {
-              return res.json({status: "error", info: "Error searching Animator."});
+              return res.json({status: "error", info: sails.__("ERROR_SEARCHING_ANIMATOR")});
             }
 
             if (!AnimatorFounded) {
-              return res.json({status: "error", info: "That Animator doesn't exist."});
+              return res.json({status: "error", info: sails.__("ANIMATOR_NO_FOUNDED")});
             }
 
             return res.json({status: "ok", data: AnimatorFounded});
@@ -91,56 +90,56 @@ module.exports = {
 
   deleteByID: function (req, res, next) {
     if (req.param('id') === undefined) {
-      return res.json({status: "error", info: "ID parameter is required."});
+      return res.json({status: "error", info: sails.__("ID_PARAMETER_REQUIRED")});
     }
 
     Animator.destroy({id: req.param('id')})
       .exec(function (err) {
         if (err) {
-          return res.json({status: "error", info: "An error has ocurred deleting Animator."});
+          return res.json({status: "error", info: sails.__("ERROR_DELETING_ANIMATOR")});
         }
-        return res.json({status: "ok", info: "Animator deleted."});
+        return res.json({status: "ok", info: sails.__("ANIMATOR_DELETED")});
       });
   },
 
   create: function (req, res, next) {
     if (req.param('formationCenter') === undefined) {
-      return res.json({status: "error", info: "Formation Center Name is required."});
+      return res.json({status: "error", info: sails.__("FORMATION_CENTER_NAME_REQUIRED")});
     }
 
     if (req.param('animator') === undefined) {
-      return res.json({status: "error", info: "Animator object is required."});
+      return res.json({status: "error", info: sails.__("ANIMATOR_PARAMETER_REQUIRED")});
     }
 
     FormationCenter.findOne({name: req.param('formationCenter')})
       .exec(function (err, FC) {
         if (err) {
-          return res.json({status: "error", info: "An error has ocurred searching the Formation Center."});
+          return res.json({status: "error", info: sails.__("ERROR_SEARCHING_FORMATION_CENTER")});
         }
 
         if (!FC) {
-          return res.json({status: "error", info: "No Formation Center with that name."});
+          return res.json({status: "error", info: sails.__("FORMATION_CENTER_NO_FOUNDED")});
         }
 
         var vAnimator = req.param('animator');
 
         Animator.findOne(vAnimator).exec(function (err, founded) {
           if (err) {
-            return res.json({status: "error", info: "Error searching the Animator."});
+            return res.json({status: "error", info: sails.__("ERROR_SEARCHING_ANIMATOR")});
           }
 
           if (founded) {
-            return res.json({status: "error", info: "Error the Animator already exist."});
+            return res.json({status: "error", info: sails.__("ANIMATOR_EXIST")});
           }
 
           vAnimator.formationCenter = FC.id;
 
           Animator.create(vAnimator).exec(function (err, created) {
             if (err || !created) {
-              return res.json({status: "error", info: "Error creating the Animator."});
+              return res.json({status: "error", info: sails.__("ERROR_CREATING_ANIMATOR")});
             }
 
-            return res.json({status: "ok", info: "Animator created.", data: created});
+            return res.json({status: "ok", info: sails.__("ANIMATOR_CREATED"), data: created});
           })
         })
       });
@@ -149,11 +148,11 @@ module.exports = {
   update: function (req, res, next) {
 
     if (req.param('id') === undefined) {
-      return res.json({status: "error", info: "id parameter is required."});
+      return res.json({status: "error", info: sails.__("ID_PARAMETER_REQUIRED")});
     }
 
     if (req.param('attributes') === undefined) {
-      return res.json({status: "error", info: "attributes parameter is required."});
+      return res.json({status: "error", info: sails.__("ATTRIBUTE_PARAMETER_REQUIRED")});
     }
 
     var attributes = req.param('attributes');
@@ -161,22 +160,22 @@ module.exports = {
     //Search if there is an Animator with the new attributes.
     Animator.findOne(attributes).exec(function (err, founded) {
       if (err) {
-        return res.json({status: "error", info: "Error searching Animator."});
+        return res.json({status: "error", info: sails.__("ERROR_SEARCHING_ANIMATOR")});
       }
 
       if (founded) {
-        return res.json({status: "error", info: "The Animator already exist."});
+        return res.json({status: "error", info: sails.__("ANIMATOR_EXIST")});
       }
 
       Animator.findOne({id: req.param('id')}).exec(function (err, AnimatorFounded) {
         if (err || !AnimatorFounded) {
-          return res.json({status: "error", info: "Error searching Animator."});
+          return res.json({status: "error", info: sails.__("ERROR_SEARCHING_ANIMATOR")});
         }
 
         Animator.update({id: req.param('id')}, attributes)
           .exec(function (err, AnimatorUpdated) {
             if (err) {
-              return res.json({status: "error", info: "Error updating Animator."});
+              return res.json({status: "error", info: sails.__("ERROR_UPDATING_ANIMATOR")});
             }
 
             return res.json({status: "ok", data: AnimatorUpdated});
@@ -189,7 +188,7 @@ module.exports = {
   searchByFormationCenterWithPagination: function (req, res, next) {
 
     if (req.param('formationCenter') === undefined) {
-      return res.json({status: "error", info: "Formation Center Name is required."});
+      return res.json({status: "error", info: sails.__("FORMATION_CENTER_NAME_REQUIRED")});
     }
 
     var page = 0;
@@ -199,7 +198,7 @@ module.exports = {
       if (!isNaN(parseInt(req.param('page')))) {
         page = Math.abs(parseInt(req.param('page')));
       } else {
-        return res.json({err: 'The page parameter is an invalid string number'});
+        return res.json({err: sails.__("ERROR_PAGE_INVALID")});
       }
     }
 
@@ -207,18 +206,18 @@ module.exports = {
       if (!isNaN(parseInt(req.param('len')))) {
         len = Math.abs(parseInt(req.param('len')));
       } else {
-        return res.json({err: 'The len parameter is an invalid string number'});
+        return res.json({err: sails.__("ERROR_LEN_INVALID")});
       }
     }
 
     FormationCenter.findOne({name: req.param('formationCenter')})
       .exec(function (err, FC) {
         if (err) {
-          return res.json({status: "error", info: "An error has ocurred searching the Formation Center."});
+          return res.json({status: "error", info: sails.__("ERROR_SEARCHING_FORMATION_CENTER")});
         }
 
         if (!FC) {
-          return res.json({status: "error", info: "No Formation Center with that name."});
+          return res.json({status: "error", info: sails.__("FORMATION_CENTER_NO_FOUNDED")});
         }
 
         var query = {
@@ -230,12 +229,12 @@ module.exports = {
 
         Animator.find(query).exec(function (err, Animators) {
           if (err) {
-            return res.json({status: "error", info: "Error searching Animators."});
+            return res.json({status: "error", info: sails.__("ERROR_SEARCHING_ANIMATORS")});
           }
 
           Animator.count({ formationCenter: FC.id }).exec(function (err, AnimatorsCounted) {
             if (err) {
-              return res.json({status: "error", info: "Error counting Animators."});
+              return res.json({status: "error", info: sails.__("ERROR_COUNTING_ANIMATORS")});
             }
 
             return res.json({status: "ok", data: Animators, maxSize: AnimatorsCounted});

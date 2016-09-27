@@ -16,7 +16,7 @@ module.exports = {
     }
     else
     {
-      return res.json({err: 'The page parameter is an invalid string number'});
+      return res.json({err: sails.__("ERROR_PAGE_INVALID")});
     }
 
 
@@ -26,12 +26,12 @@ module.exports = {
     }
     else
     {
-      return res.json({err: 'The len parameter is an invalid string number'});
+      return res.json({err: sails.__("ERROR_LEN_INVALID")});
     }
   }
   else
   {
-    return res.json({err:'The len parameter is an invalid string number'});
+    return res.json({err: sails.__("ERROR_LEN_INVALID")});
   }
 
 
@@ -77,7 +77,7 @@ module.exports = {
       .exec(function  (err, fomationCentersFounded) {
         // body...
         if(err) {
-          return res.json({response:"ERROR", message: err.message});
+          return res.json({response: "ERROR", message: sails.__("ERROR_COUNTING_FAQS")});
         }
 
         return res.json( {response:"OK", size: fomationCentersFounded});

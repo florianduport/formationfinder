@@ -27,8 +27,8 @@ app.config(function($translateProvider) {
             DATE_BUTTOM:"Date",
             VIEW_MAP:"View Map",
             ADVACED_SEARCH:"Advanced Search",
-            INIT_DATE:"Init date",
-            END_DATE:"Init date",
+            INIT_DATE:"Start",
+            END_DATE:"End",
             FORMATION_CENTER:"Formation Center",
             OTHER_DATA:"More info",
             FORMATION_DATE:"Date",
@@ -36,7 +36,8 @@ app.config(function($translateProvider) {
             FORMATION_ADDRESS:"Address",
             BUTTON_RESERVER:"Reserve",
             CITY:"City",
-            SEARCH_IN_MAP:"Search in map"
+            SEARCH_IN_MAP:"Search in map",
+            ITEMS_PER_PAGE: "Items per page",
 
         })
         .translations('fr', {
@@ -64,15 +65,16 @@ app.config(function($translateProvider) {
             DATE_BUTTOM:"Date",
             VIEW_MAP:"View Map",
             ADVACED_SEARCH:"Advanced Search",
-            INIT_DATE:"Init date",
-            END_DATE:"Init date",
+            INIT_DATE:"Start",
+            END_DATE:"End",
             OTHER_DATA:"More info",
             FORMATION_DATE:"Date",
             FORMATION_DATA:"Formation's info",
             FORMATION_ADDRESS:"Address",
             BUTTON_RESERVER:"S'inscrire",
             CITY:"City",
-            SEARCH_IN_MAP:"Search in map"
+            SEARCH_IN_MAP:"Search in map",
+            ITEMS_PER_PAGE: "Items per page",
         })
     .translations('es', {
         HEADLINE: 'Hey, das ist meine großartige App!',
@@ -99,15 +101,16 @@ app.config(function($translateProvider) {
         DATE_BUTTOM:"Date",
         VIEW_MAP:"View Map",
         ADVACED_SEARCH:"Advanced Search",
-        INIT_DATE:"Init date",
-        END_DATE:"Init date",
+        INIT_DATE:"Inicial",
+        END_DATE:"Final",
         OTHER_DATA:"More info",
         FORMATION_DATE:"Date",
         FORMATION_DATA:"Formation's info",
         FORMATION_ADDRESS:"Address",
         BUTTON_RESERVER:"Reservar",
         CITY:"City",
-        SEARCH_IN_MAP:"Buscar usando el mapa"
+        SEARCH_IN_MAP:"Buscar usando el mapa",
+        ITEMS_PER_PAGE: "Elementos por página"
 
     });;
      $translateProvider.preferredLanguage('en');

@@ -12,7 +12,7 @@
     }
 </style>
 <div class="searchresult searchlist">
-    <div class="container" ng-controller="ModalDemoCtrl">
+    <div class="container">
         <div class="row row-eq-height ">
             <div class="col-sm-6 col-md-6 col-xs-12 col-lg-6 ">
                 <div class="sidebarformation">
@@ -78,8 +78,8 @@
                                         {{'DATE_BUTTOM' | translate }}
                                     </button>
                                     <!--<button type="button" class="btn   btn-primary" ng-click="showMap($event)"-->
-                                            <!--ng-model="mapView" uib-btn-radio="'Right'">-->
-                                        <!--{{'VIEW_MAP' | translate }}-->
+                                    <!--ng-model="mapView" uib-btn-radio="'Right'">-->
+                                    <!--{{'VIEW_MAP' | translate }}-->
                                     <!--</button>-->
 
                                 </div>
@@ -93,13 +93,15 @@
                         <!--&lt;!&ndash;<label class="fa-pull-left " style="color:#0a0d66 " ng-click="advanceSearch=!advanceSearch"><p>Advanced Search</p></label>&ndash;&gt;-->
 
                         <!--&lt;!&ndash;<hr>&ndash;&gt;-->
-                        <div uib-collapse="advanceSearch" horizontal>
-                            <div class="fadeInDown">
-                                <form name="myform" novalidate>
+                        <form name="myform" novalidate role="form">
+                            <div uib-collapse="advanceSearch" horizontal>
+                                <div class="fadeInDown">
+
                                     <!--<div class=" animated " style="padding-left: 0"-->
                                     <!--ng-class="{'fadeInDown':advanceSearch,'hidden':!advanceSearch}">-->
-                                    <div class=" form-group">
-                                        <label style="color:#000066;font-size: small ">{{'DATE_BUTTOM' | translate }} : </label>
+                                    <div class="form-group">
+                                        <label style="color:#000066;font-size: small ">{{'DATE_BUTTOM' | translate }}
+                                            : </label>
                                         <div class=" input-group date ident-date">
                                         <span class="input-group-addon"><span
                                                 class="text-info">{{'INIT_DATE' | translate }}:</span></span>
@@ -140,7 +142,8 @@
 
                                     </div>
                                     <div class="form-group">
-                                        <label style="width: 50px;color:#000066;font-size: small" class="text-info">{{'PRICE' | translate }}: </label>
+                                        <label style="width: 50px;color:#000066;font-size: small" class="text-info">{{'PRICE'
+                                            | translate }}: </label>
                                         <div class=" input-group ">
 
                                             <input class="form-control" tooltip-placement="top" tooltip-trigger="'none'"
@@ -155,10 +158,10 @@
                                         <!--<span   class="error-message text-danger" ng-show="myform.phoneNumber.$dirty && myform.phoneNumber.$invalid"><p style="text-decoration-color:#f1a417;background: #afd9ee">Price field should be of 5 digits</p></span>-->
                                     </div>
                                     <!--</div>-->
-                                </form>
-                            </div>
-                        </div>
 
+                                </div>
+                            </div>
+                        </form>
                     </div>
 
 
@@ -167,44 +170,57 @@
 
                     <!--<div class="container container-fluid">-->
                     <!--<div  ng-show="app.totalItems > 0" class="row well container-fluid">-->
-                    <div ng-show="app.totalItems > 0" align="right" style="color:#000066">
-                        <ul uib-pagination boundary-links="true" items-per-page="app.itemPerPage"
+                    <div ng-show="app.totalItems > 0" align="left" style="color:#000066;">
+                        <div align="left">
+                    <label  class="label label-primary" for="selectLen">{{'ITEMS_PER_PAGE' | translate}}</label>
+                    <select ng-options="iLen for iLen in lens"
+                            ng-model="app.itemPerPage"
+                            ng-value="3"
+                            ng-change="itemsPerPageChance()"
+                            id="selectLen">
+                    </select>
+                        </div>
+                    <div  align="right" >
+                        <ul  style="margin-top: 0px;margin-bottom: 0px" uib-pagination boundary-links="true" items-per-page="app.itemPerPage"
                             total-items="app.totalItems"
                             ng-click="getPagableRecords()" ng-model="app.currentPage" class="pagination-sm"
                             previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
                     </div>
-                    <ul class="list-group" >
+                    </div>
+                    <ul class="list-group"  ng-controller="ModalDemoCtrl">
                         <li class="list-group-item"
-                            ng-repeat="iformation in formations | filter:criteriaList | orderBy:sortType "  ng-class="{'selected':iformation.id == selectedRow}" >
+                            ng-repeat="iformation in formations | filter:criteriaList | orderBy:sortType "
+                            ng-class="{'selected':iformation.id == selectedRow}">
                             <div class="row">
                                 <div class="col-sm-6 col-xs-6 col-lg-6  clearfix ">
                                     <form>
                                         <div class=" input-group ">
 
-                    <div class="pull-left" >
-                        <!--<input type="checkbox" checklist-model="search.formation"-->
-                               <!--checklist-value="iformation"><input type="checkbox" checklist-model="search.formation"-->
-                               <!--checklist-value="iformation">-->
+                                            <div class="pull-left">
+                                                <!--<input type="checkbox" checklist-model="search.formation"-->
+                                                <!--checklist-value="iformation"><input type="checkbox" checklist-model="search.formation"-->
+                                                <!--checklist-value="iformation">-->
                         <span
-                            style="margin-left: 0px;font-style: italic;font-size: large;text-decoration-color: #0e0e0e"
-                            class="text-info bold" title="Formation center´s name">
+                                style="margin-left: 0px;font-style: italic;font-size: large;text-decoration-color: #0e0e0e"
+                                class="text-info bold" title="Formation center´s name">
                         <strong>{{iformation.name}}</strong>
                     </span>
-                    </div>
+                                            </div>
                                         </div>
                                     </form>
-                    <!--<span uib-rating tooltip-placement="top-right" tooltip="Popularity" ng-model="rate"-->
-                          <!--max="5" read-only="isReadonly"-->
-                    <!--&gt;</span>-->
+                                    <!--<span uib-rating tooltip-placement="top-right" tooltip="Popularity" ng-model="rate"-->
+                                    <!--max="5" read-only="isReadonly"-->
+                                    <!--&gt;</span>-->
 
                                     <div class="text-left proximite pcolorbox">
                                         <a href="" ng-click="searchPlusInformation(iformation.id)" rel="nofollow"
                                            class="popup-fiche cboxElement">
                                             <div class="icons puce-active pcolorbox"></div>
-                                            <div >
+                                            <div>
                                                 <script type="text/ng-template" id="myModalContent.html">
                                                     <div class="modal-header">
-                                                        <h3 class="modal-title">{{'FORMATION_CENTER' | translate }}: {{items.name}}</h3>
+                                                        <h3 class="modal-title">{{'FORMATION_CENTER' | translate }}:
+                                                            {{items.name}}</h3>
                                                     </div>
                                                     <div class="modal-body">
                                                         <ul>
@@ -223,7 +239,8 @@
                                                         <div class="panel-default" is-open="status.isCustomHeaderOpen"
                                                              template-url="group-template.html">
                                                             <div class="panel-heading">
-                                                                <h4 class="panel-title" ; style="color:#000066;font-size: small ">
+                                                                <h4 class="panel-title" ;
+                                                                    style="color:#000066;font-size: small ">
                                                                     {{'FORMATION_DATA' | translate }}
                                                                     <!--ng-click="sortType = 'date'; sortReverse = !sortReverse; updateSort()"-->
                                                                 </h4>
@@ -232,27 +249,29 @@
                                                                  style="text-align: left ;color:#000066;margin-left: 0px; padding-left: 0px">
 
 
-
-                                                            <strong>  {{'FORMATION_ADDRESS' | translate }}: </strong>{{items.formation.address}}
+                                                                <strong> {{'FORMATION_ADDRESS' | translate }}: </strong>{{items.formation.address}}
                                                             </div>
-                                                            <div class="text-info" style="font-size: large"><strong>{{'FORMATION_DATE' | translate }}:</strong></div>
-                                                        <!--<span ng-repeat="idate in items.formation.dates"> <b>{{getReadableDate(idate)}}</b><br/></span>-->
-                                                        <!--<div class="texte-prefecture" title="{{items.formation.address}}">-->
+                                                            <div class="text-info" style="font-size: large"><strong>{{'FORMATION_DATE'
+                                                                | translate }}:</strong></div>
+                                                            <!--<span ng-repeat="idate in items.formation.dates"> <b>{{getReadableDate(idate)}}</b><br/></span>-->
+                                                            <!--<div class="texte-prefecture" title="{{items.formation.address}}">-->
                                                             <uib-accordion close-others="true">
-                                                                <div style="font-size: small" uib-accordion-group class="panel-default"
+                                                                <div style="font-size: small" uib-accordion-group
+                                                                     class="panel-default"
                                                                      heading="{{ getReadableDate(idate.date)}}"
                                                                      ng-repeat="idate in items.formation.dates">
                                                             <span class="input-group-addon"
                                                                   style="font-size: small">  <strong>Morning :</strong>{{idate.morning.hourStart}} -{{idate.morning.hourEnd}}</span>
                                                             <span class="input-group-addon"
-                                                                  style="font-size: small">  <strong>Afternoon :</strong>{{idate.afternoon.hourStart}} -{{idate.afternoon.hourEnd}}</span>
+                                                                  style="font-size: small">  <strong>Afternoon
+                                                                :</strong>{{idate.afternoon.hourStart}} -{{idate.afternoon.hourEnd}}</span>
                                                                 </div>
                                                             </uib-accordion>
                                                         </div>
-                                                        </div>
-                                                        <div>
+                                                    </div>
+                                                    <div>
 
-                                                        </div>
+                                                    </div>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <!--<button class="btn btn-primary" type="button" ng-click="ok()">OK</button>-->
@@ -263,13 +282,15 @@
                                                     </div>
                                                 </script>
                                                 <div class="plus-info pcolorbox alert-link"
-                                                     ng-click="openFormationCenterInfo( iformation)"><strong>{{'OTHER_DATA' | translate }}</strong></div>
+                                                     ng-click="openFormationCenterInfo( iformation)"><strong>{{'OTHER_DATA'
+                                                    | translate }}</strong></div>
                                             </div>
                                         </a>
                                     </div>
                                     <div class="reserver text-left">
                                         <button class="btn  btn-info" style="border-radius: 10%" href=""
-                                                ng-click="formationBook(iformation.id, iformation.price)" title="">{{'BUTTON_RESERVER' | translate }}
+                                                ng-click="formationBook(iformation.id, iformation.price)" title="">
+                                            {{'BUTTON_RESERVER' | translate }}
                                         </button>
                                     </div>
                                 </div>
@@ -283,8 +304,6 @@
                                 <!--iformation.customers.length}}/{{ iformation.maxPeople}}</i></uib-progressbar>-->
 
                                 <!--<div class="text-left">-->
-
-
 
 
                                 <!--<div class="hide">-->
@@ -348,7 +367,7 @@
 
                     </ul>
                     <div ng-show="app.totalItems > 0" align="right" style="color:#000066">
-                        <ul uib-pagination boundary-links="true" items-per-page="app.itemPerPage"
+                        <ul style="margin-top: 0px;margin-bottom: 0px"  uib-pagination boundary-links="true" items-per-page="app.itemPerPage"
                             total-items="app.totalItems"
                             ng-click="getPagableRecords()" ng-model="app.currentPage" class="pagination-sm"
                             previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
@@ -365,14 +384,8 @@
                 <br/>
                 <br/>
                 <br/>
-                <div>
-                    <form>
+                <div  ng-controller="ModalDemoCtrl">
 
-                        <!--<div class=" input-group">-->
-                            <!--<span class="input-group-addon" id="basic-addon1"> {{'SEARCH_IN_MAP' | translate }}</span>-->
-                            <!--<input type="checkbox" checklist-model="searchInMap" >-->
-                        <!--</div>-->
-                    </form>
                     <div style="height: 820px;">
                         <ng-map zoom="6" center="48.864716, 2.349014"
                                 on-click="click()" style="height:100%;">
@@ -392,13 +405,16 @@
                             <div ng-repeat="iformationcenter in formationcenters">
                                 <div ng-repeat="iplace in iformationcenter.places">
                                     <marker position="{{iplace.latitude}}, {{iplace.longitude}}"
-                                          >
+                                    >
                                         <!--<div> {{iplace.name}} </div>-->
                                     </marker>
                                     <!--<div> {{iplace.name}} </div>-->
-                                    <custom-marker    id="end" position="{{iplace.latitude}}, {{iplace.longitude}}">
-                                    <span ng-mouseover="mouseoverPoint(iplace.formationid)" ng-click="openFormationCenterMapInfo(iplace.formationcentername,iplace.formationid)"> <span class="badge" style="border-radius: 50%">{{iplace.price}} </span></span>
-                                </custom-marker>
+                                    <custom-marker id="end" position="{{iplace.latitude}}, {{iplace.longitude}}">
+                                        <span ng-mouseup="mouseoffsidePoint()"
+                                              ng-mouseover="mouseoverPoint(iplace.formationid)"
+                                              ng-click="openFormationCenterMapInfo(iplace.formationcentername,iplace.formationid)"> <span
+                                                class="badge" style="border-radius: 50%">{{iplace.price}} </span></span>
+                                    </custom-marker>
                                 </div>
                             </div>
 

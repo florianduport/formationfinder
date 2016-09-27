@@ -22,7 +22,7 @@
 
     <br/>
 
-    <div class="row">
+    <div class="row" ng-show="userIsMain">
         <form>
             <div class="form-group">
                 <label class="control-label"> {{'CREATE_CREDENTIAL' | translate}}
@@ -68,7 +68,7 @@
                 <th>{{'USERNAME' | translate}}</th>
                 <th>{{'MAIN' | translate}}</th>
                 <th>{{'ACTIVATED' | translate}}</th>
-                <th>{{'ACTIONS' | translate}}</th>
+                <th ng-show="userIsMain">{{'ACTIONS' | translate}}</th>
             </tr>
             </thead>
             <tbody>
@@ -91,7 +91,7 @@
                         <span class="glyphicon glyphicon-remove"></span>
                     </span>
                 </td>
-                <td>
+                <td ng-show="userIsMain">
                     <button type="button" class="btn btn-sm btn-primary" ng-click="editLogin(login)">
                         {{'EDIT' | translate}}
                     </button>

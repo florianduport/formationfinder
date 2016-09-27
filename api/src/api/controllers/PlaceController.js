@@ -26,14 +26,14 @@ module.exports = {
     if (!latitude) {
       return res.json({
         response: "ERROR",
-        msg: "Parameter lat not exist"
+        msg: sails.__("NOT_LAT")
       })
     }
 
     if (!longitude) {
       return res.json({
         response: "ERROR",
-        msg: "Parameter long not exist"
+        msg: sails.__("NOT_LONG")
       })
     }
 
@@ -57,7 +57,7 @@ module.exports = {
         if (!PlaceResult) {
           return res.json({
             response: "ERROR",
-            msg: "Not exits formations near yours selected position"
+            msg: sails.__("NOT_EXIST_PLACE_NEAR")
           })
         }
       }
@@ -80,7 +80,7 @@ module.exports = {
               if (PlaceResult.length == 0) {
                 return res.json({
                   response: "ERROR",
-                  msg: "Not exits formations near yours selected position"
+                  msg: sails.__("NOT_EXIST_FORMANTION_PLACE_NEAR")
                 })
               }
               else {
@@ -110,16 +110,40 @@ module.exports = {
     if (!latitude) {
       return res.json({
         response: "ERROR",
-        msg: "Parameter lat not exist"
+        msg: sails.__("NOT_LAT")
       })
     }
 
     if (!longitude) {
       return res.json({
         response: "ERROR",
-        msg: "Parameter long not exist"
+        msg: sails.__("NOT_LONG")
       })
     }
+
+    var page = 0;
+    var len = 10;
+
+    if (req.param('page') !== undefined) {
+      if (!isNaN(parseInt(req.param('page')))) {
+        page = Math.abs(parseInt(req.param('page')));
+      }
+      else {
+        return res.json({err: sails.__("ERROR_PAGE_INVALID")});
+      }
+    }
+
+    //console.log("Call Services")
+    if (req.param('len') !== undefined) {
+      if (!isNaN(parseInt(req.param('len')))) {
+        len = Math.abs(parseInt(req.param('len')));
+      }
+      else {
+        return res.json({err: sails.__("ERROR_LEN_INVALID")});
+      }
+    }
+
+    skip = page * len
 
     distance = 1000; ///1 Km
     ////Exists and is a number
@@ -144,45 +168,246 @@ module.exports = {
             msg: "Not exits formations near yours selected position"
           })
         }
-      }
-      ///If result is empty and distance is equal 1 km search for 3,5 km
-      ///if empty this distance search for 5km if emtpy return "Not exist formations"
-      distArraLength = distancesArray.length
-      var iDist = 2
-      PlaceService.searchPosition(latitude, longitude, distancesArray[iDist], function (PlacesResult) {
-        if (PlaceResult.length == 0) {
-          iDist++;
-          PlaceService.searchPosition(latitude, longitude, distancesArray[iDist], function (PlacesResult) {
+        else {
 
-            if (typeof  PlaceResult == "string") {
-              return res.json({
-                response: "ERROR",
-                msg: PlaceResult
-              })
-            }
-            else {
-              if (PlaceResult.length == 0) {
-                return res.json({
-                  response: "ERROR",
-                  msg: "Not exits formations near yours selected position"
-                })
-              }
-              else {
-                return res.json({
-                  response: "OK",
-                  result: PlaceResult
-                })
-              }
-            }
+          arrayData = []
+          var promise;
+          promise = PlaceResult.reduce(function (prev, iPlace) {
+            return prev.then(function () {
+              object = iPlace.id
+              // console.log("Data", iPlace)
+              arrayData.push(new ObjectID(iPlace.id));
+            });
+          }, Promise.resolve());
 
+          promise.then(function (array) {
+            //if (initialDate || finalDate)
+            query = {}
+            query.place = {$in: arrayData}
+            /*query = {
+             place : {$in:arrayData},
+             price: {
+             $gte:50
+             },
+             dates: {
+             $elemMatch:{
+             date: {
+             $gte:new Date("2016-10-04"),
+             $lte: new Date("2017-05-03")
+             }
+             }
+             }
+
+             }*/
+
+            /// console.log("QUERY: " , query)
+            Formation.native(function (err, collection) {
+              if (err) return res.serverError(err);
+              //console.log("---")
+              ////Transform all arrayData to new ObjectId [new ObjectID (arrayData[0])]
+              // {"place":{"$all": [new ObjectID(arrayData[0])] },"price":{"$gte":50},"dates":{"$elemMatch":{"date":{"$gte":new Date("2016-10-04"),"$lte":new Date("2017-05-03")}}}}
+
+              //console.log("******")
+              // parameters.place = {$all:[new ObjectID(arrayData[0])]}
+              collection.find(query).limit(len).skip(skip).toArray(function (err, results) {
+                // console.log("sfdsdfsss " + results);
+                if (err) return res.serverError(err);
+                ////Dados los id buscar un place un el nombre "5797e539e1e9812814a35520"
+                //console.log("DATA", results)
+                ///Make populate for all id formation to search place and formationcenter data
+                formationArray = []
+                async = require("async");
+                async.forEach(results,
+                  // 2nd param is the function that each item is passed to
+                  function (iFormation, callback) {
+                    // Call an asynchronous function, often a save() to DB
+
+
+                    //console.log(iFormation)
+                    //console.log(",,,,,,,,,,,")
+                    idStr = "" + iFormation._id
+                    //console.log(idStr)
+                    Formation.find({id: idStr})
+                      .populate('place')
+                      .populate('formationCenter')
+                      .populate('customers')
+                      .exec(function placesFouded(err, placesFormation) {
+                        // body...
+                        formationsResponse = [];
+
+
+                        formationArray.push(placesFormation[0]);
+                        callback();
+                      });
+
+                  },
+                  // 3rd param is the function to call when everything's done
+                  function (err) {                // All tasks are done now
+                    // console.log("ANSWER ID", formationArray.length);
+                    return res.json({
+                      response: "OK",
+                      result: formationArray
+                    })
+                  }
+                );
+              });
+            });
           });
         }
-        else
+      }
+    });
+  },
+
+  countFormationByposition: function (req, res, next) {
+
+    latitude = req.param("lat");
+    longitude = req.param("long")
+
+    if (!latitude) {
+      return res.json({
+        response: "ERROR",
+        msg: sails.__("NOT_LAT")
+      })
+    }
+
+    if (!longitude) {
+      return res.json({
+        response: "ERROR",
+        msg: sails.__("NOT_LONG")
+      })
+    }
+
+    var page = 0;
+    var len = 10;
+
+    if (req.param('page') !== undefined) {
+      if (!isNaN(parseInt(req.param('page')))) {
+        page = Math.abs(parseInt(req.param('page')));
+      }
+      else {
+        return res.json({err: sails.__("ERROR_PAGE_INVALID")});
+      }
+    }
+
+    //console.log("Call Services")
+    if (req.param('len') !== undefined) {
+      if (!isNaN(parseInt(req.param('len')))) {
+        len = Math.abs(parseInt(req.param('len')));
+      }
+      else {
+        return res.json({err: sails.__("ERROR_LEN_INVALID")});
+      }
+    }
+
+    skip = page * len
+
+    distance = 1000; ///1 Km
+    ////Exists and is a number
+    distancesArray = [1000, 3500, 5000]
+    if (req.param("distance") && !isNaN(parseInt(req.param("distance")))) {
+      distances = req.param("distance");
+    }
+
+    console.log("Find information")
+    PlaceService.searchPosition(latitude, longitude, distance, function (PlaceResult) {
+
+      if (typeof  PlaceResult == "string") {
+        return res.json({
+          response: "ERROR",
+          msg: PlaceResult
+        })
+      }
+      else {
+        if (!PlaceResult) {
           return res.json({
-            response: "OK",
-            result: PlaceResult
+            response: "ERROR",
+            msg: "Not exits formations near yours selected position"
           })
-      });
+        }
+        else {
+
+          arrayData = []
+          var promise;
+          promise = PlaceResult.reduce(function (prev, iPlace) {
+            return prev.then(function () {
+              object = iPlace.id
+              // console.log("Data", iPlace)
+              arrayData.push(new ObjectID(iPlace.id));
+            });
+          }, Promise.resolve());
+
+          promise.then(function (array) {
+            //if (initialDate || finalDate)
+            query = {}
+            query.place = {$in: arrayData}
+            /*query = {
+             place : {$in:arrayData},
+             price: {
+             $gte:50
+             },
+             dates: {
+             $elemMatch:{
+             date: {
+             $gte:new Date("2016-10-04"),
+             $lte: new Date("2017-05-03")
+             }
+             }
+             }
+
+             }*/
+
+            /// console.log("QUERY: " , query)
+            Formation.native(function (err, collection) {
+              if (err) return res.serverError(err);
+              //console.log("---")
+              ////Transform all arrayData to new ObjectId [new ObjectID (arrayData[0])]
+              // {"place":{"$all": [new ObjectID(arrayData[0])] },"price":{"$gte":50},"dates":{"$elemMatch":{"date":{"$gte":new Date("2016-10-04"),"$lte":new Date("2017-05-03")}}}}
+
+              //console.log("******")
+              // parameters.place = {$all:[new ObjectID(arrayData[0])]}
+              collection.find(query).toArray(function (err, results) {
+                // console.log("sfdsdfsss " + results);
+                if (err) return res.serverError(err);
+                ////Dados los id buscar un place un el nombre "5797e539e1e9812814a35520"
+                //console.log("DATA", results)
+                ///Make populate for all id formation to search place and formationcenter data
+                formationArray = []
+                async = require("async");
+                async.forEach(results,
+                  // 2nd param is the function that each item is passed to
+                  function (iFormation, callback) {
+                    // Call an asynchronous function, often a save() to DB
+
+
+                    //console.log(iFormation)
+                    //console.log(",,,,,,,,,,,")
+                    idStr = "" + iFormation._id
+                    //console.log(idStr)
+                    Formation.find({id: idStr})
+                         .exec(function placesFouded(err, placesFormation) {
+                        // body...
+                        formationsResponse = [];
+
+
+                        formationArray.push(placesFormation[0]);
+                        callback();
+                      });
+
+                  },
+                  // 3rd param is the function to call when everything's done
+                  function (err) {                // All tasks are done now
+                    // console.log("ANSWER ID", formationArray.length);
+                    return res.json({
+                      response: "OK",
+                      size: formationArray.length
+                    })
+                  }
+                );
+              });
+            });
+          });
+        }
+      }
     });
   },
 
@@ -305,7 +530,7 @@ module.exports = {
 
      }*/
 
-   /// console.log("QUERY: ", query)
+    /// console.log("QUERY: ", query)
     Place.native(function (err, collection) {
       if (err) return res.serverError(err);
       //console.log("---")
@@ -330,7 +555,7 @@ module.exports = {
 
     namePlace = "";
     namePlace = req.param("name");
-   // console.log("PARAMETERS", req.param)
+    // console.log("PARAMETERS", req.param)
     if (namePlace == "" || typeof namePlace == "undefined")
       return res.json({response: "ERROR", message: "Place´s name undefined"})
 
@@ -365,7 +590,7 @@ module.exports = {
       latitudePlace = req.param("latitude");
       if (latitudePlace == "" || typeof latitudePlace == "undefined")
         return res.json({response: "ERROR", message: "Place´s latitude undefined"})
-      console.log("La cadena convertida a float ", parseFloat(latitudePlace) , latitudePlace)
+      console.log("La cadena convertida a float ", parseFloat(latitudePlace), latitudePlace)
       if (isNaN(parseFloat(latitudePlace))) {
         return res.json({response: "ERROR", message: "Place´s latitude is invalid string number"})
       }
@@ -761,7 +986,7 @@ module.exports = {
       ///GEt formation array references
       formationArray = resultObject.formations
 
-      console.log("DESTROY " ,deleteQuery)
+      console.log("DESTROY ", deleteQuery)
       Place.destroy(deleteQuery).exec(function (err) {
         if (err) {
           return res.json({response: "ERROR", message: " Not delete place"})
@@ -774,7 +999,7 @@ module.exports = {
           // 2nd param is the function that each item is passed to
           function (iValue, callback) {
 
-            Formation.update({id:iValue},{isConfirmed:false}).exec(function(err, result) {
+            Formation.update({id: iValue}, {isConfirmed: false}).exec(function (err, result) {
               callback()
             })
 
@@ -784,7 +1009,7 @@ module.exports = {
             // console.log("ANSWER ID", formationArray.length);
 
           })
-            return res.json({response: "OK"})
+        return res.json({response: "OK"})
       })
     });
   },
@@ -954,7 +1179,7 @@ module.exports = {
       query.name = {contains: req.param('name')};
     }
 
-   /// console.log("QUERY",query )
+    /// console.log("QUERY",query )
     Place.find(query).limit(len).skip(skipv).exec(function (err, resulFormation) {
 
       if (err) {

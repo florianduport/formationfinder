@@ -7,11 +7,13 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 $rootScope.userAuthenticated = false;
                 $rootScope.username = null;
                 $location.path('/');
+
+                localStorage.removeItem('admin_token');
             };
 
         }])
-    .controller("LoginController", ["$scope", "$rootScope", "$location", "$http", "$uibModal",
-        function ($scope, $rootScope, $location, $http, $uibModal) {
+    .controller("LoginController", ["$scope", "$rootScope", "$location", "$http", "$uibModal", "$translate",
+        function ($scope, $rootScope, $location, $http, $uibModal, $translate) {
 
             //If i get here and the user is logged, go to dashboard.
             if ($rootScope.userAuthenticated === true) {
@@ -42,20 +44,22 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             $rootScope.userAuthenticated = true;
                             $rootScope.username = $scope.username;
 
+                            localStorage.setItem('admin_token', result.data);
+
                             $location.path('/dashboard').replace();
                         } else {
                             $rootScope.userToken = null;
                             $rootScope.userAuthenticated = false;
                             $rootScope.formationCenter = null;
 
-                            var objeData = {type: "Error"};
-                            $scope.showModalMessage("Invalid intent. Please verify your credentials and try again.", objeData);
+                            var objeData = {type: $translate.instant('ERROR')};
+                            $scope.showModalMessage($translate.instant('INVALID_USERNAME_PASSWORD'), objeData);
                             //alert("Invalid intent. Please verify your credentials and try again.");
                         }
                     })
                     .error(function (err) {
-                        var objeData = {type: "Error"};
-                        $scope.showModalMessage("Error using auth services.", objeData);
+                        var objeData = {type: $translate.instant('ERROR')};
+                        $scope.showModalMessage($translate.instant('ERROR_USING_AUTH_SERVICE'), objeData);
                         //alert("Error using auth services.");
                     })
                     .finally(function () {
@@ -92,8 +96,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             $scope.username = $rootScope.username
 
         }])
-    .controller("FormationCenterController", ["$scope", "$rootScope", "$location", "$http", "$uibModal",
-        function ($scope, $rootScope, $location, $http, $uibModal) {
+    .controller("FormationCenterController", ["$scope", "$rootScope", "$location", "$http", "$uibModal", "$translate",
+        function ($scope, $rootScope, $location, $http, $uibModal, $translate) {
 
             $scope.initParameters = function () {
                 if ($scope.formationCenters) {
@@ -139,8 +143,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     .error(function (err) {
                         console.log("Error searching Formation Centers: ", err);
 
-                        var objeData = {type: "Error"};
-                        $scope.showModalMessage("Error searching Formation Centers", objeData);
+                        var objeData = {type: $translate.instant('ERROR')};
+                        $scope.showModalMessage($translate.instant('ERROR_SEARCHING_FORMATION_CENTERS'), objeData);
 
                         //alert("Error searching Formation Centers: " + err);
                     });//End of HTTP.POST.
@@ -168,8 +172,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             $scope.showModalConfirmDelete = function (formationCenter) {
 
                 $scope.items = {};
-                $scope.items.messageType = "Confirmation";
-                $scope.items.message = "You are going to delete this Formation Center, continue?";
+                $scope.items.messageType = $translate.instant('CONFIRMATION');
+                $scope.items.message = $translate.instant('DELETE_FORMATION_CENTER_CONFIRMATION');
                 $scope.items.objectData = "";
 
                 var modalInstance = $uibModal.open({
@@ -196,19 +200,20 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                         $http.post($rootScope.urlBase + "/formationCenter/delete", {
                                 id: formationCenter.id
+                                //token: localStorage.getItem('id_token')
                             })
                             .success(function (result) {
                                 if (result.status === "ok") {
                                     $scope.searchFormationCenters();
 
-                                    var objeData = {type: "Info"};
-                                    $scope.showModalMessage("Formation Center deleted.", objeData);
+                                    var objeData = {type: $translate.instant('INFO')};
+                                    $scope.showModalMessage($translate.instant('FORMATION_CENTER_DELETED'), objeData);
                                     //alert('Formation Center deleted.');
                                 } else {
                                     console.log("Error deleting Formation Centers: ", result.info);
 
-                                    objeData = {type: "Error"};
-                                    $scope.showModalMessage("Error deleting Formation Centers: " + result.info, objeData);
+                                    objeData = {type: $translate.instant('ERROR')};
+                                    $scope.showModalMessage($translate.instant('ERROR_DELETING_FORMATION_CENTER')+ ": " + result.info, objeData);
 
                                     //alert("Error deleting Formation Centers: " + result.info);
                                 }
@@ -216,8 +221,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             .error(function (err) {
                                 console.log("Error deleting Formation Centers: ", err);
 
-                                var objeData = {type: "Error"};
-                                $scope.showModalMessage("Error deleting Formation Centers: " + err, objeData);
+                                var objeData = {type: $translate.instant('ERROR')};
+                                $scope.showModalMessage($translate.instant('ERROR_DELETING_FORMATION_CENTER') + ": " + err, objeData);
 
                                 //alert("Error deleting Formation Centers: " + err);
                             });//End of HTTP.POST.
@@ -253,8 +258,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             };
 
         }])
-    .controller("CreateFormationCenterController", ["$scope", "$location", "$http", "$rootScope", "$uibModal",
-        function ($scope, $location, $http, $rootScope, $uibModal) {
+    .controller("CreateFormationCenterController", ["$scope", "$location", "$http", "$rootScope", "$uibModal", "$translate",
+        function ($scope, $location, $http, $rootScope, $uibModal, $translate) {
 
             $scope.zipcodeRegExp = /^\d{5}$/;
             $scope.nameRegExp = /^[µçùàèáéíóúa-zA-Z][µçùàèáéíóúa-zA-Z\s]+$/;
@@ -305,8 +310,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             if (result.status === "ok") {
                                 console.log("Formation Center created.");
 
-                                var objeData = {type: "Info"};
-                                $scope.showModalMessage("Formation Center created.", objeData);
+                                var objeData = {type: $translate.instant('INFO')};
+                                $scope.showModalMessage($translate.instant('FORMATION_CENTER_CREATED'), objeData);
 
                                 //alert("Formation Center created.");
                                 $scope.gotoToFormationCenters();
@@ -314,8 +319,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             } else {
                                 console.log("Error creating Formation Center: ", result.info);
 
-                                objeData = {type: "Error"};
-                                $scope.showModalMessage("Error creating Formation Center", objeData);
+                                objeData = {type: $translate.instant('ERROR')};
+                                $scope.showModalMessage($translate.instant('ERROR_CREATING_FORMATION_CENTER'), objeData);
 
                                 //alert("Error creating Formation Center: " + result.info);
                             }
@@ -323,8 +328,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         .error(function (err) {
                             console.log("Error creating Formation Center: ", err);
 
-                            var objeData = {type: "Error"};
-                            $scope.showModalMessage("Error creating Formation Center", objeData);
+                            var objeData = {type: $translate.instant('ERROR')};
+                            $scope.showModalMessage($translate.instant('ERROR_CREATING_FORMATION_CENTER'), objeData);
 
                             //alert("Error creating Formation Center: " + err);
                         });//End of HTTP.POST.
@@ -390,10 +395,10 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             $scope.formationcenter = result.data;
                             copyToOldAttributes();
                         } else {
-                            console.log("Error searching Formation Centers: " + result.info);
+                            console.log("Error searching Formation Center: " + result.info);
 
-                            var objeData = {type: "Error"};
-                            $scope.showModalMessage("Error searching Formation Centers.", objeData);
+                            var objeData = {type: $translate.instant('ERROR')};
+                            $scope.showModalMessage($translate.instant('ERROR_SEARCHING_FORMATION_CENTER'), objeData);
 
                             //alert("Error searching Formation Centers: " + result.info);
                             $scope.gotoToFormationCenters();
@@ -402,8 +407,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     .error(function (err) {
                         console.log("Error searching Formation Centers: ", err);
 
-                        var objeData = {type: "Error"};
-                        $scope.showModalMessage("Error searching Formation Centers.", objeData);
+                        var objeData = {type: $translate.instant('ERROR')};
+                        $scope.showModalMessage($translate.instant('ERROR_SEARCHING_FORMATION_CENTER'), objeData);
 
                         //alert("Error searching Formation Centers: " + err);
                     });//End of HTTP.POST.
@@ -463,8 +468,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 } else {
                     searchFormationCenter();
 
-                    var objeData = {type: "Error"};
-                    $scope.showModalMessage('Enter valid new parameter.', objeData);
+                    var objeData = {type: $translate.instant('ERROR')};
+                    $scope.showModalMessage($translate.instant('ENTER_VALID_NEW_PARAMETERS'), objeData);
                     //alert('Enter valid new parameter.');
                 }
             };
@@ -476,8 +481,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             $scope.showModalConfirm = function () {
 
                 $scope.items = {};
-                $scope.items.messageType = "Confirmation";
-                $scope.items.message = "You are going to update this Formation Center, continue?";
+                $scope.items.messageType = $translate.instant('CONFIRMATION');
+                $scope.items.message = $translate.instant('UPDATE_FORMATION_CENTER_CONFIRMATION');
                 $scope.items.objectData = "";
 
                 var modalInstance = $uibModal.open({
@@ -505,15 +510,15 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             .success(function (result) {
                                 if (result.status === "ok") {
 
-                                    var objeData = {type: "Info"};
-                                    $scope.showModalMessage("Formation Center Updated.", objeData);
+                                    var objeData = {type: $translate.instant('INFO')};
+                                    $scope.showModalMessage($translate.instant('FORMATION_CENTER_UPDATED'), objeData);
                                     //alert("Formation Center Updated.");
                                     $location.path('/formationcenter');
                                 } else {
                                     searchFormationCenter();
                                     console.log("Error updating Formation Centers: " + result.info);
 
-                                    objeData = {type: "Error"};
+                                    objeData = {type: $translate.instant('ERROR')};
                                     $scope.showModalMessage(result.info, objeData);
                                     //alert("Error updating Formation Centers: " + result.info);
                                 }
@@ -521,8 +526,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             .error(function (err) {
                                 console.log("Error updating Formation Centers: ", err);
 
-                                var objeData = {type: "Info"};
-                                $scope.showModalMessage("Error updating Formation Centers.", objeData);
+                                var objeData = {type: $translate.instant('ERROR')};
+                                $scope.showModalMessage($translate.instant('ERROR_UPDATING_FORMATION_CENTER'), objeData);
 
                                 //alert("Error updating Formation Centers: " + err);
                             });//End of HTTP.POST.
@@ -558,8 +563,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 });
             };
         }])
-    .controller('ModalConfirmCtrl', ["$scope", "$uibModalInstance", "items",
-        function ($scope, $uibModalInstance, items) {
+    .controller('ModalConfirmCtrl', ["$scope", "$uibModalInstance", "items", "$translate",
+        function ($scope, $uibModalInstance, items, $translate) {
 
             $scope.items = items;
             $scope.selected = {
@@ -572,11 +577,11 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             };
 
             $scope.cancel = function () {
-                $uibModalInstance.dismiss('cancel');
+                $uibModalInstance.dismiss($translate.instant('CANCEL'));
                 //$scope.formationCenterName = ""
             };
         }])
-    .controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, items) {
+    .controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, items, $translate) {
 
         $scope.items = items;
         $scope.selected = {
@@ -589,7 +594,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
         };
 
         $scope.cancel = function () {
-            $uibModalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss($translate.instant('CANCEL'));
             $scope.formationCenterName = ""
         };
     })
