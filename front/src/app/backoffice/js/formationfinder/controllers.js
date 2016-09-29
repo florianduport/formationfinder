@@ -3636,6 +3636,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             //}
             $scope.alerts = [];
             $scope.place = $rootScope.place
+
             $scope.variable = $rootScope.variable
 
             if ($scope.place.type != "EDITING") {
@@ -4383,6 +4384,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 $scope.titleformplace = "ADD_PLACE"
                 $scope.placetoEditID = 0;
                 $rootScope.place = {}
+                $rootScope.place.latitude = 48.864716
+                $rootScope.place.longitude = 2.349014
                 $rootScope.place.type = "CREATING";
                 $scope.titleformplace = $translate.instant('ADD_PLACE');
                 console.log('Form title ' ,   $scope.titleformplace )
