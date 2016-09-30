@@ -17,21 +17,17 @@
                    ng-model="credentials.password"
                    required>
         </div>
-        <!--<div class="input-group" data-toggle="tooltip" title="Select a Formation Center">-->
-            <!--<span class="input-group-addon"><i class="icon_briefcase"></i></span>-->
-            <!--<input type="text" class="form-control" placeholder="Formation center"-->
-                   <!--maxlength="40"-->
-                   <!--ng-model="credentials.formationCenter"-->
-                   <!--required-->
-                   <!--uib-typeahead="FCname for FCname in formationCentersNames | filter:$viewValue">-->
-        <!--</div>-->
-        <label class="checkbox">
-            <input type="checkbox" value="remember-me"> Remember me
+        <div class="form-group">
+            <label class="checkbox-inline">
+                <input type="checkbox" value="remember-me"> Remember me
+
+            </label>
             <span class="pull-right"> <a href="#"> Forgot Password?</a></span>
-        </label>
+        </div>
         <button class="btn btn-primary btn-lg btn-block"
                 type="submit"
                 ng-disabled="loginForm.$invalid"
-                ng-click="login()">{{loginButtonText}}</button>
+                ng-click="login()">{{loginButtonText}}
+        </button>
     </div>
 </form>

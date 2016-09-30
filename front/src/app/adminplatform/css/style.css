@@ -5313,6 +5313,11 @@ span.customSelect.changed {
     max-width: 600px;
 }
 
+#updateContainer {
+    max-width: 500px;
+    padding: 40px;
+}
+
 /*#createFCform {*/
-    /*max-width: 300px;*/
+/*max-width: 300px;*/
 /*}*/

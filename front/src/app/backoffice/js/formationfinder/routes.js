@@ -78,24 +78,10 @@ app.config(["$routeProvider", function ($routeProvider) {
                 templateUrl: "templates/bill/listbillEx.html"
             }
         )
-        //.when("/formation/book/:id", {
-        //        //controller: "FormationBookController",
-        //        controller: "WizardController",
-        //        templateUrl: "templates/formation/wizardpaginationDateBook.html"
-        //    }
-        //)
-        //.when("/testimony/search", {
-        //    controller: "TestimonySearchController",
-        //    templateUrl: "templates/testimony/search.html"
-        //})
-        //
-        //.when("/index", {
-        //    controller: "IndexBackofficeController",
-        //    templateUrl: "templates/index.html"
-        //})
-        //.when("/formations", {
-        //    controller: "FormationCenterManagementController",
-        //    templateUrl: "templates/formationcenter.html"
-        //})
+        .when("/alert/list", {
+                controller: "AlertListController",
+                templateUrl: "templates/alert/listAlertEx.html"
+            }
+        )
         .otherwise("/");
 }])

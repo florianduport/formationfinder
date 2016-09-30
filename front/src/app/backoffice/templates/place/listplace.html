@@ -1,4 +1,4 @@
-<div class="container  well admin-places">
+<div class="container   admin-places">
     <div class="row col-lg-10 col-sm-10 col-lg-10 col-xs-12 col-lg-offset-1 col-sm-offset-1 well">
         <h2>{{'ADMIN_PAGE_HEAD'| translate}}</h2>
         <p>{{'ADMIN_PAGE_HEAD_DESCRIPTION'| translate}}</p>
@@ -201,7 +201,7 @@
             <table class="table table-responsive ">
                 <thead style="font-size: 14px">
                 <tr>
-                    <th><strong>View</strong></th>
+                    <!--<th><strong>View</strong></th>-->
                     <th><strong>Name</strong></th>
                     <th><strong>Address</strong></th>
                     <th><strong>Postal code</strong></th>
@@ -213,14 +213,14 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="iplace in places | filter:criteriaList  ">
-                    <td>
-                        <form>
-                            <div class=" input-group ">
-                                <input type="checkbox" checklist-model="search.formation"
-                                       checklist-value="iplace">
-                            </div>
-                        </form>
-                    </td>
+                    <!--<td>-->
+                        <!--<form>-->
+                            <!--<div class=" input-group ">-->
+                                <!--<input type="checkbox" checklist-model="search.formation"-->
+                                       <!--checklist-value="iplace">-->
+                            <!--</div>-->
+                        <!--</form>-->
+                    <!--</td>-->
                     <td>{{iplace.name}}</td>
                     <td>{{iplace.address}}</td>
                     <td>{{iplace.zipcode}}</td>
@@ -247,10 +247,17 @@
 
                     </td>
                     <td>
-                        <div class=" input-group ">
-                            <input type="checkbox" ng-checked="iplace.isActivated" ng-disabled="checkboxUnable">
 
-                        </div>
+                         <span class="label label-success" ng-show="iplace.isActivated">
+                        <span class="glyphicon glyphicon-ok"></span>
+                    </span>
+                    <span class="label label-danger" ng-show="!iplace.isActivated">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </span>
+                        <!--<div class=" input-group ">-->
+                            <!--<input type="checkbox" ng-checked="iplace.isActivated" ng-disabled="checkboxUnable">-->
+
+                        <!--</div>-->
                     </td>
                     <td>
                         <a class="btn btn-primary" ng-click="editPlace(iplace)">{{'EDIT_PLACE' | translate}}</a>

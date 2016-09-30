@@ -58,7 +58,11 @@ app.config(function($translateProvider) {
             CARD_DATE:"Expiration date(*)",
             AMOUNT:"Amount",
             AMOUNT_ERROR:"Amount invalid",
-            CARD_TYPE:"Card type"
+            CARD_TYPE:"Card type",
+            ADMIN_PAGE_ALERT_HEAD:"Admin alerts",
+            ADMIN_PAGE_ALERT_HEAD_DESCRIPTION:"In this window you can admin formation center's alerts.",
+            TEXT:"Text",
+            TEXT_ERROR:"Text invalid"
 
 
         })
@@ -117,7 +121,11 @@ app.config(function($translateProvider) {
             CARD_DATE:"Expiration date(*)",
             AMOUNT:"Nombre",
             AMOUNT_ERROR:"Nombre invalid",
-            CARD_TYPE:"Card type"
+            CARD_TYPE:"Card type",
+            ADMIN_PAGE_ALERT_HEAD:"Admin alerts",
+            ADMIN_PAGE_ALERT_HEAD_DESCRIPTION:"In this window you can admin formation center's alerts.",
+            TEXT:"Text",
+            TEXT_ERROR:"Text invalid"
 
         })
     .translations('es', {
@@ -177,7 +185,11 @@ app.config(function($translateProvider) {
         CARD_DATE:"Expiration date(*)",
         AMOUNT:"Nombre",
         AMOUNT_ERROR:"Nombre invalid",
-        CARD_TYPE:"Tarjeta de crédito/débito"
+        CARD_TYPE:"Tarjeta de crédito/débito",
+        ADMIN_PAGE_ALERT_HEAD:"Administrar alerts",
+        ADMIN_PAGE_ALERT_HEAD_DESCRIPTION:"En esta vista se podra administrar las alertas de un Centro de Formación.",
+        TEXT:"Texto",
+        TEXT_ERROR:"Texto invalido"
 
     });;
      $translateProvider.preferredLanguage('en');

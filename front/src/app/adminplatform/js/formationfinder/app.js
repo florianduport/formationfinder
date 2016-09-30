@@ -1,8 +1,8 @@
-var app = angular.module("adminplatform", ["ngResource", "ngRoute", "ngCookies","ngAnimate","ui.bootstrap"])
+var app = angular.module("adminplatform", ['app.config',"ngResource", "ngRoute", "ngCookies","ngAnimate","ui.bootstrap"])
 
-.run(["$rootScope", "$cookieStore", "$location", function ($rootScope, $cookieStore, $location) {
+.run(["$rootScope", "$cookieStore", "$location", 'CONFIG', function ($rootScope, $cookieStore, $location, CONFIG) {
     //events
-    $rootScope.urlBase = "http://137.74.172.220:1337";
+    $rootScope.urlBase = CONFIG.BASE_URL;
     $rootScope.userToken = null;
     $rootScope.userAuthenticated = false;
     $rootScope.username = null;

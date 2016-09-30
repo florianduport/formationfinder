@@ -3,7 +3,14 @@
  */
 
 
-describe('FormationController', function() {
+describe('FormationController', function () {
+  var faker;
+  request = require('supertest'),
+  faker = require('faker');
+  async = require("async");
+  assert = require('assert');
+  mailtest = "dionis@localhost.com"
+    //faker.internet.email()
 
   describe('#find formation by date', function() {
     it(' should find formation with date ', function (done) {
@@ -563,7 +570,7 @@ describe('FormationController', function() {
           finalDate: "2023-05-03"
         }
 
-        console.log("######------------------------------------------------------------------------------#####")
+      //  console.log("######------------------------------------------------------------------------------#####")
         request(sails.hooks.http.app)
           .post('/Formation/countByZipcodeMongoEx')
           .send(config)
@@ -654,6 +661,317 @@ describe('FormationController', function() {
   });
 
 
+  describe('#Test find advaced search ==> ', function () {
+    it('Formation booked with Customer and generate asociated Alert', function (done) {
+      Place.findOne({name: {"contains": "a"}}).exec(function (err, resultObjectPlace) {
 
+        if (err)
+          done(err)
+
+        Formation.find().exec(function (err, resulArray) {
+
+          if (err || resulArray === undefined || resulArray.length == 0) {
+          //  console.log("ERROR in SEARCH")
+            done(err)
+          }
+          firstFormation = resulArray[0]
+
+          if (typeof firstFormation.place == "undefined")
+            done("PLACE UNDEFINED")
+          ////Delete all Alert for These Formation Center
+
+          Alert.destroy({formationCenter: firstFormation.formationCenter}).exec(function (err, resultDestroy) {
+            firstFormation.maxPeople = 1
+            firstFormation.place = resultObjectPlace.id
+           // console.log("FORMATION ", firstFormation)
+            Formation.update({id: firstFormation.id}, {
+              place: resultObjectPlace.id,
+              maxPeople: 1
+            }).exec(function (err, resultUpdate) {
+              //console.log("FORMATION UPDATE", resultUpdate)
+              CustomerToInsert = {
+                name: faker.internet.userName(),
+                firstName: faker.name.firstName(),
+                email: faker.internet.email(),
+                address: faker.address.streetAddress(),
+                zipCode: faker.address.zipCode(),
+                city: faker.address.city(),
+                phoneNumber: faker.phone.phoneNumber(),
+                birthDate: faker.date.past(),
+                birthCity: faker.address.city(),
+                reasonOfFormation: faker.lorem.paragraph(),
+                civility: "M",
+                number: faker.random.number(),
+                driverLicence: {
+                  number: "000000000001",
+                  placeOfDeliverance: faker.address.city()
+                }
+
+              }
+
+              config = {
+                id: firstFormation.id,
+                customerData: CustomerToInsert
+              }
+
+              ////Call services bookdFormation
+              request(sails.hooks.http.app)
+                .post('/Formation/bookFormation')
+                .send(config)
+                .expect(200, function (err, res) {
+                  if (err) return done(err);
+
+               //   console.log("SERVICE RESPONSE ", res.body)
+                  assert.equal(res.body.ok, 'book proces complit.')
+
+                  ///Formation Center for these formation only have 2 alert
+                  ///isFull type and Customer Booked
+                  Alert.find({formationCenter: firstFormation.formationCenter}).exec(function (err, resultFindAlert) {
+                    typeArray = []
+
+                    async.forEach(resultFindAlert,
+                      // 2nd param is the function that each item is passed to
+                      function (iAlert, callback) {
+
+                        if (iAlert.type == "New_Costumer" || iAlert.type == "Formation_Full") {
+                          typeArray.push(iAlert.type)
+                        }
+                        callback()
+                      },
+                      // 3rd param is the function to call when everything's done
+                      function (err) {                // All tasks are done now
+                        // console.log("ANSWER ID", formationArray.length);
+
+                      })
+
+                    assert.equal(2, typeArray.length)
+                    assert.equal("New_Costumer", typeArray[0])
+                    assert.equal("Formation_Full", typeArray[1])
+                    done();
+                  })
+
+                })
+            })
+
+
+          })
+
+        })
+      })
+
+
+    });
+
+    it('Formation booked with Customer and generate asociated Alert (NOT FULL)', function (done) {
+      Place.findOne({name: {"contains": "a"}}).exec(function (err, resultObjectPlace) {
+
+        if (err)
+          done(err)
+
+        Formation.find().exec(function (err, resulArray) {
+
+          if (err || resulArray === undefined || resulArray.length == 0) {
+            console.log("ERROR in SEARCH")
+            done(err)
+          }
+          firstFormation = resulArray[0]
+
+          if (typeof firstFormation.place == "undefined")
+            done("PLACE UNDEFINED")
+          ////Delete all Alert for These Formation Center
+
+          Alert.destroy({formationCenter: firstFormation.formationCenter}).exec(function (err, resultDestroy) {
+            firstFormation.maxPeople = 1
+            firstFormation.place = resultObjectPlace.id
+           // console.log("FORMATION ", firstFormation)
+            Formation.update({id: firstFormation.id}, {place:resultObjectPlace.id, maxPeople:firstFormation.maxPeople + 4, isFull: false}).exec(function (err, resultUpdate) {
+            //  console.log("FORMATION UPDATE", resultUpdate)
+              CustomerToInsert = {
+                name: faker.internet.userName(),
+                firstName: faker.name.firstName(),
+                email: faker.internet.email(),
+                address: faker.address.streetAddress(),
+                zipCode: faker.address.zipCode(),
+                city: faker.address.city(),
+                phoneNumber: faker.phone.phoneNumber(),
+                birthDate: faker.date.past(),
+                birthCity: faker.address.city(),
+                reasonOfFormation: faker.lorem.paragraph(),
+                civility: "M",
+                number: faker.random.number(),
+                driverLicence: {
+                  number: "000000000002",
+                  placeOfDeliverance: faker.address.city()
+                }
+
+              }
+
+              config = {
+                id: firstFormation.id,
+                customerData: CustomerToInsert
+              }
+
+              ////Call services bookdFormation
+              request(sails.hooks.http.app)
+                .post('/Formation/bookFormation')
+                .send(config)
+                .expect(200, function (err, res) {
+                  if (err) return done(err);
+
+                //  console.log("SERVICE RESPONSE ", res.body)
+                  assert.equal(res.body.ok, 'book proces complit.')
+
+                  ///Formation Center for these formation only have 2 alert
+                  ///isFull type and Customer Booked
+                  Alert.find({formationCenter: firstFormation.formationCenter}).exec(function (err, resultFindAlert) {
+                    typeArray = []
+
+                    async.forEach(resultFindAlert,
+                      // 2nd param is the function that each item is passed to
+                      function (iAlert, callback) {
+
+                        if (iAlert.type == "New_Costumer" || iAlert.type == "Formation_Full") {
+                          typeArray.push(iAlert.type)
+                        }
+                        callback()
+                      },
+                      // 3rd param is the function to call when everything's done
+                      function (err) {                // All tasks are done now
+                        // console.log("ANSWER ID", formationArray.length);
+
+                      })
+
+                    Formation.findOne({id: firstFormation.id}).exec(function (err, resultObjectFormation){
+
+                      assert.equal(1, typeArray.length)
+                      assert.equal("New_Costumer", typeArray[0])
+                      assert.equal(false, resultObjectFormation.isFull)
+
+                      done();
+
+                    })
+
+                  })
+
+                })
+            })
+
+
+          })
+
+        })
+      })
+
+
+
+     })
+
+    it('Formation booked with Customer and generate asociated Alert (NOT FULL AND PAID PARAMETEWR SETTER)', function (done) {
+      Place.findOne({name: {"contains": "a"}}).exec(function (err, resultObjectPlace) {
+
+        if (err)
+          done(err)
+
+        Formation.find().exec(function (err, resulArray) {
+
+          if (err || resulArray === undefined || resulArray.length == 0) {
+            console.log("ERROR in SEARCH")
+            done(err)
+          }
+          firstFormation = resulArray[0]
+
+          if (typeof firstFormation.place == "undefined")
+            done("PLACE UNDEFINED")
+          ////Delete all Alert for These Formation Center
+
+          Alert.destroy({formationCenter: firstFormation.formationCenter}).exec(function (err, resultDestroy) {
+            firstFormation.maxPeople = 1
+            firstFormation.place = resultObjectPlace.id
+            // console.log("FORMATION ", firstFormation)
+            Formation.update({id: firstFormation.id}, {
+              place: resultObjectPlace.id,
+              maxPeople: firstFormation.maxPeople + 4,
+              isFull: false
+            }).exec(function (err, resultUpdate) {
+              //  console.log("FORMATION UPDATE", resultUpdate)
+              CustomerToInsert = {
+                name: faker.internet.userName(),
+                firstName: faker.name.firstName(),
+                email: faker.internet.email(),
+                address: faker.address.streetAddress(),
+                zipCode: faker.address.zipCode(),
+                city: faker.address.city(),
+                phoneNumber: faker.phone.phoneNumber(),
+                birthDate: faker.date.past(),
+                birthCity: faker.address.city(),
+                reasonOfFormation: faker.lorem.paragraph(),
+                civility: "M",
+                number: faker.random.number(),
+                driverLicence: {
+                  number: "000000000003",
+                  placeOfDeliverance: faker.address.city()
+                }
+
+              }
+
+              config = {
+                id: firstFormation.id,
+                customerData: CustomerToInsert,
+                paid: false
+              }
+
+              ////Call services bookdFormation
+              request(sails.hooks.http.app)
+                .post('/Formation/bookFormation')
+                .send(config)
+                .expect(200, function (err, res) {
+                  if (err) return done(err);
+
+                  //  console.log("SERVICE RESPONSE ", res.body)
+                  assert.equal(res.body.ok, 'book proces complit.')
+
+                  ///Formation Center for these formation only have 2 alert
+                  ///isFull type and Customer Booked
+                  Alert.find({formationCenter: firstFormation.formationCenter}).exec(function (err, resultFindAlert) {
+                    typeArray = []
+
+                    async.forEach(resultFindAlert,
+                      // 2nd param is the function that each item is passed to
+                      function (iAlert, callback) {
+
+                        if (iAlert.type == "New_Costumer" || iAlert.type == "Formation_Full") {
+                          typeArray.push(iAlert.type)
+                        }
+                        callback()
+                      },
+                      // 3rd param is the function to call when everything's done
+                      function (err) {                // All tasks are done now
+                        // console.log("ANSWER ID", formationArray.length);
+
+                      })
+
+                    Formation.findOne({id: firstFormation.id}).exec(function (err, resultObjectFormation) {
+
+                      assert.equal(1, typeArray.length)
+                      assert.equal("New_Costumer", typeArray[0])
+                      assert.equal(false, resultObjectFormation.isFull)
+
+                      done();
+
+                    })
+
+                  })
+
+                })
+            })
+
+
+          })
+
+        })
+      })
+
+      })
+  })
 
 });

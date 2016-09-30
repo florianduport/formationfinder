@@ -754,7 +754,7 @@ describe('PayServices', function() {
      ) PayServices #Payment makepayment() Make the payment to the buyer wallet PAYIN  :
      Error: done() invoked with non-Error: {"response":"ERROR","message":{"name":"MangoPayError","message":"Http error"}}
      at C:\Users\XPS15\Documents\ENTREGA\SAILS_GET\formationfinder\formationfinder\node_modules\mocha\lib\runnable.js:355:23
-     at resultServices (C:\Users\XPS15\Documents\ENTREGA\SAILS_GET\formationfinder\formationfinder\test\services\payment.spec.js:856:24)
+     at resultServices (C:\Users\XPS15\Documents\ENTREGA\SAILS_GET\formationfinder\formationfinder\test\services\payment.spec8.js:856:24)
      at C:\Users\XPS15\Documents\ENTREGA\SAILS_GET\formationfinder\formationfinder\api\services\PaymentService.js:694:11
      at Timeout._onTimeout (C:\Users\XPS15\Documents\ENTREGA\SAILS_GET\formationfinder\formationfinder\node_modules\mangopay\lib\httpClient.js:68:34)
 

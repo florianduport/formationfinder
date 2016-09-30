@@ -38,7 +38,30 @@
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="39" column="12" selection-start-line="25" selection-start-column="4" selection-end-line="39" selection-end-column="12" />
+              <caret line="63" column="43" selection-start-line="66" selection-start-column="8" selection-end-line="66" selection-end-column="106" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Compartir Piso Havana, Alquiler de Habitaciones &amp; Alquiler por Meses - Airbnb Havana.htm" pinned="false" current-in-tab="false">
+        <entry file="file://E:/ENTREGA-5-8-2016/internet-3-8-2016/Compartir Piso Havana, Alquiler de Habitaciones &amp; Alquiler por Meses - Airbnb Havana.htm">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding>
+                <marker date="1470264852324" expanded="true" signature="50:114" placeholder="..." />
+                <marker date="1470264852324" expanded="true" signature="161:229" placeholder="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="style.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/css/style.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-2.525641">
+              <caret line="314" column="11" selection-start-line="314" selection-start-column="1" selection-end-line="314" selection-end-column="11" />
               <folding />
             </state>
           </provider>
@@ -60,7 +83,7 @@
         <entry file="file://$PROJECT_DIR$/js/formationfinder/controllers.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="1712" column="41" selection-start-line="1712" selection-start-column="41" selection-end-line="1712" selection-end-column="41" />
+              <caret line="1713" column="0" selection-start-line="1713" selection-start-column="0" selection-end-line="1713" selection-end-column="0" />
               <folding>
                 <element signature="e#0#45#0" expanded="false" />
                 <element signature="e#80#10586#0" expanded="false" />
@@ -142,7 +165,6 @@
                 <element signature="e#23331#23590#0" expanded="false" />
                 <element signature="e#23481#23568#0" expanded="false" />
                 <element signature="e#24105#24345#0" expanded="false" />
-                <element signature="e#24498#24560#0" expanded="false" />
                 <element signature="e#24755#24771#0" expanded="false" />
                 <element signature="e#24774#24887#0" expanded="false" />
                 <element signature="e#25006#27226#0" expanded="false" />
@@ -251,82 +273,7 @@
                 <element signature="e#54869#55983#0" expanded="false" />
                 <element signature="e#56151#63067#0" expanded="false" />
                 <element signature="e#63213#64828#0" expanded="false" />
-                <element signature="e#64963#73341#0" expanded="false" />
-                <element signature="e#65086#65320#0" expanded="false" />
-                <element signature="e#65195#65308#0" expanded="false" />
-                <element signature="e#65224#65294#0" expanded="false" />
-                <element signature="e#65499#65536#0" expanded="false" />
-                <element signature="e#66090#66303#0" expanded="false" />
-                <element signature="e#66312#66323#0" expanded="false" />
-                <element signature="e#66428#66490#0" expanded="false" />
                 <element signature="e#66678#66690#0" expanded="false" />
-                <element signature="e#66752#67022#0" expanded="false" />
-                <element signature="e#66766#66882#0" expanded="false" />
-                <element signature="e#66896#67012#0" expanded="false" />
-                <element signature="e#67117#67233#0" expanded="false" />
-                <element signature="e#67260#67376#0" expanded="false" />
-                <element signature="e#67379#67492#0" expanded="false" />
-                <element signature="e#67608#68076#0" expanded="false" />
-                <element signature="e#68140#68372#0" expanded="false" />
-                <element signature="e#68187#68246#0" expanded="false" />
-                <element signature="e#68420#68475#0" expanded="false" />
-                <element signature="e#68539#68551#0" expanded="false" />
-                <element signature="e#68603#69819#0" expanded="false" />
-                <element signature="e#69013#69586#0" expanded="false" />
-                <element signature="e#69069#69196#0" expanded="false" />
-                <element signature="e#69628#69806#0" expanded="false" />
-                <element signature="e#69884#70077#0" expanded="false" />
-                <element signature="e#69924#70030#0" expanded="false" />
-                <element signature="e#70125#70213#0" expanded="false" />
-                <element signature="e#70271#73199#0" expanded="false" />
-                <element signature="e#70369#70501#0" expanded="false" />
-                <element signature="e#70523#70634#0" expanded="false" />
-                <element signature="e#70938#70972#0" expanded="false" />
-                <element signature="e#71267#72788#0" expanded="false" />
-                <element signature="e#71390#71965#0" expanded="false" />
-                <element signature="e#71416#71489#0" expanded="false" />
-                <element signature="e#71621#71649#0" expanded="false" />
-                <element signature="e#72228#72651#0" expanded="false" />
-                <element signature="e#72283#72629#0" expanded="false" />
-                <element signature="e#72830#73187#0" expanded="false" />
-                <element signature="e#73585#73819#0" expanded="false" />
-                <element signature="e#73694#73807#0" expanded="false" />
-                <element signature="e#73723#73793#0" expanded="false" />
-                <element signature="e#73998#74035#0" expanded="false" />
-                <element signature="e#74523#74736#0" expanded="false" />
-                <element signature="e#74745#74756#0" expanded="false" />
-                <element signature="e#74861#74923#0" expanded="false" />
-                <element signature="e#75111#75123#0" expanded="false" />
-                <element signature="e#75185#75455#0" expanded="false" />
-                <element signature="e#75199#75315#0" expanded="false" />
-                <element signature="e#75329#75445#0" expanded="false" />
-                <element signature="e#75550#75666#0" expanded="false" />
-                <element signature="e#75693#75809#0" expanded="false" />
-                <element signature="e#75812#75925#0" expanded="false" />
-                <element signature="e#76035#76437#0" expanded="false" />
-                <element signature="e#76495#76727#0" expanded="false" />
-                <element signature="e#76542#76601#0" expanded="false" />
-                <element signature="e#76775#76830#0" expanded="false" />
-                <element signature="e#76894#76906#0" expanded="false" />
-                <element signature="e#76952#78096#0" expanded="false" />
-                <element signature="e#77327#77863#0" expanded="false" />
-                <element signature="e#77383#77497#0" expanded="false" />
-                <element signature="e#77905#78083#0" expanded="false" />
-                <element signature="e#78145#78227#0" expanded="false" />
-                <element signature="e#78279#80979#0" expanded="false" />
-                <element signature="e#78365#78485#0" expanded="false" />
-                <element signature="e#78507#78606#0" expanded="false" />
-                <element signature="e#78874#78908#0" expanded="false" />
-                <element signature="e#79189#80574#0" expanded="false" />
-                <element signature="e#79240#79809#0" expanded="false" />
-                <element signature="e#79266#79339#0" expanded="false" />
-                <element signature="e#79471#79499#0" expanded="false" />
-                <element signature="e#80072#80489#0" expanded="false" />
-                <element signature="e#80127#80467#0" expanded="false" />
-                <element signature="e#80616#80967#0" expanded="false" />
-                <element signature="e#132331#132467#0" expanded="false" />
-                <element signature="e#132463#132466#0" expanded="false" />
-                <marker date="1471932211154" expanded="true" signature="99353:99363" placeholder="..." />
               </folding>
             </state>
           </provider>
@@ -335,17 +282,48 @@
       <file leaf-file-name="searchlist.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/templates/formationcenter/searchlist.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.28708133">
-              <caret line="22" column="85" selection-start-line="22" selection-start-column="85" selection-end-line="22" selection-end-column="85" />
+            <state vertical-scroll-proportion="0.31496063">
+              <caret line="313" column="0" selection-start-line="313" selection-start-column="0" selection-end-line="325" selection-end-column="15" />
               <folding>
+                <element signature="n#div#0;n#div#0;n#!!top" expanded="false" />
                 <element signature="n#style#0;n#form#0;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#1;n#div#0;n#div#1;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
                 <element signature="n#div#0;n#div#0;n#form#0;n#div#0;n#div#0;n#div#2;n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
                 <element signature="n#div#1;n#div#0;n#form#0;n#div#0;n#div#0;n#div#2;n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
                 <element signature="n#div#1;n#form#0;n#div#0;n#div#0;n#div#2;n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
-                <element signature="n#div#0;n#div#0;n#li#0;n#ul#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="false" />
+                <element signature="n#div#1;n#div#0;n#!!top" expanded="false" />
                 <element signature="n#div#2;n#div#0;n#li#0;n#ul#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="searchlistMap.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/formationcenter/searchlistMap.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/js/formationfinder/app.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="9" column="61" selection-start-line="9" selection-start-column="55" selection-end-line="9" selection-end-column="61" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="config.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/js/formationfinder/config.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="7" column="17" selection-start-line="7" selection-start-column="9" selection-end-line="7" selection-end-column="17" />
+              <folding>
+                <element signature="e#0#42#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -356,8 +334,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="JavaScript File" />
         <option value="HTML File" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -388,11 +366,9 @@
         <option value="$PROJECT_DIR$/templates/formation/payment.html" />
         <option value="$USER_HOME$/Documents/GIT_UPDATE/formationfinder/api/src/config/connections.js" />
         <option value="$PROJECT_DIR$/MettingInternetSearch" />
-        <option value="$PROJECT_DIR$/css/style.css" />
         <option value="D:/PROYECTO_WORK1_APRENDIZAJE/WORK/MAIN/SAVE/formationfinder/formationfinder/api/controllers/FaqController.js" />
         <option value="$PROJECT_DIR$/js/angular/angular.min.js" />
         <option value="$PROJECT_DIR$/templates/faq/faq.html" />
-        <option value="$PROJECT_DIR$/js/formationfinder/app.js" />
         <option value="$PROJECT_DIR$/templates/sitemap/sitemap.xml" />
         <option value="D:/PROYECTO_WORK1_APRENDIZAJE/WORK/MAIN/SAVE/formationfinder/formationfinder/config/connections.js" />
         <option value="D:/PROYECTO_WORK1_APRENDIZAJE/WORK/MAIN/SAVE/formationfinder/formationfinder/api/controllers/FormationCenterController.js" />
@@ -401,10 +377,13 @@
         <option value="$PROJECT_DIR$/templates/index.html" />
         <option value="$USER_HOME$/Documents/ENTREGA/SAILS_GET/formationfinder/PITERSON/formationfinder/config/connections.js" />
         <option value="$PROJECT_DIR$/js/formationfinder/routes.js" />
-        <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/js/formationfinder/language.js" />
         <option value="$PROJECT_DIR$/templates/legalmentions/legalmentions.html" />
         <option value="$PROJECT_DIR$/js/formationfinder/controllers.js" />
+        <option value="$PROJECT_DIR$/js/formationfinder/config.js" />
+        <option value="$PROJECT_DIR$/js/formationfinder/app.js" />
+        <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/css/style.css" />
         <option value="$PROJECT_DIR$/templates/formationcenter/searchlist.html" />
       </list>
     </option>
@@ -415,10 +394,10 @@
     <detection-done>true</detection-done>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-11" />
-    <option name="y" value="-11" />
-    <option name="width" value="1942" />
-    <option name="height" value="1046" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1932" />
+    <option name="height" value="1056" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -445,7 +424,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
@@ -462,20 +440,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="formationfinder" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="formationfinder" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="formationfinder" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="templates" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -513,6 +477,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -520,19 +485,19 @@
     <property name="HbShouldOpenHtmlAsHb" value="" />
     <property name="js-jscs-nodeInterpreter" value="C:\Bitnami\nodejs-6.1.0-0\nodejs\node.exe" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../adminplatform" />
     <property name="editor.config.accepted" value="true" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\wamp\www\formationfinder\templates\formation" />
-      <recent name="C:\wamp\www\formationfinder\css" />
-      <recent name="C:\wamp\www\formationfinder\templates\formationcenter" />
-      <recent name="C:\wamp\www\formationfinder" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\wamp\www\formationfinder\templates\formationcenter" />
       <recent name="C:\wamp\www\formationfinder\js\angular" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\wamp\www\formationfinder\templates\formationcenter" />
+      <recent name="C:\wamp\www\formationfinder\templates\formation" />
+      <recent name="C:\wamp\www\formationfinder\css" />
+      <recent name="C:\wamp\www\formationfinder" />
     </key>
   </component>
   <component name="RunManager" selected="JavaScript Debug.searchlistTMP.html">
@@ -639,15 +604,15 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-11" y="-11" width="1942" height="1046" extended-state="6" />
+    <frame x="-8" y="-8" width="1932" height="1056" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2045575" sideWeight="0.49481866" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15237081" sideWeight="0.49481866" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.1005848" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24986681" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18457943" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18381503" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.12903225" sideWeight="0.5051814" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -700,38 +665,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/templates/formationcenter/searchlist.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="n#style#0;n#form#0;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#0;n#div#1;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#div#0;n#div#0;n#form#0;n#div#0;n#div#0;n#div#2;n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#div#1;n#div#0;n#form#0;n#div#0;n#div#0;n#div#2;n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#div#1;n#form#0;n#div#0;n#div#0;n#div#2;n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#div#0;n#div#0;n#li#0;n#ul#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#div#2;n#div#0;n#li#0;n#ul#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="108" column="68" selection-start-line="108" selection-start-column="68" selection-end-line="108" selection-end-column="68" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/lib/webstorm.jar!/resources/html5-schema/html5/core-scripting.rnc">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.36630037">
-          <caret line="12" column="16" selection-start-line="12" selection-start-column="16" selection-end-line="12" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$APPLICATION_HOME_DIR$/lib/webstorm.jar!/resources/html5-schema/html5/phrase.rnc">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.6030405">
@@ -949,13 +882,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/formationfinder/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="4" column="30" selection-start-line="4" selection-start-column="30" selection-end-line="4" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/faq/faq.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.0">
@@ -1001,14 +927,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="39" column="12" selection-start-line="25" selection-start-column="4" selection-end-line="39" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/formationfinder/language.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1024,15 +942,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.4752791">
           <caret line="15" column="46" selection-start-line="15" selection-start-column="46" selection-end-line="15" selection-end-column="46" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/css/style.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.36204147">
-          <caret line="858" column="12" selection-start-line="858" selection-start-column="5" selection-end-line="858" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1040,7 +949,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.4816587">
           <caret line="581" column="20" selection-start-line="581" selection-start-column="20" selection-end-line="581" selection-end-column="21" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1048,7 +956,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="5" selection-end-column="10" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1056,7 +963,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1064,14 +970,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/js/formationfinder/controllers.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="1712" column="41" selection-start-line="1712" selection-start-column="41" selection-end-line="1712" selection-end-column="41" />
+          <caret line="1713" column="0" selection-start-line="1713" selection-start-column="0" selection-end-line="1713" selection-end-column="0" />
           <folding>
             <element signature="e#0#45#0" expanded="false" />
             <element signature="e#80#10586#0" expanded="false" />
@@ -1153,7 +1058,6 @@
             <element signature="e#23331#23590#0" expanded="false" />
             <element signature="e#23481#23568#0" expanded="false" />
             <element signature="e#24105#24345#0" expanded="false" />
-            <element signature="e#24498#24560#0" expanded="false" />
             <element signature="e#24755#24771#0" expanded="false" />
             <element signature="e#24774#24887#0" expanded="false" />
             <element signature="e#25006#27226#0" expanded="false" />
@@ -1262,98 +1166,75 @@
             <element signature="e#54869#55983#0" expanded="false" />
             <element signature="e#56151#63067#0" expanded="false" />
             <element signature="e#63213#64828#0" expanded="false" />
-            <element signature="e#64963#73341#0" expanded="false" />
-            <element signature="e#65086#65320#0" expanded="false" />
-            <element signature="e#65195#65308#0" expanded="false" />
-            <element signature="e#65224#65294#0" expanded="false" />
-            <element signature="e#65499#65536#0" expanded="false" />
-            <element signature="e#66090#66303#0" expanded="false" />
-            <element signature="e#66312#66323#0" expanded="false" />
-            <element signature="e#66428#66490#0" expanded="false" />
             <element signature="e#66678#66690#0" expanded="false" />
-            <element signature="e#66752#67022#0" expanded="false" />
-            <element signature="e#66766#66882#0" expanded="false" />
-            <element signature="e#66896#67012#0" expanded="false" />
-            <element signature="e#67117#67233#0" expanded="false" />
-            <element signature="e#67260#67376#0" expanded="false" />
-            <element signature="e#67379#67492#0" expanded="false" />
-            <element signature="e#67608#68076#0" expanded="false" />
-            <element signature="e#68140#68372#0" expanded="false" />
-            <element signature="e#68187#68246#0" expanded="false" />
-            <element signature="e#68420#68475#0" expanded="false" />
-            <element signature="e#68539#68551#0" expanded="false" />
-            <element signature="e#68603#69819#0" expanded="false" />
-            <element signature="e#69013#69586#0" expanded="false" />
-            <element signature="e#69069#69196#0" expanded="false" />
-            <element signature="e#69628#69806#0" expanded="false" />
-            <element signature="e#69884#70077#0" expanded="false" />
-            <element signature="e#69924#70030#0" expanded="false" />
-            <element signature="e#70125#70213#0" expanded="false" />
-            <element signature="e#70271#73199#0" expanded="false" />
-            <element signature="e#70369#70501#0" expanded="false" />
-            <element signature="e#70523#70634#0" expanded="false" />
-            <element signature="e#70938#70972#0" expanded="false" />
-            <element signature="e#71267#72788#0" expanded="false" />
-            <element signature="e#71390#71965#0" expanded="false" />
-            <element signature="e#71416#71489#0" expanded="false" />
-            <element signature="e#71621#71649#0" expanded="false" />
-            <element signature="e#72228#72651#0" expanded="false" />
-            <element signature="e#72283#72629#0" expanded="false" />
-            <element signature="e#72830#73187#0" expanded="false" />
-            <element signature="e#73585#73819#0" expanded="false" />
-            <element signature="e#73694#73807#0" expanded="false" />
-            <element signature="e#73723#73793#0" expanded="false" />
-            <element signature="e#73998#74035#0" expanded="false" />
-            <element signature="e#74523#74736#0" expanded="false" />
-            <element signature="e#74745#74756#0" expanded="false" />
-            <element signature="e#74861#74923#0" expanded="false" />
-            <element signature="e#75111#75123#0" expanded="false" />
-            <element signature="e#75185#75455#0" expanded="false" />
-            <element signature="e#75199#75315#0" expanded="false" />
-            <element signature="e#75329#75445#0" expanded="false" />
-            <element signature="e#75550#75666#0" expanded="false" />
-            <element signature="e#75693#75809#0" expanded="false" />
-            <element signature="e#75812#75925#0" expanded="false" />
-            <element signature="e#76035#76437#0" expanded="false" />
-            <element signature="e#76495#76727#0" expanded="false" />
-            <element signature="e#76542#76601#0" expanded="false" />
-            <element signature="e#76775#76830#0" expanded="false" />
-            <element signature="e#76894#76906#0" expanded="false" />
-            <element signature="e#76952#78096#0" expanded="false" />
-            <element signature="e#77327#77863#0" expanded="false" />
-            <element signature="e#77383#77497#0" expanded="false" />
-            <element signature="e#77905#78083#0" expanded="false" />
-            <element signature="e#78145#78227#0" expanded="false" />
-            <element signature="e#78279#80979#0" expanded="false" />
-            <element signature="e#78365#78485#0" expanded="false" />
-            <element signature="e#78507#78606#0" expanded="false" />
-            <element signature="e#78874#78908#0" expanded="false" />
-            <element signature="e#79189#80574#0" expanded="false" />
-            <element signature="e#79240#79809#0" expanded="false" />
-            <element signature="e#79266#79339#0" expanded="false" />
-            <element signature="e#79471#79499#0" expanded="false" />
-            <element signature="e#80072#80489#0" expanded="false" />
-            <element signature="e#80127#80467#0" expanded="false" />
-            <element signature="e#80616#80967#0" expanded="false" />
-            <element signature="e#132331#132467#0" expanded="false" />
-            <element signature="e#132463#132466#0" expanded="false" />
-            <marker date="1471932211154" expanded="true" signature="99353:99363" placeholder="..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="63" column="43" selection-start-line="66" selection-start-column="8" selection-end-line="66" selection-end-column="106" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://E:/ENTREGA-5-8-2016/internet-3-8-2016/Compartir Piso Havana, Alquiler de Habitaciones &amp; Alquiler por Meses - Airbnb Havana.htm">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1470264852324" expanded="true" signature="50:114" placeholder="..." />
+            <marker date="1470264852324" expanded="true" signature="161:229" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/css/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.525641">
+          <caret line="314" column="11" selection-start-line="314" selection-start-column="1" selection-end-line="314" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/formationfinder/config.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="7" column="17" selection-start-line="7" selection-start-column="9" selection-end-line="7" selection-end-column="17" />
+          <folding>
+            <element signature="e#0#42#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/formationfinder/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="9" column="61" selection-start-line="9" selection-start-column="55" selection-end-line="9" selection-end-column="61" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/formationcenter/searchlistMap.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/formationcenter/searchlist.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.28708133">
-          <caret line="22" column="85" selection-start-line="22" selection-start-column="85" selection-end-line="22" selection-end-column="85" />
+        <state vertical-scroll-proportion="0.31496063">
+          <caret line="313" column="0" selection-start-line="313" selection-start-column="0" selection-end-line="325" selection-end-column="15" />
           <folding>
+            <element signature="n#div#0;n#div#0;n#!!top" expanded="false" />
             <element signature="n#style#0;n#form#0;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#0;n#div#1;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
             <element signature="n#div#0;n#div#0;n#form#0;n#div#0;n#div#0;n#div#2;n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
             <element signature="n#div#1;n#div#0;n#form#0;n#div#0;n#div#0;n#div#2;n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
             <element signature="n#div#1;n#form#0;n#div#0;n#div#0;n#div#2;n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#div#0;n#div#0;n#li#0;n#ul#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="false" />
+            <element signature="n#div#1;n#div#0;n#!!top" expanded="false" />
             <element signature="n#div#2;n#div#0;n#li#0;n#ul#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="false" />
           </folding>
         </state>

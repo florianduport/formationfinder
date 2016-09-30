@@ -576,6 +576,8 @@ module.exports = {
     if (!namePlace && !idnamePlace)
       return res.json({response: "ERROR", message: "Not exist data for delete Place"})
 
+    console.log("DESTROY 1", query)
+    deleteQuery = query
     Place.findOne(query).exec(function (err, resultObject) {
 
       if (err) {
@@ -588,12 +590,33 @@ module.exports = {
         return res.json({response: "ERROR", message: " Not exist place with name " + namePlace})
       }
 
-      console.log("DESTROY " ,query)
-      Place.destroy(query).exec(function (err) {
+      ///GEt formation array references
+      formationArray = resultObject.formations
+
+      console.log("DESTROY " ,deleteQuery)
+      Place.destroy(deleteQuery).exec(function (err) {
         if (err) {
           return res.json({response: "ERROR", message: " Not delete place"})
         }
-        return res.json({response: "OK"})
+
+        ///Update isConfirmed to false in all formation asociated to these Place
+
+
+        async.forEach(formationArray,
+          // 2nd param is the function that each item is passed to
+          function (iValue, callback) {
+
+            Formation.update({id:iValue},{isConfirmed:false}).exec(function(err, result) {
+              callback()
+            })
+
+          },
+          // 3rd param is the function to call when everything's done
+          function (err) {                // All tasks are done now
+            // console.log("ANSWER ID", formationArray.length);
+
+          })
+            return res.json({response: "OK"})
       })
     });
   },

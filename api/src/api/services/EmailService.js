@@ -70,11 +70,11 @@ module.exports  = {
 
     console.log("Enviando notificacion")
 
-    Configuration.find({ type:"smtp"} ).exec(function userConfiguration(err, configuration) {
+    Configuration.find({type:"smtp"} ).exec(function userConfiguration(err, configuration) {
       if (!configuration || err || configuration == "") {
         //return next(err);
         ///Create tmp for test
-
+//
         /*
          if ( configuration || configuration == "")
          return res.json({err:"Don´t have smtp server configuration."});
@@ -95,15 +95,21 @@ module.exports  = {
          //configuration = createConfiguration;
          //console.log("Creado el objeto en BD");
          //});
-        callback({response:"ERROR", response:"Are not  smtp servers configuration."});
         console.log("Se ejecuto el codigo de error");
+        callback(null, {response:"ERROR", message:"Not exits smtp servers configuration."});
+        return;
       }
 
       ///console.log("Cuerpo de la funcion de busqueda");
-      if ( !configuration || configuration == "")
-         return{response:"Don´t have smtp server configuration."};
-      if (configuration.length > 1)
-        callback({response:"ERROR", response:"There are many smtp servers configuration."});
+      if ( !configuration || configuration == "") {
+        callback(null, {response:"ERROR", messaje:"Don´t have smtp server configuration."});
+        return;
+      }
+
+      if (configuration.length > 1){
+        callback(null, {response:"ERROR", messaje:"There are many smtp servers configuration."});
+        return;
+      }
       ///Take first  element in array
       ConfigurationObject = configuration[0];
 
@@ -128,7 +134,7 @@ module.exports  = {
           port: emailportFormation , // The port to connect to
           host: emailhostFormation, // The hostname to connect to
           name: "" , // Options hostname of the client
-          localAddress: "", // Local interface to bind to for network connections
+          localAddress:  '', // Local interface to bind to for network connections
           connectionTimeout: 2000, // How many ms to wait for the connection to establish
           greetingTimeout: 2000, // How many ms to wait for the greeting after connection
           socketTimeout: 2000, // How many ms of inactivity to allow
@@ -137,37 +143,40 @@ module.exports  = {
       };
 
 
-      if (!emailpassFormation && !emailuserFormation ) {
+      if (!emailpassFormation && !emailuserFormation && emailuserFormation != "" && emailuserFormation !== undefined ) {
         var type = "PLAIN"
-        if (!emailsecureFormation)
-          type = emailsecureFormation
-        mailconfig.secure = true; // Defines if the connection should use SSL
-        mailconfig.auth = { // Defines authentication data
+        //if (!emailsecureFormation)
+        //  type = emailsecureFormation
+        mailconfig.provider.auth = { // Defines authentication data
           user: emailuserFormation, // Username
           pass: emailpassFormation, // Password
 
         }
+        mailconfig.secure = true; // Defines if the connection should use SSL
 
-        if ( emailsecureFormation == "xoauth2") {
-          ///Find in Colection Configuration (Document) token
-          //xoauth2: '' // OAuth2 access token
-          mailconfig.auth.xoauth2 = ConfigurationObject.keytoken;
-        }
-        else if ( emailsecureFormation == "plain") {
-
-        }
+        console.log("UPDATE MAIL CONFIG")
+        //mailconfig.auth = { // Defines authentication data
+        //  user: emailuserFormation, // Username
+        //  pass: emailpassFormation, // Password
+        //
+        //}
+        //
+        //if ( emailsecureFormation == "xoauth2") {
+        //  ///Find in Colection Configuration (Document) token
+        //  //xoauth2: '' // OAuth2 access token
+        //  mailconfig.auth.xoauth2 = ConfigurationObject.keytoken;
+        //}
+        //else if ( emailsecureFormation == "plain") {
+        //
+        //}
       }
-      mailconfig.auth = { // Defines authentication data
-        user: emailuserFormation, // Username
-        pass: emailpassFormation, // Password
+      //mailconfig.auth = { // Defines authentication data
+      //  user: emailuserFormation, // Username
+      //  pass: emailpassFormation, // Password
+      //
+      //}
 
-      }
 
-      mailconfig.provider.auth = { // Defines authentication data
-        user: emailuserFormation, // Username
-        pass: emailpassFormation, // Password
-
-      }
 
       /*
        if (!emailpass && !emailuser) {
@@ -209,7 +218,7 @@ module.exports  = {
             })
           }*/
           console.log("Sucessful!!!!");
-          callback( {
+          callback(null, {
             response: 'OK'
            });
         })
@@ -226,7 +235,7 @@ module.exports  = {
             }
             console.log("Error" + err)*/
           console.log("Error " + errSend)
-          callback(  {
+          callback( null, {
               response:"ERROR",
               error: errSend
             });

@@ -691,8 +691,31 @@ Parallax
 
 #map {
 	height: 500px;
+    display: block;
+    width: 40%;
 }
 
+
+.map-canvas {
+    height: 100%;
+}
+
+.map-search {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+}
+
+.sidebarformation {
+    position: fixed;
+    top: 47px;
+    left: 0px;
+    bottom: 0px;
+    width: 60%;
+    overflow-y: scroll;
+    background: #F7F7F7 none repeat scroll 0% 0%;
+}
 
 .btn-skin:hover,
 .btn-skin:focus,

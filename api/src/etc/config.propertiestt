@@ -1,12 +1,10 @@
-emailsystemadress=formationfinder@localhost.com
-emailport=587
-emailhost=smtp.gmail.com
-emailuser=inoid2007@gmail.com
-emailpassword="cibercubano"
+emailsystemadress=dionis@localhost.com
+emailport=25
+emailhost=localhost
 emailsecure=false
 appuser=inoid2016
-applicationame=Formationfinder
 apppassphrase=7GuneTv8QdsmMxLpfm2yWi0smLPaZ1szas9YZgRd2SeyzG47tG
+applicationame=Formationfinder
 #DATABASE_CONFIGURATION
 ipdbserver=localhost
 portdbserver=27017

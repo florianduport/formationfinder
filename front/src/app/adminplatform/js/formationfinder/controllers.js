@@ -95,7 +95,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                 var confirmation = confirm("You are going to delete all Formation Center Objects. Continue?");
 
-                if(confirmation) {
+                if (confirmation) {
 
                     $http.post($rootScope.urlBase + "/formationCenter/delete", {
                             id: $scope.formationCenters[index].id
@@ -176,6 +176,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             if (result.status === "ok") {
                                 console.log("Formation Center created.");
                                 alert("Formation Center created.");
+                                $scope.gotoToFormationCenters();
+                                //initParameter();
 
                             } else {
                                 console.log("Error creating Formation Center: ", result.info);
@@ -193,18 +195,67 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 $location.path('/formationcenter');
             };
 
+
+            /***************************************************/
+            /***               TOOLTIPS AREA                  **/
+            /***************************************************/
+            $scope.tooltipNameText = "Field required. Only letters allowed. At list two characters.";
+            $scope.tooltipNameShow = false;
+            $scope.checkName = function () {
+
+                if ($scope.formationcenter.name && $scope.nameRegExp.test($scope.formationcenter.name)) {
+                    $scope.tooltipNameShow = false;
+                } else {
+                    $scope.tooltipNameShow = true;
+                }
+            };
+
+            $scope.tooltipUserNameText = "Field required. Letters and numbers allowed. At list two characters.";
+            $scope.tooltipUserNameShow = false;
+            $scope.checkUserName = function () {
+
+                console.log("El valor de defaultLogin: ", $scope.formationcenter.defaultLogin);
+                console.log("Evaluar EXPREG da: ", $scope.usernameExpReg.test($scope.formationcenter.defaultLogin));
+
+                if (($scope.formationcenter.defaultLogin !== undefined) && $scope.usernameExpReg.test($scope.formationcenter.defaultLogin)) {
+                    $scope.tooltipUserNameShow = false;
+                } else {
+                    $scope.tooltipUserNameShow = true;
+                }
+            };
+            $scope.closeTooltipUserName = function () {
+                $scope.tooltipUserNameShow = false;
+            };
+
+            $scope.checkAll = function () {
+                $scope.checkName();
+                $scope.checkUserName();
+            };
+
+            $scope.closeAll = function () {
+                $scope.closeTooltipUserName();
+            };
+
         }])
     .controller("UpdateFormationCenterController", ["$scope", "$rootScope", "$location", "$http", "$routeParams",
         function ($scope, $rootScope, $location, $http, $routeParams) {
-
-            $scope.formationcenter = {};
-            $scope.newAttributes = {};
-            $scope.newAttributes.isActivated     = false;
 
             $scope.zipcodeRegExp = /^\d{5}$/;
             $scope.nameRegExp = /^[A-Za-z][A-Za-z\s]+$/;
             $scope.emailRedExp = /^[A-Za-z][_A-Za-z0-9-]*(\.[_A-Za-z0-9-]+)*@[A-Za-z][A-Za-z0-9-]*(\.[A-Za-z0-9-]+)*(\.[A-Za-z]{2,3})$/;
             $scope.phoneRegExp = /^(0)\d{9}$/;
+
+            $scope.formationcenter = {};
+            var oldAttributes = {};
+            var copyToOldAttributes = function () {
+                oldAttributes.name = $scope.formationcenter.name;
+                oldAttributes.address = $scope.formationcenter.address;
+                oldAttributes.zipCode = $scope.formationcenter.zipCode;
+                oldAttributes.email = $scope.formationcenter.email;
+                oldAttributes.city = $scope.formationcenter.city;
+                oldAttributes.phoneNumber = $scope.formationcenter.phoneNumber;
+                oldAttributes.isActivated = $scope.formationcenter.isActivated;
+            };
 
             var searchFormationCenter = function () {
 
@@ -214,6 +265,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     .success(function (result) {
                         if (result.status === "ok") {
                             $scope.formationcenter = result.data;
+                            copyToOldAttributes();
                         } else {
                             console.log("Error searching Formation Centers: " + result.info);
                             alert("Error searching Formation Centers: " + result.info);
@@ -226,16 +278,43 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             };
             searchFormationCenter();
 
-            //$scope.newAttributes.isActivated = $scope.formationcenter.isActivated;
+            var prepareUpdate = function () {
 
-            var validNewParameter = function () {
+                if ($scope.formationcenter.name && ($scope.formationcenter.name === oldAttributes.name)) {
+                    delete $scope.formationcenter.name;
+                }
 
-                if ($scope.newAttributes.name || $scope.newAttributes.address
-                    || $scope.newAttributes.zipCode
-                    || $scope.newAttributes.email
-                    || $scope.newAttributes.city
-                    || $scope.newAttributes.phoneNumber
-                    || ($scope.newAttributes.isActivated !== $scope.formationcenter.isActivated)) {
+                if ($scope.formationcenter.address && ($scope.formationcenter.address === oldAttributes.address)) {
+                    delete $scope.formationcenter.address;
+                }
+
+                if ($scope.formationcenter.zipCode && ($scope.formationcenter.zipCode === oldAttributes.zipCode)) {
+                    delete $scope.formationcenter.zipCode;
+                }
+
+                if ($scope.formationcenter.email && ($scope.formationcenter.email === oldAttributes.email)) {
+                    delete $scope.formationcenter.email;
+                }
+
+                if ($scope.formationcenter.city && ($scope.formationcenter.city === oldAttributes.city)) {
+                    delete $scope.formationcenter.city;
+                }
+
+                if ($scope.formationcenter.phoneNumber && ($scope.formationcenter.phoneNumber === oldAttributes.phoneNumber)) {
+                    delete $scope.formationcenter.phoneNumber;
+                }
+
+                if ($scope.formationcenter.isActivated && ($scope.formationcenter.isActivated === oldAttributes.isActivated)) {
+                    delete $scope.formationcenter.isActivated;
+                }
+
+
+                if ($scope.formationcenter.name || $scope.formationcenter.address
+                    || $scope.formationcenter.zipCode
+                    || $scope.formationcenter.email
+                    || $scope.formationcenter.city
+                    || $scope.formationcenter.phoneNumber
+                    || ($scope.formationcenter.isActivated !== undefined)) {
                     return true;
                 } else {
                     return false;
@@ -245,11 +324,11 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.updateFormationCenter = function () {
 
-                if (validNewParameter()) {
+                if (prepareUpdate()) {
 
                     $http.post($rootScope.urlBase + "/formationCenter/update", {
                             id: $routeParams.id,
-                            attributes: $scope.newAttributes
+                            attributes: $scope.formationcenter
                         })
                         .success(function (result) {
                             if (result.status === "ok") {

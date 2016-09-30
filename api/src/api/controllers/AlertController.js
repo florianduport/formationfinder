@@ -284,6 +284,16 @@ module.exports = {
       query.date.lte = new Date(req.param('finalDate'))
     }
 
+    if (req.param('text')  ) {
+      query.text =   {contains: req.param('text')}
+      //console.log("Create price restriction")
+    }
+
+    if (req.param('type')  ) {
+      query.type = req.param('type')
+      //console.log("Create price restriction")
+    }
+
     FormationCenter.findOne({name:nameFormation}).exec(function( err, resultObject){
       if (err)
         return res.json({response:"ERROR", message:err})
@@ -374,7 +384,7 @@ module.exports = {
 
 
     if (req.param('text')  ) {
-      query.text = req.param('text')
+      query.text =   {contains: req.param('text')}
       //console.log("Create price restriction")
     }
 
@@ -407,6 +417,44 @@ module.exports = {
       })
     })
 
+  },
+
+
+  getAlertType : function (req, res, next) {
+    languageData =[
+      "es", "en", "fr"]
+    languageData["es"] =  {
+      "New_Costumer" : "Nuevo usuario",
+      "Formation_Full": "Formacion llena",
+      "Place_Unable": "Lugar inactivo"
+      }
+
+    languageData["en"] = {
+      "New_Costumer" : "New costumer",
+      "Formation_Full": "Formation full",
+      "Place_Unable": "Place unable"
+      }
+
+    languageData["fr"] = {
+      "New_Costumer" : "New costumer",
+      "Formation_Full": "Formation full",
+      "Place_Unable": "Place unable"
+      }
+
+
+
+    language  = req.param('language')
+    type = req.param('type')
+    console.log("VIEW RESULT " , language ,type)
+    if(req.param('type') === undefined || req.param('language') === undefined || languageData[language]  === undefined ||languageData[language][type]  === undefined ){
+      return res.json({response:"ERROR", message:"Invalid parameter."})
+    }
+
+    ///Search in asociative map
+   return  res.json ( {response:languageData[language][type]})
+
+
   }
+
 };
 

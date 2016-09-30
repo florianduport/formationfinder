@@ -1,155 +1,83 @@
-<div class="container well">
+<div class="container well" id="updateContainer">
     <div class="row">
-        <div class="col col-xs-1">
-
-        </div>
-        <div class="col col-xs-10">
-            <div class="page-header">
-                <h2><p class="text-center">Update Formation Center</p></h2>
-            </div>
-        </div>
-        <div class="col col-xs-1">
-
+        <div class="page-header">
+            <h2><p class="text-center">Update Formation Center</p></h2>
         </div>
     </div>
 
     <div class="row">
-        <!-- OLD VALUES -->
-        <div class="col col-xs-6">
-            <form class="form">
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <input class="form-control" type="text"
-                           id="name"
-                           ng-model="formationcenter.name"
-                           readonly/>
-                </div>
+        <form class="form" name="updateFCform">
+            <div class="form-group">
+                <label for="newName">Name</label>
+                <input class="form-control" type="text"
+                       maxlength="40"
+                       id="newName"
+                       name="newName"
+                       minlength="2"
+                       ng-model="formationcenter.name"
+                       ng-pattern="nameRegExp"/>
+            </div>
 
-                <div class="form-group">
-                    <label for="address">address</label>
-                    <input class="form-control" type="text"
-                           id="address"
-                           ng-model="formationcenter.address"
-                           readonly/>
-                </div>
+            <div class="form-group">
+                <label for="newAddress">address</label>
+                <input class="form-control" type="text"
+                       maxlength="80"
+                       id="newAddress"
+                       name="newAddress"
+                       minlength="4"
+                       ng-model="formationcenter.address"/>
+            </div>
 
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input class="form-control" type="text"
-                           id="email"
-                           ng-model="formationcenter.email"
-                           readonly/>
-                </div>
+            <div class="form-group">
+                <label for="newEmail">Email</label>
+                <input class="form-control" type="text"
+                       maxlength="40"
+                       id="newEmail"
+                       name="newEmail"
+                       minlength="5"
+                       ng-model="formationcenter.email"
+                       ng-pattern="emailRedExp"/>
+            </div>
 
-                <div class="form-group">
-                    <label for="zipcode">Zipcode</label>
-                    <input class="form-control" type="text"
-                           id="zipcode"
-                           ng-model="formationcenter.zipCode"
-                           readonly/>
-                </div>
+            <div class="form-group">
+                <label for="newZipcode">Zipcode</label>
+                <input class="form-control" type="text"
+                       maxlength="5"
+                       id="newZipcode"
+                       name="newZipcode"
+                       ng-model="formationcenter.zipCode"
+                       ng-pattern="zipcodeRegExp"/>
+            </div>
 
-                <div class="form-group">
-                    <label for="city">City</label>
-                    <input class="form-control" type="text"
-                           id="city"
-                           ng-model="formationcenter.city"
-                           readonly/>
-                </div>
+            <div class="form-group">
+                <label for="newCity">City</label>
+                <input class="form-control" type="text"
+                       maxlength="40"
+                       id="newCity"
+                       name="newCity"
+                       minlength="2"
+                       ng-pattern="nameRegExp"
+                       ng-model="formationcenter.city"/>
+            </div>
 
-                <div class="form-group">
-                    <label for="phonenumber">Phone Number</label>
-                    <input class="form-control" type="text"
-                           id="phonenumber"
-                           ng-model="formationcenter.phoneNumber"
-                           readonly/>
-                </div>
+            <div class="form-group">
+                <label for="newPhonenumber">Phone Number</label>
+                <input class="form-control" type="text"
+                       maxlength="10"
+                       id="newPhonenumber"
+                       name="newPhonenumber"
+                       ng-model="formationcenter.phoneNumber"
+                       ng-pattern="phoneRegExp"/>
+            </div>
 
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" ng-model="formationcenter.isActivated" readonly> Activated
-                    </label>
-                </div>
-            </form>
-        </div>
-        <!-- END OLD VALUES -->
-
-        <!-- NEW VALUES -->
-        <div class="col col-xs-6">
-            <form class="form" name="updateFCform">
-                <div class="form-group">
-                    <label for="newName">Name</label>
-                    <input class="form-control" type="text"
-                           maxlength="40"
-                           id="newName"
-                           name="newName"
-                           minlength="2"
-                           ng-model="newAttributes.name"
-                           ng-pattern="nameRegExp"/>
-                </div>
-
-                <div class="form-group">
-                    <label for="newAddress">address</label>
-                    <input class="form-control" type="text"
-                           maxlength="80"
-                           id="newAddress"
-                           name="newAddress"
-                           minlength="4"
-                           ng-model="newAttributes.address"/>
-                </div>
-
-                <div class="form-group">
-                    <label for="newEmail">Email</label>
-                    <input class="form-control" type="text"
-                           maxlength="40"
-                           id="newEmail"
-                           name="newEmail"
-                           minlength="5"
-                           ng-model="newAttributes.email"
-                           ng-pattern="emailRedExp"/>
-                </div>
-
-                <div class="form-group">
-                    <label for="newZipcode">Zipcode</label>
-                    <input class="form-control" type="text"
-                           maxlength="5"
-                           id="newZipcode"
-                           name="newZipcode"
-                           ng-model="newAttributes.zipCode"
-                           ng-pattern="zipcodeRegExp"/>
-                </div>
-
-                <div class="form-group">
-                    <label for="newCity">City</label>
-                    <input class="form-control" type="text"
-                           maxlength="40"
-                           id="newCity"
-                           name="newCity"
-                           minlength="2"
-                           ng-pattern="nameRegExp"
-                           ng-model="newAttributes.city"/>
-                </div>
-
-                <div class="form-group">
-                    <label for="newPhonenumber">Phone Number</label>
-                    <input class="form-control" type="text"
-                           maxlength="10"
-                           id="newPhonenumber"
-                           name="newPhonenumber"
-                           ng-model="newAttributes.phoneNumber"
-                           ng-pattern="phoneRegExp"/>
-                </div>
-
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" ng-model="newAttributes.isActivated"> Activated
-                    </label>
-                </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-model="formationcenter.isActivated"> Activated
+                </label>
+            </div>
 
 
-            </form>
-        </div>
-        <!-- END NEW VALUES -->
+        </form>
     </div>
 
     <div class="row">
@@ -166,5 +94,4 @@
             </button>
         </div>
     </div>
-
 </div>

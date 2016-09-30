@@ -10,7 +10,7 @@ module.exports = [ {
 
   firstName: faker.internet.userName(),
 
-  email: "inoid2007@gmail.com",
+  email: faker.internet.email(),
 
   address: faker.address.streetAddress(),
 
@@ -33,7 +33,7 @@ module.exports = [ {
   {
     name: faker.internet.userName(),
 
-    email: "inoid2007@gmail.com",
+    email: faker.internet.email(),
 
     address: faker.address.streetAddress(),
 
@@ -56,7 +56,7 @@ module.exports = [ {
   {
     name: faker.internet.userName(),
 
-    email: "inoid2007@gmail.com",
+    email: faker.internet.email(),
 
     address: faker.address.streetAddress(),
 
@@ -79,7 +79,7 @@ module.exports = [ {
   {
     name: faker.internet.userName(),
 
-    email: "inoid2007@gmail.com",
+    email: faker.internet.email(),
 
     address: faker.address.streetAddress(),
 

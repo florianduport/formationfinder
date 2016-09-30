@@ -3,7 +3,7 @@
  */
 module.exports = {
 
-  valudateFormatinCenterInformation : function ( formationcenterName, callback) {
+  validateFormatinCenterInformation : function ( formationcenterName, callback) {
     FormationCenter.findOne({name:formationcenter}).exec(function (err, formationCenterData) {
 
 
@@ -14,7 +14,7 @@ module.exports = {
 
       }
 
-      if (typeof formationCenterData.walletid == "undefined" || typeof formationCenterData.walletid == "undefined") {
+      if (typeof formationCenterData.mangowallet == "undefined" || typeof formationCenterData.mangouser == "undefined") {
         callback("Formation Center make payment", false)
         return;
       }
@@ -300,14 +300,14 @@ module.exports = {
       Email:naturalUserData.Email,
       Tag: naturalUserData.Tag,
     }, function(err, user, wallet){
-      console.log('err', err);
-      console.log('user', user);
-      console.log('wallet', wallet);
+      //console.log('err', err);
+     // console.log('user', user);
+      //console.log('wallet', wallet);
       console.log("RESPONSE WINT MANGOPAY");
       if ( err ) {
         callback( {response: "ERROR",
-          message: err}, null)
-        //return;
+          message: err.message}, null)
+          return;
       }
 
       callback(null, {response: "OK",
@@ -427,14 +427,14 @@ module.exports = {
         CardExpirationDate: cardValueEx.CardExpirationDate,
         CardCvx: cardValueEx.CardCvx,
       }, function (err, card, res) {
-            console.log("RESULT", err)
-            console.log("RESULT", res)
+            //console.log("RESULT", err)
+            //console.log("RESULT", res)
             if (err) {
               callback(null, {
                 response: "ERROR",
                 message: err
               })
-              //return;
+              return;
             }
 
             /*      View documentation
@@ -450,11 +450,18 @@ module.exports = {
             console.log("IDENTIFICADOR OBJ", card)
             console.log("_____________________________________")
             console.log("IDENTIFICADOR", card.CardId )
-
-            callback(null, {
-              response: "OK",
-              card: card.CardId
-            })
+            if (!card) {
+              callback(null, {
+                response: "ERROR",
+                message: "Not mangopay card information"
+              })
+            }
+            else {
+              callback(null, {
+                response: "OK",
+                card: card.CardId
+              })
+            }
           })
       });
     });
@@ -921,7 +928,7 @@ module.exports = {
         if (err) {
           callback({
             response: "ERROR",
-            msg: "Couldn' t create mangopay wallet for Formation Center " + formationCenterName + ": " + err
+            message: "Couldn' t create mangopay wallet for Formation Center " + formationCenterName + ": " + err
           }, null)
           return;
         }

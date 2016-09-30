@@ -37,7 +37,7 @@ module.exports = {
      PaymentService.makeWalletToFormationCenter(formationCenterName, function(err, result) {
 
        if (err)
-         return res.json({response:"ERROR", message:err})
+         return res.json({response:"ERROR", message:err.message})
 
        return res.json(result)
      })
@@ -109,7 +109,7 @@ module.exports = {
 
     ///Find walletid and userid in Formationcenter register
     console.log("REALICE PAY")
-    PaymentService.valudateFormatinCenterInformation (formationcenter, function (err, result) {
+    PaymentService.validateFormatinCenterInformation (formationcenter, function (err, result) {
     //FormationCenter.findOne({name:formationcenter}).exec(function (err, formationCenterData){
 
       //console.log("INFO", formationCenterData)
@@ -133,7 +133,7 @@ module.exports = {
       function resultServices(err, result) {
         if (err) {
           console.log(err)
-            return res.json({response:"ERROR", message:err })
+            return res.json({response:"ERROR", message:err.message })
         }
 
 
@@ -171,8 +171,9 @@ module.exports = {
             }
 
             ///Payin to Mango
+            console.log("PAY TO MANGO")
             PaymentService.makeBuyToMango( result.user, result.user, result.wallet  , resultCard.card ,debiteFundsEx, feesEx,  // var CustomerServices = require('../../api/services/CustomerService')
-              function resultServices ( err, result ) {
+              function resultServices ( err, resultObject ) {
                 if (err) {
                   console.log(err)
                   return res.json({response:"ERROR", message:err })
@@ -180,17 +181,28 @@ module.exports = {
 
 
                 ///Transfer the user walletid to Formationcenter Wallet id.
-                PaymentService.transferWalletToWallet( result.user, result.wallet, formationCenterData.mangouser, formationCenter.mangowallet ,debiteFundsEx, feesEx,  // var CustomerServices = require('../../api/services/CustomerService')
-                  function resultServices ( err, result ) {
-                    if (err) {
-                      console.log(err)
-                      return res.json({response:"ERROR", message:err })
-                    }
 
-                    return res.json({response:"OK", walleid : user.wallet, userid:result.id, carid:resultCard.card})
+                FormationCenter.findOne({name:formationcenter}).exec(function (err, formationCenterData) {
+                  if (err) {
+                    console.log("Paso algo grave", err)
+                    return res.json({response:"ERROR", message:err.message})
+                  }
+
+                  console.log("Formation Center", formationCenterData)
+                  PaymentService.transferWalletToWallet( result.user, result.wallet, formationCenterData.mangouser, formationCenterData.mangowallet ,debiteFundsEx, feesEx,
+                    function resultServices ( err, resultData ) {
+                      if (err) {
+                        console.log("Paso algo", err)
+                        return res.json({response:"ERROR", message:err })
+                      }
+                      resultObject =  {walleid : result.wallet, userid:result.user, carid:resultCard.card}
+                       return res.json({response:"OK",resultObject})
 
 
-                  });
+                    });
+
+                })
+
 
 
 

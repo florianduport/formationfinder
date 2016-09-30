@@ -1,7 +1,7 @@
 /**
  * Created by JKindelan on 5/20/2016.
  */
-var app = angular.module("Backoffice", ["ngResource", "ngRoute", "ngCookies","ngAnimate","ui.bootstrap",'ngMap',"checklist-model","pascalprecht.translate","rzModule"]).factory('PlaceLocation', ["$resource","$http","NgMap",function ($resource, $http,NgMap) {
+var app = angular.module("Backoffice", ['app.config',"ngResource", "ngRoute", "ngCookies","ngAnimate","ui.bootstrap",'ngMap',"checklist-model","pascalprecht.translate","rzModule"]).factory('PlaceLocation', ["$resource","$http","NgMap",function ($resource, $http,NgMap) {
         var PlaceLocation = {}
 
         PlaceLocation.searchAllPlace = function () {
@@ -15,7 +15,7 @@ var app = angular.module("Backoffice", ["ngResource", "ngRoute", "ngCookies","ng
         //noinspection JSUnresolvedFunction
         return PlaceLocation;
     }])
-    .run(["$rootScope", "$cookieStore", "$location", function ($rootScope, $cookieStore, $location) {
+    .run(["$rootScope", "$cookieStore", "$location",'CONFIG', function ($rootScope, $cookieStore, $location,CONFIG) {
         //events
         $rootScope.transparent = true;
         $rootScope.username = "";
@@ -27,7 +27,7 @@ var app = angular.module("Backoffice", ["ngResource", "ngRoute", "ngCookies","ng
         $rootScope.relative = true;
         $rootScope.fullwidth = true;
         $rootScope.align = "left";
-        $rootScope.urlBase = "http://137.74.172.220:1337";
+        $rootScope.urlBase = CONFIG.BASE_URL;;
         $rootScope.userToken = null;
         $rootScope.userAuthenticated = false;
         $rootScope.formationCenter = null;

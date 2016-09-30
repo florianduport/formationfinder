@@ -27,11 +27,15 @@
                            ng-model="formationcenter.name"
                            ng-pattern="nameRegExp"
                            required/>
+                    <span style="color:#cc0000" ng-show="createFCform.name.$dirty && createFCform.name.$invalid">
+                        <span ng-show="createFCform.name.$error.required">Name is required.</span>
+                        <span ng-show="createFCform.name.$error.pattern">Only letters. At least two characters.</span>
+                    </span>
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="col-xs-3 control-label" for="defaultLogin">Default Login</label>
+                <label class="col-xs-3 control-label" for="defaultLogin">Default Username</label>
                 <div class="col col-xs-6">
                     <input class="form-control" type="text"
                            maxlength="40"
@@ -41,6 +45,12 @@
                            ng-model="formationcenter.defaultLogin"
                            ng-pattern="usernameExpReg"
                            required/>
+                    <span style="color:#cc0000" ng-show="createFCform.defaultLogin.$dirty && createFCform.defaultLogin.$invalid">
+                        <span ng-show="createFCform.defaultLogin.$error.required">Default username is required.</span>
+                        <span ng-show="createFCform.defaultLogin.$error.minlength">Enter at least two characters.</span>
+                        <span ng-show="createFCform.defaultLogin.$error.pattern">Invalid characters.</span>
+                    </span>
+
                 </div>
             </div>
 
@@ -54,6 +64,10 @@
                            minlength="4"
                            ng-model="formationcenter.address"
                            required/>
+                    <span style="color:#cc0000" ng-show="createFCform.address.$dirty && createFCform.address.$invalid">
+                        <span ng-show="createFCform.address.$error.required">Address is required.</span>
+                        <span ng-show="createFCform.address.$error.minlength">At least 4 characters.</span>
+                    </span>
                 </div>
             </div>
 
@@ -68,6 +82,10 @@
                            ng-model="formationcenter.email"
                            ng-pattern="emailRedExp"
                            required/>
+                    <span style="color:#cc0000" ng-show="createFCform.email.$dirty && createFCform.email.$invalid">
+                        <span ng-show="createFCform.email.$error.required">Email is required.</span>
+                        <span ng-show="createFCform.email.$error.pattern">Invalid email pattern.</span>
+                    </span>
                 </div>
             </div>
 
@@ -81,6 +99,10 @@
                            ng-model="formationcenter.zipCode"
                            ng-pattern="zipcodeRegExp"
                            required/>
+                    <span style="color:#cc0000" ng-show="createFCform.zipcode.$dirty && createFCform.zipcode.$invalid">
+                        <span ng-show="createFCform.zipcode.$error.required">Zipcode is required.</span>
+                        <span ng-show="createFCform.zipcode.$error.pattern">Invalid pattern. Enter 5 digits.</span>
+                    </span>
                 </div>
             </div>
 
@@ -95,6 +117,11 @@
                            ng-pattern="nameRegExp"
                            ng-model="formationcenter.city"
                            required/>
+                    <span style="color:#cc0000" ng-show="createFCform.city.$dirty && createFCform.city.$invalid">
+                        <span ng-show="createFCform.city.$error.required">City is required.</span>
+                        <span ng-show="createFCform.city.$error.pattern">Only letters.</span>
+                        <span ng-show="createFCform.city.$error.minlength">At list 2 characters.</span>
+                    </span>
                 </div>
             </div>
 
@@ -108,6 +135,10 @@
                            ng-model="formationcenter.phoneNumber"
                            ng-pattern="phoneRegExp"
                            required/>
+                    <span style="color:#cc0000" ng-show="createFCform.phonenumber.$dirty && createFCform.phonenumber.$invalid">
+                        <span ng-show="createFCform.phonenumber.$error.required">Phonenumber is required.</span>
+                        <span ng-show="createFCform.phonenumber.$error.pattern">Invalid pattern. Enter 10 digist starting with 0.</span>
+                    </span>
                 </div>
             </div>
 
@@ -132,6 +163,8 @@
                 <!--<div class="col col-xs-6 col-xs-offset-1">-->
                 <button type="submit" class="btn btn-primary btn-block"
                         ng-click="createFormationCenter()"
+                        ng-mouseenter="checkAll()"
+                        ng-mouseleave="closeAll()"
                         ng-disabled="createFCform.$invalid">
                     Create Formation Center
                 </button>

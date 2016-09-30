@@ -80,7 +80,7 @@ module.exports = {
   /*
    ///For  built´s array of bill  html table and with Formation Center´s email send email for paid notification
    */
-  sendAlertMailToFormationCenter: function (type, text, iFormationCenter, mailSubjet ) {
+  sendAlertMailToFormationCenter: function (type, text, iFormationCenter, mailSubjet, callback ) {
 
     ///Built html table
     tableBody = "<h5>" + text + "</h5>";
@@ -102,11 +102,12 @@ module.exports = {
       ///0 Ok, 1 Error, 5 all intent
 
       console.log("Mail send answer ", result.response)
-      if (result.response != "OK") {
-        ////Create Log and Alert for formationCenter
-
-      }
-
+      //if (result.response != "OK") {
+      //  ////Create Log and Alert for formationCenter
+      //
+      //}
+      callback(null,result )
+      return;
     });
   }
 };

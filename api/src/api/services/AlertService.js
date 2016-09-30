@@ -40,10 +40,15 @@ module.exports = {
 
         ///Send Mail to formation Center
         mailSubjet = "Formation is full";
-        FormationCenterServices.sendAlertMailToFormationCenter(resultUpdate.type, text, resultObject, mailSubjet)
+        FormationCenterServices.sendAlertMailToFormationCenter(resultUpdate.type, text, resultObject, mailSubjet, function (err, result){
 
-        console.log("AlertService",resultUpdate )
-        callback(null,{response: "OK", result: resultUpdate})
+          resultObject = { mailresponse:result.response, result:resultUpdate}
+          console.log("AlertService",resultUpdate )
+          callback(null,{response: "OK", resultObject})
+
+        })
+
+
 
       })
     })
@@ -86,10 +91,10 @@ module.exports = {
 
         ///Send Mail to formation Center
         mailSubjet = "A client has booked a formation";
-        FormationCenterServices.sendAlertMailToFormationCenter(resultUpdate.type, text, resultObject, mailSubjet)
-
-        callback(null, {response: "OK", result: resultUpdate})
-
+        FormationCenterServices.sendAlertMailToFormationCenter(resultUpdate.type, text, resultObject, mailSubjet, function (err, result) {
+          responseObject  = { mailresponse:result.response, result: resultUpdate}
+          callback(null, {response: "OK", responseObject})
+        })
       })
     })
   }

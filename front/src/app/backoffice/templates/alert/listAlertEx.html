@@ -1,8 +1,8 @@
 <div class="container   admin-places">
     <div class="row col-lg-8 col-sm-8 col-lg-8 col-xs-12 col-lg-offset-1 col-sm-offset-1 well">
 
-        <h2>{{'ADMIN_PAGE_BILL_HEAD'| translate}}</h2>
-        <p>{{'ADMIN_PAGE_BILL_HEAD_DESCRIPTION'| translate}}</p>
+        <h2>{{'ADMIN_PAGE_ALERT_HEAD'| translate}}</h2>
+        <p>{{'ADMIN_PAGE_ALERT_HEAD_DESCRIPTION'| translate}}</p>
 
         <!--Search form  admin-places -->
         <div class="search-form  form-horizontal">
@@ -18,16 +18,16 @@
                                autofocus -->
 
                         <input class="form-control"
-                               placeholder="{{'AMOUNT' | translate}}"
+                               placeholder="{{'TEXT' | translate}}"
                                type="text"
-                               uib-typeahead="iBill.amount for iBill in Bills | filter:$viewValue"
+                               uib-typeahead="iAlert.type for iAlert in Alerts | filter:$viewValue"
                                ng-model="criteriaList"
                                name="city_zipcode"
                                maxlength="10"
-                               ng-pattern="numExpReg"
+                               ng-pattern="usernameExpReg"
                                tooltip-placement="top"
                                tooltip-trigger="'none'"
-                               uib-tooltip="{{'AMOUNT_ERROR' | translate}}"
+                               uib-tooltip="{{'TEXT_ERROR' | translate}}"
                                tooltip-class="customClass"
                                tooltip-is-open="simplesearch.city_zipcode.$dirty && simplesearch.city_zipcode.$invalid"
 
@@ -57,60 +57,7 @@
 
                             <form name="advancedSearchPlace" class="form-horizontal" role="form">
 
-                                <!--<div class="form-group pull-left row col-xs-12 col-sm-12 col-md-12 col-lg-12">-->
-                                <!--<div class=" input-group ">-->
-                                <!--<span class="input-group-addon"-->
-                                <!--id="basic-addon1"><strong>Name:</strong></span>-->
-                                <!--<input class="form-control"-->
-                                <!--type="text"-->
-                                <!--name="name"-->
-                                <!--id="name"-->
-                                <!--maxlength="40"-->
-                                <!--placeholder="{{'NAME' | translate}}"-->
-                                <!--uib-typeahead="name as iplace.name for iplace in places | filter:$viewValue"-->
-                                <!--ng-model="seachPlace.name"-->
-                                <!--ng-pattern="usernameExpReg"-->
-                                <!--tooltip-placement="top"-->
-                                <!--tooltip-trigger="'none'"-->
-                                <!--uib-tooltip="{{'NAME_ERROR' | translate}}"-->
-                                <!--tooltip-class="customClass"-->
-                                <!--tooltip-is-open="advancedSearchPlace.name.$dirty && advancedSearchPlace.name.$invalid"-->
-                                <!--required aria-describedby="basic-addon1"/>-->
 
-                                <!--</div>-->
-                                <!--&lt;!&ndash;<span style="color:#cc0000"&ndash;&gt;-->
-                                <!--&lt;!&ndash;ng-show="advancedSearchPlace.name.$dirty && advancedSearchPlace.name.$invalid">&ndash;&gt;-->
-                                <!--&lt;!&ndash;<span ng-show="advancedSearchPlace.name.$error.required">Name is required.</span>&ndash;&gt;-->
-                                <!--&lt;!&ndash;<span ng-show="advancedSearchPlace.name.$error.pattern">Invalid name format. You should provide between 2 and 40 words characters.</span>&ndash;&gt;-->
-                                <!--&lt;!&ndash;</span>&ndash;&gt;-->
-                                <!--</div>-->
-
-                                <!--<div class="form-group pull-left row col-xs-12 col-sm-12 col-md-12 col-lg-12">-->
-                                <!--<div class=" input-group ">-->
-
-                                <!--<span class="input-group-addon"-->
-                                <!--id="basic-addon2"><strong>Address:</strong></span>-->
-                                <!--<input class="form-control" type="text"-->
-                                <!--name="address" id="address"-->
-                                <!--ng-model="seachPlace.address"-->
-                                <!--maxlength="100"-->
-                                <!--placeholder="{{'ADDRESS' | translate}}"-->
-                                <!--uib-typeahead="address as iplace.address for iplace in places | filter:$viewValue"-->
-                                <!--ng-pattern="usernameExpReg"-->
-                                <!--tooltip-placement="top"-->
-                                <!--tooltip-trigger="'none'"-->
-                                <!--uib-tooltip="{{'ADDRESS_ERROR' | translate}}"-->
-                                <!--tooltip-class="customClass"-->
-                                <!--tooltip-is-open="advancedSearchPlace.address.$dirty && advancedSearchPlace.address.$invalid"-->
-                                <!--aria-describedby="basic-addon2"/>-->
-                                <!--</div>-->
-
-                                <!--&lt;!&ndash;<span style="color:#cc0000"&ndash;&gt;-->
-                                <!--&lt;!&ndash;ng-show="advancedSearchPlace.address.$dirty && advancedSearchPlace.address.$invalid">&ndash;&gt;-->
-                                <!--&lt;!&ndash;<span ng-show="advancedSearchPlace.address.$error.required">First name is required.</span>&ndash;&gt;-->
-                                <!--&lt;!&ndash;<span ng-show="advancedSearchPlace.address.$error.pattern">Invalid first name format. You should provide between 2 and 40 words characters.</span>&ndash;&gt;-->
-                                <!--&lt;!&ndash;</span>&ndash;&gt;-->
-                                <!--</div>-->
                                 <div class=" form-group pull-left row col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                     <label class="text-info"><strong>Date: </strong></label>
                                     <div class=" input-group date ident-date">
@@ -121,7 +68,7 @@
                                                tooltip-is-open="myform.initDate.$dirty && myform.initDate.$invalid"
                                                class="form-control md-datepicker-is-showing"
                                                uib-datepicker-popup="{{format}}" is-open="popup1.opened" name="initDate"
-                                               ng-pattern="/^\d{2}-\w{3,9}-\d{4}$/"
+                                               ng-pattern="dateRegExp"
                                                datepicker-options="dateOptionsSearch"
                                                placeholder="" type="text" ng-model="search.initialDate">
                                     <span class="input-group-addon"><span id="datesearchInit" class="fa fa-calendar "
@@ -136,7 +83,7 @@
                                                uib-tooltip="End date field should be date" tooltip-class="customClass"
                                                tooltip-is-open="myform.endDate.$dirty && myform.endDate.$invalid"
                                                class="form-control" uib-datepicker-popup="{{format}}" name="endDate"
-                                               ng-pattern="/^\d{2}-\w{3,9}-\d{4}$/" is-open="popup2.opened"
+                                               ng-pattern="dateRegExp" is-open="popup2.opened"
                                                datepicker-options="dateOptionsSearch" placeholder="" type="text"
                                                ng-model="search.endDate">
                                     <span class="input-group-addon"><span id="datesearchEnd" class="fa fa-calendar"
@@ -162,15 +109,15 @@
         <!--Place table -->
         <div class="">
             <div align="right" style="color:#000066">
-                <!--<ul uib-pagination boundary-links="true" items-per-page="appBill.itemPerPageBill"-->
-                <!--total-items="appBill.totalItemsBill"-->
-                <!--ng-click="getBillRecords()" ng-model="appBill.currentPageBill" class="pagination-sm"-->
+                <!--<ul uib-pagination boundary-links="true" items-per-page="appAlert.itemPerPageAlert"-->
+                <!--total-items="appAlert.totalItemsAlert"-->
+                <!--ng-click="getAlertRecords()" ng-model="appAlert.currentPageAlert" class="pagination-sm"-->
                 <!--previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;">-->
                 <!--</ul>-->
-                <ul uib-pagination boundary-links="true" items-per-page="appBill.itemPerPageBill"
-                    total-items="appBill.totalItemsBill" ng-click="getBillRecords()" force-ellipses="true"
-                    max-size="appBill.maxSizeBill" boundary-link-numbers="true" rotate="true"
-                    ng-model="appBill.currentPageBill" class="pagination-sm" previous-text="&lsaquo;"
+                <ul uib-pagination boundary-links="true" items-per-page="appAlert.itemPerPageAlert"
+                    total-items="appAlert.totalItemsAlert" ng-click="getAlertRecords()" force-ellipses="true"
+                    max-size="appAlert.maxSizeAlert" boundary-link-numbers="true" rotate="true"
+                    ng-model="appAlert.currentPageAlert" class="pagination-sm" previous-text="&lsaquo;"
                     next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
 
             </div>
@@ -178,49 +125,30 @@
             <table class="table table-responsive">
                 <thead style="font-size: 14px">
                 <tr>
-                    <th><strong>Amount</strong></th>
+                    <th><strong>Type</strong></th>
                     <th><strong>Date</strong></th>
-                    <th><strong>Bill Number</strong></th>
-                    <th><strong>Paid</strong></th>
-                    <th><strong>Actions</strong></th>
+                    <th><strong>Text</strong></th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="iBill in Bills | filter:criteriaList ">
-                    <td>{{iBill.amount}}</td>
-                    <td>{{ getReadableDate(iBill.date) }}</td>
-                    <td>{{iBill.billNumber}}</td>
-                    <td>
-                        <!--<div class=" input-group ">-->
-                            <!--<input type="checkbox" ng-checked="iBill.billState" ng-disabled="checkboxUnable">-->
-
-                        <!--</div>-->
-
-                          <span class="label label-success" ng-show="iBill.billState">
-                        <span class="glyphicon glyphicon-ok"></span>
-                    </span>
-                    <span class="label label-danger" ng-show="!iBill.billState">
-                        <span class="glyphicon glyphicon-remove"></span>
-                    </span>
-                    </td>
-                    <td>
-                        <a class="btn btn-primary" ng-disabled="iBill.billState" ng-click="makePayment(iBill)">Pay</a>
-                        <!--<a class="btn btn-danger" ng-click="deleteBill(iBill)">Delete</a>-->
-                    </td>
+                <tr ng-repeat="iAlert in Alerts | filter:criteriaList ">
+                    <td>{{getReadableType(iAlert.type)}}</td>
+                    <td>{{ getReadableDate(iAlert.date) }}</td>
+                    <td>{{iAlert.text}}</td>
                 </tr>
                 </tbody>
             </table>
             <div align="right" style="color:#000066">
-                <!--<ul uib-pagination boundary-links="true" items-per-page="appBill.itemPerPageBill"-->
-                <!--total-items="appBill.totalItemsBill"-->
-                <!--ng-click="getBillRecords()" ng-model="appBill.currentPageBill" class="pagination-sm"-->
+                <!--<ul uib-pagination boundary-links="true" items-per-page="appAlert.itemPerPageAlert"-->
+                <!--total-items="appAlert.totalItemsAlert"-->
+                <!--ng-click="getAlertRecords()" ng-model="appAlert.currentPageAlert" class="pagination-sm"-->
                 <!--previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;">-->
                 <!--</ul>-->
 
-                <ul uib-pagination boundary-links="true" items-per-page="appBill.itemPerPageBill"
-                    total-items="appBill.totalItemsBill" ng-click="getBillRecords()" force-ellipses="true"
-                    max-size="appBill.maxSizeBill" boundary-link-numbers="true" rotate="true"
-                    ng-model="appBill.currentPageBill" class="pagination-sm" previous-text="&lsaquo;"
+                <ul uib-pagination boundary-links="true" items-per-page="appAlert.itemPerPageAlert"
+                    total-items="appAlert.totalItemsAlert" ng-click="getAlertRecords()" force-ellipses="true"
+                    max-size="appAlert.maxSizeAlert" boundary-link-numbers="true" rotate="true"
+                    ng-model="appAlert.currentPageAlert" class="pagination-sm" previous-text="&lsaquo;"
                     next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
 
 

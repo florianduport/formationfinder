@@ -258,13 +258,13 @@ describe('PlaceController', function () {
       };
 
       PlaceObject = {
-        name: faker.random.words(),
+        name: "_____________",
         email: faker.internet.email(),
         address: faker.address.streetAddress(),
         zipcode: faker.address.zipCode(),
         city: faker.address.city(),
         phoneNumber: faker.phone.phoneNumber(),
-        isActivated: faker.random.boolean(),
+        isActivated: true,
         agreementNumber: faker.random.number(),
         agreementName: faker.random.words(),
         latitude: coordinatesArray[0],
@@ -411,7 +411,7 @@ describe('PlaceController', function () {
 
         };
 
-        config.idplace = resultObject.id
+        config.id = resultObject.id
         request(sails.hooks.http.app)
           .post('/Place/deletePlace')
           .send(config)
@@ -425,7 +425,15 @@ describe('PlaceController', function () {
 
               if (err) done(err)
               assert.equal(undefined,  resultObjectDelete)
-              done();
+
+              Place.find().exec(function (err, resultArray) {
+
+                if (err) done (err)
+                assert.equal(true,  resultArray.length > 1)
+                done();
+
+              })
+
             })
 
           })
@@ -446,7 +454,7 @@ describe('PlaceController', function () {
           long: coordinatesArray[1],
 
         };
-        config.name = resultObject.name
+        config= resultObject
         request(sails.hooks.http.app)
           .post('/Place/deletePlace')
           .send(config)
@@ -454,14 +462,21 @@ describe('PlaceController', function () {
             if (err) return done(err);
 
             ///Returned created Place object
-           // console.log("MESSAGE" , res.body.message)
+            console.log("MESSAGE" , res.body.message)
             assert.equal("OK", res.body.response)
 
             Place.findOne({name: {contains: resultObject.name}}).exec(function (err, resultObjectDelete) {
 
               if (err) done(err)
               assert.equal(undefined, resultObjectDelete)
-              done();
+              Place.find().exec(function (err, resultArray) {
+
+                if (err) done (err)
+                assert.equal(true,  resultArray.length > 1)
+                done();
+
+              })
+
             })
 
           })

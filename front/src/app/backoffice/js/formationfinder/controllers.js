@@ -1,7 +1,7 @@
 /**
  * Created by JKindelan on 5/20/2016.
  */
-app.controller("indexController", ["$scope", "$rootScope", "$location", "$http", "NgMap", "$log","$translate",
+app.controller("indexController", ["$scope", "$rootScope", "$location", "$http", "NgMap", "$log", "$translate",
         function ($scope, $rootScope, $location, $http, NgMap, $log, $translate) {
             $scope.formationcenterData = $rootScope.formationcenterData
 
@@ -120,7 +120,6 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             //;
 
             //console.log("Buscando")
-
 
 
             ///Find formationcenter by position
@@ -330,6 +329,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         }
                     })
                     .error(function (err) {
+                        objeData = {type: "Error"}
                         $scope.showModalMessage("Error using auth services.", objeData)
                         $scope.loginButtonText = "Login";
                     });
@@ -417,18 +417,17 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             $scope.initCredentials = function () {
                 $scope.credentials = {};
                 $scope.credentials.formationCenter = $rootScope.formationCenter;
-                //   $scope.formationCenterName = [];
-                $scope.loginButtonText = "Create Login";
+                $scope.loginButtonText = "Create";
                 $scope.credentials.isMainLogin = false;
-                $scope.credentials.isActivated = false;
+                $scope.credentials.isActivated = true;
             };
             $scope.initCredentials();
 
-            $scope.usernameExpReg = /^[a-z][a-z\d]*[_.\s]*[a-z\d]*$/;
+            $scope.usernameExpReg = /^[A-Za-z]([A-Za-z\d]*[_.\s]*[A-Za-z\d]*)+$/;
 
             $scope.createLogin = function () {
 
-                $scope.loginButtonText = "Creating Login ...";
+                $scope.loginButtonText = "Creating ...";
 
                 $http.post($rootScope.urlBase + "/login/create", {
                         username: $scope.credentials.username,
@@ -439,7 +438,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     })
                     .success(function (data) {
                         if (data.status === "ok") {
-                            alert('Login created.');
+                            alert('Credential created.');
+                            $scope.gotoManage();
                         } else {
                             alert(data.info);
                         }
@@ -455,8 +455,6 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             $scope.gotoManage = function () {
                 $location.path('/login/admin');
             };
-
-
         }])
     .controller("AdminLoginController", ["$scope", "$rootScope", "$location", "$http",
         function ($scope, $rootScope, $location, $http) {
@@ -473,7 +471,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                             console.log($scope.logins);
                         } else {
-                            console.log("An error has ocurred searching Logins.");
+                            console.log("An error has ocurred searching Credentials.");
                         }
                     })
                     .error(function (err) {
@@ -518,9 +516,17 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
         function ($scope, $rootScope, $routeParams, $location, $http) {
 
             //$scope.formationCenter = $rootScope.formationCenter;
-            $scope.usernameExpReg = /^[a-z][a-z\d]*[_.\s]*[a-z\d]*$/;
+            $scope.usernameExpReg = /^[A-Za-z][A-Za-z\d]*[_.\s]*[A-Za-z\d]*$/;
 
             $scope.Login = {};
+            $scope.oldLogin = {};
+            var copyToOldLogin = function () {
+                $scope.oldLogin.username = $scope.Login.username;
+                $scope.oldLogin.password = $scope.Login.password;
+                $scope.oldLogin.isMainLogin = $scope.Login.isMainLogin;
+                $scope.oldLogin.isActivated = $scope.Login.isActivated;
+            };
+
             $scope.searchLogin = function () {
 
                 $http.post($rootScope.urlBase + "/login/searchByID", {
@@ -529,41 +535,74 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     .success(function (result) {
                         if (result.status === "ok") {
                             $scope.Login = result.data;
+                            copyToOldLogin();
                         } else {
                             alert("Error: " + result.info);
                         }
                     })
                     .error(function (err) {
-                        console.log("Error searching Login: ", err);
+                        console.log("Error searching Credential: ", err);
                     });
             };
             $scope.searchLogin();
 
+            var prepareUpdate = function () {
+                if ($scope.Login.username !== undefined && ($scope.Login.username === $scope.oldLogin.username)) {
+                    delete $scope.Login.username;
+                }
+
+                if ($scope.Login.password !== undefined && ($scope.Login.password === $scope.oldLogin.password)) {
+                    delete $scope.Login.password;
+                }
+
+                if ($scope.Login.isMainLogin !== undefined && ($scope.Login.isMainLogin === $scope.oldLogin.isMainLogin)) {
+                    delete $scope.Login.isMainLogin;
+                }
+
+                if ($scope.Login.isActivated !== undefined && ($scope.Login.isActivated === $scope.oldLogin.isActivated)) {
+                    delete $scope.Login.isActivated;
+                }
+
+                console.log("El valor de $scope.Login es: ", $scope.Login);
+
+                if ($scope.Login.username || $scope.Login.password
+                    || $scope.Login.isMainLogin !== undefined
+                    || $scope.Login.isActivated !== undefined) {
+                    return true;
+                } else {
+                    return false;
+                }
+            };
+
             $scope.updateLogin = function () {
 
-                $http.post($rootScope.urlBase + "/login/update", {
-                        id: $routeParams.id,
-                        //formationCenter: $scope.formationCenter,
-                        newCredentials: $scope.Login
-                    })
-                    .success(function (result) {
-                        if (result.status === "ok") {
-                            alert("User updated.");
-                            $location.path('/login/admin');
-                        } else {
-                            console.log(result.info);
-                            alert("Login not updated: " + result.info);
-                        }
-                    })
-                    .error(function (err) {
-                        console.log(err);
-                    })
-                    .finally(function () {
-                        //$scope.UpdateButtonText = "Update";
-                        //$scope.searchLogins();
-                        //$scope.initCredentials();
+                if (prepareUpdate()) {
+                    $http.post($rootScope.urlBase + "/login/update", {
+                            id: $routeParams.id,
+                            newCredentials: $scope.Login
+                        })
+                        .success(function (result) {
+                            if (result.status === "ok") {
+                                alert("Credential updated.");
+                                $location.path('/login/admin');
+                            } else {
+                                console.log(result.info);
+                                alert("Credential not updated: " + result.info);
+                            }
+                        })
+                        .error(function (err) {
+                            console.log(err);
+                        })
+                        .finally(function () {
+                            //$scope.UpdateButtonText = "Update";
+                            $scope.searchLogin();
+                        });
+                } else {
+                    alert("Enter valid new parameters, or make some chance.");
+                    $scope.searchLogin();
+                }
 
-                    });
+
             };
 
             $scope.gotoManage = function () {
@@ -576,7 +615,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             $scope.initCredentials = function () {
                 $scope.username = null;
                 $scope.formationCenter = $rootScope.formationCenter;
-                $scope.loginButtonText = "Delete Login";
+                $scope.loginButtonText = "Delete";
             };
             $scope.initCredentials();
 
@@ -601,7 +640,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.deleteLogin = function () {
 
-                $scope.loginButtonText = "Deleting Login ...";
+                $scope.loginButtonText = "Deleting ...";
 
                 $http.post($rootScope.urlBase + "/login/delete", {
                         username: $scope.username,
@@ -609,11 +648,9 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     })
                     .success(function (data) {
                         if (data.status === "ok") {
-                            alert('Login deleted.');
-                            //$scope.initCredentials();
+                            alert('Credential deleted.');
                         } else {
-                            alert("Error deleting Login: " + data.info);
-                            //$scope.initCredentials();
+                            alert("Error deleting credential: " + data.info);
                         }
                     })
                     .error(function (err) {
@@ -790,7 +827,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             $scope.CreateButtonText = "Create Formation";
 
             $scope.numExpReg = /^[\d]+$/;
-            $scope.dateRegExp = /^\d{4}\/\d{2}\/\d{2}$/;
+            $scope.dateRegExp = /^\d{2}\/\d{2}\/\d{4}$/;
             $scope.maxDate = new Date(2040, 00, 01);
 
             $scope.Hours = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
@@ -1083,7 +1120,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             };
 
             $scope.formats = ['dd/MM/yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
-            $scope.format = $scope.formats[1];
+            $scope.format = $scope.formats[0];
             $scope.altInputFormats = ['M!/d!/yyyy'];
 
 
@@ -1317,1008 +1354,6 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             $scope.username = $rootScope.username
             $scope.formationCenter = $rootScope.formationCenter;
 
-
-        }])
-    .controller("SearchController", ["$scope", "$rootScope", "$http", "$location", "$routeParams", "$timeout", "NavigatorGeolocation", "NgMap",
-        function ($scope, $rootScope, $http, $location, $routeParams, $timeout, NavigatorGeolocation, NgMap) {
-
-            $scope.searchAllFormation = function () {
-                $http.post($rootScope.urlBase + "/place/searchallplaces")
-                    .success(function (data_result) {
-                        if (data_result.err) {
-                            ///Mostrar mensaje en ventana modal de que no existe centros de formacion
-                            ///regresar a la pagina inicial
-                            $scope.errorMessage = data_result.err;
-                            alert(data_result.err);
-                            // $location.path("/");
-                            return;
-                        }
-
-                        nameArray = []
-                        if (data_result.length > 0) {
-                            for (iFormationCenter in data_result) {
-                                nameArray.push(data_result[iFormationCenter].city)
-                                console.log(iFormationCenter, data_result[iFormationCenter].city)
-                            }
-                        }
-
-                        console.log("Se obtienen resultados ff", data_result.length)
-                        $scope.states = nameArray;
-                        return nameArray
-
-                        //$location.path("/search/" + $scope.criteria);
-                    })
-                    .error(function (error) {
-                        //@action mostrar error
-                        $scope.errorMessage = error
-                        console.log("ERROR", error);
-                        $scope.states = []
-                        return ([])
-                    })
-                ;
-            }
-
-            $scope.states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Dakota', 'North Carolina', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
-            // Any function returning a promise object can be used to load values asynchronously
-            ///Modify to search by GPS location
-            $scope.getLocation = function (val) {
-
-                ///Obtener la posicion del usuario
-
-
-                return $http.get('//maps.googleapis.com/maps/api/geocode/json', {
-                    params: {
-                        address: val,
-                        sensor: false
-                    }
-                }).then(function (response) {
-                    return response.data.results.map(function (item) {
-                        return item.formatted_address;
-                    });
-                });
-            };
-
-            $scope.ngModelOptionsSelected = function (value) {
-                if (arguments.length) {
-                    _selected = value;
-                } else {
-                    return _selected;
-                }
-            };
-
-            $scope.modelOptions = {
-                debounce: {
-                    default: 500,
-                    blur: 250
-                },
-                getterSetter: true
-            };
-
-            $scope.statesWithFlags = [{
-                'name': 'Alabama',
-                'flag': '5/5c/Flag_of_Alabama.svg/45px-Flag_of_Alabama.svg.png'
-            }, {'name': 'Alaska', 'flag': 'e/e6/Flag_of_Alaska.svg/43px-Flag_of_Alaska.svg.png'}, {
-                'name': 'Arizona',
-                'flag': '9/9d/Flag_of_Arizona.svg/45px-Flag_of_Arizona.svg.png'
-            }, {
-                'name': 'Arkansas',
-                'flag': '9/9d/Flag_of_Arkansas.svg/45px-Flag_of_Arkansas.svg.png'
-            }, {
-                'name': 'California',
-                'flag': '0/01/Flag_of_California.svg/45px-Flag_of_California.svg.png'
-            }, {
-                'name': 'Colorado',
-                'flag': '4/46/Flag_of_Colorado.svg/45px-Flag_of_Colorado.svg.png'
-            }, {
-                'name': 'Connecticut',
-                'flag': '9/96/Flag_of_Connecticut.svg/39px-Flag_of_Connecticut.svg.png'
-            }, {
-                'name': 'Delaware',
-                'flag': 'c/c6/Flag_of_Delaware.svg/45px-Flag_of_Delaware.svg.png'
-            }, {'name': 'Florida', 'flag': 'f/f7/Flag_of_Florida.svg/45px-Flag_of_Florida.svg.png'}, {
-                'name': 'Georgia',
-                'flag': '5/54/Flag_of_Georgia_%28U.S._state%29.svg/46px-Flag_of_Georgia_%28U.S._state%29.svg.png'
-            }, {'name': 'Hawaii', 'flag': 'e/ef/Flag_of_Hawaii.svg/46px-Flag_of_Hawaii.svg.png'}, {
-                'name': 'Idaho',
-                'flag': 'a/a4/Flag_of_Idaho.svg/38px-Flag_of_Idaho.svg.png'
-            }, {
-                'name': 'Illinois',
-                'flag': '0/01/Flag_of_Illinois.svg/46px-Flag_of_Illinois.svg.png'
-            }, {'name': 'Indiana', 'flag': 'a/ac/Flag_of_Indiana.svg/45px-Flag_of_Indiana.svg.png'}, {
-                'name': 'Iowa',
-                'flag': 'a/aa/Flag_of_Iowa.svg/44px-Flag_of_Iowa.svg.png'
-            }, {'name': 'Kansas', 'flag': 'd/da/Flag_of_Kansas.svg/46px-Flag_of_Kansas.svg.png'}, {
-                'name': 'Kentucky',
-                'flag': '8/8d/Flag_of_Kentucky.svg/46px-Flag_of_Kentucky.svg.png'
-            }, {
-                'name': 'Louisiana',
-                'flag': 'e/e0/Flag_of_Louisiana.svg/46px-Flag_of_Louisiana.svg.png'
-            }, {'name': 'Maine', 'flag': '3/35/Flag_of_Maine.svg/45px-Flag_of_Maine.svg.png'}, {
-                'name': 'Maryland',
-                'flag': 'a/a0/Flag_of_Maryland.svg/45px-Flag_of_Maryland.svg.png'
-            }, {
-                'name': 'Massachusetts',
-                'flag': 'f/f2/Flag_of_Massachusetts.svg/46px-Flag_of_Massachusetts.svg.png'
-            }, {
-                'name': 'Michigan',
-                'flag': 'b/b5/Flag_of_Michigan.svg/45px-Flag_of_Michigan.svg.png'
-            }, {
-                'name': 'Minnesota',
-                'flag': 'b/b9/Flag_of_Minnesota.svg/46px-Flag_of_Minnesota.svg.png'
-            }, {
-                'name': 'Mississippi',
-                'flag': '4/42/Flag_of_Mississippi.svg/45px-Flag_of_Mississippi.svg.png'
-            }, {
-                'name': 'Missouri',
-                'flag': '5/5a/Flag_of_Missouri.svg/46px-Flag_of_Missouri.svg.png'
-            }, {
-                'name': 'Montana',
-                'flag': 'c/cb/Flag_of_Montana.svg/45px-Flag_of_Montana.svg.png'
-            }, {
-                'name': 'Nebraska',
-                'flag': '4/4d/Flag_of_Nebraska.svg/46px-Flag_of_Nebraska.svg.png'
-            }, {
-                'name': 'Nevada',
-                'flag': 'f/f1/Flag_of_Nevada.svg/45px-Flag_of_Nevada.svg.png'
-            }, {
-                'name': 'New Hampshire',
-                'flag': '2/28/Flag_of_New_Hampshire.svg/45px-Flag_of_New_Hampshire.svg.png'
-            }, {
-                'name': 'New Jersey',
-                'flag': '9/92/Flag_of_New_Jersey.svg/45px-Flag_of_New_Jersey.svg.png'
-            }, {
-                'name': 'New Mexico',
-                'flag': 'c/c3/Flag_of_New_Mexico.svg/45px-Flag_of_New_Mexico.svg.png'
-            }, {
-                'name': 'New York',
-                'flag': '1/1a/Flag_of_New_York.svg/46px-Flag_of_New_York.svg.png'
-            }, {
-                'name': 'North Carolina',
-                'flag': 'b/bb/Flag_of_North_Carolina.svg/45px-Flag_of_North_Carolina.svg.png'
-            }, {
-                'name': 'North Dakota',
-                'flag': 'e/ee/Flag_of_North_Dakota.svg/38px-Flag_of_North_Dakota.svg.png'
-            }, {'name': 'Ohio', 'flag': '4/4c/Flag_of_Ohio.svg/46px-Flag_of_Ohio.svg.png'}, {
-                'name': 'Oklahoma',
-                'flag': '6/6e/Flag_of_Oklahoma.svg/45px-Flag_of_Oklahoma.svg.png'
-            }, {
-                'name': 'Oregon',
-                'flag': 'b/b9/Flag_of_Oregon.svg/46px-Flag_of_Oregon.svg.png'
-            }, {
-                'name': 'Pennsylvania',
-                'flag': 'f/f7/Flag_of_Pennsylvania.svg/45px-Flag_of_Pennsylvania.svg.png'
-            }, {
-                'name': 'Rhode Island',
-                'flag': 'f/f3/Flag_of_Rhode_Island.svg/32px-Flag_of_Rhode_Island.svg.png'
-            }, {
-                'name': 'South Carolina',
-                'flag': '6/69/Flag_of_South_Carolina.svg/45px-Flag_of_South_Carolina.svg.png'
-            }, {
-                'name': 'South Dakota',
-                'flag': '1/1a/Flag_of_South_Dakota.svg/46px-Flag_of_South_Dakota.svg.png'
-            }, {
-                'name': 'Tennessee',
-                'flag': '9/9e/Flag_of_Tennessee.svg/46px-Flag_of_Tennessee.svg.png'
-            }, {'name': 'Texas', 'flag': 'f/f7/Flag_of_Texas.svg/45px-Flag_of_Texas.svg.png'}, {
-                'name': 'Utah',
-                'flag': 'f/f6/Flag_of_Utah.svg/45px-Flag_of_Utah.svg.png'
-            }, {
-                'name': 'Vermont',
-                'flag': '4/49/Flag_of_Vermont.svg/46px-Flag_of_Vermont.svg.png'
-            }, {
-                'name': 'Virginia',
-                'flag': '4/47/Flag_of_Virginia.svg/44px-Flag_of_Virginia.svg.png'
-            }, {
-                'name': 'Washington',
-                'flag': '5/54/Flag_of_Washington.svg/46px-Flag_of_Washington.svg.png'
-            }, {
-                'name': 'West Virginia',
-                'flag': '2/22/Flag_of_West_Virginia.svg/46px-Flag_of_West_Virginia.svg.png'
-            }, {
-                'name': 'Wisconsin',
-                'flag': '2/22/Flag_of_Wisconsin.svg/45px-Flag_of_Wisconsin.svg.png'
-            }, {'name': 'Wyoming', 'flag': 'b/bc/Flag_of_Wyoming.svg/43px-Flag_of_Wyoming.svg.png'}];
-
-            $scope.searchAllFormation();
-
-            console.log("Estates", $scope.states)
-
-
-            $scope.radioModel = 'Middle';
-            $scope.checkModel = {
-                left: false,
-                middle: true,
-                right: false
-            };
-
-            $scope.checkResults = [];
-
-            $scope.$watchCollection('checkModel', function () {
-                $scope.checkResults = [];
-                angular.forEach($scope.checkModel, function (value, key) {
-                    if (value) {
-                        $scope.checkResults.push(key);
-                    }
-                });
-            });
-
-
-            $scope.sortType = 'price'; // set the default sort type
-            $scope.sortReverse = false;  // set the default sort order
-            $scope.searchFish = '';     // set the default search/filter term
-            //gloal configurations
-            $scope.search = {};
-            $scope.open1 = function () {
-                $scope.popup1.opened = true;
-            };
-
-            $scope.popup1 = {
-                opened: false
-            };
-
-            $scope.popup2 = {
-                opened: false
-            };
-            $scope.inlineOptions = {
-                customClass: getDayClass,
-                minDate: new Date(),
-                showWeeks: true
-            };
-            $scope.dateOptions = {
-                dateDisabled: disabled,
-                formatYear: 'yy',
-                maxDate: new Date(2020, 5, 22),
-                minDate: new Date(),
-                startingDay: 1
-            };
-
-            $scope.dateOptionsSearch = {
-                dateDisabled: disabled,
-                formatYear: 'yyyy',
-                maxDate: new Date(2020, 5, 22),
-                minDate: new Date(),
-                startingDay: 1
-            };
-
-            // Disable weekend selection
-            function disabled(data) {
-                var date = data.date,
-                    mode = data.mode;
-                return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
-            }
-
-            $scope.today = function () {
-                $scope.search.initialDate = new Date();
-            };
-            $scope.today();
-            //gloal configurations
-            $scope.open1 = function () {
-                $scope.popup1.opened = true;
-            };
-
-            $scope.open2 = function () {
-                $scope.popup2.opened = true;
-            };
-
-            $scope.setDate = function (year, month, day) {
-                $scope.dt = new Date(year, month, day);
-            };
-
-            $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy'];
-            $scope.format = $scope.formats[0];
-            $scope.toggleMin = function () {
-                $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
-                $scope.dateOptions.minDate = $scope.inlineOptions.minDate;
-            };
-
-            $scope.toggleMin();
-
-            var tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
-
-            $scope.tomorrow = function () {
-                $scope.search.endDate = tomorrow;
-            };
-
-            $scope.tomorrow()
-            var afterTomorrow = new Date();
-            afterTomorrow.setDate(tomorrow.getDate() + 1);
-            $scope.events = [
-                {
-                    date: tomorrow,
-                    status: 'full'
-                },
-                {
-                    date: afterTomorrow,
-                    status: 'partially'
-                }
-            ];
-
-            function getDayClass(data) {
-                var date = data.date,
-                    mode = data.mode;
-                if (mode === 'day') {
-                    var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
-
-                    for (var i = 0; i < $scope.events.length; i++) {
-                        var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
-
-                        if (dayToCheck === currentDay) {
-                            return $scope.events[i].status;
-                        }
-                    }
-                }
-
-                return '';
-            }
-
-            // local configurations
-            app = this;
-            $scope.map = false;
-            $scope.searchResullt = null;
-            $scope.search = {};
-            $scope.search.name = $routeParams.criteria;
-            $scope.app = {}
-            $scope.app.currentPage = 0;
-            $scope.app.maxSize = 5;
-            $scope.app.itemPerPage = 5;
-            $scope.app.totalItems = 0;
-            $scope.searchText = "";
-
-            /*$scope.$watch(function() {
-             return $scope.searchText;
-             }, function(newValue, oldValue) {
-             console.log("change detected: " + newValue)
-             $scope.searchText = newValue;
-             });*/
-            //data = 5;
-            $routeParams.criteria = String($routeParams.criteria).trim()
-            $scope.formationcenterlist = []
-            // console.log("dddddd", $routeParams.criteria != 'undefined')
-            // console.log("dddddd", String($routeParams.criteria).trim())
-            // console.log("dddddd " + $routeParams.criteria)
-            ////if criteria is empty
-
-            $scope.alerts = [];
-
-//---------------------------------------------------------------------------------------------------------------
-            ///Show modal with formation´s Formation Center information
-            $scope.searchFuncList = function () {
-
-
-                $scope.errorMessage = "Probando "
-                if (typeof $scope.criteriaList == "undefined" || $scope.criteriaList == "")
-                    $scope.criteriaList = ""
-                $scope.search.name = $scope.criteriaList;
-                $scope.app.currentPage = 0;
-
-
-                console.log("El valor de la forama ", $scope.myform)
-
-                if ($scope.search.initialDate != "" || typeof $scope.search.endDate != "" || $scope.initialPrice != "") {
-                    if (!$scope.myform.$valid) {
-
-                        $scope.errorValid = true
-                        console.log("INSERTANDO ALERTA")
-                        message = "Sorry, Some Advanced Search fields are invalid";
-                        $scope.alerts.push({
-                            type: 'danger',
-                            msg: message
-                        });
-                        return;
-                    }
-
-                    if ($scope.search.initialDate != "" || $scope.search.endDate != "") {
-
-                        timestampInit = new Date($scope.search.initialDate).getTime()
-                        timestampEnd = new Date($scope.search.endDate).getTime()
-                        if (timestampEnd < timestampInit) {
-                            $scope.errorValid = true
-                            console.log("INSERTANDO ALERTA")
-                            message = "Sorry, End date isn´t correct";
-                            $scope.alerts.push({
-                                type: 'danger',
-                                msg: message
-                            });
-                            return;
-                        }
-                    }
-
-                }
-
-
-                $scope.countRecords();
-                $scope.getPagableRecords();
-                /*if ($scope.formations.length == 0 ) {
-                 $scope.errorValid = true
-                 console.log("INSERTANDO ALERTA")
-                 message = "Sorry, not exist result for your search criteria"
-                 $scope.alerts.push({
-                 type: 'danger',
-                 msg: message
-                 });
-                 }*/
-
-            }
-
-            $scope.closeAlert = function (index) {
-                $scope.alerts.splice(index, 1);
-            }
-
-            $scope.searchPlusInformation = function (formationId) {
-
-            }
-
-            $scope.countRecords = function () {
-                config = {}
-                if (typeof $scope.search.initialDate != "undefined") {
-                    /*  if ( !Date.isDate($scope.search.initialDate)) {
-                     $scope.errorValid = true ;
-                     /// alert(data_result.err );
-                     // $location.path("/");
-                     console.log("INSERTANDO ALERTA")
-                     message = "Sorry, Invalid date format for initialDate"
-                     $scope.alerts.push({
-                     type: 'danger',
-                     msg: data_result.err
-                     });
-                     return;
-                     }*/
-                    config.initialDate = $scope.search.initialDate
-
-                }
-
-                if (typeof $scope.search.endDate != "undefined") {
-                    /* if ( !_.isDate($scope.search.endDate)) {
-                     $scope.errorValid = true ;
-                     /// alert(data_result.err );
-                     // $location.path("/");
-                     console.log("INSERTANDO ALERTA")
-                     message = "Sorry, Invalid date format for endDate"
-                     $scope.alerts.push({
-                     type: 'danger',
-                     msg: data_result.err
-                     });
-                     return;
-                     }*/
-                    config.finalDate = $scope.search.endDate
-
-                }
-
-
-                ///Date validate and if initialDate is more than that end date not search
-
-                ///Price validate an if not a number or number < 0 not search
-                if (typeof $scope.initialPrice != "undefined")
-                    config.price = $scope.initialPrice
-
-                if ($scope.search.name != 'undefined') {
-                    //console.log("ddddddnnnn"+ !isNaN(parseInt ($scope.search.name )))
-                    if (!isNaN(parseInt($scope.search.name))) {
-                        //countbyzipcode
-                        config.zipcode = $scope.search.name
-                        console.log("Call services ", config)
-                        $http.post($rootScope.urlBase + "/Formation/countByZipcodeMongoEx", config)
-                            .success(function (data_result) {
-                                if (data_result.res != "OK") {
-                                    $scope.app.totalItems = 0;
-                                    return;
-                                }
-                                console.log("Cantidad de objetos ", data_result.size)
-                                $scope.app.totalItems = data_result.size
-                                return;
-                                // console.log("RESULTADOS", data_result)
-                            })
-                            .error(function (error) {
-                                //@action mostrar error
-                                $scope.errorMessage = error
-                                console.log(error);
-                                return
-                            })
-                        ;
-                    }
-                }
-
-
-                if ($scope.search.name == "undefined")
-                    $scope.search.name = ""
-
-                config.city = $scope.search.name
-                //countbycity
-                console.log("Call services ", config)
-                $http.post($rootScope.urlBase + '/Formation/countByCityMongoEx', config)
-                    .success(function (data_result) {
-                        if (data_result.res != "OK") {
-                            $scope.app.totalItems = 0;
-                            return;
-                        }
-                        console.log("Cantidad de objetos ---", data_result.size)
-                        $scope.app.totalItems = data_result.size
-                        return;
-                        // console.log("RESULTADOS", data_result)
-                    })
-                    .error(function (error) {
-                        //@action mostrar error
-                        $scope.errorMessage = error
-                        console.log(error);
-                        return
-                    })
-
-
-                /*$http.get($rootScope.urlBase + "/formation/count")
-                 .success(function(data,status,headers,config){
-
-                 if (data.res != "OK") {
-                 $scope.app.totalItems = 0;
-                 return;
-                 }
-                 console.log("Cantidad de objetos " ,data.size )
-                 $scope.app.totalItems = data.size
-                 })
-                 .error(function(data,status,header,config){
-                 console.log(data);
-                 });*/
-            };
-
-
-            $scope.updateupdateSort = function () {
-                $scope.getPagableRecords();
-                $scope.apply();
-            };
-
-            $scope.getPagableRecords = function () {
-
-                var pageData = 0;
-
-
-                if ($scope.app.currentPage > 0) {
-                    pageData = $scope.app.currentPage - 1;
-                    pageData = String(pageData)
-                }
-                config = {
-                    page: pageData,
-                    len: $scope.app.itemPerPage
-                }
-
-                if (typeof $scope.search.initialDate != "undefined" || $scope.search.initialDate == "") {
-                    /*                    if ( !_.isDate($scope.search.initialDate)) {
-                     $scope.errorValid = true ;
-                     /// alert(data_result.err );
-                     // $location.path("/");
-                     console.log("INSERTANDO ALERTA")
-                     message = "Sorry, Invalid date format for initialDate"
-                     $scope.alerts.push({
-                     type: 'danger',
-                     msg: data_result.err
-                     });
-                     return;
-                     }*/
-                    config.initialDate = $scope.search.initialDate
-
-                }
-
-                if (typeof $scope.search.endDate != "undefined" || $scope.search.endDate == "") {
-                    /*if ( !Date.isDate($scope.search.endDate)) {
-                     $scope.errorValid = true ;
-                     /// alert(data_result.err );
-                     // $location.path("/");
-                     console.log("INSERTANDO ALERTA")
-                     message = "Sorry, Invalid date format for endDate"
-                     $scope.alerts.push({
-                     type: 'danger',
-                     msg: data_result.err
-                     });
-                     return;
-                     }*/
-                    config.finalDate = $scope.search.endDate
-
-                }
-
-
-                ///Date validate and if initialDate is more than that end date not search
-
-                ///Price validate an if not a number or number < 0 not search
-                if (typeof $scope.initialPrice != "undefined")
-                    config.price = $scope.initialPrice
-
-                //console.log("Pagination " ,pageData )
-
-                if ($scope.search.name != undefined) {
-                    //console.log("ddddddnnnn"+ !isNaN(parseInt ($scope.search.name )))
-                    if (!isNaN(parseInt($scope.search.name))) {
-                        console.log("Es un numero")
-                        ///Validar si es un numero postal angular.isNumber(value)
-
-                        config.zipcode = $scope.search.name
-
-                        //searchbyzipcode
-
-
-                        $http.post($rootScope.urlBase + "/formation/searchByZipcodeMongoEx", config)
-                            .success(function (data_result) {
-                                if (data_result.err) {
-                                    ///Mostrar mensaje en ventana modal de que no existe centros de formacion
-                                    ///regresar a la pagina inicial
-                                    $scope.errorValid = true;
-                                    /// alert(data_result.err );
-                                    // $location.path("/");
-                                    console.log("INSERTANDO ALERTA")
-                                    message = "Sorry, not exist result for your search criteria"
-                                    $scope.alerts.push({
-                                        type: 'danger',
-                                        msg: data_result.err
-                                    });
-                                    return;
-                                }
-                                $scope.formationcenterlist = data_result;
-
-                                if (data_result) {
-                                    if (data_result.length == 0) {
-                                        $scope.errorValid = true
-                                        console.log("INSERTANDO ALERTA")
-                                        message = "Sorry, not exist result for your search criteria"
-                                        $scope.alerts.push({
-                                            type: 'danger',
-                                            msg: message
-                                        });
-                                        return
-                                    }
-                                }
-
-                                $scope.formations = [];
-                                //console.log("Resultados", data_result[0].formation.formationCenter)
-                                data_result.forEach(function (iFormationcenter, ivalue) {
-
-
-                                    iFormationcenter.name = iFormationcenter.formationCenter.name;
-                                    iFormationcenter.city = iFormationcenter.place.city;
-                                    iFormationcenter.address = iFormationcenter.place.address;
-                                    iFormationcenter.datetime = new Date(iFormationcenter.dates[0].date).getTime()
-                                    console.log("Valor ", iFormationcenter.datetime)
-                                    $scope.formations.push(iFormationcenter)
-                                })
-
-                                // console.log("RESULTADOS", data_result)
-                            })
-                            .error(function (error) {
-                                //@action mostrar error
-                                $scope.errorMessage = error
-                                console.log(error);
-
-                                console.log("INSERTANDO ALERTA")
-                                message = "Sorry, Invalid date format for initialDate"
-                                $scope.alerts.push({
-                                    type: 'danger',
-                                    msg: error
-                                });
-                                return;
-                            })
-                        ;
-
-                    }
-                    else {
-                        ///Validar si es un numero postal angular.isNumber(value)
-
-                        config.city = $scope.search.name
-                        // searchbycity
-
-                        console.log("Call services", config)
-                        $http.post($rootScope.urlBase + "/formation/searchByCityMongoEx", config)
-                            .success(function (data_result) {
-                                if (data_result.err) {
-                                    ///Mostrar mensaje en ventana modal de que no existe centros de formacion
-                                    ///regresar a la pagina inicial
-                                    $scope.errorValid = true;
-                                    /// alert(data_result.err );
-                                    // $location.path("/");
-                                    console.log("INSERTANDO ALERTA")
-                                    message = "Sorry, can´t get results"
-                                    $scope.alerts.push({
-                                        type: 'danger',
-                                        msg: message
-                                    });
-                                    return;
-                                }
-
-                                $scope.formationcenterlist = data_result;
-                                $scope.formations = [];
-
-                                if (data_result) {
-                                    if (data_result.length == 0) {
-                                        $scope.errorValid = true
-                                        console.log("INSERTANDO ALERTA")
-                                        message = "Sorry, not exist result for your search criteria"
-                                        $scope.alerts.push({
-                                            type: 'danger',
-                                            msg: message
-                                        });
-                                        return;
-                                    }
-
-
-                                }
-                                // console.log("Resultados", data_result[0].formation.formationCenter)
-                                data_result.forEach(function (iFormationcenter, ivalue) {
-
-
-                                    iFormationcenter.name = iFormationcenter.formationCenter.name;
-                                    iFormationcenter.city = iFormationcenter.place.city;
-                                    iFormationcenter.address = iFormationcenter.place.address;
-                                    iFormationcenter.datetime = new Date(iFormationcenter.dates[0].date).getTime()
-                                    console.log("Valor ", iFormationcenter.datetime)
-                                    $scope.formations.push(iFormationcenter)
-                                    //console.log("Valor ",iFormation)
-
-                                })
-                                // console.log("RESULTADOS", data_result)
-                            })
-                            .error(function (error) {
-                                //@action mostrar error
-                                console.log('RESULTADOS', error);
-                                $scope.errorMessage = error
-                                console.log(error);
-
-                                console.log("INSERTANDO ALERTA")
-                                message = "Sorry, can´t get results"
-                                $scope.alerts.push({
-                                    type: 'danger',
-                                    msg: message
-                                });
-                            })
-                        ;
-                    }
-
-                }
-                else {
-
-                    //if ($scope.app.currentPage == 1)
-                    //    $scope.app.currentPage = 0
-                    //console.log("Sin nombre ======================= " , $scope.app.currentPage)
-                    config.city = ""
-
-                    //searchbycity
-                    $http.post($rootScope.urlBase + "/formation/searchByCityMongoEx", config)
-                        .success(function (data_result) {
-                            if (data_result.length == 0) {
-                                ///Mostrar mensaje en ventana modal de que no existe centros de formacion
-                                ///regresar a la pagina inicial
-                                $scope.errorValid = true;
-                                /// alert(data_result.err );
-                                // $location.path("/");
-                                console.log("INSERTANDO ALERTA")
-                                message = "Sorry, not exist result for your search criteria"
-                                $scope.alerts.push({
-                                    type: 'danger',
-                                    msg: data_result.err
-                                });
-                                return;
-                            }
-                            console.log("dfdd")
-
-                            $scope.formationcenterlist = data_result;
-                            $scope.formations = [];
-                            // console.log("Resultados", data_result[0].formation.formationCenter)
-                            if (data_result) {
-                                if (data_result.length == 0) {
-                                    $scope.errorValid = true
-                                    console.log("INSERTANDO ALERTA")
-                                    message = "Sorry, not exist result for your search criteria"
-                                    $scope.alerts.push({
-                                        type: 'danger',
-                                        msg: message
-                                    });
-                                    return;
-                                }
-                            }
-                            data_result.forEach(function (iFormationcenter, ivalue) {
-
-
-                                iFormationcenter.name = iFormationcenter.formationCenter.name;
-                                iFormationcenter.city = iFormationcenter.place.city;
-                                iFormationcenter.address = iFormationcenter.place.address;
-                                iFormationcenter.datetime = new Date(iFormationcenter.dates[0].date).getTime()
-                                console.log("Valor ", iFormationcenter.datetime)
-                                $scope.formations.push(iFormationcenter)
-                            })
-
-
-                            //console.log("RESULTADOS", data_result)
-
-
-                        })
-                        .error(function (error) {
-                            //@action mostrar error
-                            $scope.errorMessage = error
-                            console.log(error);
-
-                            console.log("INSERTANDO ALERTA")
-                            message = "Sorry, can´t get results"
-                            $scope.alerts.push({
-                                type: 'danger',
-                                msg: message
-                            });
-                            return
-                        })
-                    ;
-                    ///if criteria is a number
-                    // console.log("Buscando resultados " + $rootScope.urlBase + "/formationcenter/searchbyName");
-                    //  console.log("Buscando resultados ", $routeParams.criteria)
-
-                }
-            };
-
-            $scope.countRecords();
-            $scope.getPagableRecords();
-
-            $scope.formationBook = function (formationToReserve) {
-
-                console.log("Formacion ", formationToReserve)
-
-                /* if (formationToReserve == "") {
-                 // @action mensaje de  error
-                 $scope.searchResullt = null;
-                 return;
-                 }*/
-
-                //$location.path("/formation/book/" + formationToReserve);
-
-                $location.path("/formation/book/" + formationToReserve);
-            };
-//-------------------------------------------------------------------------------------------------------------------
-            //Checkbox controler use with button
-            $scope.checkAll = function () {
-                $scope.search.formation = $scope.formations.map(function (item) {
-                    return item.name;
-                });
-            };
-            $scope.uncheckAll = function () {
-                $scope.search.formation = [];
-            };
-            /*
-
-             Show message in page
-             */
-            $scope.showMessage = function (type, message) {
-
-                if ($scope.alerts.length > 0) {
-                    $scope.alerts.splice(0, 1);
-                }
-                $scope.alerts.push({type: type, msg: message});
-            }
-
-
-            $scope.search = {formation: []}
-            // functions
-            $scope.showMap = function ($event) {
-
-
-                console.log(domElement + $scope.showmap);
-                var domElement = document.getElementById('menu-item');
-                console.log(domElement + $scope.showmap, $scope.search.formation.length);
-                console.log("ddd", $scope.search.formation.length);
-                unicdata = []
-                for (iName in $scope.search.formation) {
-                    console.log("Selecionado la formacion ", $scope.search.formation[iName].city)
-                    cityName = $scope.search.formation[iName].city
-                    unicdata.push($scope.search.formation[iName].city)
-                    /*    unicdata = $scope.search.formation.filter( function ( item) {
-                     return item != cityName
-                     })*/
-
-                }
-                console.log("Places to search", unicdata)
-
-                if (unicdata.length == 0) {
-
-                    console.log("INSERTANDO ALERTA")
-                    var message = "You must select some formation."
-                    $scope.showMessage('danger', message);
-                    return
-                }
-                config = {
-                    places: unicdata
-                }
-
-
-                ///Search al city with name in array an return places
-                ///if no place return empty and not  show anything
-                $http.post($rootScope.urlBase + "/Place/searchByCities", config)
-                    .success(function (data_result) {
-                        if (data_result.length == 0) {
-                            ///Mostrar mensaje en ventana modal de que no existe centros de formacion
-                            ///regresar a la pagina inicial
-                            $scope.errorValid = true;
-                            /// alert(data_result.err );
-                            // $location.path("/");
-                            console.log("INSERTANDO ALERTA")
-                            message = "Sorry, can´t get places results"
-                            $scope.showMessage('danger', message);
-                            return;
-                        }
-
-
-                        formationcenters = [{places: []}]
-
-                        formationcenters[0].places = data_result;
-
-                        console.log("Places to search", formationcenters)
-                        ///Show new positions
-                        $scope.toggleDropdownTrue($event, formationcenters);
-                        ///Clear chexk box
-                        $scope.search.formation = []
-                        //console.log("RESULTADOS", data_result)
-
-
-                    })
-                    .error(function (error) {
-                        //@action mostrar error
-                        $scope.errorMessage = error
-                        console.log(error);
-
-                        console.log("INSERTANDO ALERTA")
-                        message = "Sorry, can´t get places results"
-                        $scope.showMessage('danger', message);
-                        return
-                    })
-
-                /// Only unic name
-
-                //alert('before timeout');   // <-- This gets triggered
-
-                console.log(domElement);
-
-
-                ///Show GPS position
-                /* NavigatorGeolocation.getCurrentPosition()
-                 .then(function(position) {
-                 var lat = position.coords.latitude, lng = position.coords.longitude;
-
-                 console.log("Latitud ", lat)
-                 console.log("Longitud ", lng)
-                 });*/
-
-
-                console.log("SHOW MAP")
-
-
-            };
-
-
-            ////----------------------------------Acordion Controller
-
-            $scope.oneAtATime = true;
-
-            $scope.groups = [
-                {
-                    title: 'Dynamic Group Header - 1',
-                    content: 'Dynamic Group Body - 1'
-                },
-                {
-                    title: 'Dynamic Group Header - 2',
-                    content: 'Dynamic Group Body - 2'
-                }
-            ];
-
-            $scope.items = ['Item 1', 'Item 2', 'Item 3'];
-
-            $scope.addItem = function () {
-                var newItemNo = $scope.items.length + 1;
-                $scope.items.push('Item ' + newItemNo);
-            };
-
-            $scope.status = {
-                isCustomHeaderOpen: false,
-                isFirstOpen: true,
-                isFirstDisabled: false
-            };
-            //init
-            /*if ($scope.criterio != "") {
-             $scope.searchFunc();
-             }*/
-
-            $(".search-result-map").affix({
-                offset: {top: 100}
-            });
 
         }])
     .controller("FormationCenterController", ["$scope", "$rootScope", "$http", "$location", "$routeParams",
@@ -2695,316 +1730,6 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
         $scope.getPagableRecords();
 
     }])
-    .controller('DatepickerDemoCtrl', function ($scope) {
-        $scope.today = function () {
-            $scope.dt = new Date();
-        };
-        $scope.today();
-
-        $scope.clear = function () {
-            $scope.dt = null;
-        };
-
-        $scope.options = {
-            customClass: getDayClass,
-            minDate: new Date(),
-            showWeeks: true
-        };
-
-        // Disable weekend selection
-        function disabled(data) {
-            var date = data.date,
-                mode = data.mode;
-            return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
-        }
-
-        $scope.toggleMin = function () {
-            $scope.options.minDate = $scope.options.minDate ? null : new Date();
-        };
-
-        $scope.toggleMin();
-
-        $scope.setDate = function (year, month, day) {
-            $scope.dt = new Date(year, month, day);
-        };
-
-        var tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        var afterTomorrow = new Date(tomorrow);
-        afterTomorrow.setDate(tomorrow.getDate() + 1);
-        $scope.events = [
-            {
-                date: tomorrow,
-                status: 'full'
-            },
-            {
-                date: afterTomorrow,
-                status: 'partially'
-            }
-        ];
-
-        function getDayClass(data) {
-            var date = data.date,
-                mode = data.mode;
-            if (mode === 'day') {
-                var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
-
-                for (var i = 0; i < $scope.events.length; i++) {
-                    var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
-
-                    if (dayToCheck === currentDay) {
-                        return $scope.events[i].status;
-                    }
-                }
-            }
-
-            return '';
-        }
-    })
-    .controller('DatepickerPopupDemoCtrl', function ($scope) {
-        $scope.today = function () {
-            $scope.dt = new Date();
-        };
-        $scope.today();
-
-        $scope.clear = function () {
-            $scope.dt = null;
-        };
-
-        $scope.inlineOptions = {
-            customClass: getDayClass,
-            minDate: new Date(),
-            showWeeks: true
-        };
-
-        $scope.dateOptions = {
-            dateDisabled: disabled,
-            formatYear: 'yy',
-            maxDate: new Date(2020, 5, 22),
-            minDate: new Date(),
-            startingDay: 1
-        };
-
-        // Disable weekend selection
-        function disabled(data) {
-            var date = data.date,
-                mode = data.mode;
-            return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
-        }
-
-        $scope.toggleMin = function () {
-            $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
-            $scope.dateOptions.minDate = $scope.inlineOptions.minDate;
-        };
-
-        $scope.toggleMin();
-
-        $scope.open1 = function () {
-            $scope.popup1.opened = true;
-        };
-
-        $scope.open2 = function () {
-            $scope.popup2.opened = true;
-        };
-
-        $scope.setDate = function (year, month, day) {
-            $scope.dt = new Date(year, month, day);
-        };
-
-        $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
-        $scope.format = $scope.formats[0];
-        $scope.altInputFormats = ['M!/d!/yyyy'];
-
-        $scope.popup1 = {
-            opened: false
-        };
-
-        $scope.popup2 = {
-            opened: false
-        };
-
-        var tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        var afterTomorrow = new Date();
-        afterTomorrow.setDate(tomorrow.getDate() + 1);
-        $scope.events = [
-            {
-                date: tomorrow,
-                status: 'full'
-            },
-            {
-                date: afterTomorrow,
-                status: 'partially'
-            }
-        ];
-
-        function getDayClass(data) {
-            var date = data.date,
-                mode = data.mode;
-            if (mode === 'day') {
-                var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
-
-                for (var i = 0; i < $scope.events.length; i++) {
-                    var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
-
-                    if (dayToCheck === currentDay) {
-                        return $scope.events[i].status;
-                    }
-                }
-            }
-
-            return '';
-        }
-    })
-    .controller('TypeaheadCtrl', function ($scope, $http) {
-
-        var _selected;
-
-        $scope.selected = undefined;
-        $scope.states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Dakota', 'North Carolina', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
-        // Any function returning a promise object can be used to load values asynchronously
-        $scope.getLocation = function (val) {
-            return $http.get('//maps.googleapis.com/maps/api/geocode/json', {
-                params: {
-                    address: val,
-                    sensor: false
-                }
-            }).then(function (response) {
-                return response.data.results.map(function (item) {
-                    return item.formatted_address;
-                });
-            });
-        };
-
-        $scope.ngModelOptionsSelected = function (value) {
-            if (arguments.length) {
-                _selected = value;
-            } else {
-                return _selected;
-            }
-        };
-
-        $scope.modelOptions = {
-            debounce: {
-                default: 500,
-                blur: 250
-            },
-            getterSetter: true
-        };
-
-        $scope.statesWithFlags = [{
-            'name': 'Alabama',
-            'flag': '5/5c/Flag_of_Alabama.svg/45px-Flag_of_Alabama.svg.png'
-        }, {'name': 'Alaska', 'flag': 'e/e6/Flag_of_Alaska.svg/43px-Flag_of_Alaska.svg.png'}, {
-            'name': 'Arizona',
-            'flag': '9/9d/Flag_of_Arizona.svg/45px-Flag_of_Arizona.svg.png'
-        }, {
-            'name': 'Arkansas',
-            'flag': '9/9d/Flag_of_Arkansas.svg/45px-Flag_of_Arkansas.svg.png'
-        }, {
-            'name': 'California',
-            'flag': '0/01/Flag_of_California.svg/45px-Flag_of_California.svg.png'
-        }, {
-            'name': 'Colorado',
-            'flag': '4/46/Flag_of_Colorado.svg/45px-Flag_of_Colorado.svg.png'
-        }, {
-            'name': 'Connecticut',
-            'flag': '9/96/Flag_of_Connecticut.svg/39px-Flag_of_Connecticut.svg.png'
-        }, {'name': 'Delaware', 'flag': 'c/c6/Flag_of_Delaware.svg/45px-Flag_of_Delaware.svg.png'}, {
-            'name': 'Florida',
-            'flag': 'f/f7/Flag_of_Florida.svg/45px-Flag_of_Florida.svg.png'
-        }, {
-            'name': 'Georgia',
-            'flag': '5/54/Flag_of_Georgia_%28U.S._state%29.svg/46px-Flag_of_Georgia_%28U.S._state%29.svg.png'
-        }, {'name': 'Hawaii', 'flag': 'e/ef/Flag_of_Hawaii.svg/46px-Flag_of_Hawaii.svg.png'}, {
-            'name': 'Idaho',
-            'flag': 'a/a4/Flag_of_Idaho.svg/38px-Flag_of_Idaho.svg.png'
-        }, {'name': 'Illinois', 'flag': '0/01/Flag_of_Illinois.svg/46px-Flag_of_Illinois.svg.png'}, {
-            'name': 'Indiana',
-            'flag': 'a/ac/Flag_of_Indiana.svg/45px-Flag_of_Indiana.svg.png'
-        }, {'name': 'Iowa', 'flag': 'a/aa/Flag_of_Iowa.svg/44px-Flag_of_Iowa.svg.png'}, {
-            'name': 'Kansas',
-            'flag': 'd/da/Flag_of_Kansas.svg/46px-Flag_of_Kansas.svg.png'
-        }, {
-            'name': 'Kentucky',
-            'flag': '8/8d/Flag_of_Kentucky.svg/46px-Flag_of_Kentucky.svg.png'
-        }, {'name': 'Louisiana', 'flag': 'e/e0/Flag_of_Louisiana.svg/46px-Flag_of_Louisiana.svg.png'}, {
-            'name': 'Maine',
-            'flag': '3/35/Flag_of_Maine.svg/45px-Flag_of_Maine.svg.png'
-        }, {
-            'name': 'Maryland',
-            'flag': 'a/a0/Flag_of_Maryland.svg/45px-Flag_of_Maryland.svg.png'
-        }, {
-            'name': 'Massachusetts',
-            'flag': 'f/f2/Flag_of_Massachusetts.svg/46px-Flag_of_Massachusetts.svg.png'
-        }, {
-            'name': 'Michigan',
-            'flag': 'b/b5/Flag_of_Michigan.svg/45px-Flag_of_Michigan.svg.png'
-        }, {
-            'name': 'Minnesota',
-            'flag': 'b/b9/Flag_of_Minnesota.svg/46px-Flag_of_Minnesota.svg.png'
-        }, {
-            'name': 'Mississippi',
-            'flag': '4/42/Flag_of_Mississippi.svg/45px-Flag_of_Mississippi.svg.png'
-        }, {'name': 'Missouri', 'flag': '5/5a/Flag_of_Missouri.svg/46px-Flag_of_Missouri.svg.png'}, {
-            'name': 'Montana',
-            'flag': 'c/cb/Flag_of_Montana.svg/45px-Flag_of_Montana.svg.png'
-        }, {'name': 'Nebraska', 'flag': '4/4d/Flag_of_Nebraska.svg/46px-Flag_of_Nebraska.svg.png'}, {
-            'name': 'Nevada',
-            'flag': 'f/f1/Flag_of_Nevada.svg/45px-Flag_of_Nevada.svg.png'
-        }, {
-            'name': 'New Hampshire',
-            'flag': '2/28/Flag_of_New_Hampshire.svg/45px-Flag_of_New_Hampshire.svg.png'
-        }, {
-            'name': 'New Jersey',
-            'flag': '9/92/Flag_of_New_Jersey.svg/45px-Flag_of_New_Jersey.svg.png'
-        }, {
-            'name': 'New Mexico',
-            'flag': 'c/c3/Flag_of_New_Mexico.svg/45px-Flag_of_New_Mexico.svg.png'
-        }, {
-            'name': 'New York',
-            'flag': '1/1a/Flag_of_New_York.svg/46px-Flag_of_New_York.svg.png'
-        }, {
-            'name': 'North Carolina',
-            'flag': 'b/bb/Flag_of_North_Carolina.svg/45px-Flag_of_North_Carolina.svg.png'
-        }, {
-            'name': 'North Dakota',
-            'flag': 'e/ee/Flag_of_North_Dakota.svg/38px-Flag_of_North_Dakota.svg.png'
-        }, {'name': 'Ohio', 'flag': '4/4c/Flag_of_Ohio.svg/46px-Flag_of_Ohio.svg.png'}, {
-            'name': 'Oklahoma',
-            'flag': '6/6e/Flag_of_Oklahoma.svg/45px-Flag_of_Oklahoma.svg.png'
-        }, {'name': 'Oregon', 'flag': 'b/b9/Flag_of_Oregon.svg/46px-Flag_of_Oregon.svg.png'}, {
-            'name': 'Pennsylvania',
-            'flag': 'f/f7/Flag_of_Pennsylvania.svg/45px-Flag_of_Pennsylvania.svg.png'
-        }, {
-            'name': 'Rhode Island',
-            'flag': 'f/f3/Flag_of_Rhode_Island.svg/32px-Flag_of_Rhode_Island.svg.png'
-        }, {
-            'name': 'South Carolina',
-            'flag': '6/69/Flag_of_South_Carolina.svg/45px-Flag_of_South_Carolina.svg.png'
-        }, {
-            'name': 'South Dakota',
-            'flag': '1/1a/Flag_of_South_Dakota.svg/46px-Flag_of_South_Dakota.svg.png'
-        }, {'name': 'Tennessee', 'flag': '9/9e/Flag_of_Tennessee.svg/46px-Flag_of_Tennessee.svg.png'}, {
-            'name': 'Texas',
-            'flag': 'f/f7/Flag_of_Texas.svg/45px-Flag_of_Texas.svg.png'
-        }, {'name': 'Utah', 'flag': 'f/f6/Flag_of_Utah.svg/45px-Flag_of_Utah.svg.png'}, {
-            'name': 'Vermont',
-            'flag': '4/49/Flag_of_Vermont.svg/46px-Flag_of_Vermont.svg.png'
-        }, {
-            'name': 'Virginia',
-            'flag': '4/47/Flag_of_Virginia.svg/44px-Flag_of_Virginia.svg.png'
-        }, {
-            'name': 'Washington',
-            'flag': '5/54/Flag_of_Washington.svg/46px-Flag_of_Washington.svg.png'
-        }, {
-            'name': 'West Virginia',
-            'flag': '2/22/Flag_of_West_Virginia.svg/46px-Flag_of_West_Virginia.svg.png'
-        }, {
-            'name': 'Wisconsin',
-            'flag': '2/22/Flag_of_Wisconsin.svg/45px-Flag_of_Wisconsin.svg.png'
-        }, {'name': 'Wyoming', 'flag': 'b/bc/Flag_of_Wyoming.svg/43px-Flag_of_Wyoming.svg.png'}];
-    })
     .controller('AlertDemoCtrl', function ($scope) {
         $scope.alerts = [
             {type: 'danger', msg: 'Oh snap! Change a few things up and try submitting again.'},
@@ -3120,381 +1845,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             $uibModalInstance.dismiss('cancel');
             $scope.formationCenterName = ""
         };
-    })
-    .controller('CarouselDemoCtrl', function ($scope) {
-        $scope.myInterval = 5000;
-        $scope.noWrapSlides = false;
-        $scope.active = 0;
-        var slides = $scope.slides = [];
-        var currIndex = 0;
-
-        $scope.addSlide = function () {
-            var newWidth = 600 + slides.length + 1;
-            slides.push({
-                image: 'http://lorempixel.com/' + newWidth + '/300',
-                text: ['Nice image', 'Awesome photograph', 'That is so cool', 'I love that'][slides.length % 4],
-                id: currIndex++
-            });
-        };
-
-        $scope.randomize = function () {
-            var indexes = generateIndexesArray();
-            assignNewIndexesToSlides(indexes);
-        };
-
-        for (var i = 0; i < 4; i++) {
-            $scope.addSlide();
-        }
-
-        // Randomize logic below
-
-        function assignNewIndexesToSlides(indexes) {
-            for (var i = 0, l = slides.length; i < l; i++) {
-                slides[i].id = indexes.pop();
-            }
-        }
-
-        function generateIndexesArray() {
-            var indexes = [];
-            for (var i = 0; i < currIndex; ++i) {
-                indexes[i] = i;
-            }
-            return shuffle(indexes);
-        }
-
-        // http://stackoverflow.com/questions/962802#962890
-        function shuffle(array) {
-            var tmp, current, top = array.length;
-
-            if (top) {
-                while (--top) {
-                    current = Math.floor(Math.random() * (top + 1));
-                    tmp = array[current];
-                    array[current] = array[top];
-                    array[top] = tmp;
-                }
-            }
-
-            return array;
-        }
-    })
-    .controller('CollapseDemoCtrl', function ($scope) {
-        $scope.isCollapsed = false;
-        $scope.isCollapsedHorizontal = true;
-    })
-    .controller('DropdownCtrl', function ($scope, $log) {
-        $scope.items = [
-            'The first choice!',
-            'And another choice for you.',
-            'but wait! A third!'
-        ];
-
-        $scope.status = {
-            isopen: false
-        };
-
-        $scope.toggled = function (open) {
-            $log.log('Dropdown is now: ', open);
-        };
-
-        $scope.toggleDropdown = function ($event) {
-            console.log("Evento ", $event)
-            $event.preventDefault();
-            $event.stopPropagation();
-            $scope.status.isopen = !$scope.status.isopen;
-        };
-
-        $scope.appendToEl = angular.element(document.querySelector('#dropdown-long-content'));
-    })
-    .controller('PaginationDemoCtrl', function ($scope, $log) {
-        $scope.totalItems = 64;
-        $scope.currentPage = 4;
-
-        $scope.setPage = function (pageNo) {
-            $scope.currentPage = pageNo;
-        };
-
-        $scope.pageChanged = function () {
-            $log.log('Page changed to: ' + $scope.currentPage);
-        };
-
-        $scope.maxSize = 5;
-        $scope.bigTotalItems = 175;
-        $scope.bigCurrentPage = 1;
-    })
-    .controller('PopoverDemoCtrl', function ($scope, $sce) {
-        $scope.dynamicPopover = {
-            content: 'Hello, World!',
-            templateUrl: 'myPopoverTemplate.html',
-            title: 'Title'
-        };
-
-        $scope.placement = {
-            options: [
-                'top',
-                'top-left',
-                'top-right',
-                'bottom',
-                'bottom-left',
-                'bottom-right',
-                'left',
-                'left-top',
-                'left-bottom',
-                'right',
-                'right-top',
-                'right-bottom'
-            ],
-            selected: 'top'
-        };
-
-        $scope.htmlPopover = $sce.trustAsHtml('<b style="color: red">I can</b> have <div class="label label-success">HTML</div> content');
-    })
-    .controller('ProgressDemoCtrl', function ($scope) {
-        $scope.max = 200;
-
-        $scope.random = function () {
-            var value = Math.floor(Math.random() * 100 + 1);
-            var type;
-
-            if (value < 25) {
-                type = 'success';
-            } else if (value < 50) {
-                type = 'info';
-            } else if (value < 75) {
-                type = 'warning';
-            } else {
-                type = 'danger';
-            }
-
-            $scope.showWarning = type === 'danger' || type === 'warning';
-
-            $scope.dynamic = value;
-            $scope.type = type;
-        };
-
-        $scope.random();
-
-        $scope.randomStacked = function () {
-            $scope.stacked = [];
-            var types = ['success', 'info', 'warning', 'danger'];
-
-            for (var i = 0, n = Math.floor(Math.random() * 4 + 1); i < n; i++) {
-                var index = Math.floor(Math.random() * 4);
-                $scope.stacked.push({
-                    value: Math.floor(Math.random() * 30 + 1),
-                    type: types[index]
-                });
-            }
-        };
-
-        $scope.randomStacked();
-    })
-    .controller('RatingDemoCtrl', function ($scope) {
-        $scope.rate = 7;
-        $scope.max = 10;
-        $scope.isReadonly = false;
-
-        $scope.hoveringOver = function (value) {
-            $scope.overStar = value;
-            $scope.percent = 100 * (value / $scope.max);
-        };
-
-        $scope.ratingStates = [
-            {stateOn: 'glyphicon-ok-sign', stateOff: 'glyphicon-ok-circle'},
-            {stateOn: 'glyphicon-star', stateOff: 'glyphicon-star-empty'},
-            {stateOn: 'glyphicon-heart', stateOff: 'glyphicon-ban-circle'},
-            {stateOn: 'glyphicon-heart'},
-            {stateOff: 'glyphicon-off'}
-        ];
-    })
-    .controller('TimepickerDemoCtrl', function ($scope, $log) {
-        $scope.mytime = new Date();
-
-        $scope.hstep = 1;
-        $scope.mstep = 15;
-
-        $scope.options = {
-            hstep: [1, 2, 3],
-            mstep: [1, 5, 10, 15, 25, 30]
-        };
-
-        $scope.ismeridian = true;
-        $scope.toggleMode = function () {
-            $scope.ismeridian = !$scope.ismeridian;
-        };
-
-        $scope.update = function () {
-            var d = new Date();
-            d.setHours(14);
-            d.setMinutes(0);
-            $scope.mytime = d;
-        };
-
-        $scope.changed = function () {
-            $log.log('Time changed to: ' + $scope.mytime);
-        };
-
-        $scope.clear = function () {
-            $scope.mytime = null;
-        };
-    })
-    .controller('TooltipDemoCtrl', function ($scope, $sce) {
-        $scope.dynamicTooltip = 'Hello, World!';
-        $scope.dynamicTooltipText = 'dynamic';
-        $scope.htmlTooltip = $sce.trustAsHtml('I\'ve been made <b>bold</b>!');
-        $scope.placement = {
-            options: [
-                'top',
-                'top-left',
-                'top-right',
-                'bottom',
-                'bottom-left',
-                'bottom-right',
-                'left',
-                'left-top',
-                'left-bottom',
-                'right',
-                'right-top',
-                'right-bottom'
-            ],
-            selected: 'top'
-        };
-    })
-    .controller('TypeaheadCtrl', function ($scope, $http) {
-
-        var _selected;
-
-        $scope.selected = undefined;
-        $scope.states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Dakota', 'North Carolina', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
-        // Any function returning a promise object can be used to load values asynchronously
-        $scope.getLocation = function (val) {
-            return $http.get('//maps.googleapis.com/maps/api/geocode/json', {
-                params: {
-                    address: val,
-                    sensor: false
-                }
-            }).then(function (response) {
-                return response.data.results.map(function (item) {
-                    return item.formatted_address;
-                });
-            });
-        };
-
-        $scope.ngModelOptionsSelected = function (value) {
-            if (arguments.length) {
-                _selected = value;
-            } else {
-                return _selected;
-            }
-        };
-
-        $scope.modelOptions = {
-            debounce: {
-                default: 500,
-                blur: 250
-            },
-            getterSetter: true
-        };
-
-        $scope.statesWithFlags = [{
-            'name': 'Alabama',
-            'flag': '5/5c/Flag_of_Alabama.svg/45px-Flag_of_Alabama.svg.png'
-        }, {'name': 'Alaska', 'flag': 'e/e6/Flag_of_Alaska.svg/43px-Flag_of_Alaska.svg.png'}, {
-            'name': 'Arizona',
-            'flag': '9/9d/Flag_of_Arizona.svg/45px-Flag_of_Arizona.svg.png'
-        }, {'name': 'Arkansas', 'flag': '9/9d/Flag_of_Arkansas.svg/45px-Flag_of_Arkansas.svg.png'}, {
-            'name': 'California',
-            'flag': '0/01/Flag_of_California.svg/45px-Flag_of_California.svg.png'
-        }, {'name': 'Colorado', 'flag': '4/46/Flag_of_Colorado.svg/45px-Flag_of_Colorado.svg.png'}, {
-            'name': 'Connecticut',
-            'flag': '9/96/Flag_of_Connecticut.svg/39px-Flag_of_Connecticut.svg.png'
-        }, {'name': 'Delaware', 'flag': 'c/c6/Flag_of_Delaware.svg/45px-Flag_of_Delaware.svg.png'}, {
-            'name': 'Florida',
-            'flag': 'f/f7/Flag_of_Florida.svg/45px-Flag_of_Florida.svg.png'
-        }, {
-            'name': 'Georgia',
-            'flag': '5/54/Flag_of_Georgia_%28U.S._state%29.svg/46px-Flag_of_Georgia_%28U.S._state%29.svg.png'
-        }, {'name': 'Hawaii', 'flag': 'e/ef/Flag_of_Hawaii.svg/46px-Flag_of_Hawaii.svg.png'}, {
-            'name': 'Idaho',
-            'flag': 'a/a4/Flag_of_Idaho.svg/38px-Flag_of_Idaho.svg.png'
-        }, {'name': 'Illinois', 'flag': '0/01/Flag_of_Illinois.svg/46px-Flag_of_Illinois.svg.png'}, {
-            'name': 'Indiana',
-            'flag': 'a/ac/Flag_of_Indiana.svg/45px-Flag_of_Indiana.svg.png'
-        }, {'name': 'Iowa', 'flag': 'a/aa/Flag_of_Iowa.svg/44px-Flag_of_Iowa.svg.png'}, {
-            'name': 'Kansas',
-            'flag': 'd/da/Flag_of_Kansas.svg/46px-Flag_of_Kansas.svg.png'
-        }, {'name': 'Kentucky', 'flag': '8/8d/Flag_of_Kentucky.svg/46px-Flag_of_Kentucky.svg.png'}, {
-            'name': 'Louisiana',
-            'flag': 'e/e0/Flag_of_Louisiana.svg/46px-Flag_of_Louisiana.svg.png'
-        }, {'name': 'Maine', 'flag': '3/35/Flag_of_Maine.svg/45px-Flag_of_Maine.svg.png'}, {
-            'name': 'Maryland',
-            'flag': 'a/a0/Flag_of_Maryland.svg/45px-Flag_of_Maryland.svg.png'
-        }, {
-            'name': 'Massachusetts',
-            'flag': 'f/f2/Flag_of_Massachusetts.svg/46px-Flag_of_Massachusetts.svg.png'
-        }, {'name': 'Michigan', 'flag': 'b/b5/Flag_of_Michigan.svg/45px-Flag_of_Michigan.svg.png'}, {
-            'name': 'Minnesota',
-            'flag': 'b/b9/Flag_of_Minnesota.svg/46px-Flag_of_Minnesota.svg.png'
-        }, {
-            'name': 'Mississippi',
-            'flag': '4/42/Flag_of_Mississippi.svg/45px-Flag_of_Mississippi.svg.png'
-        }, {'name': 'Missouri', 'flag': '5/5a/Flag_of_Missouri.svg/46px-Flag_of_Missouri.svg.png'}, {
-            'name': 'Montana',
-            'flag': 'c/cb/Flag_of_Montana.svg/45px-Flag_of_Montana.svg.png'
-        }, {'name': 'Nebraska', 'flag': '4/4d/Flag_of_Nebraska.svg/46px-Flag_of_Nebraska.svg.png'}, {
-            'name': 'Nevada',
-            'flag': 'f/f1/Flag_of_Nevada.svg/45px-Flag_of_Nevada.svg.png'
-        }, {
-            'name': 'New Hampshire',
-            'flag': '2/28/Flag_of_New_Hampshire.svg/45px-Flag_of_New_Hampshire.svg.png'
-        }, {
-            'name': 'New Jersey',
-            'flag': '9/92/Flag_of_New_Jersey.svg/45px-Flag_of_New_Jersey.svg.png'
-        }, {
-            'name': 'New Mexico',
-            'flag': 'c/c3/Flag_of_New_Mexico.svg/45px-Flag_of_New_Mexico.svg.png'
-        }, {
-            'name': 'New York',
-            'flag': '1/1a/Flag_of_New_York.svg/46px-Flag_of_New_York.svg.png'
-        }, {
-            'name': 'North Carolina',
-            'flag': 'b/bb/Flag_of_North_Carolina.svg/45px-Flag_of_North_Carolina.svg.png'
-        }, {
-            'name': 'North Dakota',
-            'flag': 'e/ee/Flag_of_North_Dakota.svg/38px-Flag_of_North_Dakota.svg.png'
-        }, {'name': 'Ohio', 'flag': '4/4c/Flag_of_Ohio.svg/46px-Flag_of_Ohio.svg.png'}, {
-            'name': 'Oklahoma',
-            'flag': '6/6e/Flag_of_Oklahoma.svg/45px-Flag_of_Oklahoma.svg.png'
-        }, {'name': 'Oregon', 'flag': 'b/b9/Flag_of_Oregon.svg/46px-Flag_of_Oregon.svg.png'}, {
-            'name': 'Pennsylvania',
-            'flag': 'f/f7/Flag_of_Pennsylvania.svg/45px-Flag_of_Pennsylvania.svg.png'
-        }, {
-            'name': 'Rhode Island',
-            'flag': 'f/f3/Flag_of_Rhode_Island.svg/32px-Flag_of_Rhode_Island.svg.png'
-        }, {
-            'name': 'South Carolina',
-            'flag': '6/69/Flag_of_South_Carolina.svg/45px-Flag_of_South_Carolina.svg.png'
-        }, {
-            'name': 'South Dakota',
-            'flag': '1/1a/Flag_of_South_Dakota.svg/46px-Flag_of_South_Dakota.svg.png'
-        }, {'name': 'Tennessee', 'flag': '9/9e/Flag_of_Tennessee.svg/46px-Flag_of_Tennessee.svg.png'}, {
-            'name': 'Texas',
-            'flag': 'f/f7/Flag_of_Texas.svg/45px-Flag_of_Texas.svg.png'
-        }, {'name': 'Utah', 'flag': 'f/f6/Flag_of_Utah.svg/45px-Flag_of_Utah.svg.png'}, {
-            'name': 'Vermont',
-            'flag': '4/49/Flag_of_Vermont.svg/46px-Flag_of_Vermont.svg.png'
-        }, {'name': 'Virginia', 'flag': '4/47/Flag_of_Virginia.svg/44px-Flag_of_Virginia.svg.png'}, {
-            'name': 'Washington',
-            'flag': '5/54/Flag_of_Washington.svg/46px-Flag_of_Washington.svg.png'
-        }, {
-            'name': 'West Virginia',
-            'flag': '2/22/Flag_of_West_Virginia.svg/46px-Flag_of_West_Virginia.svg.png'
-        }, {'name': 'Wisconsin', 'flag': '2/22/Flag_of_Wisconsin.svg/45px-Flag_of_Wisconsin.svg.png'}, {
-            'name': 'Wyoming',
-            'flag': 'b/bc/Flag_of_Wyoming.svg/43px-Flag_of_Wyoming.svg.png'
-        }];
-    })
-    .controller("WizardController", function ($rootScope, $http, $routeParams, $scope, $uibModal, $log, $location) {
+    }).controller("WizardController", function ($rootScope, $http, $routeParams, $scope, $uibModal, $log, $location) {
 
         var vm = this;
 
@@ -3524,7 +1875,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
         vm.zipcodeRegExp = /^\d{5}$/;
         vm.nameRegExp = /^[A-Za-z][A-Za-z\s]+$/;
         vm.emailRedExp = /^[a-z][_a-z0-9-]*(\.[_a-z0-9-]+)*@[a-z][a-z0-9-]*(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/;
-        vm.dateRegExp = /^\d{4}\/\d{2}\/\d{2}$/;
+        vm.dateRegExp = /^\d{2}\/\d{2}\/\d{4}$/;
         vm.numberRegExp = /^\d{12}$/;
 
         vm.paymentServicesError = false;
@@ -4068,7 +2419,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
         };
 
         vm.formats = ['dd/MM/yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
-        vm.format = vm.formats[1];
+        vm.format = vm.formats[0];
         vm.altInputFormats = ['M!/d!/yyyy'];
 
         vm.popupBirthDate = {
@@ -4117,142 +2468,6 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
         }
 
     })
-    .controller('ModalInstanceCtrlWizard', function ($scope, $uibModalInstance, $rootScope, $routeParams, $http, customerData) {
-// Disable weekend selection
-        function disabled(data) {
-            var date = data.date,
-                mode = data.mode;
-            return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
-        }
-
-        function getDayClass(data) {
-            var date = data.date,
-                mode = data.mode;
-            if (mode === 'day') {
-                var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
-
-                for (var i = 0; i < vm.events.length; i++) {
-                    var currentDay = new Date(vm.events[i].date).setHours(0, 0, 0, 0);
-
-                    if (dayToCheck === currentDay) {
-                        return vm.events[i].status;
-                    }
-                }
-            }
-
-            return '';
-        }
-
-
-        $scope.formats = ['dd/MM/yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
-        $scope.format = $scope.formats[1];
-        $scope.altInputFormats = ['M!/d!/yyyy'];
-        $scope.dateOptions = {
-            dateDisabled: disabled,
-            formatYear: 'yyyy',
-            maxDate: new Date(2020, 5, 22),
-            minDate: new Date(),
-            startingDay: 1
-        };
-
-        $scope.paymentMessages = [];
-
-        $scope.paymentMessagesClose = function (MessageIndex) {
-            vm.paymentMessages.splice(MessageIndex, 1);
-        };
-        $scope.numberRegExp = /^\d{16}$/;
-        $scope.dateRegExp = /^\d{4}\/\d{2}\/\d{2}$/;
-
-        $scope.creditCardData = {};
-        $scope.popupCardCreditDate = {
-            opened: false
-        };
-
-        $scope.openCardCreditDate = function () {
-            $scope.popupCardCreditDate.opened = true;
-        };
-
-        $scope.customerData = customerData;
-        //$scope.selected = {
-        //    item: $scope.items[0]
-        //};
-
-        $scope.ok = function () {
-
-
-            ///With formation center identifier and constumer data make payment
-            if (!$scope.paymentdata.$valid) {
-
-                if ($scope.paymentMessages.length > 0) {
-                    $scope.paymentMessages.splice(0, 1);
-                }
-                $scope.paymentMessages.push({type: "danger", info: "Sorry, Some fields are invalid"});
-                return;
-            }
-
-
-            ////Make payment if all data if of
-            config = {
-                userdata: $scope.customerData,
-                formationidentifier: $routeParams.id,
-                creditCardData: $scope.creditCardData
-            }
-
-            console.log("DATA to send to services", config)
-            $http.get($rootScope.urlBase + "/Payment/makepayment/", config)
-                .success(function (data, status, headers, config) {
-                    if (data.response === "ok") {
-
-                        if (vm.paymentMessages.length > 0) {
-                            vm.paymentMessages.splice(0, 1);
-                        }
-                        vm.paymentMessages.push({type: "success", info: "Payment ok."});
-
-                        // The payment have been made. Now make the book process.
-                        $http.post($rootScope.urlBase + "/formation/bookFormation", {
-                                id: $routeParams.id,
-                                customerData: vm.customerData
-                            })
-                            .success(function (data) {
-                                if (data.ok !== undefined) {
-                                    if (vm.paymentMessages.length > 0) {
-                                        vm.paymentMessages.splice(0, 1);
-                                    }
-                                    vm.paymentMessages.push({type: "success", info: "Book process complit."});
-                                }
-                                else {
-                                    if (vm.paymentMessages.length > 0) {
-                                        vm.paymentMessages.splice(0, 1);
-                                    }
-                                    vm.paymentMessages.push({type: "danger", info: data.err});
-                                }
-
-                                console.log(data);
-                            })
-                            .error(function (err) {
-
-                                if (vm.paymentMessages.length > 0) {
-                                    vm.paymentMessages.splice(0, 1);
-                                }
-
-                                vm.paymentMessages.push({type: "danger", info: err});
-                                console.log(err);
-                            });
-
-                        vm.gotoStep(4);
-                    }
-                })
-
-            selectedItem = {status: "OK"}
-            $uibModalInstance.close(selectedItem);
-            $uibModalInstance.dismiss('cancel');
-        };
-
-        $scope.cancel = function () {
-            $uibModalInstance.dismiss('cancel');
-            $scope.formationCenterName = ""
-        };
-    })
     .controller("PlaceEditcontroller", ["$scope", "$rootScope", "$http", "$location", "$routeParams", "$timeout", "NavigatorGeolocation", "NgMap", "$uibModal", "$log", "$translate",
         function ($scope, $rootScope, $http, $location, $routeParams, $timeout, NavigatorGeolocation, NgMap, $uibModal, $log, $translate) {
 
@@ -4272,6 +2487,9 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             $scope.alerts = [];
             $scope.place = $rootScope.place
             $scope.variable = $rootScope.variable
+
+            if ($scope.place.type != "EDITING")
+                $scope.place.isActivated = true
 
             $scope.$on('EVENT_EDIT_DATA', function (event, data) {
                 $scope.place = {}
@@ -4314,6 +2532,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 $scope.place.isActivated = false
                 $scope.place.latitude = null
                 $scope.place.longitude = null
+
             }
             $scope.showMessagePlace = function (type, message) {
 
@@ -4334,91 +2553,89 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 $scope.place.longitude = 4.9543940842151642
                 if ((typeof $scope.place.latitude == "undefined" || $scope.place.latitude == "" ) || (typeof $scope.place.longitude == "undefined" || $scope.place.longitude == "" )) {
 
-                    objectData = {type:"Error"}
-                    $scope.showModalMessage("Not location's place defined"  , objectData);
+                    objectData = {type: "Error"}
+                    $scope.showModalMessage("Not location's place defined", objectData);
                     //( 'NOT_LOCATION_PLACE' | translate )
                 }
                 else {
 
-                ///if editing
-                console.log("Position to create ", $scope.place.latitude , $scope.place.longitude )
-                if (typeof  $scope.place.type != "undefined") {
-                    $scope.place.isValidated = $scope.place.isConfirmed
+                    ///if editing
+                    console.log("Position to create ", $scope.place.latitude, $scope.place.longitude)
+                    if (typeof  $scope.place.type != "undefined") {
+                        $scope.place.isValidated = $scope.place.isConfirmed
 
+                        if (String($scope.place.type).toLowerCase() == "editing") {
 
+                            ////Temporal
+                            //$scope.place.latitude = 44.090066452554424
+                            //$scope.place.longitude = 4.9543940842151642
 
-                    if (String($scope.place.type).toLowerCase() == "editing") {
+                            $http.post($rootScope.urlBase + "/Place/updatePlace", $scope.place)
+                                .success(function (data) {
+                                    if (typeof data != 'undefined' && data.response != "ERROR") {
+                                        objectMessage = {type: "Information"}
+                                        $scope.showModalMessage("Updated place", objectMessage);
+                                        $scope.searchAllPlacesEdit();
+                                        // delete $scope.place;
+                                        $scope.resetPlaceData()
+                                        $location.path("/place/listdata");
 
-                        ////Temporal
-                        //$scope.place.latitude = 44.090066452554424
-                        //$scope.place.longitude = 4.9543940842151642
+                                        return
+                                    }
+                                    else {
+                                        objectMessage = {type: "Error"}
+                                        console.log("Ocurrio un error ", data)
+                                        $scope.showModalMessage(data.message, objectMessage);
+                                        return
 
-                        $http.post($rootScope.urlBase + "/Place/updatePlace", $scope.place)
-                            .success(function (data) {
-                                if (typeof data != 'undefined' && data.response != "ERROR") {
-                                    objectMessage = {type: "Information"}
-                                    $scope.showModalMessage("Updated place", objectMessage);
-                                    $scope.searchAllPlacesEdit();
-                                   // delete $scope.place;
-                                    $scope.resetPlaceData()
-                                    $location.path("/place/listdata");
+                                    }
+                                    //console.log($scope.places);
 
-                                    return
-                                }
-                                else {
+                                })
+                                .error(function (err) {
+                                    console.log(err);
+                                    var message = "You must select some formation."
                                     objectMessage = {type: "Error"}
-                                    console.log("Ocurrio un error ", data)
-                                    $scope.showModalMessage(data.message, objectMessage);
+                                    $scope.showModalMessage(err.message, objectMessage);
                                     return
+                                });
 
-                                }
-                                //console.log($scope.places);
+                        } else if (String($scope.place.type).toLowerCase() == "creating") {
+                            objectMessage = {type: "Information"}
 
-                            })
-                            .error(function (err) {
-                                console.log(err);
-                                var message = "You must select some formation."
-                                objectMessage = {type: "Error"}
-                                $scope.showModalMessage(err.message, objectMessage);
-                                return
-                            });
+                            ////Temporal
+                            //$scope.place.latitude = 44.090066452554424
+                            //$scope.place.longitude = 4.9543940842151642
 
-                    } else if (String($scope.place.type).toLowerCase() == "creating") {
-                        objectMessage = {type: "Information"}
+                            console.log("DATA ", $scope.place)
+                            $http.post($rootScope.urlBase + "/Place/createPlace", $scope.place)
+                                .success(function (data) {
+                                    if (typeof data != 'undefined' && data.response != "ERROR") {
 
-                        ////Temporal
-                        //$scope.place.latitude = 44.090066452554424
-                        //$scope.place.longitude = 4.9543940842151642
+                                        $scope.showModalMessage("Created place", objectMessage);
+                                        $scope.searchAllPlacesEdit();
+                                        //  $scope.place = {}
+                                        $scope.resetPlaceData()
+                                        //delete $scope.place;
+                                        $scope.place.type = "EDITING"
+                                        $location.path("/place/listdata");
+                                    }
+                                    else {
+                                        objectMessage = {type: "Error"}
+                                        console.log("Ocurrio un error ", data)
+                                        $scope.showModalMessage(data.message, objectMessage);
+                                        //return
 
-                        console.log("DATA ", $scope.place)
-                        $http.post($rootScope.urlBase + "/Place/createPlace", $scope.place)
-                            .success(function (data) {
-                                if (typeof data != 'undefined' && data.response != "ERROR") {
+                                    }
 
-                                    $scope.showModalMessage("Created place", objectMessage);
-                                    $scope.searchAllPlacesEdit();
-                                     $scope.place = {}
-                                  $scope.resetPlaceData()
-                                    //delete $scope.place;
-                                    $scope.place.type = "EDITING"
-                                    return
-                                }
-                                else {
-                                    objectMessage = {type: "Error"}
-                                    console.log("Ocurrio un error ", data)
-                                    $scope.showModalMessage(data.message, objectMessage);
-                                    //return
+                                })
+                                .error(function (err) {
+                                    console.log(err);
+                                });
 
-                                }
-
-                            })
-                            .error(function (err) {
-                                console.log(err);
-                            });
-
+                        }
                     }
-                }
-                ///if createplace
+                    ///if createplace
 
 
                 }
@@ -4499,8 +2716,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 /// console.log("En esta posicion ");
                 $scope.data = $scope.map;
                 possArray = String(event.latLng).split(",")
-                latitud = String(possArray[0]).replace("(","")
-                longitud = possArray[1].replace(")","")
+                latitud = String(possArray[0]).replace("(", "")
+                longitud = possArray[1].replace(")", "")
 
 
                 ///
@@ -4695,8 +2912,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                 modalInstance.result.then(function (selectedItem) {
                     $scope.selected = selectedItem;
-
-                    console.log("Seleccionado OK para eliminar ", $scope.selected)
+                    //console.log("Seleccionado OK para eliminar ", $scope.selected)
                     if (typeof $scope.selected != "undefined" && $scope.selected.action == "OK") {
                         if (typeof  $scope.selected != "undefined" && typeof $scope.selected.id != "undefined") {
                             ///Delete object if place if active
@@ -4707,10 +2923,15 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             $http.post($rootScope.urlBase + "/Place/deleteplace", $scope.selected)
                                 .success(function (data) {
                                     if (typeof data != 'undefined') {
+                                        console.log("Refress DATA")
+                                        $scope.countRecordsPlace();
+                                        $scope.getPlaceRecords();
+                                        $scope.place.address = null
 
+                                        $scope.showModalMessage("Place delete sucessful", messageObject);
 
                                     }
-                                    $scope.showModalMessage("Place delete sucessful", messageObject);
+
                                     //console.log($scope.places);
 
                                 })
@@ -4726,9 +2947,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                             ////Load places news remeber pagination and search criteria
 
-                            console.log("Refress DATA")
-                            $scope.countRecordsPlace();
-                            $scope.getPlaceRecords();
+
                         }
                     }
                 }, function () {
@@ -5034,10 +3253,16 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.deletePlace = function (placeObject) {
 
+                console.log("Object Place" , placeObject )
                 if (typeof placeObject != "undefined" && typeof placeObject.id != "undefined") {
 
                     ///Show modal with validation message confirmation
-                    $scope.showModalData("Are you sure delete these place", placeObject);
+                    messageWindow = "Are you sure delete these place.";
+                    if (typeof placeObject.formations != "undefined" && placeObject.formations.length > 0) {
+                        messageWindow +=  "\n Formations asociated will be modified too."
+                    }
+
+                    $scope.showModalData( messageWindow , placeObject);
 
                 }
 
@@ -5173,14 +3398,14 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             };
             $scope.inlineOptions = {
                 customClass: getDayClass,
-            //    minDate: new Date(),
+                //    minDate: new Date(),
                 showWeeks: true
             };
             $scope.dateOptions = {
                 dateDisabled: disabled,
                 formatYear: 'yy',
                 maxDate: new Date(2020, 5, 22),
-            //    minDate: new Date(),
+                //    minDate: new Date(),
                 startingDay: 1
             };
 
@@ -5188,7 +3413,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 dateDisabled: disabled,
                 formatYear: 'yyyy',
                 maxDate: new Date(2020, 5, 22),
-              //  minDate: new Date(),
+                //  minDate: new Date(),
                 startingDay: 1
             };
 
@@ -5216,7 +3441,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 $scope.dt = new Date(year, month, day);
             };
 
-            $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy'];
+            $scope.formats = ['dd/MM/yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy'];
             $scope.format = $scope.formats[0];
             $scope.toggleMin = function () {
                 $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
@@ -5263,6 +3488,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                 return '';
             }
+
+            $scope.search = {};
 
             $scope.formationcenterName = $rootScope.formationCenter;
 
@@ -5398,7 +3625,6 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 }
 
 
-
                 console.log("Search execution")
 
                 console.log("Call services ", config)
@@ -5449,7 +3675,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             }
 
             $scope.deleteBill = function (billObject) {
-                if ( typeof billObject != "undefined" ) {
+                if (typeof billObject != "undefined") {
 
                     ////Modal form delte confirmation
 
@@ -5458,7 +3684,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     $http.post($rootScope.urlBase + '/Bill/deleteBill', config)
                         .success(function (data_result) {
                             if (data_result.response == "ERROR") {
-                                message =  data_result.message;
+                                message = data_result.message;
                                 //$scope.alerts.push({
                                 //    type: 'danger',
                                 //    msg: message
@@ -5471,7 +3697,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             }
                             console.log("Cantidad de objetos --- obtenidos", data_result.length)
                             // $scope.appBill.currentPageBill = 0;
-                            message =  "Bill was delete sucessful";
+                            message = "Bill was delete sucessful";
                             //$scope.alerts.push({
                             //    type: 'danger',
                             //    msg: message
@@ -5488,7 +3714,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                             $scope.errorMessage = error
                             console.log(error);
-                            message =  error.message;
+                            message = error.message;
                             objectType = {type: "Error"};
                             $scope.showModalMessage(message, objectType);
                             return
@@ -5623,7 +3849,6 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     }
 
 
-
                 }
 
                 $scope.countRecordsBill();
@@ -5645,59 +3870,59 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 name: "CB/Visa/Mastercard"
 
             },
-             {
+            {
                 img: "103_0_574_Maestro21.png",
                 type: "Card",
-                name:"Maestro"
+                name: "Maestro"
             },
             {
                 img: "diners.png",
                 type: "Card",
-                name:"Diners"
-            },  {
+                name: "Diners"
+            }, {
                 img: "",
                 type: "Card",
-                name:"MasterPass"
+                name: "MasterPass"
             },
             {
                 img: "p24-small.png",
                 type: "Card",
-                name:"Przelewy24"
+                name: "Przelewy24"
             },
             {
                 img: "IDEAL_Logo.png",
                 type: "Card",
-                name:"iDeal"
+                name: "iDeal"
             },
-             {
+            {
                 img: "bancontact.png",
                 type: "Card",
-                name:"Bancontact/Mister Cash"
+                name: "Bancontact/Mister Cash"
             },
             {
                 img: "paylib.jpg",
                 type: "Card",
-                name:"PayLib"
+                name: "PayLib"
             },
             {
                 img: "Sofort.png",
                 type: "Card",
-                name:"Sofort"
+                name: "Sofort"
             },
-           {
+            {
                 img: "elv.png",
                 type: "Direct_Debit",
-                name:"ELV"
+                name: "ELV"
             },
-             {
+            {
                 img: "giropay.jpg",
                 type: "Direct_Debit",
-                name:"Giropay"
+                name: "Giropay"
             },
             {
                 img: "bank.png",
                 type: "Bankwire",
-                name:"Bankwire"
+                name: "Bankwire"
             }
         ]
 
@@ -5729,7 +3954,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
 
         $scope.formats = ['dd/MM/yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
-        $scope.format = $scope.formats[1];
+        $scope.format = $scope.formats[0];
         $scope.altInputFormats = ['M!/d!/yyyy'];
         $scope.dateOptions = {
             dateDisabled: disabled,
@@ -5745,7 +3970,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             vm.paymentMessages.splice(MessageIndex, 1);
         };
         $scope.numberRegExp = /^\d{16}$/;
-        $scope.dateRegExp = /^\d{4}\/\d{2}\/\d{2}$/;
+        $scope.dateRegExp = /^\d{2}\/\d{2}\/\d{4}$/;
 
         $scope.creditCardData = {};
         $scope.popupCardCreditDate = {
@@ -5810,5 +4035,580 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             $uibModalInstance.dismiss('cancel');
             $scope.formationCenterName = ""
         };
-    });
+    })
+    .controller("AlertListController", ["$scope", "$rootScope", "$http", "$location", "$routeParams", "$timeout", "NavigatorGeolocation", "NgMap", "$uibModal", "$log", "$translate",
+        function ($scope, $rootScope, $http, $location, $routeParams, $timeout, NavigatorGeolocation, NgMap, $uibModal, $log, $translate) {
+            $scope.weekDay = ["Sunday", "Monday", "Tuesday", "Wensday", "Thuesday", "Fryday", "Saturday"]
+            $scope.usernameExpReg = /^([µ|ç|ùàè|áéíóú|a-z|A-Z]*)([\w|\d])*([_|\s]*[\.|\-|\'|ç|ùàè|áéíóú|A-Z|a-z|\d])*$/;
+
+
+            $scope.advanceSearch = true
+            $scope.checkboxUnable = true
+            $scope.appAlert = {}
+            $scope.appAlert.currentPageAlert = 0;
+            $scope.appAlert.maxSizeAlert = 5;
+            $scope.appAlert.itemPerPageAlert = 5;
+            $scope.appAlert.totalItemsAlert = 0;
+            $scope.appAlert.smallnumPages = 5
+            $scope.dateRegExp = /^\d{2}\/\d{2}\/\d{4}$/;
+
+            $scope.search = {};
+            $scope.open1 = function () {
+                $scope.popup1.opened = true;
+            };
+
+            $scope.popup1 = {
+                opened: false
+            };
+
+            $scope.popup2 = {
+                opened: false
+            };
+            $scope.inlineOptions = {
+                customClass: getDayClass,
+                //    minDate: new Date(),
+                showWeeks: true
+            };
+            $scope.dateOptions = {
+                dateDisabled: disabled,
+                formatYear: 'yy',
+                maxDate: new Date(2020, 5, 22),
+                //    minDate: new Date(),
+                startingDay: 1
+            };
+
+            $scope.dateOptionsSearch = {
+                dateDisabled: disabled,
+                formatYear: 'yyyy',
+                maxDate: new Date(2020, 5, 22),
+                //  minDate: new Date(),
+                startingDay: 1
+            };
+
+            // Disable weekend selection
+            function disabled(data) {
+                var date = data.date,
+                    mode = data.mode;
+                return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
+            }
+
+            $scope.today = function () {
+                $scope.search.initialDate = new Date();
+            };
+            $scope.today();
+            //gloal configurations
+            $scope.open2 = function () {
+                $scope.popup2.opened = true;
+            };
+
+            $scope.setDate = function (year, month, day) {
+                $scope.dt = new Date(year, month, day);
+            };
+
+            $scope.formats = ['dd/MM/yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy'];
+            $scope.format = $scope.formats[0];
+            $scope.toggleMin = function () {
+                $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
+                $scope.dateOptions.minDate = $scope.inlineOptions.minDate;
+            };
+
+            $scope.toggleMin();
+
+            var tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+
+            $scope.tomorrow = function () {
+                $scope.search.endDate = tomorrow;
+            };
+
+            $scope.tomorrow()
+            var afterTomorrow = new Date();
+            afterTomorrow.setDate(tomorrow.getDate() + 1);
+            $scope.events = [
+                {
+                    date: tomorrow,
+                    status: 'full'
+                },
+                {
+                    date: afterTomorrow,
+                    status: 'partially'
+                }
+            ];
+
+            function getDayClass(data) {
+                var date = data.date,
+                    mode = data.mode;
+                if (mode === 'day') {
+                    var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
+
+                    for (var i = 0; i < $scope.events.length; i++) {
+                        var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
+
+                        if (dayToCheck === currentDay) {
+                            return $scope.events[i].status;
+                        }
+                    }
+                }
+
+                return '';
+            }
+
+            $scope.search = {};
+            $scope.formationcenterName = $rootScope.formationCenter;
+
+            $scope.searchAllAlerts = function () {
+                $http.get($rootScope.urlBase + "/Alert/searchallAlerts")
+                    .success(function (data) {
+                        if (typeof data != 'undefined') {
+                            $scope.places = data
+                        }
+
+                        console.log($scope.places);
+
+                    })
+                    .error(function (err) {
+                        console.log(err);
+                    });
+            };
+
+            //$scope.searchAllAlerts();
+
+            $scope.countRecordsAlert = function () {
+
+                //$scope.search.name = $scope.criteriaList
+
+                config = {
+                    page: 0,
+                    len: $scope.appAlert.maxSizeAlert,
+                    nameformation: $scope.formationcenterName,
+
+                }
+
+
+                if (typeof   $scope.search.name != "undefined" || $scope.search.name == "") {
+                    /*                    if ( !_.isDate($scope.search.initialDate)) {
+                     $scope.errorValid = true ;
+                     /// alert(data_result.err );
+                     // $location.path("/");
+                     console.log("INSERTANDO ALERTA")
+                     message = "Sorry, Invalid date format for initialDate"
+                     $scope.alerts.push({
+                     type: 'danger',
+                     msg: data_result.err
+                     });
+                     return;
+                     }*/
+                    config.text = $scope.search.name
+
+                }
+
+                if (typeof $scope.search.initialDate != "undefined" || $scope.search.initialDate == "") {
+                    /*                    if ( !_.isDate($scope.search.initialDate)) {
+                     $scope.errorValid = true ;
+                     /// alert(data_result.err );
+                     // $location.path("/");
+                     console.log("INSERTANDO ALERTA")
+                     message = "Sorry, Invalid date format for initialDate"
+                     $scope.alerts.push({
+                     type: 'danger',
+                     msg: data_result.err
+                     });
+                     return;
+                     }*/
+                    config.initialDate = $scope.search.initialDate
+
+                }
+
+                if (typeof $scope.search.endDate != "undefined" || $scope.search.endDate == "") {
+                    /*if ( !Date.isDate($scope.search.endDate)) {
+                     $scope.errorValid = true ;
+                     /// alert(data_result.err );
+                     // $location.path("/");
+                     console.log("INSERTANDO ALERTA")
+                     message = "Sorry, Invalid date format for endDate"
+                     $scope.alerts.push({
+                     type: 'danger',
+                     msg: data_result.err
+                     });
+                     return;
+                     }*/
+                    config.finalDate = $scope.search.endDate
+
+                }
+
+                //if (typeof  $scope.search.name == "undefined")
+                //    $scope.search.name = ""
+                //
+                //config.city = $scope.search.name
+                //countbycity
+                console.log("Call services ", config)
+                $http.post($rootScope.urlBase + '/Alert/countAlertByFormationCenter', config)
+                    .success(function (data_result) {
+                        // console.log("RESULT ", data_result)
+                        if (data_result.response != "OK") {
+                            $scope.appAlert.totalItemsAlert = 0;
+                            return;
+                        }
+                        //console.log("Cantidad de objetos ---", data_result.size)
+                        $scope.appAlert.totalItemsAlert = data_result.size
+                        return;
+                        // console.log("RESULTADOS", data_result)
+                    })
+                    .error(function (error) {
+                        //@action mostrar error
+                        $scope.errorMessage = error
+                        console.log(error);
+                        return
+                    })
+            };
+
+
+            $scope.getAlertRecords = function () {
+
+                //$scope.search.name = $scope.criteriaList
+
+                var pageData = 0;
+
+
+                if ($scope.appAlert.currentPageAlert > 0) {
+                    pageData = $scope.appAlert.currentPageAlert - 1;
+                    pageData = String(pageData)
+                }
+
+
+                config = {
+                    page: pageData,
+                    len: $scope.appAlert.maxSizeAlert,
+                    nameformation: $scope.formationcenterName,
+                }
+
+                ///Search by amount else
+
+
+                if (typeof $scope.search.initialDate != "undefined" || $scope.search.initialDate == "") {
+                    /*                    if ( !_.isDate($scope.search.initialDate)) {
+                     $scope.errorValid = true ;
+                     /// alert(data_result.err );
+                     // $location.path("/");
+                     console.log("INSERTANDO ALERTA")
+                     message = "Sorry, Invalid date format for initialDate"
+                     $scope.alerts.push({
+                     type: 'danger',
+                     msg: data_result.err
+                     });
+                     return;
+                     }*/
+                    config.initialDate = $scope.search.initialDate
+
+                }
+
+                if (typeof $scope.search.endDate != "undefined" || $scope.search.endDate == "") {
+                    /*if ( !Date.isDate($scope.search.endDate)) {
+                     $scope.errorValid = true ;
+                     /// alert(data_result.err );
+                     // $location.path("/");
+                     console.log("INSERTANDO ALERTA")
+                     message = "Sorry, Invalid date format for endDate"
+                     $scope.alerts.push({
+                     type: 'danger',
+                     msg: data_result.err
+                     });
+                     return;
+                     }*/
+                    config.finalDate = $scope.search.endDate
+
+                }
+
+                if (typeof   $scope.search.name != "undefined" || $scope.search.name == "") {
+                    /*                    if ( !_.isDate($scope.search.initialDate)) {
+                     $scope.errorValid = true ;
+                     /// alert(data_result.err );
+                     // $location.path("/");
+                     console.log("INSERTANDO ALERTA")
+                     message = "Sorry, Invalid date format for initialDate"
+                     $scope.alerts.push({
+                     type: 'danger',
+                     msg: data_result.err
+                     });
+                     return;
+                     }*/
+                    config.text = $scope.search.name
+
+                }
+
+                console.log("Search execution")
+
+                console.log("Call services ", config)
+                $http.post($rootScope.urlBase + '/Alert/searchAlertByFormationCenter', config)
+                    .success(function (data_result) {
+                        if (data_result.response == "ERROR" || data_result.result.length == 0 || typeof data_result.result.length == "undefined") {
+                            //$scope.appAlert.currentPageAlert = 0;
+                            message = "Sorry, search don´t have results";
+                            //$scope.alerts.push({
+                            //    type: 'danger',
+                            //    msg: message
+                            //});
+
+                            objectType = {type: "Error"};
+                            console.log("Error show form", data_result)
+                            $scope.showModalMessage(message, objectType);
+                            return;
+
+                        }
+                        console.log("Cantidad de objetos --- obtenidos", data_result.result.length)
+                        // $scope.appAlert.currentPageAlert = 0;
+                        $scope.Alerts = data_result.result
+                        console.log("Rsults", $scope.Alerts)
+                        $scope.activatedAlert = []
+                        ///Review if clean al parameter
+                        return;
+                        // console.log("RESULTADOS", data_result)
+                    })
+                    .error(function (error) {
+                        //@action mostrar error
+
+                        $scope.errorMessage = error
+                        message = error
+                        objectType = {type: "Error"};
+                        console.log("Error show form")
+                        $scope.showModalMessage(message, objectType);
+                        return;
+                        return
+                    })
+
+            }
+
+            $scope.makePayment = function (AlertObject) {
+                objectToPay = $rootScope.formationcenterData;
+                if (typeof AlertObject != "undefined" && typeof objectToPay != "undefined") {
+                    objectToPay.amount = AlertObject.amount
+                    $scope.showModalData("", $rootScope.formationcenterData)
+                }
+            }
+
+            $scope.deleteAlert = function (AlertObject) {
+                if (typeof AlertObject != "undefined") {
+
+                    ////Modal form delte confirmation
+
+                    ///if ok
+                    AlertObject.idparam = AlertObject.id
+                    $http.post($rootScope.urlBase + '/Alert/deleteAlert', config)
+                        .success(function (data_result) {
+                            if (data_result.response == "ERROR") {
+                                message = data_result.message;
+                                //$scope.alerts.push({
+                                //    type: 'danger',
+                                //    msg: message
+                                //});
+
+                                objectType = {type: "Error"};
+
+                                $scope.showModalMessage(message, objectType);
+                                return;
+                            }
+                            console.log("Cantidad de objetos --- obtenidos", data_result.length)
+                            // $scope.appAlert.currentPageAlert = 0;
+                            message = "Alert was delete sucessful";
+                            //$scope.alerts.push({
+                            //    type: 'danger',
+                            //    msg: message
+                            //});
+
+                            objectType = {type: "Information"};
+                            $scope.showModalMessage(message, objectType);
+                            ///Review if clean al parameter
+                            return;
+                            // console.log("RESULTADOS", data_result)
+                        })
+                        .error(function (error) {
+                            //@action mostrar error
+
+                            $scope.errorMessage = error
+                            console.log(error);
+                            message = error.message;
+                            objectType = {type: "Error"};
+                            $scope.showModalMessage(message, objectType);
+                            return
+                        })
+                }
+            }
+
+            $scope.getReadableDate = function (dateParmt) {
+                value = new Date(dateParmt);
+                resultDate = $scope.weekDay[value.getDay()] + ": " + value.getDate() + "-" + value.getMonth() + "-" + value.getFullYear();
+
+                return resultDate
+
+            };
+
+            $scope.getReadableType = function (type) {
+
+                if (typeof type != "undefined") {
+                    config = {}
+                    config.language = "en" //$translate.determinePreferredLanguage()
+                    config.type = type
+
+                    console.log("RESULT", config)
+                    //$http.get($rootScope.urlBase + '/Alert/getAlertType', config)
+                    //    .success(function (data_result) {
+                    //        if (data_result.response == "ERROR" ) {
+                    //
+                    //            return "";
+                    //
+                    //        }
+                    //
+                    //        ///Review if clean al parameter
+                    //        return type;
+                    //        // console.log("RESULTADOS", data_result)
+                    //    })
+                    //    .error(function (error) {
+                    //        //@action mostrar error
+                    //
+                    //        //$scope.errorMessage = error
+                    //        message = error
+                    //        objectType = {type: "Error"};
+                    //        //console.log("Error show form")
+                    //        //$scope.showModalMessage(message, objectType);
+                    //        return "";
+                    //
+                    //    })
+
+
+                }
+                return type
+            }
+
+            $scope.showModalData = function (messageshow, objectData) {
+
+                //size = "" | "lg" | "sm"
+
+                ////Set formationCenterObjectData
+                $scope.items = objectData;
+                $scope.items.message = messageshow
+
+                var modalInstance = $uibModal.open({
+                    animation: $scope.animationsEnabled,
+                    templateUrl: 'myModalContentPayment.html',
+                    controller: 'ModalInstancePaymentController',
+                    size: "",
+                    resolve: {
+                        items: function () {
+                            return $scope.items;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+                    $scope.selected = selectedItem;
+
+                    console.log("Seleccionado OK para eliminar ", $scope.selected)
+                    if (typeof $scope.selected != "undefined" && $scope.selected.status == "OK") {
+                        if (typeof  $scope.selected != "undefined" && typeof $scope.selected.status != "undefined") {
+                            ///Se ha hecho el pago exitosamente
+                            $scope.getAlertRecords();
+
+                        }
+                    }
+                }, function () {
+                    $log.info('Close modal: ' + new Date());
+                });
+
+            }
+
+
+            $scope.showModalMessage = function (messageshow, objectData) {
+
+                //size = "" | "lg" | "sm"
+                $scope.items = objectData;
+                $scope.items.message = messageshow
+
+                var modalInstance = $uibModal.open({
+                    animation: $scope.animationsEnabled,
+                    templateUrl: 'myModalMessage.html',
+                    controller: 'ModalInstanceCtrl',
+                    size: "",
+                    resolve: {
+                        items: function () {
+                            return $scope.items;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+                    //$scope.selected = selectedItem;
+
+                }, function () {
+                    $log.info('Close modal: ' + new Date());
+                });
+
+            }
+
+            $scope.toggleAnimation = function () {
+                $scope.animationsEnabled = !$scope.animationsEnabled;
+            };
+
+            $scope.searchFuncList = function () {
+
+
+                // $scope.errorMessage = "Probando "
+                if (typeof $scope.criteriaList == "undefined" || $scope.criteriaList == "")
+                    $scope.criteriaList = ""
+
+                $scope.search.name = $scope.criteriaList;
+                $scope.appAlert.currentPageAlert = 0
+
+
+                // console.log("El valor de la forama ", $scope.myform)
+
+                if ($scope.search.initialDate != "" || typeof $scope.search.endDate != "") {
+                    if (!$scope.advancedSearchPlace.$valid) {
+
+                        $scope.errorValid = true
+                        // console.log("INSERTANDO ALERTA")
+                        message = "Sorry, Some Advanced Search fields are invalid";
+                        //$scope.alerts.push({
+                        //    type: 'danger',
+                        //    msg: message
+                        //});
+
+                        objectType = {type: "Error"};
+
+                        $scope.showModalMessage(message, objectType);
+                        return;
+                    }
+
+                    if ($scope.search.initialDate != "" || $scope.search.endDate != "") {
+
+                        timestampInit = new Date($scope.search.initialDate).getTime()
+                        timestampEnd = new Date($scope.search.endDate).getTime()
+                        if (timestampEnd < timestampInit) {
+                            $scope.errorValid = true
+                            console.log("INSERTANDO ALERTA")
+                            message = "Sorry, End date isn´t correct";
+                            //$scope.alerts.push({
+                            //    type: 'danger',
+                            //    msg: message
+                            //});
+
+                            objectType = {type: "Error"};
+
+                            $scope.showModalMessage(message, objectType);
+                            return;
+                        }
+                    }
+
+
+                }
+
+                $scope.countRecordsAlert();
+                $scope.getAlertRecords();
+            }
+
+
+            ///-----------------------------------------------------
+            $scope.countRecordsAlert();
+            $scope.getAlertRecords();
+        }]);
+
 ;
