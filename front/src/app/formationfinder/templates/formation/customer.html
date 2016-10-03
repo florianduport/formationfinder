@@ -89,7 +89,7 @@
                    class="form-control"
                    type="text"
                    required
-                   placeholder="1998/05/23"
+                   placeholder="{{ ( 'DATE_PLACEHOLDER' | translate) }}"
                    uib-datepicker-popup="{{vm.format}}"
                    is-open="vm.popupBirthDate.opened"
                    datepicker-options="vm.BirthDateOptions"/>

@@ -190,8 +190,9 @@
         </div>
         <!--Place table -->
         <div class="table-responsive">
-            <div align="right" style="color:#000066">
-                <ul uib-pagination boundary-links="true" items-per-page="appPlace.itemPerPagePlace"
+            <div align="right" style="color:#000066" ng-show="appPlace.totalItemsPlace > 0">
+
+            <ul uib-pagination boundary-links="true" items-per-page="appPlace.itemPerPagePlace"
                     total-items="appPlace.totalItemsPlace"
                     ng-click="getPlaceRecords()" ng-model="appPlace.currentPagePlace" class="pagination-sm"
                     previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;">
@@ -266,7 +267,7 @@
                 </tr>
                 </tbody>
             </table>
-            <div align="right" style="color:#000066">
+            <div align="right" style="color:#000066" ng-show="appPlace.totalItemsPlace > 0">
                 <ul uib-pagination boundary-links="true" items-per-page="appPlace.itemPerPagePlace"
                     total-items="appPlace.totalItemsPlace"
                     ng-click="getPlaceRecords()" ng-model="appPlace.currentPagePlace" class="pagination-sm"

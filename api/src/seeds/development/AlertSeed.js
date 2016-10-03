@@ -10,7 +10,7 @@ faker = require('faker');
 faker.locale = "fr"
 module.exports =
   function(done) {
-    var registerSize = 100;
+    var registerSize = 50;
     typeOptionArray = ['New_Costumer', 'Formation_Full', 'Place_Unable']
     var faqArray = []
     for ( var iValue = 1 ; iValue <  registerSize; iValue++) {

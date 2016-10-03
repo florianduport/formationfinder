@@ -161,7 +161,7 @@
         <!--</div>-->
         <!--Place table -->
         <div class="">
-            <div align="right" style="color:#000066">
+            <div align="right" style="color:#000066" ng-show="appAlert.totalItemsBill > 0">
                 <!--<ul uib-pagination boundary-links="true" items-per-page="appBill.itemPerPageBill"-->
                 <!--total-items="appBill.totalItemsBill"-->
                 <!--ng-click="getBillRecords()" ng-model="appBill.currentPageBill" class="pagination-sm"-->
@@ -210,8 +210,9 @@
                 </tr>
                 </tbody>
             </table>
-            <div align="right" style="color:#000066">
-                <!--<ul uib-pagination boundary-links="true" items-per-page="appBill.itemPerPageBill"-->
+            <div align="right" style="color:#000066" ng-show="appAlert.totalItemsBill > 0">
+
+            <!--<ul uib-pagination boundary-links="true" items-per-page="appBill.itemPerPageBill"-->
                 <!--total-items="appBill.totalItemsBill"-->
                 <!--ng-click="getBillRecords()" ng-model="appBill.currentPageBill" class="pagination-sm"-->
                 <!--previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;">-->

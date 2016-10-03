@@ -20,7 +20,6 @@
                         <input class="form-control"
                                placeholder="{{'TEXT' | translate}}"
                                type="text"
-                               uib-typeahead="iAlert.type for iAlert in Alerts | filter:$viewValue"
                                ng-model="criteriaList"
                                name="city_zipcode"
                                maxlength="10"
@@ -108,7 +107,7 @@
         <!--</div>-->
         <!--Place table -->
         <div class="">
-            <div align="right" style="color:#000066">
+            <div align="right" style="color:#000066" ng-show="appAlert.totalItemsAlert > 0">
                 <!--<ul uib-pagination boundary-links="true" items-per-page="appAlert.itemPerPageAlert"-->
                 <!--total-items="appAlert.totalItemsAlert"-->
                 <!--ng-click="getAlertRecords()" ng-model="appAlert.currentPageAlert" class="pagination-sm"-->
@@ -138,7 +137,7 @@
                 </tr>
                 </tbody>
             </table>
-            <div align="right" style="color:#000066">
+            <div align="right" style="color:#000066" ng-show="appAlert.totalItemsAlert > 0">
                 <!--<ul uib-pagination boundary-links="true" items-per-page="appAlert.itemPerPageAlert"-->
                 <!--total-items="appAlert.totalItemsAlert"-->
                 <!--ng-click="getAlertRecords()" ng-model="appAlert.currentPageAlert" class="pagination-sm"-->

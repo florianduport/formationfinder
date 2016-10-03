@@ -527,7 +527,7 @@ module.exports = {
     customerData = req.param('customerData');
 
     //Validate de customer data
-    if (customerData === undefined || !CustomerServices.isValidCustomerData(customerData)) {
+    if (customerData === undefined || !CustomerService.isValidCustomerData(customerData)) {
       return res.json({err: 'You must provide a valid customerData object.'});
     }
 
@@ -758,7 +758,7 @@ module.exports = {
       query.dates.$elemMatch.date.$lte = new Date(req.param('finalDate'))
     }
 
-    // query.isFull = false
+    query.isFull = false
     ///---------------------------------------------------------------------------------
 
 
@@ -926,7 +926,7 @@ module.exports = {
       query.dates.$elemMatch.date.$lte = new Date(req.param('finalDate'))
     }
 
-    // query.isFull = false
+     query.isFull = false
     ///---------------------------------------------------------------------------------
 
 
@@ -1102,7 +1102,7 @@ module.exports = {
       query.dates.$elemMatch.date.$lte = new Date(req.param('finalDate'))
     }
 
-    // query.isFull = false
+    query.isFull = false
     ///---------------------------------------------------------------------------------
     // console.log("City name search: ", cityname)
 
@@ -1313,7 +1313,7 @@ module.exports = {
       query.dates.$elemMatch.date.$lte = new Date(req.param('finalDate'))
     }
 
-    // query.isFull = false
+    query.isFull = false
     ///---------------------------------------------------------------------------------
 
     // console.log("Zipcode place query ",zipcodeData )
@@ -1377,6 +1377,7 @@ module.exports = {
                 Formation.find({id: idStr})
                   .populate('place')
                   .populate('formationCenter')
+                  .populate('customers')
                   .exec(function placesFouded(err, placesFormation) {
                     // body...
                     if (err)

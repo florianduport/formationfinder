@@ -1,10 +1,11 @@
-<br />
+<br/>
 <div class="row">
     <div class="col-sm-9 col-sm-offset-1">
         <div class="form-group">
             <h4>If you like, you cant make an immediate payment using mangopay.</h4>
-            <div uib-alert ng-repeat="message in vm.customerFoundMessages" 
-                 ng-class="'alert-' + message.type">{{message.info}}</div>
+            <div uib-alert ng-repeat="message in vm.customerFoundMessages"
+                 ng-class="'alert-' + message.type">{{message.info}}
+            </div>
             <script type="text/ng-template" id="myModalContent.html">
                 <div class="modal-header">
                     <h3 class="modal-title">Payment data: </h3>
@@ -15,42 +16,67 @@
                             <label class="control-label " for="number">Card number (*)</label>
 
                             <input name="number" id="number"
-                                   ng-model="creditCardData.number"
+                                   ng-model="creditCardData.CardNumber"
                                    ng-pattern="numberRegExp"
                                    maxlength="16"
                                    class="form-control"
                                    type="text"
-                                   required />
+                                   required/>
 
-        <span style="color:#cc0000" ng-show="paymentdata.number.$dirty && paymentdata.number.$invalid">
-            <span ng-show="paymentdata.number.$error.required">Card number is required.</span>
-            <span ng-show="paymentdata.number.$error.pattern">You sould provide digit.</span>
-        </span>
+                                <span style="color:#cc0000"
+                                      ng-show="paymentdata.number.$dirty && paymentdata.number.$invalid">
+                                    <span ng-show="paymentdata.number.$error.required">Card number is required.</span>
+                                    <span ng-show="paymentdata.number.$error.pattern">You sould provide digit.</span>
+                                </span>
+
+
                         </div>
-
+                        <div class="form-group">
+                            <label class="control-label " for="numberCSV">{{'CARD_CSV' | translate }}</label>
+                            <div class="input-group ">
+                                <input name="csv" id="numberCSV"
+                                       ng-model="creditCardData.CardCvx"
+                                       ng-pattern="numberRegExp"
+                                       maxlength="4"
+                                       class="form-control"
+                                       type="text"
+                                       required/>
+                                <span class="input-group-addon"><span class="fa fa-certificate"></span></span>
+                            </div>
+                        <span style="color:#cc0000" ng-show="paymentdata.csv.$dirty && paymentdata.csv.$invalid">
+                                <span ng-show="paymentdata.csv.$error.required">Card number is required.</span>
+                                <span ng-show="paymentdata.csv.$error.pattern">You sould provide digit.</span>
+                            </span>
+                        </div>
                         <div class="form-group">
                             <label class="control-label" for="dateOfProcuration">Expiration date(*)</label>
                             <div class="input-group date  ident-date">
                                 <input name="dateOfProcuration" id="dateOfProcuration"
-                                       ng-model="creditCardData.dateOfExpiration"
+                                       ng-model="creditCardData.CardExpirationDate"
                                        class="form-control"
                                        type="text" required
                                        ng-pattern="dateRegExp"
                                        uib-datepicker-popup="{{format}}"
                                        is-open="popupCardCreditDate.opened"
-                                       datepicker-options="dateOptions" />
-                                <span class="input-group-addon" ><span id="procDateInit" class="fa fa-calendar" ng-click="openCardCreditDate()"></span></span>
+                                       datepicker-options="dateOptions"/>
+                                <span class="input-group-addon"><span id="procDateInit" class="fa fa-calendar"
+                                                                      ng-click="openCardCreditDate()"></span></span>
                             </div>
                         </div>
-                        <span class="error-message text-danger" ng-show="paymentdata.dateOfProcuration.$dirty && paymentdata.dateOfProcuration.$invalid">You should provide a valid date string.</span>
+                        <span class="error-message text-danger"
+                              ng-show="paymentdata.dateOfProcuration.$dirty && paymentdata.dateOfProcuration.$invalid">You should provide a valid date string.</span>
                         <div class="row">
                             <div class="col-md-9 col-md-offset-1">
-                                <div uib-alert ng-repeat="message in vm.validationMessages" ng-class="'alert-' + message.type" close="vm.closeMessage($index)" dismiss-on-timeout="4000">{{message.info}}</div>
+                                <div uib-alert ng-repeat="message in vm.validationMessages"
+                                     ng-class="'alert-' + message.type" close="vm.closeMessage($index)"
+                                     dismiss-on-timeout="4000">{{message.info}}
+                                </div>
                             </div>
                         </div>
                     </form>
                     <div uib-alert ng-repeat="message in vm.customerFoundMessages"
-                         ng-class="'alert-' + message.type">{{message.info}}</div>
+                         ng-class="'alert-' + message.type">{{message.info}}
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-primary" type="button" ng-click="ok()">Pay now</button>

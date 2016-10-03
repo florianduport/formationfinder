@@ -7,7 +7,7 @@ before(function(done) {
 
   // Increase the Mocha timeout so that Sails has enough time to lift.
 
-  this.timeout(500000);
+  this.timeout(5000000);
 
   //var fs = require('fs');
 

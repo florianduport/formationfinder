@@ -51,6 +51,10 @@ module.exports.routes = {
     controller: "PayController", action: "makepaymentex"
   },
 
+  '/Payment/mangopaymentex':{
+    controller: "PayController", action: "mangopaymentex"
+  },
+
   '/Payment/mangopayment':{
     controller: "PayController", action: "mangopayment"
   }

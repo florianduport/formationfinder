@@ -3,7 +3,7 @@
  */
 
 
-describe('BillController', function () {
+describe('BillController', function (){
   var faker;
   faker = require('faker');
   describe('#Bill CRUD Rest service test suite  ==> ', function () {
@@ -23,13 +23,14 @@ describe('BillController', function () {
           billState: faker.random.boolean()
         };
 
+
         config.nameformation = firstFormationCenter.name;
         request(sails.hooks.http.app)
           .post('/Bill/createBill')
           .send(config)
           .expect(200, function (err, res) {
             if (err) return done(err);
-            console.log("LOG" , res.body)
+           //console.log("LOG" , res.body)
             assert.equal(res.body.response, "OK")
             done();
           })

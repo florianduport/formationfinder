@@ -35,7 +35,10 @@ app.config(function($translateProvider) {
             ACCEPT: "OK",
             CLOSE:"CLOSE",
             CANCEL: "CANCELAR",
-            EDIT_PLACE: "Edit",
+            EDIT_PLACE: "Edit place",
+            DELETE_PLACE: "Delete place",
+            EDIT_PLACE_MESSAGE: "Edit place´s attributes",
+            ADD_PLACE_MESSAGE:"Insert place´s attributes",
         //------
             LOGOUT:"LOGOUT",
             LOGOUT_USER:"Logout user",
@@ -62,7 +65,11 @@ app.config(function($translateProvider) {
             ADMIN_PAGE_ALERT_HEAD:"Admin alerts",
             ADMIN_PAGE_ALERT_HEAD_DESCRIPTION:"In this window you can admin formation center's alerts.",
             TEXT:"Text",
-            TEXT_ERROR:"Text invalid"
+            TEXT_ERROR:"Text invalid",
+            DATE_PLACEHOLDER : "12/06/2016",
+            New_Costumer:"New costumer",
+            Formation_Full:"Formation full",
+            Place_Unable:"Place unable"
 
 
         })
@@ -100,6 +107,8 @@ app.config(function($translateProvider) {
             CLOSE:"FERMER",
             CANCEL: "CANCELAR",
             EDIT_PLACE: "Edit",
+            EDIT_PLACE_MESSAGE: "Edit place´s attributes",
+            ADD_PLACE_MESSAGE:"Insert place´s attributes",
             //------
             LOGOUT:"LOGOUT",
             LOGOUT_USER:"Logout user",
@@ -125,7 +134,11 @@ app.config(function($translateProvider) {
             ADMIN_PAGE_ALERT_HEAD:"Admin alerts",
             ADMIN_PAGE_ALERT_HEAD_DESCRIPTION:"In this window you can admin formation center's alerts.",
             TEXT:"Text",
-            TEXT_ERROR:"Text invalid"
+            TEXT_ERROR:"Text invalid",
+            DATE_PLACEHOLDER : "12/06/2016",
+            New_Costumer:"New costumer",
+            Formation_Full:"Formation full",
+            Place_Unable:"Place unable"
 
         })
     .translations('es', {
@@ -156,8 +169,8 @@ app.config(function($translateProvider) {
         NEW_PLACE: "Añadir lugar",
         ADVANCED_SEARCH: "Búsqueda avanzada",
         VIEW_MAP: "Ver mapa",
-        EDIT_PLACE: "Edit Place´s attributes",
-        ADD_PLACE:"Insert Place´s attributes",
+        EDIT_PLACE_MESSAGE: "Edit place´s attributes",
+        ADD_PLACE_MESSAGE:"Insert place´s attributes",
         DELETE: "Eliminar",
         EDIT: "Editar",
         ACCEPT: "ACEPTAR",
@@ -189,7 +202,11 @@ app.config(function($translateProvider) {
         ADMIN_PAGE_ALERT_HEAD:"Administrar alerts",
         ADMIN_PAGE_ALERT_HEAD_DESCRIPTION:"En esta vista se podra administrar las alertas de un Centro de Formación.",
         TEXT:"Texto",
-        TEXT_ERROR:"Texto invalido"
+        TEXT_ERROR:"Texto invalido",
+        DATE_PLACEHOLDER : "12/06/2016",
+        New_Costumer:"New costumer",
+        Formation_Full:"Formation full",
+        Place_Unable:"Place unable"
 
     });;
      $translateProvider.preferredLanguage('en');

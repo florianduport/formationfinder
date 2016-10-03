@@ -119,7 +119,7 @@ module.exports.cron = {
   secondJob: {
     schedule: '*/60 * * * * *',
     onTick: function () {
-      console.log('I am triggering every five seconds');
+      console.log('I am triggering every second');
 
       resultCostumerUpdate = [];
       var UserToSendMails = []
@@ -141,7 +141,7 @@ module.exports.cron = {
         UserToSendMails = result;
         console.log("------- Obteniendo datos -----------");
 
-        console.log(UserToSendMails)
+        //console.log(UserToSendMails)
 
         console.log("------- ************* -----------");
 
@@ -154,50 +154,12 @@ module.exports.cron = {
 
 
               async.forEach(UserToSendMails, function (Customerdata, callback) {
-                var iResultCostumerUpdate = {}
-                iResultCostumerUpdate.costumerid = Customerdata.costumerid
-                if (Customerdata.email) {
-                  ///Update all costumer like the started formation´s mail will send
 
+                CustomerServices.sendMailToCostumer(Customerdata, function (result) {
+                  ///resultCostumerUpdate.push(iResultCostumerUpdate)
+                  callback();
 
-                  ////If exist send Mail with text
-                  ///Your course estarted at   in
-                  ///and GMail link with extact adress
-                  var initDate = Customerdata.date
-                  var mailSubjet = "Your formation almost started  ";
-                  var mailHtmlBody = "<b>Formationfinde notify you your coruse in Formation Center in adress almas started " + initDate + "</b>"
-                  var config = {}
-                  config = {
-                    to: Customerdata.email,
-                    subject: mailSubjet,
-                    html: mailHtmlBody
-                  };
-
-                  config.costumerid = Customerdata.id;
-
-                  result = EmailService.send(config, function (err, result) {
-                    ///If not error when send mail
-                    ///0 Ok, 1 Error, 5 all intent
-                    iResultCostumerUpdate.mailstatus = 5;
-                    var emailstatus = 5;
-                    console.log("Mail send answer ", result.response)
-                    if (result.response != "OK") {
-
-                      iResultCostumerUpdate.mailstatus = 1;
-                      emailstatus = 1;
-                      ///Update  costumer like the started formation´s mail is sended if not error
-                      Costumer.update({id: options.costumerid}, {emailsend: emailsend + emailstatus}).exec(function (err, Costumers) {
-                      })
-                    }
-                    else
-                      Costumer.update({id: options.costumerid}, {emailsend: mailstatus}).exec(function (err, Costumers) {
-                      })
-
-                    resultCostumerUpdate.push(iResultCostumerUpdate)
-
-                    callback();
-                  });
-                }
+                })
 
               }, function (err) {
                 if (err)

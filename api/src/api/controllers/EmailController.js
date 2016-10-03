@@ -74,9 +74,9 @@ module.exports = {
 
       ///Take first  element in array
       ConfigurationObject = configuration[0];
-      mailConfigurationParam =req.param("mailConfig");
-      if (typeof mailConfigurationParam != "undefined")
-        ConfigurationObject = mailConfigurationParam
+      //mailConfigurationParam =req.param("mailConfig");
+      //if (typeof mailConfigurationParam != "undefined")
+      //  ConfigurationObject = mailConfigurationParam
 
       var emailportFormation = ConfigurationObject.emailport
       var emailhostFormation  = ConfigurationObject.emailhost
@@ -115,11 +115,6 @@ module.exports = {
       //
       //}
 
-      mailconfig.provider.auth = { // Defines authentication data
-        user: emailuserFormation, // Username
-        pass: emailpassFormation, // Password
-
-      }
 
 /*      config = {
         from: 'no-reply@ghaiklor.com',
@@ -143,16 +138,17 @@ module.exports = {
           tls: {} // Defines additional options to be passed to the socket constructor
         }}*/
 
-      if (!emailpassFormation && !emailuserFormation ) {
+      if ( emailuserFormation && typeof emailuserFormation != "undefined" && emailuserFormation != "" ) {
         var type = "PLAIN"
         if (!emailsecureFormation)
           type = emailsecureFormation
         mailconfig.secure = false; // Defines if the connection should use SSL
-        mailconfig.auth = { // Defines authentication data
+        mailconfig.provider.auth = { // Defines authentication data
           user: emailuserFormation, // Username
           pass: emailpassFormation, // Password
 
         }
+
 
         if ( emailsecureFormation == "xoauth2") {
           ///Find in Colection Configuration (Document) token

@@ -30,9 +30,9 @@ describe('AlertService', function () {
 
         AlertService.createAlertIsFull(config.formationCenter, config.text, function (err, result) {
           if (err) return done(err);
-          //console.log("LOG", res.body)
-          assert.equal(res.body.response, "OK")
-          assert.equal(res.body.result.type, enumArray[1])
+          console.log("LOG", result)
+          assert.equal(result.response, "OK")
+          assert.equal(result.responseObject.result.type, enumArray[1])
           done();
         })
       })
@@ -40,22 +40,26 @@ describe('AlertService', function () {
 
 
     it('Create alert with type CustomerBooked (Client has booked a formation)', function (done) {
+      FormationCenter.find().exec(function (err, resultArray) {
+        if (err) done(err)
 
-      if (err) done(err)
+        firstFormationCenter = resultArray[0]
+        var config = {
+          text: faker.lorem.paragraph(),
+          formationCenter: firstFormationCenter.name,
+          date: new Date()
+        }
 
-      firstFormationCenter = resultArray[0]
-      var config = {
-        text: faker.lorem.paragraph(),
-        formationCenter: firstFormationCenter.name,
-        date: new Date()
-      }
+        console.log("CALL SERVICE")
+        AlertService.createAlertCustomerBooked(config.formationCenter, config.text, function (err, result) {
+          console.log("CALL SERVICE DATA")
+          if (err) return done(err);
 
-      AlertService.createAlertCustomerBooked(config.formationCenter, config.text, function (err, result) {
-        if (err) return done(err);
-        //console.log("LOG", res.body)
-        assert.equal(res.body.response, "OK")
-        assert.equal(res.body.result.type, enumArray[0])
-        done();
+          console.log("LOG", result)
+          assert.equal(result.response, "OK")
+          assert.equal(result.responseObject.result.type, enumArray[0])
+          done();
+        })
       })
     })
 

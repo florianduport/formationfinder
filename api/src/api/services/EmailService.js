@@ -143,7 +143,7 @@ module.exports  = {
       };
 
 
-      if (!emailpassFormation && !emailuserFormation && emailuserFormation != "" && emailuserFormation !== undefined ) {
+      if (emailpassFormation && emailuserFormation && emailuserFormation != "" && emailuserFormation !== undefined ) {
         var type = "PLAIN"
         //if (!emailsecureFormation)
         //  type = emailsecureFormation

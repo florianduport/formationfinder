@@ -14,6 +14,10 @@ app.config(function($translateProvider) {
             MANAGER:"Manager",
             EMAIL_LABEL:"Email",
             INFORMACION_EDITOR:"Editor informations",
+            CARD_CSV:"Csv",
+            CARD_NUMBER:"Card number (*)",
+            CARD_DATE:"Expiration date(*)",
+            DATE_PLACEHOLDER : "12/06/2016"
         })
         .translations('fr', {
             HEADLINE: 'Hey, das ist meine großartige App!',
@@ -27,6 +31,10 @@ app.config(function($translateProvider) {
             MANAGER:"Gérant ",
             EMAIL_LABEL:"Courriel",
             INFORMACION_EDITOR:"Informations de l’éditeur",
+            CARD_CSV:"Csv",
+            CARD_NUMBER:"Card number (*)",
+            CARD_DATE:"Expiration date(*)",
+            DATE_PLACEHOLDER : "12/06/2016"
 
         })
     .translations('es', {
@@ -41,6 +49,10 @@ app.config(function($translateProvider) {
         MANAGER:"Gerente ",
         EMAIL_LABEL:"Correo",
         INFORMACION_EDITOR:"Informaciónes del editor",
+        CARD_CSV:"Csv",
+        CARD_NUMBER:"Card number (*)",
+        CARD_DATE:"Expiration date(*)",
+        DATE_PLACEHOLDER : "12/06/2016"
 
     });;
      $translateProvider.preferredLanguage('en');

@@ -251,7 +251,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             $scope.formationCentersNames = [];
             $scope.loginButtonText = "Login";
 
-            $scope.usernameExpReg = /^[a-z][a-z\d]*[_.\s]*[a-z\d]*$/;
+            $scope.usernameExpReg = /^([ê|µ|ç|ùàè|áéíóú|a-z|A-Z]*)([\w|\d])*([_|\s]*[\.|\-|\'|ê|ç|ùàè|áéíóú|A-Z|a-z|\d])*$/;
 
             $scope.searchFormationCentersNames = function () {
                 $http.get($rootScope.urlBase + "/formationcenter/searchAllFormationCentersNames")
@@ -423,7 +423,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             };
             $scope.initCredentials();
 
-            $scope.usernameExpReg = /^[A-Za-z]([A-Za-z\d]*[_.\s]*[A-Za-z\d]*)+$/;
+            $scope.usernameExpReg = /^([ê|µ|ç|ùàè|áéíóú|a-z|A-Z]*)([\w|\d])*([_|\s]*[\.|\-|\'|ê|ç|ùàè|áéíóú|A-Z|a-z|\d])*$/;
+
 
             $scope.createLogin = function () {
 
@@ -516,7 +517,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
         function ($scope, $rootScope, $routeParams, $location, $http) {
 
             //$scope.formationCenter = $rootScope.formationCenter;
-            $scope.usernameExpReg = /^[A-Za-z][A-Za-z\d]*[_.\s]*[A-Za-z\d]*$/;
+            $scope.usernameExpReg = /^([ê|µ|ç|ùàè|áéíóú|a-z|A-Z]*)([\w|\d])*([_|\s]*[\.|\-|\'|ê|ç|ùàè|áéíóú|A-Z|a-z|\d])*$/;
+
 
             $scope.Login = {};
             $scope.oldLogin = {};
@@ -620,7 +622,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             $scope.initCredentials();
 
             $scope.index = null;
-            $scope.usernameExpReg = /^[a-z][a-z\d]*[_.\s]*[a-z\d]*$/;
+            $scope.usernameExpReg = /^([ê|µ|ç|ùàè|áéíóú|a-z|A-Z]*)([\w|\d])*([_|\s]*[\.|\-|\'|ê|ç|ùàè|áéíóú|A-Z|a-z|\d])*$/;
+
 
             $scope.usersnames = [];
             $scope.searchLoginNames = function () {
@@ -2471,7 +2474,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
     .controller("PlaceEditcontroller", ["$scope", "$rootScope", "$http", "$location", "$routeParams", "$timeout", "NavigatorGeolocation", "NgMap", "$uibModal", "$log", "$translate",
         function ($scope, $rootScope, $http, $location, $routeParams, $timeout, NavigatorGeolocation, NgMap, $uibModal, $log, $translate) {
 
-            $scope.usernameExpReg = /^([µ|ç|ùàè|áéíóú|a-z|A-Z]*)([\w|\d])*([_|\s]*[\.|\-|\'|ç|ùàè|áéíóú|A-Z|a-z|\d])*$/;
+            $scope.usernameExpReg = /^([ê|µ|ç|ùàè|áéíóú|a-z|A-Z]*)([\w|\d])*([_|\s]*[\.|\-|\'|ê|ç|ùàè|áéíóú|A-Z|a-z|\d])*$/;
             ///^[a-z][a-z\d]*[_.\s]*[a-z\d]*$/;
             $scope.numExpReg = /^[\d]+$/;
             ///Data Structure for insert
@@ -2488,9 +2491,13 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             $scope.place = $rootScope.place
             $scope.variable = $rootScope.variable
 
-            if ($scope.place.type != "EDITING")
+            if ($scope.place.type != "EDITING") {
                 $scope.place.isActivated = true
-
+                $scope.titleformplace = $translate.instant('ADD_PLACE_MESSAGE');
+            }
+            else {
+                $scope.titleformplace = $translate.instant('EDIT_PLACE_MESSAGE');
+            }
             $scope.$on('EVENT_EDIT_DATA', function (event, data) {
                 $scope.place = {}
                 $scope.variable = {name: "La prueba"}
@@ -2827,7 +2834,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
         function ($scope, $rootScope, $http, $location, $routeParams, $timeout, NavigatorGeolocation, NgMap, $uibModal, $log, $translate) {
             $scope.advanceSearch = true
             ///^[a-z][a-z\d]*[_.\s]*[a-z\d]*$/;
-            $scope.usernameExpReg = /^([µ|ç|ùàè|áéíóú|a-z|A-Z]*)([\w|\d])*([_|\s]*[\.|\-|\'|ç|ùàè|áéíóú|A-Z|a-z|\d])*$/;
+            $scope.usernameExpReg = /^([ê|µ|ç|ùàè|áéíóú|a-z|A-Z]*)([\w|\d])*([_|\s]*[\.|\-|\'|ê|ç|ùàè|áéíóú|A-Z|a-z|\d])*$/;
 
             $scope.numExpReg = /^[\d]+$/;
             $scope.placetoEditID = 0
@@ -2920,6 +2927,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             messageObject = {}
                             messageObject.type = "MESSAGE"
                             console.log("Delete object")
+
                             $http.post($rootScope.urlBase + "/Place/deleteplace", $scope.selected)
                                 .success(function (data) {
                                     if (typeof data != 'undefined') {
@@ -3207,6 +3215,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 $scope.placetoEditID = 0;
                 $rootScope.place = {}
                 $rootScope.place.type = "CREATING";
+                $scope.titleformplace = $translate.instant('ADD_PLACE');
+                console.log('Form title ' ,   $scope.titleformplace )
                 console.log("EDICION ", $scope.SAVE_BUTTON);
                 $location.path('/place/edit');
             }
@@ -3219,8 +3229,9 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     ///Show edit place
                     $scope.placetoEditID = placeId;
                     console.log("Update editing value ListController")
-                    $scope.titleformplace = "EDIT_PLACE";
 
+
+                    console.log('Form title ' ,   $scope.titleformplace )
                     $rootScope.place = {}
                     $rootScope.variable = {name: "La prueba"}
                     console.log('received broadcasted event');
@@ -4039,7 +4050,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
     .controller("AlertListController", ["$scope", "$rootScope", "$http", "$location", "$routeParams", "$timeout", "NavigatorGeolocation", "NgMap", "$uibModal", "$log", "$translate",
         function ($scope, $rootScope, $http, $location, $routeParams, $timeout, NavigatorGeolocation, NgMap, $uibModal, $log, $translate) {
             $scope.weekDay = ["Sunday", "Monday", "Tuesday", "Wensday", "Thuesday", "Fryday", "Saturday"]
-            $scope.usernameExpReg = /^([µ|ç|ùàè|áéíóú|a-z|A-Z]*)([\w|\d])*([_|\s]*[\.|\-|\'|ç|ùàè|áéíóú|A-Z|a-z|\d])*$/;
+            $scope.usernameExpReg = /^([ê|µ|ç|ùàè|áéíóú|a-z|A-Z]*)([\w|\d])*([_|\s]*[\.|\-|\'|ê|ç|ùàè|áéíóú|A-Z|a-z|\d])*$/;
 
 
             $scope.advanceSearch = true
@@ -4448,8 +4459,10 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     config = {}
                     config.language = "en" //$translate.determinePreferredLanguage()
                     config.type = type
+                    traslateValue  = $translate.instant(type) || type ;
+                    console.log("RESULT", traslateValue)
+                    return (traslateValue)
 
-                    console.log("RESULT", config)
                     //$http.get($rootScope.urlBase + '/Alert/getAlertType', config)
                     //    .success(function (data_result) {
                     //        if (data_result.response == "ERROR" ) {

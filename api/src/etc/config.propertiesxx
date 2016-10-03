@@ -1,9 +1,9 @@
 systemurladdress=http://137.172.74.220/formationfinder/
-emailsystemadress=inoid2007@gmail.com
+emailsystemadress=formationfinder@localhost.com
 emailport=587
 emailhost=smtp.gmail.com
-emailuser=formationcenter2016@gmail.com
-emailpassword=formationcenter
+emailuser=inoid2007@gmail.com
+emailpassword="cibercubano"
 emailsecure=false
 appuser=inoid2016
 applicationame=Formationfinder

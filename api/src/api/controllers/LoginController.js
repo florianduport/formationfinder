@@ -223,9 +223,12 @@ module.exports = {
         if (resulToken.status == 'ok') {
           var result = {};
           result.token = resulToken.token;
-          result.formationCenter = loginFounded.formationCenter.name;
-          return res.json({status: "ok", data: result});
-
+          if ( typeof loginFounded.formationCenter != "undefined" ){
+           result.formationCenter = loginFounded.formationCenter.name;
+           return res.json({status: "ok", data: result});
+          }
+          else
+            return res.json({status: "error", info: "Error generated at generateLoginToken."});
         } else {
           return res.json({status: "error", info: "Error generated at generateLoginToken."});
         }

@@ -1,8 +1,8 @@
 /**
  * Created by dionis on 6/22/2016.
  */
-module.exports  = {
-  searchbyclosedformation: function( callbackFunction) {
+module.exports = {
+  searchbyclosedformation: function (callbackFunction) {
     //localhost:1337/Formationcenter/create?name=Paris"&adress="rue 15"&zipCode=21231&city="Paris"&email="dionis@uo.edu.cu"&phoneNumber="02131231231"
 
     //http://localhost:1337/Place/create?formationCenter=57655462ca27cbd00fbfe3f0&name=Paris_Place%22&adress=%22rue%2015%22&zipCode=21231&isActived=true&agreementNumber=344&agreementName=02131231231
@@ -26,111 +26,42 @@ module.exports  = {
 
     formationsArray = []
     placeFormationArray = []
-    async.series({
-        one: function(callback){
-          Customer.find({"emailsend": 0 }).then( function userFounded( Customers) {
-              ///Ver como buscar un campo fecha y calcular 5 horas mas
-              ///comporar este valor con el campo fecha de todos los insertados
-              //console.log("Hour to search " + date)
-              return ( Customers)
+    console.log("Date to compare ", date)
+    //
+    Formation.find({"dates.date":{"lte":date}}).populate('customers').populate("place").exec(function (err, resultArray) {
+    //  console.log("Formation results ", resultArray.length)
+      for (iTrForm in resultArray) {
+        formation = resultArray[iTrForm]
+       // console.log("Update data customer ", formation)
+        if (typeof formation.customers != "undefined" && formation.customers.length > 0) {
+          for (iTr in formation.customers) {
 
+            iCustomer = formation.customers[iTr]
+
+          //  console.log("Update data customer ", iCustomer)
+            objectResult = {};
+            objectResult.costumerid = iCustomer.id
+            objectResult.formationcenterid = iCustomer.formationCenter
+            objectResult.costumerid = iCustomer.id
+            objectResult.costumername = iCustomer.id
+            objectResult.email = iCustomer.email
+            objectResult.date = formation.dates[0].date
+            iPlace = formation.place
+            if (typeof  iPlace != "undefined") {
+              objectResult.placeid = iPlace.place
+              objectResult.place = iPlace;
+              objectResult.placename = iPlace.name
+              objectResult.address = iPlace.address
+              resultFormation.push(objectResult);
             }
-          ).then( function (Customers) {
-
-
-            async.forEach(Customers, function (iCustomer, callback) {
-              // if any of the saves produced an error, err would equal that error
-
-             // console.log("------Usuario-------")
-              ///console.log(iCustomer)
-
-              ///, {"createdAt" : { '<': date}}
-              Formation.find({"id": iCustomer.formation}).exec(function formationFounded(err, formation) {
-                if (err)
-                  console.log("Error ocurred when customer update "  + err);
-
-                for (iTr in formation) {
-                  formationsArray.push(formation[iTr])
-                  objectResult = {};
-                  objectResult.costumerid = iCustomer.id
-                  objectResult.formationcenterid = iCustomer.formationCenter
-                  objectResult.costumerid= iCustomer.id
-                  objectResult.placeid =  formation[iTr].place
-                  objectResult.email =  iCustomer.email
-                  resultFormation.push(objectResult);
-
-                }
-                callback();
-              })
-            }, function (err) {
-              if (err) {
-                callback(err,placeFormationArray);
-              }
-             //console.log("------- Formations ---------- ")
-            // console.log(resultFormation)
-             callback(null, formationsArray);
-            })
-          });
-        },
-        two: function(callback){
-
-         // console.log("two  " , resultFormation)
-          async.forEach(resultFormation, function (iResultFormation, callback) {
-            Place.findOne({id: iResultFormation.placeid}).exec (function placeFounded( err, Places) {
-              if (err)
-                callback(err,placeFormationArray);
-              Place = Places
-
-             // console.log("El lugar ", Places)
-              objectPlaceFormation = {}
-              //objectPlaceFormation.formation = iResultFormation;
-              objectPlaceFormation.place = Place;
-              iResultFormation.name =  Place.name
-              iResultFormation.adress = Place.address,
-                placeFormationArray.push(objectPlaceFormation)
-              callback();
-            })
-          }, function ( err) {
-            if (err)
-              callback(err,placeFormationArray);
-          /*  console.log("********************************************")
-            console.log(placeFormationArray)*/
-            callback(null,placeFormationArray);
-          });
-        },
-        three: function(callback){
-          async.forEach(resultFormation, function (iResultFormation, callback) {
-            Customer.update({id: iResultFormation.costumerid}, {emailsend: 1}).exec(function customerUpdate(err, customerArray) {
-              if (err)
-                console.log("Error ocurred when customer update " + err);
-              callback()
-            })}, function ( err) {
-              if (err)
-                callback(err,placeFormationArray);
-              /*  console.log("********************************************")
-               console.log(placeFormationArray)*/
-              callback(null,placeFormationArray);
-            })
-
+            else
+             console.log("Undefined place for formation " ,formation.place)
+          }
         }
-      },  function(err, results) {
-        // results is now equal to: {one: 1, two: 2}
-        if (err) {
-          console.log("Ocurrio un error ", err)
-          return next(err);
-        }
-
-       /// console.log("**** Ejecucion de la ultima instruccion**** ")
-        var valResult = {resultFormation }
-      //  console.log(resultFormation);
-      ///Update Customer emailsend with 1 and verify is sended
-
-        //return formationsArray
-      callbackFunction  (resultFormation)
-      });
-
-
-
+      }
+      console.log("Verify formation for send Mail ", resultFormation.length)
+      callbackFunction(resultFormation)
+    })
 
 
 
@@ -171,7 +102,7 @@ module.exports  = {
   },
   ///Update al costumer id with send mailed result
   ///parameter is Array with object { idcostumer, sendmailed} result
-  updatemailnotify: function ( costumerArray) {
+  updatemailnotify: function (costumerArray) {
     ////Para cada elemento del arreglo  actualizar en la base de datoss
 
     async.forEach(costumerArray, function (CustomerObject, callback) {
@@ -182,14 +113,14 @@ module.exports  = {
 
 
       ///, {"createdAt" : { '<': date}}
-      CustomerObject.update({"id": CustomerObject.costumerid},{ mailsended: CustomerObject.mailstatus }).exec(function CostumerUpdateFounded(err, Customer) {
+      CustomerObject.update({"id": CustomerObject.costumerid}, {mailsended: CustomerObject.mailstatus}).exec(function CostumerUpdateFounded(err, Customer) {
 
         for (iTr in Customer) {
           formationsArray.push()
           objectResult = Customer[iTr]
           console.log("--- Actualizando usuario ---");
-          console.log("--- nombre : " +  objectResult.name);
-          console.log("--- correo : " +  objectResult.email);
+          console.log("--- nombre : " + objectResult.name);
+          console.log("--- correo : " + objectResult.email);
         }
         //console.log(formation)
         callback();
@@ -205,18 +136,112 @@ module.exports  = {
     });
   },
   isValidCustomerData: function (data) {
-		// body...
-		var isValid =  _.isObject(data) && _.isString(data.name)
-		            && _.isString(data.firstName)
-		            && _.isString(data.phoneNumber)
-		            && _.isString(data.email)
-		            && _.isObject(data.driverLicence)
-		            && _.isString(data.driverLicence.number)
-		            && _.isString(data.driverLicence.placeOfDeliverance);
+    // body...
+    var isValid = _.isObject(data) && _.isString(data.name)
+      && _.isString(data.firstName)
+      && _.isString(data.phoneNumber)
+      && _.isString(data.email)
+      && _.isObject(data.driverLicence)
+      && _.isString(data.driverLicence.number)
+      && _.isString(data.driverLicence.placeOfDeliverance);
 
-		console.log("En la comprobacion isValid es: "+isValid);
+    console.log("En la comprobacion isValid es: " + isValid);
 
-		return (isValid === true);
+    return (isValid === true);
 
-	}
+  },
+
+  sendMailToCostumer: function (customerData, callback) {
+
+    var iResultCostumerUpdate = {}
+
+    if (typeof customerData == "undefined") {
+      console.log("Not data about Customer")
+      callback(iResultCostumerUpdate)
+    }
+    else {
+      Customer.findOne({id: customerData.costumerid }).populate("formationCenter").exec(function (err, resultObject) {
+
+        if (err) {
+          iResultCostumerUpdate.err = err.message
+          callback(iResultCostumerUpdate)
+        }
+
+        if (typeof resultObject == "undefined") {
+          callback(iResultCostumerUpdate)
+        }
+
+        iResultCostumerUpdate.costumerid = customerData.costumerid
+        if (customerData.email && resultObject.emailsend < 5) {
+          ///Update all costumer like the started formation´s mail will send
+
+
+          ////If exist send Mail with text
+          ///Your course estarted at   in
+          ///and GMail link with extact adress
+          var initDate = customerData.date
+          var mailSubjet = "Your formation almost started  ";
+
+          ///Set systemurladdress in Configuration collection
+          var mailHtmlBody = "<b><h3><a src=\""+ sails.config.globals.configsystem.systemurladdress+"\">Formationfinder</a> notify that formation in address " + customerData.address + " almost started " + initDate + "</h3></b></br>"
+          mailHtmlBody += "<b>Formation Center : " + resultObject.formationCenter.name + "</b><br />"
+          mailHtmlBody += "<b>Formation Center (phone number): " + resultObject.formationCenter.phoneNumber + "</b><br />"
+          mailHtmlBody += "<b>Formation Center (email): " + resultObject.formationCenter.email + "</b><br />"
+
+          var config = {}
+          config = {
+            to: customerData.email,
+            subject: mailSubjet,
+            html: mailHtmlBody
+          };
+
+          config.costumerid = customerData.id;
+
+          result = EmailService.send(config, function (err, result) {
+            ///If not error when send mail
+            ///0 Ok, 1 Error, 5 all intent
+            iResultCostumerUpdate.mailstatus = 5;
+            var emailstatus = 5;
+            console.log("Mail send answer ", result.response)
+            if (result.response != "OK") {
+
+              iResultCostumerUpdate.mailstatus = 1;
+              emailstatus = resultObject.emailsend + 1;
+              ///Update  costumer like the started formation´s mail is sended if not error
+              Customer.update({id: customerData.costumerid}, {emailsend:  emailstatus}).exec(function (err, Costumers) {
+                 // console.log("Update Costumer mail ",  err, Costumers )
+
+              })
+            }
+            else
+              Customer.update({id: customerData.costumerid}, {emailsend: emailstatus}).exec(function (err, Costumers) {
+                //console.log("Update Costumer mail ",  err, Costumers )
+              })
+
+            callback(iResultCostumerUpdate)
+
+          })
+        }
+      })
+    }
+
+
+  },
+
+  isValidCustomerData: function (data) {
+    // body...
+    var isValid = _.isObject(data) && _.isString(data.name)
+      && _.isString(data.firstName)
+      && _.isString(data.phoneNumber)
+      && _.isString(data.email)
+      && _.isObject(data.driverLicence)
+      && _.isString(data.driverLicence.number)
+      && _.isString(data.driverLicence.placeOfDeliverance);
+
+    console.log("En la comprobacion isValid es: " + isValid);
+
+    return (isValid === true);
+
+  }
+
 }

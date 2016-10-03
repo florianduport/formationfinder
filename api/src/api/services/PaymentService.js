@@ -863,7 +863,7 @@ module.exports = {
    * User data
    */
   makeWalletToFormationCenter: function ( formationcenter, callback) {
-
+    moment = require("moment")
    if (!formationcenter || formationcenter == "") {
       callback({response: "Undefined Formation Center´s name"}, null );
       return;
@@ -918,7 +918,7 @@ module.exports = {
         Email: iFormationCenter.email,
       }
 
-      console.log("Date to send ",  legalUserData)
+      //console.log("Date to send ",  legalUserData)
 
       config = {}
       config.currency = "EUR";
@@ -926,6 +926,7 @@ module.exports = {
 
       PaymentService.createwallet(config, legalUserData, function (err, result) {
         if (err) {
+          console.log("ERROR", err)
           callback({
             response: "ERROR",
             message: "Couldn' t create mangopay wallet for Formation Center " + formationCenterName + ": " + err

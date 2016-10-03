@@ -228,7 +228,7 @@ module.exports = {
         }
         else {
           console.log("No exist  emailuser  parameter in config system file set default parameter.");
-          emailconfig.emailuser = "formationfinder@localhost.com"
+          //emailconfig.emailuser = "formationfinder@localhost.com"
         }
 
         if (typeof sails.config.globals.configsystem.emailpassword != "undefined") {
@@ -237,7 +237,7 @@ module.exports = {
         }
         else {
           console.log("No exist  emailuser  parameter in config system file set default parameter.");
-          emailconfig.emailpassword = ""
+          //emailconfig.emailpassword = ""
         }
 
         if (typeof sails.config.globals.configsystem.emailsecure != "undefined") {
@@ -257,15 +257,29 @@ module.exports = {
         /* GMail configuration*/
 
 
+        //Configuration.create({
+        //  name: "mail",
+        //  type: "smtp",
+        //  emailsystemadress: "formationfinder@localhost.com",
+        //  emailport: "587",
+        //  emailhost: "smtp.gmail.com",
+        //  emailuser: "inoid2007@gmail.com",
+        //  emailpassword: "cibercubano",
+        //  emailsecure: true
+        //}).then(function (Configurations) {
+        //  configuration = Configurations[0];
+        //  //console.log("Creado el objeto en BD");
+        //});
+
         Configuration.create({
           name: "mail",
           type: "smtp",
-          emailsystemadress: "formationfinder@localhost.com",
-          emailport: "587",
-          emailhost: "smtp.gmail.com",
-          emailuser: "inoid2007@gmail.com",
-          emailpassword: "cibercubano",
-          emailsecure: true
+          emailsystemadress:  emailconfig.emailsystemadress,
+          emailport: emailconfig.emailport,
+          emailhost: emailconfig.emailhost,
+          emailuser: emailconfig.emailuser,
+          emailpassword:  emailconfig.emailpassword,
+          emailsecure: emailconfig.emailsecure
         }).then(function (Configurations) {
           configuration = Configurations[0];
           //console.log("Creado el objeto en BD");
@@ -381,19 +395,24 @@ module.exports = {
       },
       three: function (callback) {
 
-
-        formationData = placeFormationAsociation.formation[0]
-        formationCenter = placeFormationAsociation.formationcenter[0]
-        Customer.update({}, {
-          formationCenter: formationCenter, formation: formationData,
-          emailsend: 0
-        }).exec(function (err, Customers) {
-          if (err)
-            console.log(err)
-
-          console.log("Three step update Costumer")
+        if (placeFormationAsociation.formationcenter.length == 0 || placeFormationAsociation.formation.length == 0) {
+          console.log("No information for update Customer")
           callback(null, placeFormationAsociation);
-        })
+        }
+        else {
+          formationData = placeFormationAsociation.formation[0]
+          formationCenter = placeFormationAsociation.formationcenter[0]
+          Customer.update({}, {
+            formationCenter: formationCenter, formation: formationData,
+            emailsend: 0
+          }).exec(function (err, Customers) {
+            if (err)
+              console.log(err)
+
+            console.log("Three step update Costumer")
+            callback(null, placeFormationAsociation);
+          })
+        }
       },
 
       four: function (callback) {
@@ -430,7 +449,7 @@ module.exports = {
                   callback(err);
                 }
 
-                console.log("Actualizando BILL ", iBill.id)
+                // console.log("Actualizando BILL ", iBill.id)
               })
 
             });
@@ -443,7 +462,7 @@ module.exports = {
               console.log("Error Updating Animator.");
             }
 
-            console.log("************* Se actualizaron los animators: ", Animators);
+           // console.log("************* Se actualizaron los animators: ", Animators);
           });
 
           ///Seed all Alert to First Formation Center
@@ -468,20 +487,22 @@ module.exports = {
       six: function (callback) {
         //Use with INTERNET
 
-        // FormationCenter.find({}).exec(function (err, formationCenterArray) {
-        //   if (err)
-        //     console.log(err)
-        //   formationCenterArray.forEach(function (iFormation, i) {
-        //     PaymentService.makeWalletToFormationCenter(iFormation.name,
-        //       function resultServices(err, result) {
-        //         if (err) done(err)
-        //
-        //         console.log("Payment data  ", result)
-        //       })
-        //   });
-        //   console.log("SIX")
-        //   callback(null, placeFormationAsociation);
-        // });
+         FormationCenter.find({}).exec(function (err, formationCenterArray) {
+           if (err)
+             console.log(err)
+           formationCenterArray.forEach(function (iFormation, i) {
+             PaymentService.makeWalletToFormationCenter(iFormation.name,
+               function resultServices(err, result) {
+                 if (err) {
+                   console.log("ERROR" , err)
+                 }
+
+                 console.log("Payment data  ", result)
+               })
+           });
+           console.log("SIX")
+           callback(null, placeFormationAsociation);
+         });
       }
     }, function (err, results) {
       // results is now equal to: {one: 1, two: 2}

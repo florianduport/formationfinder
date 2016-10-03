@@ -88,22 +88,42 @@ module.exports = {
    * User data
    */
   mangopayment: function (req, res, next) {
+
+
+
+
+
     userValue = req.param("userdata")
+
+    if ( typeof userValue == "undefine")
+      return res.json({response:"ERROR", message:"Parameter userValue undefined"})
+
     cardValue = req.param("cardata")
+
+    if ( typeof cardValue == "undefine")
+      return res.json({response:"ERROR", message:"Parameter cardValue undefined"})
 
     ///Validate cardValue
 
     mount = req.param("price")
 
-
+    if ( typeof mount == "undefine")
+      return res.json({response:"ERROR", message:"Parameter mount undefined"})
     //Validate price
 
     formationcenter = req.param("formationcentername")
+
+    if ( typeof formationcenter == "undefine")
+      return res.json({response:"ERROR", message:"Parameter formationcenter undefined"})
 
     ///Validate formationcenter name
 
 
     currency = req.param("currency")
+
+    if ( typeof currency == "undefine")
+      currency = "EUR"
+
 
     //Validate currency
 
@@ -112,14 +132,7 @@ module.exports = {
     PaymentService.validateFormatinCenterInformation (formationcenter, function (err, result) {
     //FormationCenter.findOne({name:formationcenter}).exec(function (err, formationCenterData){
 
-      //console.log("INFO", formationCenterData)
-      //return res.json({response:"ERROR"})
-      //if (err) {
-      //  return res.json({response: "ERROR", message: err})
-      //}
-      //
-      //if ( typeof formationCenterData.walletid == "undefined" || typeof formationCenterData.walletid == "undefined"){
-      //  return res.json({response:"ERROR", message:"Formation Center make payment"})
+
 
       if (result == false) {
          return res.json({response:"ERROR", message:"Formation Center make payment"})
@@ -128,8 +141,34 @@ module.exports = {
     config = {currency: "EUR"}
     config.currency = currency;
 
+        var naturalUserData = {
+          FirstName: userValue.firstName, // Required
+          LastName: userValue.name,    // Required
+          Birthday:userValue.birthDate,  // Required,  // Required
+          Nationality: userValue.nacionality, // Required, default: 'FR'
+          CountryOfResidence: userValue.country, // Required, default: 'FR'
+          Address: {
+            AddressLine1: userValue.address,
+            AddressLine2: userValue.address,
+            City: userValue.city,
+            Region: userValue.city,
+            PostalCode:userValue.zipCode,
+            Country: userValue.country
+
+          },
+          Occupation: "Management",
+          IncomeRange: "6",
+          ProofOfIdentity: null,
+          ProofOfAddress: null,
+          PersonType: "NATURAL",
+          Email: userValue.email,
+          Tag: "Formationfinder tag"
+
+        }
+
     ///Create natural user and wallet
-    PaymentService.createNaturalWallet(config, userValue,  // var CustomerServices = require('../../api/services/CustomerService')
+        console.log("User to Register ",  naturalUserData);
+    PaymentService.createNaturalWallet(config, naturalUserData,  // var CustomerServices = require('../../api/services/CustomerService')
       function resultServices(err, result) {
         if (err) {
           console.log(err)
@@ -217,10 +256,189 @@ module.exports = {
 
       });
 
+  },
+
+
+  /**
+   * `PayController.makepay()`
+   * User data
+   */
+  mangopaymentex: function (req, res, next) {
+
+
+
+
+
+    userValue = req.param("userdata")
+
+    if ( typeof userValue == "undefine")
+      return res.json({response:"ERROR", message:"Parameter userdata undefined"})
+
+    cardValue = req.param("creditCardData")
+
+    if ( typeof cardValue == "undefine")
+      return res.json({response:"ERROR", message:"Parameter creditCardData undefined"})
+
+    ///Validate cardValue
+
+    mount = req.param("price")
+
+    if ( typeof mount == "undefine")
+      return res.json({response:"ERROR", message:"Parameter mount undefined"})
+    //Validate price
+
+    formationcenter = req.param("formationidentifier")
+
+    if ( typeof formationcenter == "undefine")
+      return res.json({response:"ERROR", message:"Parameter formationidentifier undefined"})
+
+    ///Validate formationcenter name
+
+
+    currency = req.param("currency")
+
+    if ( typeof currency == "undefine")
+      currency = "EUR"
+
+
+    //Validate currency
+    ///Find FormationCenter Data and amout
+    Formation.findOne({id:formationcenter}).populate("formationCenter").exec( function (err, resultObject) {
+
+      if (err) {
+        return res.json({response:"ERROR", message:err.message})
+      }
+
+      if ( typeof  resultObject == "undefined") {
+        return res.json({response:"ERROR", message:"No exist data about formation."})
+      }
+
+      mount = resultObject.price
+      formationcenter  = resultObject.formationCenter.name
+
+      ///Find walletid and userid in Formationcenter register
+      console.log("REALICE PAY")
+      PaymentService.validateFormatinCenterInformation (formationcenter, function (err, result) {
+        //FormationCenter.findOne({name:formationcenter}).exec(function (err, formationCenterData){
+
+
+
+        if (result == false) {
+          return res.json({response:"ERROR", message:"Formation Center make payment"})
+        }
+        else {
+          config = {currency: "EUR"}
+          config.currency = currency;
+
+          var naturalUserData = {
+            FirstName: userValue.firstName, // Required
+            LastName: userValue.name,    // Required
+            Birthday:userValue.birthDate,  // Required,  // Required
+            Nationality: userValue.nacionality, // Required, default: 'FR'
+            CountryOfResidence: userValue.country, // Required, default: 'FR'
+            Address: {
+              AddressLine1: userValue.address,
+              AddressLine2: userValue.address,
+              City: userValue.city,
+              Region: userValue.city,
+              PostalCode:userValue.zipCode,
+              Country: userValue.country
+
+            },
+            Occupation: "Management",
+            IncomeRange: "6",
+            ProofOfIdentity: null,
+            ProofOfAddress: null,
+            PersonType: "NATURAL",
+            Email: userValue.email,
+            Tag: "Formationfinder tag"
+
+          }
+
+          ///Create natural user and wallet
+          PaymentService.createNaturalWallet(config, naturalUserData,  // var CustomerServices = require('../../api/services/CustomerService')
+            function resultServices(err, result) {
+              if (err) {
+                console.log(err)
+                return res.json({response:"ERROR", message:err.message })
+              }
+
+
+
+              ///Register user card to mangopay
+
+
+              console.log("CALL FUNCTION")
+
+              PaymentService.createCard( cardValue, config,  result.user,  // var CustomerServices = require('../../api/services/CustomerService')
+                function resultServices ( err, resultCard ) {
+                  if (err) {
+                    console.log(err)
+                    return res.json({response:"ERROR", message:err })
+                  }
+                  //User card parameter card number undefined
+
+                  //console.log("=======" +  result.card)
+
+                  ///Remmeber money count is in cents 1100 centes
+                  testAmount = 12; //It's 120 euro
+                  debiteFundsEx =  {
+                    Currency: "EUR",
+                    Amount: mount
+                  }
+
+
+                  ///10% money for may platform
+
+                  ///Get data about money pay to our marketplace
+                  ourMarketPlacePrice = 0
+                  feesEx = {
+                    Currency: "EUR",
+                    Amount:  ourMarketPlacePrice
+                  }
+
+                  ///Payin to Mango
+                  console.log("PAY TO MANGO")
+                  PaymentService.makeBuyToMango( result.user, result.user, result.wallet  , resultCard.card ,debiteFundsEx, feesEx,  // var CustomerServices = require('../../api/services/CustomerService')
+                    function resultServices ( err, resultObject ) {
+                      if (err) {
+                        console.log(err)
+                        return res.json({response:"ERROR", message:err })
+                      }
+
+
+                      ///Transfer the user walletid to Formationcenter Wallet id.
+
+                      FormationCenter.findOne({name:formationcenter}).exec(function (err, formationCenterData) {
+                        if (err) {
+                          console.log("Paso algo grave", err)
+                          return res.json({response:"ERROR", message:err.message})
+                        }
+
+                        console.log("Formation Center", formationCenterData)
+                        PaymentService.transferWalletToWallet( result.user, result.wallet, formationCenterData.mangouser, formationCenterData.mangowallet ,debiteFundsEx, feesEx,
+                          function resultServices ( err, resultData ) {
+                            if (err) {
+                              console.log("Paso algo", err)
+                              return res.json({response:"ERROR", message:err })
+                            }
+                            resultObject =  {walleid : result.wallet, userid:result.user, carid:resultCard.card}
+                            return res.json({response:"OK",resultObject})
+
+
+                          });
+
+                      })
+
+                    });
+                })
+            });
+        }
+      });
+    })
+
+
   }
-
-
-
 
 
 };

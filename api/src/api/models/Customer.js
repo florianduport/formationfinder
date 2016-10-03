@@ -62,7 +62,7 @@ module.exports = {
 
   	email: {
   		type: 'email',
-  		unique: true
+  		//unique: true
   	},
 
   	driverLicence: {
@@ -80,10 +80,15 @@ module.exports = {
   		type: 'string'
   	},
 
+    emailsend: {
+      type: 'integer'
+    },
+
   	customerBills: {
   		collection: 'customerBill' ,
   		via: 'customer'
   	}
+
   },
   searchByLicenceNumberInYear: function (licence, year, callback) {
     // body...
