@@ -2586,8 +2586,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
              */
             $scope.createPlace = function () {
 
-                $scope.place.latitude = 44.090066452554424
-                $scope.place.longitude = 4.9543940842151642
+                //$scope.place.latitude = 44.090066452554424
+                //$scope.place.longitude = 4.9543940842151642
                 if ((typeof $scope.place.latitude == "undefined" || $scope.place.latitude == "" ) || (typeof $scope.place.longitude == "undefined" || $scope.place.longitude == "" )) {
 
                     objectData = {type: "Error"}
@@ -2707,8 +2707,11 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             var marker;
             var vm = this;
+            console.log("Buscando Map")
             NgMap.getMap().then(function (map) {
                 $scope.map = map;
+
+                console.log("Asignando datos 1" ,  map.markers[0])
                 marker = map.markers[0];
                 console.log("Asignando datos")
             });
@@ -2745,7 +2748,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             //    })
             //;
 
-            //console.log("Buscando")
+            console.log("Buscando")
             $scope.click = function (event) {
                 // console.log("Buscando")
                 $scope.map.setZoom(8);
@@ -2791,7 +2794,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                 $scope.place.latitude = latitud;
                 $scope.place.longitude = longitud;
-                alert('this is at ' + latitud + " :" + longitud);
+               // alert('this is at ' + latitud + " :" + longitud);
                 // alert(arg1+arg2);
             }
 
