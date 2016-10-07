@@ -1,39 +1,55 @@
 <form class="login-form" id="updateLoginForm" name="updateLoginForm">
     <div class="login-wrap">
-        <h4>Enter new Credential attributes values</h4>
-        <div class="input-group" data-toggle="tooltip" title="Insert user´s name">
-            <span class="input-group-addon"><i class="icon_profile"></i></span>
-            <input type="text" class="form-control" placeholder="New Username"
-                   autofocus
-                   maxlength="40"
-                   ng-model="Login.username"
-                   ng-pattern="usernameExpReg">
+        <p class="login-img"><i class="icon_lock_alt"></i></p>
+        <h4 class="text-center">{{'UPDATE_CREDENTIAL' | translate}}</h4>
+        <div class="form-group">
+            <div class="input-group" data-toggle="tooltip" title="{{'INSERT_NAME' | translate}}">
+                <span class="input-group-addon"><i class="icon_profile"></i></span>
+                <input type="text" class="form-control" placeholder="{{'USERNAME' | translate}}"
+                       autofocus
+                       name="username"
+                       maxlength="40"
+                       ng-model="Login.username"
+                       ng-pattern="usernameExpReg">
+            </div>
+            <span style="color:#cc0000" ng-show="updateLoginForm.username.$dirty && updateLoginForm.username.$invalid">
+                <span ng-show="updateLoginForm.username.$error.pattern">{{'INVALID_USERNAME' | translate}}.</span>
+            </span>
         </div>
-        <div class="input-group" data-toggle="tooltip" title="Insert password">
-            <span class="input-group-addon"><i class="icon_key_alt"></i></span>
-            <input type="password" class="form-control" placeholder="New Password"
-                   maxlength="40"
-                   minlength="4"
-                   ng-model="Login.password">
+
+        <div class="form-group">
+            <div class="input-group" data-toggle="tooltip" title="Insert password">
+                <span class="input-group-addon"><i class="icon_key_alt"></i></span>
+                <input type="password" class="form-control" placeholder="New Password"
+                       maxlength="40"
+                       minlength="4"
+                       name="password"
+                       ng-model="Login.password">
+            </div>
+            <span style="color:#cc0000" ng-show="updateLoginForm.password.$dirty && updateLoginForm.password.$invalid">
+                <span ng-show="updateLoginForm.password.$error.minlength">{{'PASSWORD_MIN' | translate}}.</span>
+            </span>
         </div>
+
         <div class="form-group">
             <label class="checkbox-inline">
                 <input class="checkbox"
                        type="checkbox"
-                       ng-model="Login.isMainLogin"> Main
+                       ng-model="Login.isMainLogin"> {{'MAIN' | translate}}
             </label>
             <label class="checkbox-inline">
                 <input class="checkbox"
                        type="checkbox"
-                       ng-model="Login.isActivated"> Activated
+                       ng-model="Login.isActivated"> {{'ACTIVATED' | translate}}
             </label>
         </div>
         <button class="btn btn-primary btn-lg btn-block"
                 type="button"
                 ng-click="updateLogin()">
-            Update
+            {{'UPDATE' | translate}}
         </button>
-        <button class="btn btn-info btn-lg btn-block" type="button" ng-click="gotoManage()">Back to Manage
+        <button class="btn btn-info btn-lg btn-block" type="button" ng-click="gotoManage()">
+            {{'GO_BACK' | translate}}
         </button>
     </div>
 </form>

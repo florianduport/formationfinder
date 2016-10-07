@@ -88,5 +88,5 @@ app.config(["$routeProvider", function ($routeProvider) {
                 templateUrl: "templates/alert/listAlertEx.html"
             }
         )
-        .otherwise("/");
+        .otherwise("/dashboard");
 }])

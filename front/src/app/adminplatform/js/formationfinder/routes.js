@@ -28,5 +28,5 @@ app.config(["$routeProvider", function ($routeProvider) {
                 templateUrl: "templates/formationcenter/update.html"
             }
         )
-        .otherwise("/");
+        .otherwise("/dashboard");
 }])

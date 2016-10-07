@@ -249,29 +249,10 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.credentials = {};
             $scope.formationCentersNames = [];
-            $scope.loginButtonText = "Login";
 
-            $scope.usernameExpReg = /^([ê|µ|ç|ùàè|áéíóú|a-z|A-Z]*)([\w|\d])*([_|\s]*[\.|\-|\'|ê|ç|ùàè|áéíóú|A-Z|a-z|\d])*$/;
-
-            $scope.searchFormationCentersNames = function () {
-                $http.get($rootScope.urlBase + "/formationcenter/searchAllFormationCentersNames")
-                    .success(function (data) {
-                        if (data.status === 'ok') {
-                            $scope.formationCentersNames = data.result;
-                        } else {
-                            console.log(data.info);
-                        }
-                    })
-                    .error(function (err) {
-                        console.log(err);
-                    });
-            };
-
-            $scope.searchFormationCentersNames();
+            $scope.usernameExpReg = /^[µçùàèáéíóúA-Za-z]([µçùàèáéíóúA-Za-z\d]*[_.\s]*[µçùàèáéíóúA-Za-z\d]*)+$/;
 
             $scope.login = function () {
-
-                $scope.loginButtonText = "Login in ...";
 
                 $http.post($rootScope.urlBase + "/login/check", {
                         username: $scope.credentials.username,
@@ -297,18 +278,18 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                                             = data
 
                                         console.log("Call DASHBOARD")
-                                        $location.path('/dashboard');
+                                        $location.path('/dashboard').replace();
                                     }
                                     else {
                                         //alert("Error using auth services.");
-                                        $scope.loginButtonText = "Login";
+                                        //$scope.loginButtonText = "Login";
                                         objeData = {type: "Error"}
                                         $scope.showModalMessage("Error using auth services.", objeData)
                                     }
 
                                 }).error(function (err) {
                                 // alert("Error using auth services.");
-                                $scope.loginButtonText = "Login";
+                                //$scope.loginButtonText = "Login";
 
                                 objeData = {type: "Error"}
                                 $scope.showModalMessage("Error using auth services." + err, objeData)
@@ -319,9 +300,9 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             $rootScope.userToken = null;
                             $rootScope.userAuthenticated = false;
                             $rootScope.formationCenter = null;
-                            $scope.loginButtonText = "Login";
+                            //$scope.loginButtonText = "Login";
 
-                            ////Show modal
+                            //Show modal
 
                             //alert("Invalid intent. Please verify your credentials and try again.");
                             objeData = {type: "Error"}
@@ -331,7 +312,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     .error(function (err) {
                         objeData = {type: "Error"}
                         $scope.showModalMessage("Error using auth services.", objeData)
-                        $scope.loginButtonText = "Login";
+                        //$scope.loginButtonText = "Login";
                     });
             };
 
@@ -423,8 +404,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             };
             $scope.initCredentials();
 
-            $scope.usernameExpReg = /^([ê|µ|ç|ùàè|áéíóú|a-z|A-Z]*)([\w|\d])*([_|\s]*[\.|\-|\'|ê|ç|ùàè|áéíóú|A-Z|a-z|\d])*$/;
-
+            $scope.usernameExpReg = /^[µçùàèáéíóúA-Za-z]([µçùàèáéíóúA-Za-z\d]*[_.\s]*[µçùàèáéíóúA-Za-z\d]*)+$/;
 
             $scope.createLogin = function () {
 
@@ -483,25 +463,30 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.deleteLogin = function (index) {
 
-                $http.post($rootScope.urlBase + "/login/delete", {
-                        username: $scope.logins[index].username,
-                        formationCenter: $scope.formationCenter,
-                    })
-                    .success(function (data) {
-                        if (data.status === "ok") {
-                            alert('Login deleted.');
-                            //$scope.initCredentials();
-                        } else {
-                            alert("Error deleting Login: " + data.info);
-                            //$scope.initCredentials();
-                        }
-                    })
-                    .error(function (err) {
-                        alert("Error deleting Login: " + err);
-                    })
-                    .finally(function () {
-                        $scope.searchLogins();
-                    });
+                var confirmation = confirm("You are going to delete this Credential. Continue?");
+
+                if (confirmation) {
+
+                    $http.post($rootScope.urlBase + "/login/delete", {
+                            username: $scope.logins[index].username,
+                            formationCenter: $scope.formationCenter,
+                        })
+                        .success(function (data) {
+                            if (data.status === "ok") {
+                                alert('Credential deleted.');
+                                //$scope.initCredentials();
+                            } else {
+                                alert("Error deleting credential: " + data.info);
+                                //$scope.initCredentials();
+                            }
+                        })
+                        .error(function (err) {
+                            alert("Error deleting credential: " + err);
+                        })
+                        .finally(function () {
+                            $scope.searchLogins();
+                        });
+                }
             };
 
             $scope.gotoCreate = function () {
@@ -694,26 +679,30 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.deleteFormation = function (index) {
 
-                var formation = $scope.formations[index];
+                var confirmation = confirm("You are going to delete this Formation. Continue?");
 
-                $http.post($rootScope.urlBase + "/formation/deleteByID", {
-                        id: formation.id
-                    })
-                    .success(function (result) {
-                        if (result.status === "ok") {
-                            $scope.formations.splice(index, 1);
+                if (confirmation) {
 
-                            alert("Formation deleted.");
-                        } else {
+                    var formation = $scope.formations[index];
+
+                    $http.post($rootScope.urlBase + "/formation/deleteByID", {
+                            id: formation.id
+                        })
+                        .success(function (result) {
+                            if (result.status === "ok") {
+                                $scope.formations.splice(index, 1);
+
+                                alert("Formation deleted.");
+                            } else {
+                                alert("An error has ocurred deleting the Formation.");
+                            }
+                        })
+                        .error(function (err) {
+                            console.log("An error has ocurred deleting the Formation.");
+                            console.log(err);
                             alert("An error has ocurred deleting the Formation.");
-                        }
-                    })
-                    .error(function (err) {
-                        console.log("An error has ocurred deleting the Formation.");
-                        console.log(err);
-                        alert("An error has ocurred deleting the Formation.");
-                    });
-
+                        });
+                }
             };
 
             $scope.gotoCreate = function () {
@@ -730,7 +719,15 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
         function ($scope, $routeParams, $rootScope, $location, $http) {
 
             $scope.formation = null;
-            $scope.newFormationValues = null;
+            $scope.oldFormationValues = null;
+
+            var copyToOldFormation = function () {
+                $scope.oldFormationValues = {
+
+                };
+            };
+
+
 
             $scope.searchFormation = function () {
 
@@ -740,6 +737,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     .success(function (result) {
                         if (result.status === "ok") {
                             $scope.formation = result.data;
+                            initValues();
+                            console.log("La formation para updatear tiene: ",$scope.formation);
                         } else {
                             console.log("Error searching Formation: ", result.info);
                             alert("Error searching Formation: " + result.info);
@@ -773,6 +772,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             };
             $scope.searchPlaces();
+            //$scope.selectedPlace = null;
 
             $scope.animatorsPSY = [];
             $scope.searchPSY = function () {
@@ -794,7 +794,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     });
             };
             $scope.searchPSY();
-            $scope.selectedPSY = null;
+            //$scope.selectedPSY = null;
 
             $scope.animatorsBAFM = [];
             $scope.searchBAFM = function () {
@@ -816,7 +816,12 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     });
             };
             $scope.searchBAFM();
-            $scope.selectedBAFM = null;
+            //$scope.selectedBAFM = null;
+
+            var initValues = function () {
+                //$scope.selectedPlace = $scope.formation.place;
+            };
+
 
             $scope.updateFormation = function () {
 
@@ -827,11 +832,11 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
     .controller("CreateFormationController", ["$scope", "$rootScope", "$location", "$http",
         function ($scope, $rootScope, $location, $http) {
 
-            $scope.CreateButtonText = "Create Formation";
+            //$scope.CreateButtonText = "Create Formation";
 
             $scope.numExpReg = /^[\d]+$/;
             $scope.dateRegExp = /^\d{2}\/\d{2}\/\d{4}$/;
-            $scope.maxDate = new Date(2040, 00, 01);
+            $scope.maxDate = new Date(2080, 00, 01);
 
             $scope.Hours = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
             $scope.MorningStartH;
@@ -850,16 +855,19 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 $scope.animatorsPSY = [];
                 $scope.animatorsBAFM = [];
                 $scope.fDate = {};
+                $scope.fDate.date = new Date().setHours(0, 0, 0, 0);
 
-                $scope.MorningStartH = null;
-                $scope.MorningStartM = null;
-                $scope.MorningEndH = null;
-                $scope.MorningEndM = null;
-                $scope.AfternoonStartH = null;
-                $scope.AfternoonStartM = null;
-                $scope.AfternoonEndH = null;
-                $scope.AfternoonEndM = null;
-                $scope.InvalidDateParameters = true;
+                $scope.MorningStartH = "09";
+                $scope.MorningStartM = "00";
+                $scope.MorningEndH = "11";
+                $scope.MorningEndM = "00";
+                $scope.AfternoonStartH = "02";
+                $scope.AfternoonStartM = "00";
+                $scope.AfternoonEndH = "04";
+                $scope.AfternoonEndM = "00";
+
+                $scope.InvalidDateParameters = false;
+                $scope.dateOutOfRange = false;
 
                 $scope.selectedPlace = null;
                 $scope.selectedPSY = null;
@@ -869,6 +877,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 $scope.formation.isConfirmed = false;
                 $scope.formation.animators = [];
                 $scope.formation.dates = [];
+                $scope.formation.maxPeople = 20;
 
                 $scope.searchPlaces = function () {
 
@@ -931,26 +940,35 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 };
                 $scope.searchBAFM();
             };
-
             $scope.initParameters();
 
             $scope.validDate = function (vDate) {
-                var tempDate = new Date();
+                var tempDate = new Date().setHours(0, 0, 0, 0);
+                //tempDate.setHours(0, 0, 0, 0);
 
-                return (tempDate < vDate && vDate < $scope.maxDate);
+                //console.log("TempDate es : ", tempDate);
+                //console.log("vDate es : ", vDate);
+
+                if (tempDate <= vDate && vDate <= $scope.maxDate) {
+                    $scope.dateOutOfRange = false;
+                    return true;
+                }
+
+                $scope.dateOutOfRange = true;
+                return false;
             };
 
             $scope.validateDateParameters = function () {
-                if ($scope.MorningStartH
-                    && $scope.MorningStartM
-                    && $scope.MorningEndH
-                    && $scope.MorningEndM
-                    && $scope.AfternoonStartH
-                    && $scope.AfternoonStartM
-                    && $scope.AfternoonEndH
-                    && $scope.AfternoonEndM
-                    && $scope.fDate.date
-                    && $scope.validDate($scope.fDate.date)
+
+                if (!$scope.fDate.date) {
+                    $scope.InvalidDateParameters = true;
+                    return;
+                }
+
+                //convert to timestamp and set the 00:00 Hour.
+                $scope.fDate.date = new Date($scope.fDate.date).setHours(0, 0, 0, 0);
+
+                if ($scope.validDate($scope.fDate.date)
                 ) {
                     $scope.InvalidDateParameters = false;
                 } else {
@@ -960,9 +978,9 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.insertDate = function () {
 
-                console.log("**************Entre a insert Date:*********************");
-
-                console.log("El valor de Fdate: ", $scope.fDate);
+                //console.log("**************Entre a insert Date:*********************");
+                //
+                //console.log("El valor de Fdate: ", $scope.fDate);
 
                 $scope.fDate.morning = {
                     hourStart: $scope.MorningStartH + ":" + $scope.MorningStartM,
@@ -977,15 +995,15 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 //Search the Dates array, if there is a same date, then update the "{morning, afternoon} attributes"
                 var lgth = $scope.formation.dates.length;
                 for (var i = 0; i < lgth; i++) {
-                    console.log("$scope.formation.dates[i].date: ", $scope.formation.dates[i].date);
-                    console.log("$scope.fDate.date: ", $scope.fDate.date);
+                    //console.log("$scope.formation.dates[i].date: ", $scope.formation.dates[i].date);
+                    //console.log("$scope.fDate.date: ", $scope.fDate.date);
+                    //
+                    //console.log("El tipo de $scope.formation.dates[i].date es: ", typeof $scope.formation.dates[i].date);
+                    //console.log("El tipo de $scope.fDate.date: ", typeof $scope.fDate.date);
+                    //
+                    //console.log("La comparacion da: ", ($scope.formation.dates[i].date == $scope.fDate.date))
 
-                    console.log("El tipo de $scope.formation.dates[i].date es: ", typeof $scope.formation.dates[i].date);
-                    console.log("El tipo de $scope.fDate.date: ", typeof $scope.fDate.date);
-
-                    console.log("La comparacion da: ", ($scope.formation.dates[i].date == $scope.fDate.date))
-
-                    if ($scope.formation.dates[i].date == $scope.fDate.date) {
+                    if ($scope.formation.dates[i].date === $scope.fDate.date) {
                         console.log("Entre al if ");
                         $scope.formation.dates.splice(i, 1, {
                             date: $scope.fDate.date,
@@ -996,8 +1014,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             }
                         });
 
-                        $scope.fDate.date = null;
-                        $scope.InvalidDateParameters = true;
+                        $scope.fDate.date = new Date().setHours(0, 0, 0, 0);
+                        $scope.InvalidDateParameters = false;
 
                         return;
                     }
@@ -1009,8 +1027,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     afternoon: {hourStart: $scope.fDate.afternoon.hourStart, hourEnd: $scope.fDate.afternoon.hourEnd}
                 });
 
-                $scope.fDate.date = null;
-                $scope.InvalidDateParameters = true;
+                $scope.fDate.date = new Date().setHours(0, 0, 0, 0);
+                $scope.InvalidDateParameters = false;
             };
 
             $scope.deleteDate = function (index) {
@@ -1038,6 +1056,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             alert("Formation Created.");
                             console.log("Formation Created.");
                             console.log(result.data);
+                            $scope.gotoManage();
                         } else {
                             alert("Error creating the Formation.");
                         }
@@ -1165,54 +1184,6 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
         function ($scope, $rootScope, $location, $http, $uibModal) {
 
             $scope.animators = [];
-            $scope.showCreateForm = false;
-            $scope.nameRegExp = /^[A-Za-z][A-Za-z\s]+$/;
-            $scope.zipcodeRegExp = /^\d{5}$/;
-
-            $scope.initParameters = function () {
-                $scope.animator = {};
-                $scope.animator.type = 'PSY';
-
-            };
-
-            $scope.initParameters();
-
-            $scope.validParameters = function () {
-                return ($scope.animator.name && $scope.animator.firstName
-                && $scope.animator.city
-                && $scope.animator.zipCode);
-            };
-
-            $scope.createAnimator = function () {
-                if ($scope.validParameters()) {
-
-                    $http.post($rootScope.urlBase + "/animator/create", {
-                            formationCenter: $rootScope.formationCenter,
-                            animator: $scope.animator
-                        })
-                        .success(function (result) {
-                            if (result.status === "ok") {
-
-                                $scope.initParameters();
-                                alert("Animator created.");
-                                console.log("Animator created.", result.data);
-
-                                $scope.searchAnimators();
-
-                            } else {
-                                alert("Error creating Animator: " + result.info);
-                                console.log("Error creating Animator: ", result.info);
-                            }
-                        })
-                        .error(function (err) {
-                            console.log("Error creating Animator: ", err);
-                        });
-                }
-            };
-
-            $scope.ToggleShowCreateAnimator = function () {
-                $scope.showCreateForm = !$scope.showCreateForm;
-            };
 
             $scope.searchAnimators = function () {
 
@@ -1237,27 +1208,37 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             $scope.searchAnimators();
 
             $scope.deleteAnimator = function (index) {
-                var Aminator = $scope.animators[index];
 
-                $http.post($rootScope.urlBase + "/animator/deleteByID", {
-                        id: Aminator.id
-                    })
-                    .success(function (result) {
-                        if (result.status === "ok") {
-                            $scope.animators.splice(index, 1);
-                            alert("Animator deleted");
-                            console.log("Animator deleted");
-                        } else {
-                            console.log("Error deleting Animator: ", result.info);
-                        }
-                    })
-                    .error(function (err) {
-                        console.log("Error deleting Animator: ", err);
-                    });
+                var confirmation = confirm("You are going to delete this Animator. Continue?");
+
+                if (confirmation) {
+
+                    var Aminator = $scope.animators[index];
+
+                    $http.post($rootScope.urlBase + "/animator/deleteByID", {
+                            id: Aminator.id
+                        })
+                        .success(function (result) {
+                            if (result.status === "ok") {
+                                $scope.animators.splice(index, 1);
+                                alert("Animator deleted");
+                                console.log("Animator deleted");
+                            } else {
+                                console.log("Error deleting Animator: ", result.info);
+                            }
+                        })
+                        .error(function (err) {
+                            console.log("Error deleting Animator: ", err);
+                        });
+                }
             };
 
             $scope.editAnimator = function (index) {
                 $location.path("/animator/edit/" + $scope.animators[index].id);
+            };
+
+            $scope.gotoCreateAnimator = function () {
+                $location.path("/animator/create/");
             };
 
         }])

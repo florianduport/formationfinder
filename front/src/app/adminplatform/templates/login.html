@@ -1,8 +1,7 @@
 <div class="container well">
     <div class="row">
         <div class="col">
-            <h1 class="text-center">Wellcome to the Formation Finder</h1>
-            <h3 class="text-center">ADMIN PLATFORM</h3>
+            <h1 class="text-center">{{'WELLCOME' | translate}}</h1>
         </div>
     </div>
 </div>
@@ -13,28 +12,27 @@
             <form class="login-form" name="loginForm">
                 <div class="login-wrap">
                     <p class="login-img"><i class="icon_lock_alt"></i></p>
-                    <div class="input-group" data-toggle="tooltip" title="Insert user´s name">
+                    <div class="input-group" data-toggle="tooltip" title="{{'INSERT_NAME' | translate}}">
                         <span class="input-group-addon"><i class="icon_profile"></i></span>
-                        <input type="text" class="form-control" placeholder="Username"
+                        <input type="text" class="form-control" placeholder="{{'USERNAME' | translate}}"
                                autofocus
                                maxlength="40"
                                ng-model="username"
-                               ng-pattern="usernameExpReg"
                                required>
+                        <!--ng-pattern="usernameExpReg"-->
                     </div>
-                    <div class="input-group" data-toggle="tooltip" title="Insert password">
+                    <div class="input-group" data-toggle="tooltip" title="{{'INSERT_PASSWORD' | translate}}">
                         <span class="input-group-addon"><i class="icon_key_alt"></i></span>
-                        <input type="password" class="form-control" placeholder="Password"
+                        <input type="password" class="form-control" placeholder="{{'PASSWORD' | translate}}"
                                maxlength="40"
                                ng-model="password"
-                               minlength="4"
                                required>
                     </div>
 
                     <button class="btn btn-primary btn-lg btn-block"
                             type="submit"
                             ng-disabled="loginForm.$invalid"
-                            ng-click="login()">{{loginButtonText}}
+                            ng-click="login()">{{'LOGIN' | translate}}
                     </button>
                 </div>
             </form>

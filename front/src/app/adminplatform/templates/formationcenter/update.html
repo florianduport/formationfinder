@@ -1,14 +1,14 @@
 <div class="container well" id="updateContainer">
     <div class="row">
         <div class="page-header">
-            <h2><p class="text-center">Update Formation Center</p></h2>
+            <h2 class="text-center">{{'UPDATE_FORMATION_CENTER' | translate}}</h2>
         </div>
     </div>
 
     <div class="row">
         <form class="form" name="updateFCform">
             <div class="form-group">
-                <label for="newName">Name</label>
+                <label for="newName">{{'NAME' | translate}}</label>
                 <input class="form-control" type="text"
                        maxlength="40"
                        id="newName"
@@ -17,12 +17,12 @@
                        ng-model="formationcenter.name"
                        ng-pattern="nameRegExp"/>
                  <span style="color:#cc0000" ng-show="updateFCform.newName.$dirty && updateFCform.newName.$invalid">
-                    <span ng-show="updateFCform.newName.$error.pattern">Only letters. At least two characters.</span>
+                    <span ng-show="updateFCform.newName.$error.pattern">{{'NAME_ERROR' | translate}}</span>
                  </span>
             </div>
 
             <div class="form-group">
-                <label for="newAddress">address</label>
+                <label for="newAddress">{{'ADDRESS' | translate}}</label>
                 <input class="form-control" type="text"
                        maxlength="80"
                        id="newAddress"
@@ -30,12 +30,12 @@
                        minlength="4"
                        ng-model="formationcenter.address"/>
                 <span style="color:#cc0000" ng-show="updateFCform.newAddress.$dirty && updateFCform.newAddress.$invalid">
-                    <span ng-show="updateFCform.newAddress.$error.minlength">At least 4 characters.</span>
+                    <span ng-show="updateFCform.newAddress.$error.minlength">{{'PASSWORD_MIN' | translate}}</span>
                 </span>
             </div>
 
             <div class="form-group">
-                <label for="newEmail">Email</label>
+                <label for="newEmail">{{'EMAIL' | translate}}</label>
                 <input class="form-control" type="text"
                        maxlength="40"
                        id="newEmail"
@@ -44,13 +44,13 @@
                        ng-model="formationcenter.email"
                        ng-pattern="emailRedExp"/>
                 <span style="color:#cc0000" ng-show="updateFCform.newEmail.$dirty && updateFCform.newEmail.$invalid">
-                    <span ng-show="updateFCform.newEmail.$error.minlength">At least 5 characters.</span>
-                    <span ng-show="updateFCform.newEmail.$error.pattern">Invalid email address.</span>
+                    <!--<span ng-show="updateFCform.newEmail.$error.minlength">At least 5 characters.</span>-->
+                    <span ng-show="updateFCform.newEmail.$error.pattern">{{'INVALID_EMAIL' | translate}}</span>
                 </span>
             </div>
 
             <div class="form-group">
-                <label for="newZipcode">Zipcode</label>
+                <label for="newZipcode">{{'ZIPCODE' | translate}}</label>
                 <input class="form-control" type="text"
                        maxlength="5"
                        id="newZipcode"
@@ -58,12 +58,12 @@
                        ng-model="formationcenter.zipCode"
                        ng-pattern="zipcodeRegExp"/>
                 <span style="color:#cc0000" ng-show="updateFCform.newZipcode.$dirty && updateFCform.newZipcode.$invalid">
-                    <span ng-show="updateFCform.newZipcode.$error.pattern">Invalid Zipcode.</span>
+                    <span ng-show="updateFCform.newZipcode.$error.pattern">{{'ZIPCODE_ERROR' | translate}}</span>
                 </span>
             </div>
 
             <div class="form-group">
-                <label for="newCity">City</label>
+                <label for="newCity">{{'CITY' | translate}}</label>
                 <input class="form-control" type="text"
                        maxlength="40"
                        id="newCity"
@@ -72,12 +72,12 @@
                        ng-pattern="nameRegExp"
                        ng-model="formationcenter.city"/>
                 <span style="color:#cc0000" ng-show="updateFCform.newCity.$dirty && updateFCform.newCity.$invalid">
-                    <span ng-show="updateFCform.newCity.$error.pattern">Only letters. At least two characters.</span>
+                    <span ng-show="updateFCform.newCity.$error.pattern">{{'NAME_ERROR' | translate}}</span>
                 </span>
             </div>
 
             <div class="form-group">
-                <label for="newPhonenumber">Phone Number</label>
+                <label for="newPhonenumber">{{'PHONE_NUMBER' | translate}}</label>
                 <input class="form-control" type="text"
                        maxlength="10"
                        id="newPhonenumber"
@@ -85,13 +85,13 @@
                        ng-model="formationcenter.phoneNumber"
                        ng-pattern="phoneRegExp"/>
                 <span style="color:#cc0000" ng-show="updateFCform.newPhonenumber.$dirty && updateFCform.newPhonenumber.$invalid">
-                    <span ng-show="updateFCform.newPhonenumber.$error.pattern">Only number, starting with '0'.</span>
+                    <span ng-show="updateFCform.newPhonenumber.$error.pattern">{{'PHONE_NUMBER_ERROR' | translate}}</span>
                 </span>
             </div>
 
             <div class="checkbox">
                 <label>
-                    <input type="checkbox" ng-model="formationcenter.isActivated"> Activated
+                    <input type="checkbox" ng-model="formationcenter.isActivated"> {{'ACTIVATED' | translate}}
                 </label>
             </div>
 
@@ -103,13 +103,13 @@
         <div class="form-group">
             <button type="submit" class="btn btn-primary btn-block"
                     ng-click="updateFormationCenter()">
-                Update Formation Center
+                {{'UPDATE' | translate}}
             </button>
         </div>
         <div class="form-group">
             <button type="button" class="btn btn-info btn-block"
                     ng-click="gotoToFormationCenters()">
-                Back to Formation Centers
+                {{'GO_BACK' | translate}}
             </button>
         </div>
     </div>

@@ -1,7 +1,8 @@
 <div class="manage container well" id="manage-animator">
     <div class="row">
+        <h2 class="text-center">{{'ADMIN_ANIMATORS' | translate}}</h2>
         <form>
-            <h4>Search Animators in the list</h4>
+            <h4>{{'SEARCH_ANIMATOR_IN_LIST' | translate}}</h4>
             <div class="form-group">
                 <div class="col-sm-5">
                     <input class="form-control"
@@ -9,15 +10,14 @@
                            ng-model="criteria"/>
                 </div>
             </div>
-
         </form>
     </div>
     <div class="row">
         <form>
             <div class="form-group">
-                <label class="control-label col-sm-4" for="">Create Animator
+                <label class="control-label col-sm-4">{{'CREATE_ANIMATOR' | translate}}
                     <button class="btn btn-xs btn-info" ng-click="gotoCreateAnimator()">
-                        Create
+                        {{'CREATE' | translate}}
                     </button>
                 </label>
             </div>
@@ -25,17 +25,22 @@
     </div>
 
     <div class="row">
-        <div class="table-responsive">
+
+        <div ng-show="!(animators.length > 0)">
+            <div class="alert alert-danger" role="alert">{{'NOTHING_TO_SHOW' | translate}}</div>
+        </div>
+
+        <div class="table-responsive" ng-show="(animators.length > 0)">
             <table class="table table-condensed">
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>Name</th>
-                    <th>First Name</th>
-                    <th>Type</th>
-                    <th>City</th>
-                    <th>zipCode</th>
-                    <th>Actions</th>
+                    <th>{{'NAME' | translate}}</th>
+                    <th>{{'FIRST_NAME' | translate}}</th>
+                    <th>{{'TYPE' | translate}}</th>
+                    <th>{{'CITY' | translate}}</th>
+                    <th>{{'ZIPCODE' | translate}}</th>
+                    <th>{{'ACTIONS' | translate}}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -47,11 +52,13 @@
                     <td>{{animator.city}}</td>
                     <td>{{animator.zipCode}}</td>
                     <td>
-                        <input type="button" class="btn btn-sm btn-success" value="Edit"
-                               ng-click="editAnimator(key)"/>
+                        <button type="button" class="btn btn-sm btn-success" ng-click="editAnimator(key)">
+                            {{'EDIT' | translate}}
+                        </button>
                         <span></span>
-                        <input type="button" class="btn btn-sm btn-danger" value="Delete"
-                               ng-click="deleteAnimator(key)"/>
+                        <button type="button" class="btn btn-sm btn-danger" value="Delete" ng-click="deleteAnimator(key)">
+                            {{'DELETE' | translate}}
+                        </button>
                     </td>
                 </tr>
                 </tbody>

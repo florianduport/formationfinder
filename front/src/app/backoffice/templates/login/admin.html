@@ -1,20 +1,23 @@
 <div class="container well admin-login">
-    <h2>Admin security</h2>
-    <p>In this topic you can admin your formation center operators.</p>
-    <h5>Create new Credential</h5>
-    <button class="btn btn-sm btn-info"
-            ng-click="gotoCreate()">
-        Create
-    </button>
+    <h2 class="text-center">{{'ADMIN_CREDENTIALS' | translate}}</h2>
+    <div class="form-group">
+        <label class="control-label"> {{'CREATE_CREDENTIAL' | translate}}
+            <button class="btn btn-sm btn-info"
+                    ng-click="gotoCreate()">
+                {{'CREATE' | translate}}
+            </button>
+        </label>
+    </div>
+
     <div class="table-responsive">
         <table class="table table-condensed">
             <thead>
             <tr>
                 <th>#</th>
-                <th>Username</th>
-                <th>Main</th>
-                <th>Activated</th>
-                <th>Actions</th>
+                <th>{{'USERNAME' | translate}}</th>
+                <th>{{'MAIN' | translate}}</th>
+                <th>{{'ACTIVATED' | translate}}</th>
+                <th>{{'ACTIONS' | translate}}</th>
             </tr>
             </thead>
             <tbody>
@@ -38,12 +41,14 @@
                     </span>
                 </td>
                 <td>
-                    <input type="button" class="btn btn-sm btn-success" value="Edit"
-                           ng-click="editLogin(key)"/>
+                    <button type="button" class="btn btn-sm btn-success" ng-click="editLogin(key)">
+                        {{'EDIT' | translate}}
+                    </button>
                     <span></span>
                     <span></span>
-                    <input type="button" class="btn btn-sm btn-danger" value="Delete"
-                           ng-click="deleteLogin(key)"/>
+                    <button type="button" class="btn btn-sm btn-danger" value="Delete" ng-click="deleteLogin(key)">
+                        {{'DELETE' | translate}}
+                    </button>
                 </td>
             </tr>
             </tbody>

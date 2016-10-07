@@ -1,33 +1,32 @@
 <form class="login-form" name="loginForm">
     <div class="login-wrap">
         <p class="login-img"><i class="icon_lock_alt"></i></p>
-        <div class="input-group" data-toggle="tooltip" title="Insert user´s name">
+        <div class="input-group" data-toggle="tooltip" title="{{'INSERT_NAME' | translate}}">
             <span class="input-group-addon"><i class="icon_profile"></i></span>
-            <input type="text" class="form-control" placeholder="Username"
+            <input type="text" class="form-control" placeholder="{{'USERNAME' | translate}}"
                    autofocus
                    maxlength="40"
                    ng-model="credentials.username"
-                   ng-pattern="usernameExpReg"
                    required>
+            <!--ng-pattern="usernameExpReg"-->
         </div>
-        <div class="input-group" data-toggle="tooltip" title="Insert password">
+        <div class="input-group" data-toggle="tooltip" title="{{'INSERT_PASSWORD' | translate}}">
             <span class="input-group-addon"><i class="icon_key_alt"></i></span>
-            <input type="password" class="form-control" placeholder="Password"
+            <input type="password" class="form-control" placeholder="{{'PASSWORD' | translate}}"
                    maxlength="40"
                    ng-model="credentials.password"
                    required>
         </div>
         <div class="form-group">
             <label class="checkbox-inline">
-                <input type="checkbox" value="remember-me"> Remember me
-
+                <input type="checkbox" value="remember-me"> {{'REMEMBER_ME' | translate}}
             </label>
-            <span class="pull-right"> <a href="#"> Forgot Password?</a></span>
+            <span class="pull-right"> <a href="#"> {{'FORGOT_PASSWORD' | translate}}</a></span>
         </div>
         <button class="btn btn-primary btn-lg btn-block"
                 type="submit"
                 ng-disabled="loginForm.$invalid"
-                ng-click="login()">{{loginButtonText}}
+                ng-click="login()">{{'LOGIN' | translate}}
         </button>
     </div>
 </form>

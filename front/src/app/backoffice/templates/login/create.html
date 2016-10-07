@@ -1,50 +1,59 @@
 <form class="login-form" id="createForm" name="createForm">
     <div class="login-wrap">
         <p class="login-img"><i class="icon_lock_alt"></i></p>
-        <div class="input-group" data-toggle="tooltip" title="Insert user´s name">
-            <span class="input-group-addon"><i class="icon_profile"></i></span>
-            <input type="text" class="form-control" placeholder="Username"
-                   autofocus
-                   maxlength="40"
-                   ng-model="credentials.username"
-                   ng-pattern="usernameExpReg"
-                   required>
+        <h4 class="text-center">{{'CREATE_CREDENTIAL' | translate}}</h4>
+        <div class="form-group">
+            <div class="input-group" data-toggle="tooltip" title="{{'INSERT_NAME' | translate}}">
+                <span class="input-group-addon"><i class="icon_profile"></i></span>
+                <input type="text" class="form-control" placeholder="{{'USERNAME' | translate}}"
+                       autofocus
+                       name="username"
+                       maxlength="40"
+                       ng-model="credentials.username"
+                       ng-pattern="usernameExpReg"
+                       required>
+            </div>
+            <span style="color:#cc0000" ng-show="createForm.username.$dirty && createForm.username.$invalid">
+                <span ng-show="createForm.username.$error.required">{{'REQUIRED_FIELD' | translate}}.</span>
+                <span ng-show="createForm.username.$error.pattern">{{'INVALID_USERNAME' | translate}}.</span>
+            </span>
         </div>
-        <div class="input-group" data-toggle="tooltip" title="Insert password">
-            <span class="input-group-addon"><i class="icon_key_alt"></i></span>
-            <input type="password" class="form-control" placeholder="Password"
-                   maxlength="40"
-                   minlength="4"
-                   ng-model="credentials.password"
-                   required>
+
+        <div class="form-group">
+            <div class="input-group" data-toggle="tooltip" title="{{'INSERT_PASSWORD' | translate}}">
+                <span class="input-group-addon"><i class="icon_key_alt"></i></span>
+                <input type="password" class="form-control" placeholder="{{'PASSWORD' | translate}}"
+                       maxlength="40"
+                       minlength="4"
+                       name="password"
+                       ng-model="credentials.password"
+                       required>
+            </div>
+            <span style="color:#cc0000" ng-show="createForm.password.$dirty && createForm.password.$invalid">
+                <span ng-show="createForm.password.$error.required">{{'REQUIRED_FIELD' | translate}}.</span>
+                <span ng-show="createForm.password.$error.minlength">{{'PASSWORD_MIN' | translate}}.</span>
+            </span>
         </div>
-        <!--<div class="input-group" data-toggle="tooltip" title="Select a Formation Center">-->
-            <!--<span class="input-group-addon"><i class="icon_briefcase"></i></span>-->
-            <!--<input type="text" class="form-control" placeholder="Formation center"-->
-                   <!--maxlength="40"-->
-                   <!--ng-model="credentials.formationCenter"-->
-                   <!--disabled>-->
-                   <!--&lt;!&ndash;uib-typeahead="FCname for FCname in formationCentersNames | filter:$viewValue">&ndash;&gt;-->
-        <!--</div>-->
+
         <div class="form-group">
             <label class="checkbox-inline">
                 <input class="checkbox"
                        type="checkbox"
-                       ng-model="credentials.isMainLogin"> Main
+                       ng-model="credentials.isMainLogin"> {{'MAIN' | translate}}
             </label>
             <label class="checkbox-inline">
                 <input class="checkbox"
                        type="checkbox"
-                       ng-model="credentials.isActivated"> Activated
+                       ng-model="credentials.isActivated"> {{'ACTIVATED' | translate}}
             </label>
         </div>
         <button class="btn btn-primary btn-lg btn-block"
                 type="submit"
                 ng-disabled="createForm.$invalid"
-                ng-click="createLogin()">{{loginButtonText}}
+                ng-click="createLogin()">{{'CREATE' | translate}}
         </button>
         <button class="btn btn-info btn-lg btn-block" type="button" ng-click="gotoManage()">
-            Back to Manage
+            {{'GO_BACK' | translate}}
         </button>
     </div>
 </form>

@@ -1,0 +1,173 @@
+<div class="container well createFormContainer">
+    <form class="" name="createForm" id="createForm">
+        <div class="row">
+            <div class="col col-md-6">
+                <h4>Enter Formation attributes</h4>
+                <label>Select Place</label>
+                <div class="input-group" data-toggle="tooltip" title="Select a Place">
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-map-marker"></span></span>
+                    <select ng-model="selectedPlace"
+                            ng-options="place.name for place in places"
+                            class="form-control"
+                            required>
+                    </select>
+                </div>
+
+                <label>Insert Price</label>
+                <div class="input-group" data-toggle="tooltip" title="Insert price">
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-euro"></span></span>
+                    <input type="text" class="form-control"
+                           autofocus
+                           maxlength="3"
+                           ng-model="formation.price"
+                           ng-pattern="numExpReg"
+                           required>
+                </div>
+                <label>Insert Max People</label>
+                <div class="input-group" data-toggle="tooltip" title="Insert Max People">
+                    <span class="input-group-addon"><span class="glyphicon">#</span></span>
+                    <input type="text" class="form-control"
+                           maxlength="3"
+                           ng-model="formation.maxPeople"
+                           ng-pattern="numExpReg"
+                           required>
+                </div>
+
+                <label>Select Psychologist</label>
+                <div class="input-group" data-toggle="tooltip" title="Select a Psychologist">
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                    <select ng-model="selectedPSY"
+                            ng-options="psy.name for psy in animatorsPSY"
+                            class="form-control"
+                            placeholder="Psychologist"
+                            required>
+                    </select>
+                </div>
+
+                <label>Select BAFM/BAFCRI</label>
+                <div class="input-group" data-toggle="tooltip" title="Select a BAFM/BAFCRI">
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                    <select ng-model="selectedBAFM"
+                            ng-options="BAFM.name for BAFM in animatorsBAFM"
+                            class="form-control"
+                            placeholder="BAFM/BAFCRI"
+                            required>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-inline">
+                        <input class="checkbox"
+                               type="checkbox"
+                               ng-model="formation.isConfirmed"> Is Confirmed
+                    </label>
+                </div>
+            </div>
+
+            <div class="col col-md-6">
+                <fieldset>
+                    <legend>Insert Date</legend>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input name="DateInput" id="DateInput"
+                                   class="form-control"
+                                   ng-model="fDate.date"
+                                   ng-pattern="dateRegExp"
+                                   ng-change="validateDateParameters()"
+                                   type="text"
+                                   maxlength="10"
+                                   placeholder="Peak Date"
+                                   uib-datepicker-popup="{{format}}"
+                                   is-open="popupDateInput.opened"
+                                   datepicker-options="DateInputOptions"/>
+                            <span class="input-group-addon">
+                                <span id="dateInputInit" class="fa fa-calendar"  ng-click="openDateInput()"></span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <label class="label label-info">Morning:</label>
+                    <strong>Start</strong>
+                    <select name="MorningStartH"
+                            ng-model="MorningStartH"
+                            ng-change="validateDateParameters()"
+                            ng-options="hour for hour in Hours">
+                    </select>:
+                    <select name="MorningStartM"
+                            ng-model="MorningStartM"
+                            ng-change="validateDateParameters()"
+                            ng-options="minute for minute in Minutes">
+                    </select>
+                    <span></span>
+
+                    <strong>End</strong>
+                    <select name="MorningEndH"
+                            ng-model="MorningEndH"
+                            ng-change="validateDateParameters()"
+                            ng-options="hour for hour in Hours">
+                    </select>:
+                    <select name="MorningEndM"
+                            ng-model="MorningEndM"
+                            ng-change="validateDateParameters()"
+                            ng-options="minute for minute in Minutes">
+                    </select>
+                    <br/>
+
+                    <label class="label label-info">Afternoon:</label>
+                    <strong>Start</strong>
+                    <select name="AfternoonStartH"
+                            ng-model="AfternoonStartH"
+                            ng-change="validateDateParameters()"
+                            ng-options="hour for hour in Hours">
+                    </select>:
+                    <select name="AfternoonStartM"
+                            ng-model="AfternoonStartM"
+                            ng-change="validateDateParameters()"
+                            ng-options="minute for minute in Minutes">
+                    </select>
+                    <span></span>
+                    <strong>End</strong>
+                    <select name="AfternoonEndH"
+                            ng-model="AfternoonEndH"
+                            ng-change="validateDateParameters()"
+                            ng-options="hour for hour in Hours">
+                    </select>:
+                    <select name="AfternoonEndM"
+                            ng-model="AfternoonEndM"
+                            ng-change="validateDateParameters()"
+                            ng-options="minute for minute in Minutes">
+                    </select>
+
+                    <br/>
+                    <br/>
+
+                    <button class="btn btn-info btn-md btn-block"
+                            type="button"
+                            ng-disabled="InvalidDateParameters"
+                            ng-click="insertDate()">Insert Date
+                    </button>
+                    <label></label>
+                    <div ng-show="formation.dates.length > 0">
+                        <h5>Dates:</h5>
+                    <ul>
+                        <li ng-repeat="(key,fdate) in formation.dates">
+                            <!--| orderBy: fdate.date-->
+                            <span class="label label-warning"> {{fdate.date | date}} </span>    <button class="btn btn-danger btn-xs" ng-click="deleteDate(key)">X</button>
+                        </li>
+                    </ul>
+                    </div>
+
+                </fieldset>
+            </div>
+            <button class="btn btn-primary btn-lg btn-block"
+                    type="submit"
+                    ng-disabled="createForm.$invalid"
+                    ng-click="createFormation()">{{'CREATE' | translate}}
+            </button>
+            <button class="btn btn-info btn-lg btn-block"
+                    type="button"
+                    ng-click="gotoManage()">{{'GO_BACK' | translate}}
+            </button>
+        </div>
+    </form>
+</div>

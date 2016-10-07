@@ -1,23 +1,16 @@
 <div class="container well" id="createContainer">
     <div class="row">
-        <div class="col col-xs-1 clearfix">
-
-        </div>
-        <div class="col col-xs-10">
-            <div class="page-header">
-                <h2 class="text-center">Create Formation Center</h2>
-            </div>
-        </div>
-        <div class="col col-xs-1">
-
+        <div class="col">
+            <h2 class="text-center">{{'CREATE_FORMATION_CENTER' | translate}}</h2>
         </div>
     </div>
 
+    <br/>
     <!-- CREATE FORMATION CENTER FORM  -->
-    <div class="row">
-        <form class="form-horizontal" name="createFCform" id="createFCform">
+    <form class="form-horizontal" name="createFCform" id="createFCform">
+        <div class="row">
             <div class="form-group">
-                <label class="col-xs-3 control-label" for="name">Name</label>
+                <label class="col-xs-4 control-label" for="name">{{'NAME' | translate}}</label>
                 <div class="col col-xs-6">
                     <input class="form-control" type="text"
                            maxlength="40"
@@ -28,14 +21,14 @@
                            ng-pattern="nameRegExp"
                            required/>
                     <span style="color:#cc0000" ng-show="createFCform.name.$dirty && createFCform.name.$invalid">
-                        <span ng-show="createFCform.name.$error.required">Name is required.</span>
-                        <span ng-show="createFCform.name.$error.pattern">Only letters. At least two characters.</span>
+                        <span ng-show="createFCform.name.$error.required">{{'REQUIRED_FIELD' | translate}}</span>
+                        <span ng-show="createFCform.name.$error.pattern">{{'NAME_ERROR' | translate}}</span>
                     </span>
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="col-xs-3 control-label" for="defaultLogin">Default Username</label>
+                <label class="col-xs-4 control-label" for="defaultLogin">{{'DEFAULT_USERNAME' | translate}}</label>
                 <div class="col col-xs-6">
                     <input class="form-control" type="text"
                            maxlength="40"
@@ -45,18 +38,19 @@
                            ng-model="formationcenter.defaultLogin"
                            ng-pattern="usernameExpReg"
                            required/>
-                    <span style="color:#cc0000" ng-show="createFCform.defaultLogin.$dirty && createFCform.defaultLogin.$invalid">
-                        <span ng-show="createFCform.defaultLogin.$error.required">Default username is required.</span>
-                        <span ng-show="createFCform.defaultLogin.$error.minlength">Enter at least two characters.</span>
-                        <span ng-show="createFCform.defaultLogin.$error.pattern">Invalid characters.</span>
+                    <span style="color:#cc0000"
+                          ng-show="createFCform.defaultLogin.$dirty && createFCform.defaultLogin.$invalid">
+                        <span ng-show="createFCform.defaultLogin.$error.required">{{'REQUIRED_FIELD' | translate}}</span>
+                        <span ng-show="createFCform.defaultLogin.$error.minlength">{{'AT_LEAST_2_CHARACTERS' | translate}}</span>
+                        <span ng-show="createFCform.defaultLogin.$error.pattern">{{'INVALID_USERNAME' | translate}}</span>
                     </span>
 
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="col-xs-3 control-label" for="address">address</label>
-                <div class="col col-xs-8">
+                <label class="col-xs-4 control-label" for="address">{{'ADDRESS' | translate}}</label>
+                <div class="col col-xs-7">
                     <input class="form-control" type="text"
                            maxlength="80"
                            id="address"
@@ -65,15 +59,15 @@
                            ng-model="formationcenter.address"
                            required/>
                     <span style="color:#cc0000" ng-show="createFCform.address.$dirty && createFCform.address.$invalid">
-                        <span ng-show="createFCform.address.$error.required">Address is required.</span>
-                        <span ng-show="createFCform.address.$error.minlength">At least 4 characters.</span>
+                        <span ng-show="createFCform.address.$error.required">{{'REQUIRED_FIELD' | translate}}</span>
+                        <span ng-show="createFCform.address.$error.minlength">{{'PASSWORD_MIN' | translate}}</span>
                     </span>
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="col-xs-3 control-label" for="email">Email</label>
-                <div class="col col-xs-5">
+                <label class="col-xs-4 control-label" for="email">{{'EMAIL' | translate}}</label>
+                <div class="col col-xs-6">
                     <input class="form-control" type="text"
                            maxlength="40"
                            id="email"
@@ -83,15 +77,15 @@
                            ng-pattern="emailRedExp"
                            required/>
                     <span style="color:#cc0000" ng-show="createFCform.email.$dirty && createFCform.email.$invalid">
-                        <span ng-show="createFCform.email.$error.required">Email is required.</span>
-                        <span ng-show="createFCform.email.$error.pattern">Invalid email pattern.</span>
+                        <span ng-show="createFCform.email.$error.required">{{'REQUIRED_FIELD' | translate}}</span>
+                        <span ng-show="createFCform.email.$error.pattern">{{'INVALID_EMAIL' | translate}}</span>
                     </span>
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="col-xs-3 control-label" for="zipcode">Zipcode</label>
-                <div class="col col-xs-4">
+                <label class="col-xs-4 control-label" for="zipcode">{{'ZIPCODE' | translate}}</label>
+                <div class="col col-xs-6">
                     <input class="form-control" type="text"
                            maxlength="5"
                            id="zipcode"
@@ -100,14 +94,14 @@
                            ng-pattern="zipcodeRegExp"
                            required/>
                     <span style="color:#cc0000" ng-show="createFCform.zipcode.$dirty && createFCform.zipcode.$invalid">
-                        <span ng-show="createFCform.zipcode.$error.required">Zipcode is required.</span>
-                        <span ng-show="createFCform.zipcode.$error.pattern">Invalid pattern. Enter 5 digits.</span>
+                        <span ng-show="createFCform.zipcode.$error.required">{{'REQUIRED_FIELD' | translate}}</span>
+                        <span ng-show="createFCform.zipcode.$error.pattern">{{'ZIPCODE_ERROR' | translate}}</span>
                     </span>
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="col-xs-3 control-label" for="city">City</label>
+                <label class="col-xs-4 control-label" for="city">{{'CITY' | translate}}</label>
                 <div class="col col-xs-6">
                     <input class="form-control" type="text"
                            maxlength="40"
@@ -118,16 +112,15 @@
                            ng-model="formationcenter.city"
                            required/>
                     <span style="color:#cc0000" ng-show="createFCform.city.$dirty && createFCform.city.$invalid">
-                        <span ng-show="createFCform.city.$error.required">City is required.</span>
-                        <span ng-show="createFCform.city.$error.pattern">Only letters.</span>
-                        <span ng-show="createFCform.city.$error.minlength">At list 2 characters.</span>
+                        <span ng-show="createFCform.city.$error.required">{{'REQUIRED_FIELD' | translate}}</span>
+                        <span ng-show="createFCform.city.$error.pattern">{{'NAME_ERROR' | translate}}</span>
                     </span>
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="col-xs-3 control-label" for="phonenumber">Phone Number</label>
-                <div class="col col-xs-4">
+                <label class="col-xs-4 control-label" for="phonenumber">{{'PHONE_NUMBER' | translate}}</label>
+                <div class="col col-xs-6">
                     <input class="form-control" type="text"
                            maxlength="10"
                            id="phonenumber"
@@ -135,53 +128,41 @@
                            ng-model="formationcenter.phoneNumber"
                            ng-pattern="phoneRegExp"
                            required/>
-                    <span style="color:#cc0000" ng-show="createFCform.phonenumber.$dirty && createFCform.phonenumber.$invalid">
-                        <span ng-show="createFCform.phonenumber.$error.required">Phonenumber is required.</span>
-                        <span ng-show="createFCform.phonenumber.$error.pattern">Enter 10 digits starting with '0'.</span>
+                    <span style="color:#cc0000"
+                          ng-show="createFCform.phonenumber.$dirty && createFCform.phonenumber.$invalid">
+                        <span ng-show="createFCform.phonenumber.$error.required">{{'REQUIRED_FIELD' | translate}}</span>
+                        <span ng-show="createFCform.phonenumber.$error.pattern">{{'PHONE_NUMBER_ERROR' | translate}}</span>
                     </span>
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="control-label col-xs-3"></label>
-                <div class="col col-xs-3">
+                <label class="control-label col-xs-4"></label>
+                <div class="col col-xs-4">
                     <label class="checkbox-inline">
-                        <input type="checkbox" ng-model="formationcenter.isActivated"> Activated
+                        <input type="checkbox" ng-model="formationcenter.isActivated"> {{'ACTIVATED' | translate}}
                     </label>
                 </div>
             </div>
-        </form>
-    </div>
+        </div>
+
+        <br/>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block"
+                            ng-click="createFormationCenter()"
+                            ng-disabled="createFCform.$invalid">
+                        {{'CREATE' | translate}}
+                    </button>
+
+                    <button type="button" class="btn btn-info btn-block"
+                            ng-click="gotoToFormationCenters()">
+                        {{'GO_BACK' | translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
     <!-- END OF CREATE FORMATION CENTER FORM  -->
-    <br>
-    <div class="row">
-        <div class="col col-xs-2">
-
-        </div>
-        <div class="col-xs-8">
-            <div class="form-group">
-                <!--<div class="col col-xs-6 col-xs-offset-1">-->
-                <button type="submit" class="btn btn-primary btn-block"
-                        ng-click="createFormationCenter()"
-                        ng-mouseenter="checkAll()"
-                        ng-mouseleave="closeAll()"
-                        ng-disabled="createFCform.$invalid">
-                    Create Formation Center
-                </button>
-                <!--</div>-->
-            </div>
-            <div class="form-group">
-                <!--<div class="col col-xs-6 col-xs-offset-1">-->
-                <button type="button" class="btn btn-info btn-block"
-                        ng-click="gotoToFormationCenters()">
-                    Back to Formation Centers
-                </button>
-                <!--</div>-->
-            </div>
-        </div>
-        <div class="col col-xs-2">
-
-        </div>
-    </div>
-
 </div>

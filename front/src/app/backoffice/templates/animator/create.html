@@ -1,13 +1,13 @@
 <div class="container well manage" id="createAnimatorContainer">
     <div class="row">
-        <h2 class="text-center">Create Animator</h2>
+        <h2 class="text-center">{{'CREATE_ANIMATOR' | translate}}</h2>
     </div>
 
     <div class="row">
         <div class="col">
             <form class="form" name="createAnimForm" id="createAnimForm">
                 <div class="form-group">
-                    <label class="control-label" for="name">Name</label>
+                    <label class="control-label" for="name">{{'NAME' | translate}}</label>
                     <input type="text"
                            name="name"
                            id="name"
@@ -23,7 +23,7 @@
                     </span>
                 </div>
                 <div class="form-group">
-                    <label class="control-label" for="firstname">First Name</label>
+                    <label class="control-label" for="firstname">{{'FIRST_NAME' | translate}}</label>
                     <input type="text"
                            id="firstname"
                            name="firstname"
@@ -40,15 +40,15 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label" for="type">Type</label>
+                    <label class="control-label" for="type">{{'TYPE' | translate}}</label>
                     <select id="type" ng-model="animator.type" class="form-control">
-                        <option value="PSY">Psychologist</option>
+                        <option value="PSY">{{'PSYCHOLOGIST' | translate}}</option>
                         <option value="BAFM">BAFM/BAFCRI</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label" for="city">City</label>
+                    <label class="control-label" for="city">{{'CITY' | translate}}</label>
                     <input type="text"
                            id="city"
                            name="city"
@@ -63,7 +63,7 @@
                     </span>
                 </div>
                 <div class="form-group">
-                    <label class="control-label" for="zipcode">Zipcode</label>
+                    <label class="control-label" for="zipcode">{{'ZIPCODE' | translate}}</label>
                     <input type="text"
                            id="zipcode"
                            name="zipcode"
@@ -81,12 +81,12 @@
                     <button ng-disabled="createAnimForm.$invalid"
                             ng-click="createAnimator()"
                             type="submit"
-                            class="btn btn-primary btn-block">Create Animator
+                            class="btn btn-primary btn-block">{{'CREATE' | translate}}
                     </button>
 
                     <button ng-click="gotoManageAminator()"
                             type="button"
-                            class="btn btn-info btn-block">Go to Animators
+                            class="btn btn-info btn-block">{{'GO_BACK' | translate}}
                     </button>
                 </div>
             </form>

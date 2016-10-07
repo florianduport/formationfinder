@@ -37,7 +37,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             $rootScope.userAuthenticated = true;
                             $rootScope.username = $scope.username;
 
-                            $location.path('/dashboard');
+                            $location.path('/dashboard').replace();
                         } else {
                             $rootScope.userToken = null;
                             $rootScope.userAuthenticated = false;
@@ -125,8 +125,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             }
 
         }])
-    .controller("CreateFormationCenterController", ["$scope", "$rootScope", "$location", "$http", "$translate",
-        function ($scope, $rootScope, $location, $http, $translate) {
+    .controller("CreateFormationCenterController", ["$scope", "$location", "$http", "$rootScope",
+        function ($scope, $location, $http, $rootScope) {
 
             $scope.zipcodeRegExp = /^\d{5}$/;
             $scope.nameRegExp = /^[µçùàèáéíóúa-zA-Z][µçùàèáéíóúa-zA-Z\s]+$/;
@@ -178,7 +178,6 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                                 console.log("Formation Center created.");
                                 alert("Formation Center created.");
                                 $scope.gotoToFormationCenters();
-                                //initParameter();
 
                             } else {
                                 console.log("Error creating Formation Center: ", result.info);
@@ -197,45 +196,45 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             };
 
 
-            /***************************************************/
-            /***               TOOLTIPS AREA                  **/
-            /***************************************************/
-            $scope.tooltipNameText = "Field required. Only letters allowed. At list two characters.";
-            $scope.tooltipNameShow = false;
-            $scope.checkName = function () {
-
-                if ($scope.formationcenter.name && $scope.nameRegExp.test($scope.formationcenter.name)) {
-                    $scope.tooltipNameShow = false;
-                } else {
-                    $scope.tooltipNameShow = true;
-                }
-            };
-
-            $scope.tooltipUserNameText = "Field required. Letters and numbers allowed. At list two characters.";
-            $scope.tooltipUserNameShow = false;
-            $scope.checkUserName = function () {
-
-                console.log("El valor de defaultLogin: ", $scope.formationcenter.defaultLogin);
-                console.log("Evaluar EXPREG da: ", $scope.usernameExpReg.test($scope.formationcenter.defaultLogin));
-
-                if (($scope.formationcenter.defaultLogin !== undefined) && $scope.usernameExpReg.test($scope.formationcenter.defaultLogin)) {
-                    $scope.tooltipUserNameShow = false;
-                } else {
-                    $scope.tooltipUserNameShow = true;
-                }
-            };
-            $scope.closeTooltipUserName = function () {
-                $scope.tooltipUserNameShow = false;
-            };
-
-            $scope.checkAll = function () {
-                $scope.checkName();
-                $scope.checkUserName();
-            };
-
-            $scope.closeAll = function () {
-                $scope.closeTooltipUserName();
-            };
+            ///***************************************************/
+            ///***               TOOLTIPS AREA                  **/
+            ///***************************************************/
+            //$scope.tooltipNameText = "Field required. Only letters allowed. At list two characters.";
+            //$scope.tooltipNameShow = false;
+            //$scope.checkName = function () {
+            //
+            //    if ($scope.formationcenter.name && $scope.nameRegExp.test($scope.formationcenter.name)) {
+            //        $scope.tooltipNameShow = false;
+            //    } else {
+            //        $scope.tooltipNameShow = true;
+            //    }
+            //};
+            //
+            //$scope.tooltipUserNameText = "Field required. Letters and numbers allowed. At list two characters.";
+            //$scope.tooltipUserNameShow = false;
+            //$scope.checkUserName = function () {
+            //
+            //    console.log("El valor de defaultLogin: ", $scope.formationcenter.defaultLogin);
+            //    console.log("Evaluar EXPREG da: ", $scope.usernameExpReg.test($scope.formationcenter.defaultLogin));
+            //
+            //    if (($scope.formationcenter.defaultLogin !== undefined) && $scope.usernameExpReg.test($scope.formationcenter.defaultLogin)) {
+            //        $scope.tooltipUserNameShow = false;
+            //    } else {
+            //        $scope.tooltipUserNameShow = true;
+            //    }
+            //};
+            //$scope.closeTooltipUserName = function () {
+            //    $scope.tooltipUserNameShow = false;
+            //};
+            //
+            //$scope.checkAll = function () {
+            //    $scope.checkName();
+            //    $scope.checkUserName();
+            //};
+            //
+            //$scope.closeAll = function () {
+            //    $scope.closeTooltipUserName();
+            //};
 
         }])
     .controller("UpdateFormationCenterController", ["$scope", "$rootScope", "$location", "$http", "$routeParams", "$translate",
@@ -270,6 +269,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         } else {
                             console.log("Error searching Formation Centers: " + result.info);
                             alert("Error searching Formation Centers: " + result.info);
+                            $scope.gotoToFormationCenters();
                         }
                     })
                     .error(function (err) {
