@@ -7,45 +7,45 @@ var faker = require('faker');
 faker.locale = "fr"
 module.exports = [
   {
-    name: faker.internet.userName(),
-    firstName: faker.internet.userName(),
+    name: faker.name.lastName(),
+    firstName: faker.name.firstName(),
     type: "BAFM",
-    zipcode: faker.address.zipCode(),
+    zipCode: faker.address.zipCode(),
     city: "Stgo"
   },
   {
-    name: faker.internet.userName(),
-    firstName: faker.internet.userName(),
+    name: faker.name.lastName(),
+    firstName: faker.name.firstName(),
     type: "PSY",
-    zipcode: faker.address.zipCode(),
+    zipCode: faker.address.zipCode(),
     city: "La Habana"
   },
   {
-    name: faker.internet.userName(),
-    firstName: faker.internet.userName(),
+    name: faker.name.lastName(),
+    firstName: faker.name.firstName(),
     type: "BAFM",
-    zipcode: faker.address.zipCode(),
+    zipCode: faker.address.zipCode(),
     city: "Palma"
   },
   {
-    name: faker.internet.userName(),
-    firstName: faker.internet.userName(),
+    name: faker.name.lastName(),
+    firstName: faker.name.firstName(),
     type: "BAFM",
-    zipcode: faker.address.zipCode(),
+    zipCode: faker.address.zipCode(),
     city: "Ciego"
   },
   {
-    name: faker.internet.userName(),
-    firstName: faker.internet.userName(),
+    name: faker.name.lastName(),
+    firstName: faker.name.firstName(),
     type: "PSY",
-    zipcode: faker.address.zipCode(),
+    zipCode: faker.address.zipCode(),
     city: "villa Clara"
   },
   {
-    name: faker.internet.userName(),
-    firstName: faker.internet.userName(),
+    name: faker.name.lastName(),
+    firstName: faker.name.firstName(),
     type: "PSY",
-    zipcode: faker.address.zipCode(),
+    zipCode: faker.address.zipCode(),
     city: "Camaguey"
   },
 ]

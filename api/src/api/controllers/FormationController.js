@@ -532,7 +532,7 @@ module.exports = {
     }
 
     //Search the formation.
-    Formation.findOne(formationID).populate("place")
+    Formation.findOne(formationID).populate("place").populate("customers")
       .exec(function (err, formationFounded) {
         // body...
 
@@ -617,17 +617,21 @@ module.exports = {
 
                     formationFounded.customers.push(customerCreated.id);
 
-                   // console.log("Mostrando la cantidad de customers de la formacion " +
-                    //  formationFounded.customers.length, formationFounded.maxPeople);
+                    console.log("Mostrando la cantidad de customers de la formacion " +
+                    formationFounded.customers.length, formationFounded.maxPeople);
+
 
                     if (formationFounded.customers.length == formationFounded.maxPeople) {
                       formationFounded.isFull = true;
                     }
 
-                    Formation.update({id: formationFounded.id}, {isFull: formationFounded.isFull}).exec(function (err, resultObject) {
+                    Formation.update({id: formationFounded.id},  formationFounded).exec(function (err, resultObject) {
 
                       FormationService.isFormationFull(formationFounded, function (err, result) {
-                      //  console.log("Evaluatec is Formation Full")
+                      //
+                      //  formationFounded.save()
+
+                        console.log("Update Formation")
                         return res.json({ok: 'book proces complit.'});
                       })
                     })

@@ -12,6 +12,12 @@ module.exports   = {
 
 
    // console.log( "Call search in MogoDB")
+   //Include pagination
+    var page = 0;
+    var len = 10;
+
+    ///Read if exist parament pagination
+    skip = page * len
     collection.find({
           location:
         { $near :
@@ -19,7 +25,7 @@ module.exports   = {
           $geometry: { type: "Point",  coordinates: [ longitude, latitude] }, $maxDistance: distance}
         }
 
-      }).toArray(function (err, results) {
+      }).limit(len).skip(skip).toArray(function (err, results) {
      // console.log("Get data in DB -- ", (err))
       if (err) {
         console.log("Error -- ", (err))

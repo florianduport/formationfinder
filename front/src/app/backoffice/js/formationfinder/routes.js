@@ -58,6 +58,11 @@ app.config(["$routeProvider", function ($routeProvider) {
                 templateUrl: "templates/animator/edit.html"
             }
         )
+        .when("/animator/create", {
+                controller: "CreateAnimatorController",
+                templateUrl: "templates/animator/create.html"
+            }
+        )
         .when("/place/edit", {
             controller: "PlaceEditcontroller",
             templateUrl: "templates/place/editplace.html"

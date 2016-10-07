@@ -62,7 +62,7 @@ module.exports = {
         html: tableCode
       };
 
-      console.log("Sended Mail to Formation Center " ,config )
+     // console.log("Sended Mail to Formation Center " ,config )
 
       result = EmailService.send(config, function (err, result) {
         ///If not error when send mail
@@ -95,7 +95,7 @@ module.exports = {
       html: tableCode
     };
 
-    console.log("Sended Mail to Formation Center " ,config )
+  //  console.log("Sended Mail to Formation Center " ,config )
 
     result = EmailService.send(config, function (err, result) {
       ///If not error when send mail

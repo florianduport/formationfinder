@@ -41,11 +41,11 @@ module.exports = {
         ///Send Mail to formation Center
         mailSubjet = "Formation is full";
 
-        console.log("INIT SERVICES SEND MAIL")
+      //  console.log("INIT SERVICES SEND MAIL")
         FormationCenterServices.sendAlertMailToFormationCenter(resultUpdate.type, text, resultObject, mailSubjet, function (err, result){
 
           responseObject = { mailresponse:result.response, result:resultUpdate}
-          console.log("AlertService",resultUpdate )
+        //  console.log("AlertService",resultUpdate )
           callback(null,{response: "OK", responseObject})
 
         })

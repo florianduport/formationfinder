@@ -5283,13 +5283,26 @@ span.customSelect.changed {
 **    De Piterson       **
 *************************/
 
-.admin-login {
-    max-width: 700px;
+/** General **/
+
+#detailContainer {
+    margin-top: 70px;
+    margin-left: 120px;
 }
 
-.admin-formation {
-    max-width: 800px;
+.manage {
+    margin-left: 80px;
     padding: 40px;
+}
+
+.form-group {
+    margin-bottom: 5px !important;
+}
+
+/** Login **/
+
+.admin-login {
+    max-width: 700px;
 }
 
 .login-form select {
@@ -5299,9 +5312,11 @@ span.customSelect.changed {
     border-radius: 0;
 }
 
-#detailContainer {
-    margin-top: 80px;
-    margin-left: 120px;
+/** Formation **/
+
+.admin-formation {
+    max-width: 800px;
+    padding: 40px;
 }
 
 .createFormContainer {
@@ -5309,7 +5324,17 @@ span.customSelect.changed {
     padding: 40px;
 }
 
-.manage{
-    margin-left: 80px;
-    padding: 40px;
+/** Animator **/
+
+#createAnimatorContainer {
+    max-width: 450px;
 }
+
+#manage-animator {
+    max-width: 900px;
+}
+
+#updateAnimatorContainer {
+    max-width: 450px;
+}
+

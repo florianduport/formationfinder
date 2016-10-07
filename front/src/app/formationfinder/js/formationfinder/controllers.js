@@ -152,12 +152,12 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
 
         }])
 
-    .controller("SearchController", ["$scope", "$rootScope", "$http", "$location", "$routeParams", "$timeout", "NavigatorGeolocation", "NgMap",
-        function ($scope, $rootScope, $http, $location, $routeParams, $timeout, NavigatorGeolocation, NgMap) {
-            $scope.weekDay = ["Sunday", "Monday", "Tuesday", "Wensday", "Thuesday", "Fryday", "Saturday"]
+    .controller("SearchController", ["$scope", "$rootScope", "$http", "$location", "$routeParams", "$timeout", "NavigatorGeolocation", "NgMap", "$translate",
+        function ($scope, $rootScope, $http, $location, $routeParams, $timeout, NavigatorGeolocation, NgMap, $translate) {
+            $scope.weekDay = ["Sunday", "Monday", "Tuesday", "Wensday", "Thuesday", "Friday", "Saturday"]
             $scope.advanceSearch = true
             $scope.rate = 0;
-            $scope.max = 5;
+            $scope.max = 3;
             $scope.isReadonly = false;
 
             $scope.hoveringOver = function (value) {
@@ -387,7 +387,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
             $scope.app = {}
             $scope.app.currentPage = 0;
             $scope.app.maxSize = 5;
-            $scope.app.itemPerPage = 5;
+            $scope.app.itemPerPage = 3;
             $scope.app.totalItems = 0;
             $scope.searchText = "";
 
@@ -800,6 +800,9 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                                     //console.log("Valor ",iFormation)
 
                                 })
+
+                                $scope.showmap = true
+                                $scope.showMap(null)
                                 // console.log("RESULTADOS", data_result)
                             })
                             .error(function (error) {
@@ -872,6 +875,8 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                                 console.log("Valor ", iFormationcenter.datetime)
                                 $scope.formations.push(iFormationcenter)
                             })
+                            $scope.showmap = true
+                            $scope.showMap(null)
 
 
                         })
@@ -946,14 +951,28 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                 console.log(domElement + $scope.showmap, $scope.search.formation.length);
                 console.log("ddd", $scope.search.formation.length);
                 unicdata = []
-                for (iName in $scope.search.formation) {
-                    console.log("Selecionado la formacion ", $scope.search.formation[iName].city)
-                    cityName = $scope.search.formation[iName].city
-                    unicdata.push($scope.search.formation[iName].city)
-                    /*    unicdata = $scope.search.formation.filter( function ( item) {
-                     return item != cityName
-                     })*/
+                if ($scope.search.formation.length > 0) {
+                    for (iName in $scope.search.formation) {
+                        console.log("Selecionado la formacion ", $scope.search.formation[iName].city)
+                        cityName = $scope.search.formation[iName].city
+                        unicdata.push($scope.search.formation[iName].city)
+                        /*    unicdata = $scope.search.formation.filter( function ( item) {
+                         return item != cityName
+                         })*/
 
+                    }
+                }
+                else {
+                    ////Search by all object Formation in Window
+                    for (iName in  $scope.formations) {
+                        console.log("Selecionado la formacion ", $scope.formations[iName].city)
+                        cityName = $scope.formations[iName].city
+                        unicdata.push($scope.formations[iName].city)
+                        /*    unicdata = $scope.search.formation.filter( function ( item) {
+                         return item != cityName
+                         })*/
+
+                    }
                 }
                 console.log("Places to search", unicdata)
 
@@ -1086,6 +1105,194 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                 {stateOff: 'glyphicon-off'}
             ];
 
+    //////Map control ---------------------------------------------
+
+            $scope.searchInMap = false;
+
+            $scope.items = [
+                'The first choice!',
+                'And another choice for you.',
+                'but wait! A third!'
+            ];
+
+            $scope.status = {
+                isopen: true
+            };
+
+            $scope.toggled = function (open) {
+                $log.log('Dropdown is now: ', open);
+            };
+
+            $scope.toggleDropdown = function ($event) {
+                console.log("Evento ", $event)
+                $event.preventDefault();
+                $event.stopPropagation();
+
+                $scope.status.isopen = !$scope.status.isopen;
+                console.log("Evento ", $scope.status.isopen)
+            };
+
+            $scope.searchAllPlaces = function ($event) {
+                $scope.status.isopen = false
+                console.log("Evento ", $event)
+                $event.preventDefault();
+                $event.stopPropagation();
+
+                $http.post($rootScope.urlBase + "/formationcenter/searchallformationcenters")
+                    .success(function (data_result) {
+                        if (data_result.err) {
+                            ///Mostrar mensaje en ventana modal de que no existe centros de formacion
+                            ///regresar a la pagina inicial
+                            $scope.errorMessage = data_result.err;
+                            alert(data_result.err);
+                            // $location.path("/");
+                            return;
+                        }
+
+                        $scope.formationcenters = data_result;
+                        console.log("formationcenters ", $scope.formationcenters)
+                        console.log("Se obtienen resultados")
+                        //$location.path("/search/" + $scope.criteria);
+                    })
+                    .error(function (error) {
+                        //@action mostrar error
+                        $scope.errorMessage = error
+                        console.log(error);
+                    })
+                ;
+
+                $scope.status.isopen = true
+                console.log("Evento ", $scope.status.isopen)
+
+            };
+
+            $scope.toggleDropdownTrue = function ($event, newFormationCenters) {
+                $scope.status.isopen = false
+                console.log("Evento ", $event)
+                if ($event) {
+                    $event.preventDefault();
+                    $event.stopPropagation();
+                }
+
+                // $scope.status.isopen = !$scope.status.isopen;
+                if (newFormationCenters && newFormationCenters.length > 0) {
+                    console.log("Update data map from ", $scope.formationcenters.length + " to " + newFormationCenters.length)
+                    $scope.formationcenters = newFormationCenters
+                }
+                $scope.status.isopen = true
+                console.log("Evento ", $scope.status.isopen)
+            };
+
+            $scope.showmap = false;
+            console.log("Buscando")
+            $scope.map = {
+                center: [48.864716, 2.349014],
+                options: function () {
+                    return {
+                        streetViewControl: false,
+                        scrollwheel: false
+                    }
+                },
+                events: {
+                    click: function (e, map) {
+                        ///call find place services
+
+                        /// alert(e.latLng.lat() + " " + e.latLng.lng());
+                    }
+                }
+            };
+
+            var marker;
+            var vm = this;
+            NgMap.getMap().then(function (map) {
+                vm.map = map;
+                marker = map.markers[0];
+                console.log("Asignando datos")
+            });
+            vm.centerChanged = function (event) {
+                /* $timeout(function() {
+                 vm.map.panTo(marker.getPosition());
+                 }, 3000);*/
+            }
+
+
+            ///Find formationcenter by position
+
+
+            $http.post($rootScope.urlBase + "/formationcenter/searchallformationcenters")
+                .success(function (data_result) {
+                    if (data_result.err) {
+                        ///Mostrar mensaje en ventana modal de que no existe centros de formacion
+                        ///regresar a la pagina inicial
+                        $scope.errorMessage = data_result.err;
+                        alert(data_result.err);
+                        // $location.path("/");
+                        return;
+                    }
+
+                    $scope.formationcenters = data_result;
+                    console.log("formationcenters ", $scope.formationcenters)
+                    console.log("Se obtienen resultados")
+                    //$location.path("/search/" + $scope.criteria);
+                })
+                .error(function (error) {
+                    //@action mostrar error
+                    $scope.errorMessage = error
+                    console.log(error);
+                })
+            ;
+
+            console.log("Buscando")
+            vm.click = function (event) {
+                console.log("Buscando")
+                vm.map.setZoom(9);
+
+                ///With all point compute ceontroide and show map
+                // vm.map.setCenter(marker.getPosition());
+                console.log("En esta posicion ");
+                $scope.data = vm.map;
+                possArray = String(event.latLng).split(",")
+                latitud = possArray[0]
+                longitud = possArray[1]
+
+
+                ///
+///Find formationcenter by position
+                if ($scope.searchInMap == true) {
+                    $http.post($rootScope.urlBase + "/formationcenter/searchformationbyPos", {
+                            "latitude": latitud,
+                            "longitude": longitud,
+                        })
+                        .success(function (data_result) {
+                            if (data_result.err) {
+                                ///Mostrar mensaje en ventana modal de que no existe centros de formacion
+                                ///regresar a la pagina inicial
+                                $scope.errorMessage = data_result.err;
+                                // alert($scope.errorMessage);
+                                // $location.path("/");
+                                return;
+                            }
+
+                            $scope.formationcenters = data_result;
+                            ///I think its search
+                            $location.path("/search/" + $scope.criteria);
+                        })
+                        .error(function (error) {
+                            //@action mostrar error
+                            $scope.errorMessage = error
+                            console.log(error);
+                        })
+                    ;
+                }
+                ///Find if position is inner France if not show alert o modal windows
+
+                ///else find Formation-Place near position
+
+                ///if not there show alert o windows
+                // alert('this is at ' + latitud + " :" + longitud);
+                // alert(arg1+arg2);
+            }
+
         }])
     .controller("FormationCenterController", ["$scope", "$rootScope", "$http", "$location", "$routeParams",
         function ($scope, $rootScope, $http, $location, $routeParams) {
@@ -1169,10 +1376,10 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
          //vm.map.setCenter(chicago);
          };*/
 
-        $scope.changeLanguage = function (langKey) {
-            console.log("Change language to ", langKey)
-            $translate.use(langKey);
-        };
+        //$scope.changeLanguage = function (langKey) {
+        //    console.log("Change language to ", langKey)
+        //    $translate.use(langKey);
+        //};
 
 
         $scope.items = [
@@ -1235,8 +1442,10 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
         $scope.toggleDropdownTrue = function ($event, newFormationCenters) {
             $scope.status.isopen = false
             console.log("Evento ", $event)
-            $event.preventDefault();
-            $event.stopPropagation();
+            if ($event) {
+                $event.preventDefault();
+                $event.stopPropagation();
+            }
 
             // $scope.status.isopen = !$scope.status.isopen;
             if (newFormationCenters && newFormationCenters.length > 0) {
@@ -1310,7 +1519,9 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
         vm.click = function (event) {
             console.log("Buscando")
             vm.map.setZoom(9);
-           // vm.map.setCenter(marker.getPosition());
+
+            ///With all point compute ceontroide and show map
+            // vm.map.setCenter(marker.getPosition());
             console.log("En esta posicion ");
             $scope.data = vm.map;
             possArray = String(event.latLng).split(",")
@@ -1348,7 +1559,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
             ///else find Formation-Place near position
 
             ///if not there show alert o windows
-           // alert('this is at ' + latitud + " :" + longitud);
+            // alert('this is at ' + latitud + " :" + longitud);
             // alert(arg1+arg2);
         }
     }])
@@ -1880,7 +2091,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
     .controller('ModalDemoCtrl', ["$scope", "$uibModal", "$log", "$rootScope", "$http", "$location", "$routeParams", function ($scope, $uibModal, $log, $rootScope, $http, $location, $routeParams) {
 
         $scope.items = {}; //['item1', 'item2', 'item3'];
-
+        $scope.oneAtATime = true;
         $scope.animationsEnabled = true;
         $scope.formationCenterName = ""
         $scope.open = function (size) {
@@ -1908,25 +2119,27 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
 
         $scope.openFormationCenterInfo = function (formationCenterName) {
 
-            console.log("Formation center name", formationCenterName)
-            $scope.formationCenterName = formationCenterName
+            console.log("Formation center name", formationCenterName.name)
+            $scope.formationCenterName = formationCenterName.name
             ///Find formation center iformation
             $http.post($rootScope.urlBase + "/formationcenter/searchbyname", {
-                    name: formationCenterName
+                    name: formationCenterName.name
                 })
                 .success(function (data_result) {
                     if (data_result.err) {
                         ///Mostrar mensaje en ventana modal de que no existe centros de formacion
                         ///regresar a la pagina inicial
                         $scope.errorMessage = data_result.err;
-                        console.log("Error " + data_result)
+                        console.log("Error " , data_result)
                         // alert($scope.errorMessage);
                         // $location.path("/");
                         return;
                     }
 
-                    console.log("Result ", data_result)
+
+                    data_result.formation = formationCenterName
                     $scope.items = data_result;
+                    console.log("Result ", $scope.items)
 
                     //size = "" | "lg" | "sm"
                     var modalInstance = $uibModal.open({
@@ -1963,6 +2176,18 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
     }])
     .controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, items) {
 
+        $scope.weekDay = ["Sunday", "Monday", "Tuesday", "Wensday", "Thuesday", "Friday", "Saturday"]
+
+        $scope.getReadableDate = function (dateParmt) {
+            //console.log("DATE PARAMETER ", dateParmt)
+            value = new Date(dateParmt);
+            resultDate = $scope.weekDay[value.getDay()] + ": " + value.getDate() + "/" + value.getMonth() + "/" + value.getFullYear();
+
+            return resultDate
+
+        };
+
+        $scope.oneAtATime = true;
         $scope.items = items;
         $scope.selected = {
             item: $scope.items[0]
@@ -2035,6 +2260,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
         vm.emailRedExp = /^[a-z][_a-z0-9-]*(\.[_a-z0-9-]+)*@[a-z][a-z0-9-]*(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/;
         vm.dateRegExp = /^\d{2}\/\d{2}\/\d{4}$/;
         vm.numberRegExp = /^\d{12}$/;
+        vm.numberRegExpCard = /^\d{3}$/;
 
         vm.paymentServicesError = false;
         vm.paymentButtonDisabled = true;
@@ -2180,7 +2406,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                 else ///Register new costumer
                      ///remenber registe if paid or not
                     console.log("Make recap to form")
-                vm.bookFormation();
+                ///vm.bookFormation();
 
                 return;
             }
@@ -2579,16 +2805,16 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
 
         //For date pickers options configuration.
         actDate = new Date();
-        $scope.initialBirthDateYear  = 16
+        $scope.initialBirthDateYear = 16
 
 
         // BirthDate options
         vm.BirthDateOptions = {
             dateDisabled: disabled,
             formatYear: 'yyyy',
-            maxDate: new Date(actDate.getFullYear() - $scope.initialBirthDateYear , actDate.getMonth(), actDate.getDate()),
+            maxDate: new Date(actDate.getFullYear() - $scope.initialBirthDateYear, actDate.getMonth(), actDate.getDate()),
             minDate: new Date(actDate.getFullYear() - 80, 0, 1),
-            initDate: new Date(actDate.getFullYear() - $scope.initialBirthDateYear , actDate.getMonth(), actDate.getDate()),
+            initDate: new Date(actDate.getFullYear() - $scope.initialBirthDateYear, actDate.getMonth(), actDate.getDate()),
             startingDay: 1
         };
 
@@ -2681,7 +2907,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
         }
 
     })
-    .controller('ModalInstanceCtrlWizard', function ($scope, $uibModalInstance, $rootScope, $routeParams, $http, customerData) {
+    .controller('ModalInstanceCtrlWizard', function ($scope, $uibModalInstance, $rootScope, $routeParams, $http, customerData, $translate) {
 // Disable weekend selection
         function disabled(data) {
             var date = data.date,
@@ -2689,6 +2915,24 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
             return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
         }
 
+        $scope.weekDay = ["Sunday", "Monday", "Tuesday", "Wensday", "Thuesday", "Friday", "Saturday"]
+
+        $scope.getReadableDate = function (dateParmt) {
+           // console.log("DATE PARAMETER ", dateParmt)
+            value = new Date(dateParmt);
+            resultDate = $scope.weekDay[value.getDay()] + ": " + value.getDate() + "/" + value.getMonth() + "/" + value.getFullYear();
+
+            return resultDate
+
+        };
+
+        $scope.getCustomerFormation = function (customersArray) {
+            if (typeof customersArray == "undefined") {
+                console.log("It´s undefined")
+            }
+            return customersArray.length
+
+        }
         function getDayClass(data) {
             var date = data.date,
                 mode = data.mode;
@@ -2725,6 +2969,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
             vm.paymentMessages.splice(MessageIndex, 1);
         };
         $scope.numberRegExp = /^\d{16}$/;
+        $scope.numberRegExpCard = /^\d{3}$/;
         $scope.dateRegExp = /^\d{2}\/\d{2}\/\d{4}$/;
 
         $scope.creditCardData = {};
@@ -2747,7 +2992,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
 
 
             ///With formation center identifier and constumer data make payment
-            if (!$scope.paymentdata.$invalid) {
+            if ($scope.paymentdata.$invalid) {
 
                 console.log("Some problems")
                 if ($scope.paymentMessages.length > 0) {
@@ -2760,9 +3005,14 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
 
             ////Make payment if all data if of
 
-            dateExpiration = new Date ($scope.creditCardData.CardExpirationDate);
-            $scope.creditCardData.CardExpirationDate = dateExpiration.getMonth() + dateExpiration.getDay()
-            console.log("Credit Card Data ",   $scope.creditCardData)
+            dateExpiration = new Date($scope.creditCardData.CardExpirationDate);
+           // moment = require('moment')
+
+           // $scope.creditCardData.CardExpirationDate = moment($scope.creditCardData.CardExpirationDate).format("MMYY")
+
+           console.log("Date ", dateExpiration)
+            $scope.creditCardData.CardExpirationDate = dateExpiration.getMonth() + "" +dateExpiration.getYear()
+            console.log("Credit Card Data ", $scope.creditCardData)
             config = {
                 userdata: $scope.customerData,
                 formationidentifier: $routeParams.id,
@@ -2772,19 +3022,23 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
             }
 
 
-            config.userdata.nacionality= "FR"
-            config.userdata.country="FR"
+            config.userdata.nacionality = "FR"
+            config.userdata.country = "FR"
 
             console.log("DATA to send to services", config)
-
+            selectedItem = {status: "OK"}
 ///Modify for paymet services
             $http.get($rootScope.urlBase + "/Payment/mangopaymentex/", config)
                 .success(function (data, status, headers, config) {
-                    if (data.response !== "ok") {
+                    if (data.response !== "OK") {
                         ///Error BIG PROBLEMS
                         $scope.showError = true
                     }
                     else {
+                        if (data.response == "ERROR") {
+                            selectedItem.status = "ERROR"
+                            selectedItem.message = data.message
+                        }
                         if (vm.paymentMessages.length > 0) {
                             vm.paymentMessages.splice(0, 1);
                         }
@@ -2793,22 +3047,35 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                         console.log("Go to recap")
                         vm.gotoStep(4);
                     }
+
+                    $uibModalInstance.close(selectedItem);
+                    $uibModalInstance.dismiss('cancel');
                 })
 
-            selectedItem = {status: "OK"}
 
-            if (  data.response == "ERROR") {
-                selectedItem.status = "ERROR"
-                selectedItem.message = data.message
-            }
-            $uibModalInstance.close(selectedItem);
-            $uibModalInstance.dismiss('cancel');
         };
 
         $scope.cancel = function () {
             $uibModalInstance.dismiss('cancel');
             $scope.formationCenterName = ""
         };
+
+        $scope.getCardNumTooltipError = function () {
+            if ($scope.paymentdata.number.$error.required) {
+
+                return $translate.instant('CARDNUMBER_REQUIRED');
+            }
+            else if ($scope.paymentdata.number.$error.pattern) {
+                return  $translate.instant('CARDNUMBER_ERROR');
+            }
+
+        }
+
+        $scope.isCardNumTooltipError = function () {
+            return ($scope.paymentdata.number.$dirty && $scope.paymentdata.number.$invalid)
+        }
+
+
     })
     .controller('SitemapController', ["NgMap", "$scope", "$rootScope", "$http", "$location", "$translate", function (NgMap, $scope, $rootScope, $http, $location, $translate) {
     }])

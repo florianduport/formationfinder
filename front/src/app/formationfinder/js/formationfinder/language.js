@@ -17,7 +17,27 @@ app.config(function($translateProvider) {
             CARD_CSV:"Csv",
             CARD_NUMBER:"Card number (*)",
             CARD_DATE:"Expiration date(*)",
-            DATE_PLACEHOLDER : "12/06/2016"
+            DATE_PLACEHOLDER : "12/06/2016",
+            CARD_NUMBER:"Card number (*)",
+            EXPIRATION_DATE:"Expiration date(*)",
+            CARDNUMBER_REQUIRED:"Card number is required.",
+            CARDNUMBER_ERROR:"You sould provide digit.",
+            FILTER_BY:"Filter results :",
+            PRICE:"Price",
+            DATE_BUTTOM:"Date",
+            VIEW_MAP:"View Map",
+            ADVACED_SEARCH:"Advanced Search",
+            INIT_DATE:"Init date",
+            END_DATE:"Init date",
+            FORMATION_CENTER:"Formation Center",
+            OTHER_DATA:"More info",
+            FORMATION_DATE:"Date",
+            FORMATION_DATA:"Formation's info",
+            FORMATION_ADDRESS:"Address",
+            BUTTON_RESERVER:"To recever",
+            CITY:"City",
+            SEARCH_IN_MAP:"Search in map"
+
         })
         .translations('fr', {
             HEADLINE: 'Hey, das ist meine großartige App!',
@@ -34,8 +54,25 @@ app.config(function($translateProvider) {
             CARD_CSV:"Csv",
             CARD_NUMBER:"Card number (*)",
             CARD_DATE:"Expiration date(*)",
-            DATE_PLACEHOLDER : "12/06/2016"
-
+            DATE_PLACEHOLDER : "12/06/2016",
+            CARD_NUMBER:"Card number (*)",
+            EXPIRATION_DATE:"Expiration date(*)",
+            CARDNUMBER_REQUIRED:"Card number is required.",
+            CARDNUMBER_ERROR:"You sould provide digit.",
+            FILTER_BY:"Filter results :",
+            PRICE:"Price",
+            DATE_BUTTOM:"Date",
+            VIEW_MAP:"View Map",
+            ADVACED_SEARCH:"Advanced Search",
+            INIT_DATE:"Init date",
+            END_DATE:"Init date",
+            OTHER_DATA:"More info",
+            FORMATION_DATE:"Date",
+            FORMATION_DATA:"Formation's info",
+            FORMATION_ADDRESS:"Address",
+            BUTTON_RESERVER:"S'inscrire",
+            CITY:"City",
+            SEARCH_IN_MAP:"Search in map"
         })
     .translations('es', {
         HEADLINE: 'Hey, das ist meine großartige App!',
@@ -52,7 +89,25 @@ app.config(function($translateProvider) {
         CARD_CSV:"Csv",
         CARD_NUMBER:"Card number (*)",
         CARD_DATE:"Expiration date(*)",
-        DATE_PLACEHOLDER : "12/06/2016"
+        DATE_PLACEHOLDER : "12/06/2016",
+        CARD_NUMBER:"Card number (*)",
+        EXPIRATION_DATE:"Expiration date(*)",
+        CARDNUMBER_REQUIRED:"Card number is required.",
+        CARDNUMBER_ERROR:"You sould provide digit.",
+        FILTER_BY:"Filter results :",
+        PRICE:"Price",
+        DATE_BUTTOM:"Date",
+        VIEW_MAP:"View Map",
+        ADVACED_SEARCH:"Advanced Search",
+        INIT_DATE:"Init date",
+        END_DATE:"Init date",
+        OTHER_DATA:"More info",
+        FORMATION_DATE:"Date",
+        FORMATION_DATA:"Formation's info",
+        FORMATION_ADDRESS:"Address",
+        BUTTON_RESERVER:"Reservar",
+        CITY:"City",
+        SEARCH_IN_MAP:"Buscar usando el mapa"
 
     });;
      $translateProvider.preferredLanguage('en');

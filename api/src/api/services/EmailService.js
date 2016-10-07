@@ -60,15 +60,15 @@ module.exports  = {
     if ( htmlEmail) {
       mailElement.html = htmlEmail;
       mailElement.text = htmlEmail;
-      console.log("<= To send mail ==>");
-      console.log( mailElement );
+      //console.log("<= To send mail ==>");
+      //console.log( mailElement );
     }
     ///Read in Configuration´s Colecction data about email server configuration
     ///Get in Database email´s confguration data.
 
     var ConfigurationObject = "";
 
-    console.log("Enviando notificacion")
+   // console.log("Enviando notificacion")
 
     Configuration.find({type:"smtp"} ).exec(function userConfiguration(err, configuration) {
       if (!configuration || err || configuration == "") {
@@ -80,7 +80,7 @@ module.exports  = {
          return res.json({err:"Don´t have smtp server configuration."});
          */
 
-        console.log("Read configuration ", configuration)
+       // console.log("Read configuration ", configuration)
 
          //Configuration.create( {
          //name:"mail",
@@ -123,9 +123,9 @@ module.exports  = {
       //  var mailcomposer = require("mailcomposer");
 
 
-      console.log("Valores de variables: ", ConfigurationObject["emailport"], emailhostFormation, emailsystemFormation);
+     // console.log("Valores de variables: ", ConfigurationObject["emailport"], emailhostFormation, emailsystemFormation);
 
-      console.log("Datos de la configuracion ",ConfigurationObject )
+     // console.log("Datos de la configuracion ",ConfigurationObject )
 
       var mailconfig = {
         from: emailsystemFormation ,
@@ -154,7 +154,7 @@ module.exports  = {
         }
         mailconfig.secure = true; // Defines if the connection should use SSL
 
-        console.log("UPDATE MAIL CONFIG")
+      //  console.log("UPDATE MAIL CONFIG")
         //mailconfig.auth = { // Defines authentication data
         //  user: emailuserFormation, // Username
         //  pass: emailpassFormation, // Password
@@ -195,10 +195,10 @@ module.exports  = {
 
 
       var smtp = MailerService('smtp', mailconfig );
-      console.log("Datos del servidor de correo  ", mailconfig)
-      console.log("Datos del correo ", mailElement)
+     // console.log("Datos del servidor de correo  ", mailconfig)
+     // console.log("Datos del correo ", mailElement)
 
-       console.log("dd");
+     //  console.log("dd");
       smtp.send(
           mailElement
         )

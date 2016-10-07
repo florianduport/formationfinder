@@ -2,6 +2,16 @@
  * Created by dionis on 6/22/2016.
  */
 module.exports = {
+
+  getReadableDate:  function  (dateParmt) {
+    weekDay = ["Sunday", "Monday", "Tuesday", "Wensday", "Thuesday", "Friday", "Saturday"]
+    value = new Date(dateParmt);
+    resultDate = weekDay[value.getDay()] + ": " + value.getDate() + "/" + value.getMonth() + "/" + value.getFullYear();
+
+    return resultDate
+
+   },
+
   searchbyclosedformation: function (callbackFunction) {
     //localhost:1337/Formationcenter/create?name=Paris"&adress="rue 15"&zipCode=21231&city="Paris"&email="dionis@uo.edu.cu"&phoneNumber="02131231231"
 
@@ -180,10 +190,13 @@ module.exports = {
           ///Your course estarted at   in
           ///and GMail link with extact adress
           var initDate = customerData.date
-          var mailSubjet = "Your formation almost started  ";
+          var mailSubjet = "Alert Formation almost started  ";
 
           ///Set systemurladdress in Configuration collection
-          var mailHtmlBody = "<b><h3><a src=\""+ sails.config.globals.configsystem.systemurladdress+"\">Formationfinder</a> notify that formation in address " + customerData.address + " almost started " + initDate + "</h3></b></br>"
+
+          ///INTERNACIONALIZATION
+          var mailHtmlBody = "<b><h4><a hrf=\""+ sails.config.globals.configsystem.systemurladdress+"\">Formationfinder</a> notify :</h4></b></br>"
+          mailHtmlBody +=  "<b><h3> Formation in address " + customerData.address + " almost started at " + CustomerService.getReadableDate( initDate ) + "</h3></b></br>"
           mailHtmlBody += "<b>Formation Center : " + resultObject.formationCenter.name + "</b><br />"
           mailHtmlBody += "<b>Formation Center (phone number): " + resultObject.formationCenter.phoneNumber + "</b><br />"
           mailHtmlBody += "<b>Formation Center (email): " + resultObject.formationCenter.email + "</b><br />"

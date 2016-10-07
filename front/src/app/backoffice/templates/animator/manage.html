@@ -15,86 +15,13 @@
     <div class="row">
         <form>
             <div class="form-group">
-                <label class="control-label col-sm-4" for="">Show/Hide Create Animator
-                    <button class="btn btn-xs btn-info" ng-click="ToggleShowCreateAnimator()">
-                        <span ng-show="!showCreateForm" class="glyphicon glyphicon-plus"></span>
-                        <span ng-show="showCreateForm" class="glyphicon glyphicon-minus"></span>
+                <label class="control-label col-sm-4" for="">Create Animator
+                    <button class="btn btn-xs btn-info" ng-click="gotoCreateAnimator()">
+                        Create
                     </button>
                 </label>
             </div>
         </form>
-    </div>
-    <div class="row" ng-show="showCreateForm">
-        <form class="form-horizontal" name="createAnimForm" id="createAnimForm">
-            <div class="form-group">
-                <label class="col-sm-2 control-label" for="name">Name</label>
-                <div class="col-sm-3">
-                    <input type="text"
-                           id="name"
-                           ng-model="animator.name"
-                           required
-                           maxlength="30"
-                           ng-pattern="nameRegExp"
-                           class="form-control"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label" for="firstname">First Name</label>
-                <div class="col-sm-3">
-                    <input type="text"
-                           id="firstname"
-                           required
-                           ng-model="animator.firstName"
-                           ng-pattern="nameRegExp"
-                           maxlength="30"
-                           class="form-control"/>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="col-sm-2 control-label" for="type">Type</label>
-                <div class="col-sm-3">
-                    <select id="type" ng-model="animator.type" class="form-control">
-                        <option value="PSY">Psychologist</option>
-                        <option value="BAFM">BAFM/BAFCRI</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label" for="city">City</label>
-                <div class="col-sm-3">
-                    <input type="text"
-                           id="city"
-                           required
-                           ng-model="animator.city"
-                           ng-pattern="nameRegExp"
-                           maxlength="30"
-                           class="form-control"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label" for="zipcode">Zipcode</label>
-                <div class="col-sm-3">
-                    <input type="text"
-                           id="zipcode"
-                           ng-model="animator.zipCode"
-                           required
-                           ng-pattern="zipcodeRegExp"
-                           maxlength="5"
-                           class="form-control"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-4 col-sm-offset-1">
-                    <button ng-disabled="createAnimForm.$invalid"
-                            ng-click="createAnimator()"
-                            type="submit"
-                            class="btn btn-info btn-block">Create Animator
-                    </button>
-                </div>
-            </div>
-        </form>
-        <br/>
     </div>
 
     <div class="row">

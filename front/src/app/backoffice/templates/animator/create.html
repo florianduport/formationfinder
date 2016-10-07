@@ -1,26 +1,25 @@
-<div class="container well manage" id="updateAnimatorContainer">
+<div class="container well manage" id="createAnimatorContainer">
     <div class="row">
-        <h2 class="text-center">Edit Animator</h2>
+        <h2 class="text-center">Create Animator</h2>
     </div>
 
     <div class="row">
         <div class="col">
-            <form class="form" name="editAnimForm" id="editAnimForm">
+            <form class="form" name="createAnimForm" id="createAnimForm">
                 <div class="form-group">
                     <label class="control-label" for="name">Name</label>
                     <input type="text"
-                           id="name"
                            name="name"
+                           id="name"
                            ng-model="animator.name"
-                           ng-change="checkParameters()"
                            required
                            maxlength="30"
-                           minlength="2"
                            ng-pattern="nameRegExp"
+                           minlength="2"
                            class="form-control"/>
-                    <span style="color:#cc0000" ng-show="editAnimForm.name.$dirty && editAnimForm.name.$invalid">
-                        <span ng-show="editAnimForm.name.$error.required">{{'REQUIRED_FIELD' | translate}}.</span>
-                        <span ng-show="editAnimForm.name.$error.pattern">{{'NAME_ERROR' | translate}}</span>
+                    <span style="color:#cc0000" ng-show="createAnimForm.name.$dirty && createAnimForm.name.$invalid">
+                        <span ng-show="createAnimForm.name.$error.required">{{'REQUIRED_FIELD' | translate}}.</span>
+                        <span ng-show="createAnimForm.name.$error.pattern">{{'NAME_ERROR' | translate}}</span>
                     </span>
                 </div>
                 <div class="form-group">
@@ -30,13 +29,13 @@
                            name="firstname"
                            required
                            ng-model="animator.firstName"
-                           ng-change="checkParameters()"
                            ng-pattern="nameRegExp"
                            maxlength="30"
                            class="form-control"/>
-                    <span style="color:#cc0000" ng-show="editAnimForm.firstname.$dirty && editAnimForm.firstname.$invalid">
-                        <span ng-show="editAnimForm.firstname.$error.required">{{'REQUIRED_FIELD' | translate}}.</span>
-                        <span ng-show="editAnimForm.firstname.$error.pattern">{{'NAME_ERROR' | translate}}</span>
+                    <span style="color:#cc0000"
+                          ng-show="createAnimForm.firstname.$dirty && createAnimForm.firstname.$invalid">
+                        <span ng-show="createAnimForm.firstname.$error.required">{{'REQUIRED_FIELD' | translate}}.</span>
+                        <span ng-show="createAnimForm.firstname.$error.pattern">{{'NAME_ERROR' | translate}}</span>
                     </span>
                 </div>
 
@@ -47,6 +46,7 @@
                         <option value="BAFM">BAFM/BAFCRI</option>
                     </select>
                 </div>
+
                 <div class="form-group">
                     <label class="control-label" for="city">City</label>
                     <input type="text"
@@ -54,14 +54,12 @@
                            name="city"
                            required
                            ng-model="animator.city"
-                           ng-change="checkParameters()"
                            ng-pattern="nameRegExp"
                            maxlength="30"
-                           minlength="2"
                            class="form-control"/>
-                    <span style="color:#cc0000" ng-show="editAnimForm.city.$dirty && editAnimForm.city.$invalid">
-                        <span ng-show="editAnimForm.city.$error.required">{{'REQUIRED_FIELD' | translate}}.</span>
-                        <span ng-show="editAnimForm.city.$error.pattern">{{'NAME_ERROR' | translate}}</span>
+                    <span style="color:#cc0000" ng-show="createAnimForm.city.$dirty && createAnimForm.city.$invalid">
+                        <span ng-show="createAnimForm.city.$error.required">{{'REQUIRED_FIELD' | translate}}.</span>
+                        <span ng-show="createAnimForm.city.$error.pattern">{{'NAME_ERROR' | translate}}</span>
                     </span>
                 </div>
                 <div class="form-group">
@@ -69,23 +67,23 @@
                     <input type="text"
                            id="zipcode"
                            name="zipcode"
-                           required
                            ng-model="animator.zipCode"
-                           ng-change="checkParameters()"
+                           required
                            ng-pattern="zipcodeRegExp"
                            maxlength="5"
                            class="form-control"/>
-                    <span style="color:#cc0000" ng-show="editAnimForm.zipcode.$dirty && editAnimForm.zipcode.$invalid">
-                        <span ng-show="editAnimForm.zipcode.$error.required">{{'REQUIRED_FIELD' | translate}}.</span>
-                        <span ng-show="editAnimForm.zipcode.$error.pattern">{{'ZIPCODE_ERROR' | translate}}</span>
+                    <span style="color:#cc0000" ng-show="createAnimForm.zipcode.$dirty && createAnimForm.zipcode.$invalid">
+                        <span ng-show="createAnimForm.zipcode.$error.required">{{'REQUIRED_FIELD' | translate}}.</span>
+                        <span ng-show="createAnimForm.zipcode.$error.pattern">{{'ZIPCODE_ERROR' | translate}}</span>
                     </span>
                 </div>
                 <div class="form-group">
-                    <button ng-disabled="invalidParameters"
-                            ng-click="editAnimator()"
+                    <button ng-disabled="createAnimForm.$invalid"
+                            ng-click="createAnimator()"
                             type="submit"
-                            class="btn btn-primary btn-block">Update Animator
+                            class="btn btn-primary btn-block">Create Animator
                     </button>
+
                     <button ng-click="gotoManageAminator()"
                             type="button"
                             class="btn btn-info btn-block">Go to Animators

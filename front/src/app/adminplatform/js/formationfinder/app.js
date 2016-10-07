@@ -1,4 +1,4 @@
-var app = angular.module("adminplatform", ['app.config',"ngResource", "ngRoute", "ngCookies","ngAnimate","ui.bootstrap"])
+var app = angular.module("adminplatform", ['app.config',"ngResource", "ngRoute", "ngCookies","ngAnimate","pascalprecht.translate","ui.bootstrap"])
 
 .run(["$rootScope", "$cookieStore", "$location", 'CONFIG', function ($rootScope, $cookieStore, $location, CONFIG) {
     //events

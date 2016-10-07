@@ -3,6 +3,15 @@
  */
 module.exports = {
 
+  getReadableDate:  function  (dateParmt) {
+    weekDay = ["Sunday", "Monday", "Tuesday", "Wensday", "Thuesday", "Fryday", "Saturday"]
+    value = new Date(dateParmt);
+    resultDate =  value.getDate() + "/" + value.getMonth() + "/" + value.getFullYear();
+
+    return resultDate
+
+  },
+
   validateFormatinCenterInformation : function ( formationcenterName, callback) {
     FormationCenter.findOne({name:formationcenter}).exec(function (err, formationCenterData) {
 
@@ -430,10 +439,10 @@ module.exports = {
             //console.log("RESULT", err)
             //console.log("RESULT", res)
             if (err) {
-              callback(null, {
+              callback( {
                 response: "ERROR",
                 message: err
-              })
+              }, null)
               return;
             }
 
@@ -451,10 +460,10 @@ module.exports = {
             console.log("_____________________________________")
             console.log("IDENTIFICADOR", card.CardId )
             if (!card) {
-              callback(null, {
+              callback( {
                 response: "ERROR",
                 message: "Not mangopay card information"
-              })
+              }, null)
             }
             else {
               callback(null, {

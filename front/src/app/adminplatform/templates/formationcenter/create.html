@@ -1,11 +1,11 @@
 <div class="container well" id="createContainer">
-    <div class="row" style="backgro">
+    <div class="row">
         <div class="col col-xs-1 clearfix">
 
         </div>
         <div class="col col-xs-10">
             <div class="page-header">
-                <h2><p class="text-center">Create Formation Center</p></h2>
+                <h2 class="text-center">Create Formation Center</h2>
             </div>
         </div>
         <div class="col col-xs-1">
@@ -137,7 +137,7 @@
                            required/>
                     <span style="color:#cc0000" ng-show="createFCform.phonenumber.$dirty && createFCform.phonenumber.$invalid">
                         <span ng-show="createFCform.phonenumber.$error.required">Phonenumber is required.</span>
-                        <span ng-show="createFCform.phonenumber.$error.pattern">Invalid pattern. Enter 10 digist starting with 0.</span>
+                        <span ng-show="createFCform.phonenumber.$error.pattern">Enter 10 digits starting with '0'.</span>
                     </span>
                 </div>
             </div>

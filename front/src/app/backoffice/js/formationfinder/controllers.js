@@ -1348,6 +1348,55 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 $scope.invalidParameters = true;
             };
         }])
+    .controller("CreateAnimatorController", ["$scope", "$rootScope", "$location", "$http", "$uibModal", "$translate",
+        function ($scope, $rootScope, $location, $http, $uibModal, $translate) {
+
+            $scope.nameRegExp = /^[µçùàèáéíóúa-zA-Z][µçùàèáéíóúa-zA-Z\s]+$/;
+            $scope.zipcodeRegExp = /^\d{5}$/;
+
+            $scope.initParameters = function () {
+                $scope.animator = {};
+                $scope.animator.type = 'PSY';
+            };
+
+            $scope.initParameters();
+
+            $scope.validParameters = function () {
+                return ($scope.animator.name && $scope.animator.firstName
+                && $scope.animator.city
+                && $scope.animator.zipCode);
+            };
+
+            $scope.createAnimator = function () {
+                if ($scope.validParameters()) {
+
+                    $http.post($rootScope.urlBase + "/animator/create", {
+                            formationCenter: $rootScope.formationCenter,
+                            animator: $scope.animator
+                        })
+                        .success(function (result) {
+                            if (result.status === "ok") {
+
+                                $scope.initParameters();
+                                alert("Animator created.");
+                                //console.log("Animator created.", result.data);
+                                $scope.gotoManageAminator();
+
+                            } else {
+                                alert("Error creating Animator: " + result.info);
+                                //console.log("Error creating Animator: ", result.info);
+                            }
+                        })
+                        .error(function (err) {
+                            console.log("Error creating Animator: ", err);
+                        });
+                }
+            };
+
+            $scope.gotoManageAminator = function () {
+                $location.path("/animator/manage/");
+            };
+        }])
     .controller("FormationCenterManagementController", ["$scope", "$rootScope", "$location", "$http", "NgMap", "$log",
         function ($scope, $rootScope, $location, $http, NgMap, $log) {
 

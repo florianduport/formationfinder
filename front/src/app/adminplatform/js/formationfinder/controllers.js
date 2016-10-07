@@ -21,7 +21,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.initParameters();
 
-            $scope.usernameExpReg = /^[a-z][a-z\d]*[_.\s]*[a-z\d]*$/;
+            $scope.usernameExpReg = /^[µçùàèáéíóúA-Za-z]([µçùàèáéíóúA-Za-z\d]*[_.\s]*[µçùàèáéíóúA-Za-z\d]*)+$/;
 
             $scope.login = function () {
 
@@ -125,13 +125,14 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             }
 
         }])
-    .controller("CreateFormationCenterController", ["$scope", "$rootScope", "$location", "$http",
-        function ($scope, $rootScope, $location, $http) {
+    .controller("CreateFormationCenterController", ["$scope", "$rootScope", "$location", "$http", "$translate",
+        function ($scope, $rootScope, $location, $http, $translate) {
 
             $scope.zipcodeRegExp = /^\d{5}$/;
-            $scope.nameRegExp = /^[A-Za-z][A-Za-z\s]+$/;
-            $scope.usernameExpReg = /^[A-Za-z][A-Za-z\d]*[_.\s]*[A-Za-z\d]*$/;
-            $scope.emailRedExp = /^[A-Za-z][_A-Za-z0-9-]*(\.[_A-Za-z0-9-]+)*@[A-Za-z][A-Za-z0-9-]*(\.[A-Za-z0-9-]+)*(\.[A-Za-z]{2,3})$/;
+            $scope.nameRegExp = /^[µçùàèáéíóúa-zA-Z][µçùàèáéíóúa-zA-Z\s]+$/;
+            $scope.usernameExpReg = /^[µçùàèáéíóúA-Za-z]([µçùàèáéíóúA-Za-z\d]*[_.\s]*[µçùàèáéíóúA-Za-z\d]*)+$/;
+            //$scope.emailRedExp = /^[A-Za-z][_A-Za-z0-9-]*(\.[_A-Za-z0-9-]+)*@[A-Za-z][A-Za-z0-9-]*(\.[A-Za-z0-9-]+)*(\.[A-Za-z]{2,3})$/;
+            $scope.emailRedExp = /^[µçùàèáéíóúa-zA-Z][_µçùàèáéíóúa-zA-Z0-9-]*(\.[_µçùàèáéíóúa-zA-Z0-9-]+)*@[µçùàèáéíóúa-zA-Z][µçùàèáéíóúa-zA-Z0-9-]*(\.[µçùàèáéíóúa-zA-Z0-9-]+)*(\.[µçùàèáéíóúa-zA-Z]{2,3})$/;
             $scope.phoneRegExp = /^(0)\d{9}$/;
 
             var initParameter = function () {
@@ -237,12 +238,12 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             };
 
         }])
-    .controller("UpdateFormationCenterController", ["$scope", "$rootScope", "$location", "$http", "$routeParams",
-        function ($scope, $rootScope, $location, $http, $routeParams) {
+    .controller("UpdateFormationCenterController", ["$scope", "$rootScope", "$location", "$http", "$routeParams", "$translate",
+        function ($scope, $rootScope, $location, $http, $routeParams, $translate) {
 
             $scope.zipcodeRegExp = /^\d{5}$/;
-            $scope.nameRegExp = /^[A-Za-z][A-Za-z\s]+$/;
-            $scope.emailRedExp = /^[A-Za-z][_A-Za-z0-9-]*(\.[_A-Za-z0-9-]+)*@[A-Za-z][A-Za-z0-9-]*(\.[A-Za-z0-9-]+)*(\.[A-Za-z]{2,3})$/;
+            $scope.nameRegExp = /^[µçùàèáéíóúa-zA-Z][µçùàèáéíóúa-zA-Z\s]+$/;
+            $scope.emailRedExp = /^[µçùàèáéíóúa-zA-Z][_µçùàèáéíóúa-zA-Z0-9-]*(\.[_µçùàèáéíóúa-zA-Z0-9-]+)*@[µçùàèáéíóúa-zA-Z][µçùàèáéíóúa-zA-Z0-9-]*(\.[µçùàèáéíóúa-zA-Z0-9-]+)*(\.[µçùàèáéíóúa-zA-Z]{2,3})$/;
             $scope.phoneRegExp = /^(0)\d{9}$/;
 
             $scope.formationcenter = {};

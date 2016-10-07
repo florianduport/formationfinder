@@ -486,23 +486,28 @@ module.exports = {
       },
       six: function (callback) {
         //Use with INTERNET
+        if (placeFormationAsociation.formationcenter.length == 0 || placeFormationAsociation.formation.length == 0) {
+          console.log("No information for update")
+          callback(null, placeFormationAsociation);
+        }
+        else {
+          FormationCenter.find({}).exec(function (err, formationCenterArray) {
+            if (err)
+              console.log(err)
+            formationCenterArray.forEach(function (iFormation, i) {
+              PaymentService.makeWalletToFormationCenter(iFormation.name,
+                function resultServices(err, result) {
+                  if (err) {
+                    console.log("ERROR", err)
+                  }
 
-         FormationCenter.find({}).exec(function (err, formationCenterArray) {
-           if (err)
-             console.log(err)
-           formationCenterArray.forEach(function (iFormation, i) {
-             PaymentService.makeWalletToFormationCenter(iFormation.name,
-               function resultServices(err, result) {
-                 if (err) {
-                   console.log("ERROR" , err)
-                 }
-
-                 console.log("Payment data  ", result)
-               })
-           });
-           console.log("SIX")
-           callback(null, placeFormationAsociation);
-         });
+                  console.log("Payment data  ", result)
+                })
+            });
+            console.log("SIX")
+            callback(null, placeFormationAsociation);
+          });
+        }
       }
     }, function (err, results) {
       // results is now equal to: {one: 1, two: 2}

@@ -111,11 +111,13 @@ describe('PayController', function () {
 
            }
 
+           currentDate = new Date()
+           console.log("DATE RESULT " , moment('0623', 'MMDD').unix())
+           console.log("DATE RESULT " ,currentDate.getMonth() +"" + currentDate.getDay() ,  moment(String(currentDate.getMonth() + currentDate.getDay()), 'MMDD').unix())
 
-            currentDate = new Date()
            cardValueEx = {
              CardNumber: '4706750000000017',
-             CardExpirationDate: currentDate.getMonth() + currentDate.getDay(),  //12-06-2023  moment('0623', 'MMDD').unix() currentDate
+             CardExpirationDate: moment(currentDate).format('MMYY') ,  //12-06-2023
              CardCvx: '342',
            }
            var testCurrency = "EUR"
@@ -191,7 +193,7 @@ describe('PayController', function () {
           currentDate = new Date()
           cardValueEx = {
             CardNumber: '4706750000000017',
-            CardExpirationDate: currentDate.getMonth() + currentDate.getDay(),  //12-06-2023  moment('0623', 'MMDD').unix() currentDate
+            CardExpirationDate:   moment(currentDate).format('MMYY'),  //12-06-2023  moment('0623', 'MMDD').unix() currentDate
             CardCvx: '342',
           }
           var testCurrency = "EUR"
