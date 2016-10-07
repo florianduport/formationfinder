@@ -34,7 +34,7 @@ app.config(function($translateProvider) {
             FORMATION_DATE:"Date",
             FORMATION_DATA:"Formation's info",
             FORMATION_ADDRESS:"Address",
-            BUTTON_RESERVER:"To recever",
+            BUTTON_RESERVER:"Reserve",
             CITY:"City",
             SEARCH_IN_MAP:"Search in map"
 
