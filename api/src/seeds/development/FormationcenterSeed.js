@@ -4,14 +4,14 @@
 
 var faker = require('faker');
 // email: faker.internet.email(),
-//"dionis@localhost.com"
+//"inoid2007@gmail.com"
 faker.locale = "fr"
 module.exports = [ {
   name: faker.internet.userName(),
 
   firstName: faker.internet.userName(),
 
-  email: "dionis@localhost.com",
+  email: "inoid2007@gmail.com",
 
   address: faker.address.streetAddress(),
 
@@ -34,7 +34,7 @@ module.exports = [ {
   {
     name: faker.internet.userName(),
     firstName: faker.internet.userName(),
-    email: "dionis@localhost.com",
+    email: "inoid2007@gmail.com",
 
     address: faker.address.streetAddress(),
 
@@ -57,7 +57,7 @@ module.exports = [ {
   {
     name: faker.internet.userName(),
     firstName: faker.internet.userName(),
-    email: "dionis@localhost.com",
+    email: "inoid2007@gmail.com",
 
     address: faker.address.streetAddress(),
 
@@ -80,7 +80,7 @@ module.exports = [ {
   {
     name: faker.internet.userName(),
     firstName: faker.internet.userName(),
-    email: "dionis@localhost.com",
+    email: "inoid2007@gmail.com",
 
     address: faker.address.streetAddress(),
 
