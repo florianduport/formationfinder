@@ -573,7 +573,7 @@
                                ng-model="vm.customerData.name"
                                ng-pattern="vm.nameRegExp"
                                maxlength="40"
-                               placeholder="Guerin"
+                               placeholder="vm.customerData.name"
                                class="form-control"
                                type="text"
                                required/>
@@ -589,7 +589,7 @@
                                ng-model="vm.customerData.firstName"
                                ng-pattern="vm.nameRegExp"
                                maxlength="40"
-                               placeholder="Nathan"
+                               placeholder="vm.customerData.firstName"
                                class="form-control"
                                type="text" required/>
                         <span style="color:#cc0000"
@@ -603,7 +603,7 @@
                         <label class="control-label" for="phoneNumber">Phone Number (*)</label>
                         <input name="phoneNumber" id="phoneNumber"
                                class="form-control" type="text"
-                               placeholder="0913332109"
+                               placeholder="vm.customerData.phoneNumber"
                                ng-model="vm.customerData.phoneNumber"
                                maxlength="10"
                                required
@@ -620,7 +620,7 @@
                         <input name="email" id="email"
                                ng-model="vm.customerData.email"
                                ng-pattern="vm.emailRedExp"
-                               placeholder="nathan.guerin@gmail.com"
+                               placeholder="vm.customerData.email"
                                maxlength="50"
                                class="form-control"
                                type="text" required/>
@@ -647,7 +647,7 @@
                                    class="form-control"
                                    type="text"
                                    required
-                                   placeholder="{{ ( 'DATE_PLACEHOLDER' | translate) }}"
+                                   placeholder="vm.customerData.birthDate"
                                    uib-datepicker-popup="{{vm.format}}"
                                    is-open="vm.popupBirthDate.opened"
                                    datepicker-options="vm.BirthDateOptions"/>
@@ -664,6 +664,7 @@
                         <input name="birthCity" id="birthCity"
                                ng-model="vm.customerData.birthCity"
                                maxlength="40"
+                               placeholder="vm.customerData.birthCity"
                                ng-pattern="vm.nameRegExp"
                                class="form-control" type="text"/>
                         <span style="color:#cc0000"
@@ -677,6 +678,7 @@
                         <input name="address" id="address"
                                ng-model="vm.customerData.address"
                                maxlength="100"
+                              placeholder="vm.customerData.address"
                                class="form-control" type="text"/>
                     </div><!--END ADDRESS-->
 
@@ -686,6 +688,7 @@
                                ng-model="vm.customerData.city"
                                maxlength="40"
                                ng-pattern="vm.nameRegExp"
+                               placeholder="vm.customerData.city"
                                class="form-control" type="text"/>
                         <span style="color:#cc0000" ng-show="customerForm.city.$dirty && customerForm.city.$invalid">
                             <span ng-show="customerForm.city.$error.pattern">Invalid city name. You should provide between 2 and 40 words characters.</span>
@@ -699,7 +702,7 @@
                                class="form-control"
                                ng-pattern="vm.zipcodeRegExp"
                                maxlength="5"
-                               placeholder="33216"
+                               placeholder="vm.customerData.zipCode"
                                required
                                type="text"/>
                         <span style="color:#cc0000"

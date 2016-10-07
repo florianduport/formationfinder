@@ -90,8 +90,12 @@
                     </td>
                     <td>
                         <button type="button"
+                                class="btn btn-sm btn-primary" ng-class="[formation.costumer.length>0,btn-info]"
+                                ng-click="detailsFormation(formation)">{{'DETAILS' | translate}}
+                        </button>
+                        <button type="button"
                                 class="btn btn-sm btn-primary"
-                                ng-click="editFormation(formation)">Edit
+                                ng-click="editFormation(formation)">{{'EDIT' | translate}}
                         </button>
                         <span></span>
                         <button type="button"

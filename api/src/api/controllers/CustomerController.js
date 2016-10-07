@@ -243,7 +243,8 @@ module.exports = {
 
       });
     },
-  searchByLicenceInYear: function (req, res, next) {
+
+   searchByLicenceInYear: function (req, res, next) {
     // body...
 
     result = {};
@@ -320,6 +321,26 @@ module.exports = {
         })
       })
 
-  }
+  },
+
+   searchbyformation:function(req, res, next){
+
+   },
+
+   searchById : function (req, res, next){
+     idStr = req.param('id')
+
+     if (idStr === undefined) {
+       return res.json({status: "error", info: sails.__("ERROR_FORMATION_REQUIRED")});
+     }
+
+     Customer.findOne({id:idStr}).exec(function (err, customerObject) {
+
+         if (customerObject === undefined) {
+           return res.json({status: "error", info: sails.__("ERROR_FORMATION_REQUIRED")});
+         }
+       return res.json({status: "ok", data: customerObject});
+     })
+   }
 };
 

@@ -70,28 +70,55 @@ module.exports = {
       return res.json({status: "error", info: sails.__("PASSWORD_REQUIRED")});
     }
 
-    Adminlogin.findOne({
-      username: req.param('username'),
-      password: req.param('password')
-    }).exec(function (err, AdminloginFounded) {
-      if (err) {
-        return res.json({status: "error", info: sails.__("ERROR_SEARCHING_LOGIN")});
-      }
+    Adminlogin.native(function (err, collection) {
+      if (err) return res.json({status: "error", info: sails.__("ERROR_SEARCHING_LOGIN")});
 
-      if (!AdminloginFounded) {
-        return res.json({status: "error", info: sails.__("INVALID_USERNAME_PASSWORD")});
-      }
+      collection.find({
+        username: req.param('username'),
+        password: req.param('password')
+      }).toArray(function (err, AdminloginFounded) {
+        if (err) {
+          return res.json({status: "error", info: sails.__("ERROR_SEARCHING_LOGIN")});
+        }
 
-      resulToken = LoginService.generateLoginToken(AdminloginFounded.id);
+        if (!AdminloginFounded || AdminloginFounded.length === 0) {
+          return res.json({status: "error", info: sails.__("INVALID_USERNAME_PASSWORD")});
+        }
 
-      if (resulToken.status == 'ok') {
-        return res.json({status: "ok", data: resulToken.token});
+        resulToken = LoginService.generateLoginToken(AdminloginFounded[0]._id);
 
-      } else {
-        return res.json({status: "error", info: sails.__("GENERATE_LOGIN_TOKEN_ERROR")});
-      }
+        if (resulToken.status == 'ok') {
+          return res.json({status: "ok", data: resulToken.token});
 
-    }); //End of Adminlogin.findOne
+        } else {
+          return res.json({status: "error", info: sails.__("GENERATE_LOGIN_TOKEN_ERROR")});
+        }
+
+      });
+    });
+
+    //Adminlogin.findOne({
+    //  username: req.param('username'),
+    //  password: req.param('password')
+    //}).exec(function (err, AdminloginFounded) {
+    //  if (err) {
+    //    return res.json({status: "error", info: sails.__("ERROR_SEARCHING_LOGIN")});
+    //  }
+    //
+    //  if (!AdminloginFounded) {
+    //    return res.json({status: "error", info: sails.__("INVALID_USERNAME_PASSWORD")});
+    //  }
+    //
+    //  resulToken = LoginService.generateLoginToken(AdminloginFounded.id);
+    //
+    //  if (resulToken.status == 'ok') {
+    //    return res.json({status: "ok", data: resulToken.token});
+    //
+    //  } else {
+    //    return res.json({status: "error", info: sails.__("GENERATE_LOGIN_TOKEN_ERROR")});
+    //  }
+    //
+    //}); //End of Adminlogin.findOne
 
   } //End of login action.
 

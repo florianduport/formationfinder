@@ -15,6 +15,7 @@ module.exports = {
     Formation.findOne({id: req.param('id')})
       .populate('place')
       .populate('animators')
+      .populate('customers')
       .exec(function (err, FormationFounded) {
         if (err) {
           return res.json({status: "error", info: sails.__("ERROR_FORMATION_SEARCHING")});
@@ -219,297 +220,6 @@ module.exports = {
 
   },
 
-  //searchByZipcode: function (req, res, next) {
-  //  // body...
-  //
-  //
-  //  zc = req.param('zipcode');
-  //
-  //  if (zc === undefined) {
-  //    return res.json({err: 'No zipcode provided'});
-  //  }
-  //
-  //
-  //  initialDate = req.param('initialDate');
-  //  finalDate = req.param('finalDate');
-  //
-  //  initialDate = new Date(initialDate);
-  //  finalDate = new Date(finalDate);
-  //
-  //  if (!_.isDate(initialDate) || !_.isDate(finalDate)) {
-  //    return res.json({err: 'Invalid date format for initialDate or finalDate.'});
-  //  }
-  //  var page = 0;
-  //  var len = 10;
-  //
-  //  if (req.param('page') !== undefined) {
-  //    if (!isNaN(parseInt(req.param('page')))) {
-  //      page = Math.abs(parseInt(req.param('page')));
-  //    }
-  //    else {
-  //      return res.json({err: 'The page parameter is an invalid string number'});
-  //    }
-  //  }
-  //
-  //  //console.log("Call Services")
-  //  if (req.param('len') !== undefined) {
-  //    if (!isNaN(parseInt(req.param('len')))) {
-  //      len = Math.abs(parseInt(req.param('len')));
-  //    }
-  //    else {
-  //      return res.json({err: 'The len parameter is an invalid string number'});
-  //    }
-  //  }
-  //  initialDate = req.param('initialDate');
-  //  finalDate = req.param('finalDate');
-  //
-  //  query = {};
-  //  queryPlace = {};
-  //
-  //  // console.log("Validation price", !isNaN(parseInt(req.param('price'))) )
-  //  // console.log("Validation price", req.param('price') )
-  //
-  //  if (req.param('price') && !isNaN(parseInt(req.param('price')))) {
-  //    query.price = {'>=': req.param('price')};
-  //    //console.log("Create price restriction")
-  //  }
-  //  query.limit = len
-  //  query.skip = page * len
-  //  query.isFull = false
-  //  queryPlace.zipcode = zc
-  //
-  //  // console.log("Query" ,queryPlace )
-  //  // console.log("Query" ,query )
-  //  Formation.find(query)
-  //    .populate('place', queryPlace)
-  //    .populate('formationCenter')
-  //    .exec(function placesFouded(err, placesFormations) {
-  //      // body...
-  //      formationsResponse = [];
-  //
-  //      placesFormations.forEach(function (iPlace, index) {
-  //        if (typeof iPlace.place != "undefined") {
-  //          iPlace.formationCenter.city = iPlace.place.city;
-  //          formationsResponse.push({
-  //
-  //            formation: iPlace
-  //          });
-  //        }
-  //      });
-  //
-  //      return res.json(formationsResponse);
-  //    });
-  //
-  //  /*Place.find({
-  //   zipcode: zc,
-  //   skip: page * len,
-  //   limit: len})
-  //   .populate('formations')
-  //   .populate('formationCenter')
-  //   .exec(function placesFouded(err, places) {
-  //   // body...
-  //
-  //   formationsResponse = [];
-  //
-  //   places.forEach(function (place, index) {
-  //   // body...
-  //
-  //   place.formations.forEach(function (actualFormation, index) {
-  //   // body...
-  //   formationsResponse.push({
-  //   formationCenterName: place.formationCenter.name,
-  //   formation: actualFormation
-  //   });
-  //   });
-  //   });
-  //
-  //   return res.json(formationsResponse);
-  //   });*/
-  //},
-  //
-  //countByZipcode: function (req, res, next) {
-  //
-  //  // console.log("Call Services")
-  //  if (req.param('zipcode')) {
-  //    zc = req.param('zipcode');
-  //  }
-  //
-  //  if (zc === undefined) {
-  //    return res.json({err: 'No zipcode provided'});
-  //  }
-  //  queryPlace = {}
-  //
-  //
-  //  if (zc == "") {
-  //
-  //    Formation.count().exec(function countFaq(error, found) {
-  //      if (error) {
-  //
-  //        return res.json({"res": error});
-  //      }
-  //
-  //      //console.log('There are ' + found + ' Faq');
-  //
-  //      return res.json({"res": "OK", "size": found})
-  //
-  //
-  //      // There are 1 users called 'Flynn'
-  //      // Don't forget to handle your errors
-  //    });
-  //  } else {
-  //    queryPlace.zipcode = zc
-  //
-  //    Formation.find().populate('place', queryPlace).exec(function countFaq(error, placesFormations) {
-  //      if (error) {
-  //        return res.json({"res": error});
-  //      }
-  //
-  //      //console.log('There are ' + found + ' Faq');
-  //      var counterFormation = 0
-  //      placesFormations.forEach(function (iPlace, index) {
-  //        if (typeof iPlace.place != "undefined") {
-  //          counterFormation++
-  //        }
-  //      });
-  //      return res.json({"res": "OK", "size": counterFormation});
-  //
-  //
-  //      // There are 1 users called 'Flynn'
-  //      // Don't forget to handle your errors
-  //    });
-  //  }
-  //},
-  //
-  //searchByCity: function (req, res, next) {
-  //  // body...
-  //
-  //  cityname = req.param('city');
-  //
-  //  // console.log("Call Services")
-  //  if (cityname === undefined) {
-  //    return res.json({err: 'No city provided'});
-  //  }
-  //
-  //
-  //  initialDate = req.param('initialDate');
-  //  finalDate = req.param('finalDate');
-  //
-  //  initialDate = new Date(initialDate);
-  //  finalDate = new Date(finalDate);
-  //
-  //  if (!_.isDate(initialDate) || !_.isDate(finalDate)) {
-  //    return res.json({err: 'Invalid date format for initialDate or finalDate.'});
-  //  }
-  //  var page = 0;
-  //  var len = 10;
-  //
-  //  if (req.param('page') !== undefined) {
-  //    if (!isNaN(parseInt(req.param('page')))) {
-  //      page = Math.abs(parseInt(req.param('page')));
-  //    }
-  //    else {
-  //      return res.json({err: 'The page parameter is an invalid string number'});
-  //    }
-  //  }
-  //
-  //  //console.log("Call Services")
-  //  if (req.param('len') !== undefined) {
-  //    if (!isNaN(parseInt(req.param('len')))) {
-  //      len = Math.abs(parseInt(req.param('len')));
-  //    }
-  //    else {
-  //      return res.json({err: 'The len parameter is an invalid string number'});
-  //    }
-  //  }
-  //  initialDate = req.param('initialDate');
-  //  finalDate = req.param('finalDate');
-  //
-  //  query = {};
-  //  queryPlace = {};
-  //
-  //  /// console.log("Validation price", !isNaN(parseInt(req.param('price'))) )
-  //  // console.log("Validation price", req.param('price') )
-  //
-  //  if (req.param('price') && !isNaN(parseInt(req.param('price')))) {
-  //    query.price = {'>=': req.param('price')};
-  //    //console.log("Create price restriction")
-  //  }
-  //  query.limit = len
-  //  query.skip = page * len
-  //  query.isFull = false
-  //  if (cityname != "")
-  //    queryPlace.city = {'contains': cityname}
-  //
-  //  // console.log("Query" ,queryPlace )
-  //  // console.log("Query" ,query )
-  //  Formation.find(query)
-  //    .populate('place', queryPlace)
-  //    .populate('formationCenter')
-  //    .exec(function placesFouded(err, placesFormations) {
-  //      // body...
-  //      formationsResponse = [];
-  //
-  //      placesFormations.forEach(function (iPlace, index) {
-  //        if (typeof iPlace.place != "undefined") {
-  //          iPlace.formationCenter.city = iPlace.place.city;
-  //          formationsResponse.push({
-  //            formation: iPlace
-  //          });
-  //        }
-  //      });
-  //
-  //      return res.json(formationsResponse);
-  //    });
-  //},
-  //
-  //countByCity: function (req, res, next) {
-  //  cityname = "";
-  //
-  //  // console.log("Call Services")
-  //  if (req.param('city')) {
-  //    cityname = req.param('city');
-  //  }
-  //  queryPlace = {}
-  //  if (cityname == "") {
-  //
-  //    Formation.count().exec(function countFaq(error, found) {
-  //      if (error) {
-  //
-  //        return res.json({"res": error});
-  //      }
-  //
-  //      //console.log('There are ' + found + ' Faq');
-  //
-  //      return res.json({"res": "OK", "size": found})
-  //
-  //
-  //      // There are 1 users called 'Flynn'
-  //      // Don't forget to handle your errors
-  //    });
-  //  } else {
-  //    queryPlace.city = {'contains': cityname}
-  //
-  //    Formation.find().populate('place', queryPlace).exec(function countFaq(error, placesFormations) {
-  //      if (error) {
-  //        return res.json({"res": error});
-  //      }
-  //
-  //      //console.log('There are ' + found + ' Faq');
-  //      var counterFormation = 0
-  //      placesFormations.forEach(function (iPlace, index) {
-  //        if (typeof iPlace.place != "undefined") {
-  //          counterFormation++
-  //        }
-  //      });
-  //      return res.json({"res": "OK", "size": counterFormation});
-  //
-  //
-  //      // There are 1 users called 'Flynn'
-  //      // Don't forget to handle your errors
-  //    });
-  //  }
-  //
-  //},
 
   bookFormation: function (req, res, next) {
     // body...
@@ -1549,61 +1259,6 @@ module.exports = {
      });*/
   },
 
-  //searchcityMongo: function (req, res, next) {
-  //
-  //  //db.getCollection('formation').find({"dates":{"$elemMatch":{"date":{"$gte":new ISODate("2016-10-04"),"$lte":new ISODate("2017-05-03")}}}})
-  //  cityv = req.param("city")
-  //  var ObjectID = require('mongodb').ObjectID
-  //  Place.find({city: {contains: cityv}}).exec(function (err, resulFormation) {
-  //
-  //    arrayData = []
-  //    var promise;
-  //    promise = resulFormation.reduce(function (prev, iPlace) {
-  //      return prev.then(function () {
-  //        object = iPlace.id
-  //        arrayData.push(new ObjectID(iPlace.id));
-  //      });
-  //    }, Promise.resolve());
-  //
-  //    promise.then(function (array) {
-  //
-  //
-  //      parameters = {
-  //        place: {$in: arrayData},
-  //        price: {
-  //          $gte: 50
-  //        },
-  //        dates: {
-  //          $elemMatch: {
-  //            date: {
-  //              $gte: new Date("2016-10-04"),
-  //              $lte: new Date("2017-05-03")
-  //            }
-  //          }
-  //        }
-  //
-  //      }
-  //      Formation.native(function (err, collection) {
-  //        if (err) return res.serverError(err);
-  //        //console.log("---")
-  //        ////Transform all arrayData to new ObjectId [new ObjectID (arrayData[0])]
-  //        // {"place":{"$all": [new ObjectID(arrayData[0])] },"price":{"$gte":50},"dates":{"$elemMatch":{"date":{"$gte":new Date("2016-10-04"),"$lte":new Date("2017-05-03")}}}}
-  //
-  //        //console.log("******")
-  //        // parameters.place = {$all:[new ObjectID(arrayData[0])]}
-  //        collection.find(parameters).limit(page).skip(0).toArray(function (err, results) {
-  //          //console.log("sfdsdfsss " + results);
-  //          if (err) return res.serverError(err);
-  //          ////Dados los id buscar un place un el nombre "5797e539e1e9812814a35520"
-  //          return res.json(results)
-  //        });
-  //      });
-  //    });
-  //  });
-  //
-  //
-  //},
-
   searchByDate: function (req, res, next) {
     // body...
     var page = 0;
@@ -1881,6 +1536,48 @@ module.exports = {
           });
         });
       });
+  },
+
+  searchUsersByFormation: function (req, res, next){
+    idStr = req.param('id');
+
+    console.log("Search data object ---------------------------------->>>>>>>>  ", idStr)
+    if (idStr === undefined ) {
+      return res.json({err: sails.__("ERROR_FORMATIONDATE_ID_NODATA")});
+    }
+
+    Formation.findOne({id:idStr}).populate("customers").exec(function (err, formationObject){
+      console.log("Search data object")
+      if (typeof formationObject != "undefined"){
+        console.log("Send information ", formationObject.customers.length)
+        return res.json({status:"ok", data:formationObject.customers})
+      }
+      return res.json([])
+    })
+  },
+
+  sendMailToCustomer: function  (req, res, next){
+    idStr = req.param('id');
+
+    console.log("Search data object ---------------------------------->>>>>>>>  ", idStr)
+    if (idStr === undefined ) {
+      return res.json({err: sails.__("ERROR_FORMATIONDATE_ID_NODATA")});
+    }
+
+    from =  req.param('from');
+
+    subject =  req.param('subject');
+
+    subject =  req.param('text');
+
+    FormationServices.sendMessageToCustomer(idStr, from, subject, text).exec(function (err, result){
+      console.log("Search data object")
+      if (typeof err != "undefined"){
+        console.log("Send information ", formationObject.customers.length)
+        return res.json({status:"error", message:err.message})
+      }
+      return res.json([])
+    })
   }
 };
 

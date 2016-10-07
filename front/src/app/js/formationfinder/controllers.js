@@ -2440,6 +2440,10 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
         //wizard Functions
         vm.gotoStep = function (newStep) {
 
+            //Esto para navegar sin las validaciones
+            //vm.currentStep = newStep;
+            //return;
+
             if (vm.currentStep === 1) {
                 if (newStep === 4) {
                     vm.showValidationMessage({
@@ -2606,7 +2610,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
         };
 
 
-        //Return true if procuration date grait than deliverance date.
+        //Return true if procuration date grait or equal than deliverance date.
         vm.procDgtdeliD = function () {
             if (!vm.customerData.driverLicence.dateOfProcuration
                 || !vm.customerData.driverLicence.dateOfDeliverance) {
@@ -2633,6 +2637,20 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
             return false;
         };
 
+        vm.validProcDateRange = function () {
+            if (vm.customerData.driverLicence.dateOfProcuration) {
+                procDate = new Date(vm.customerData.driverLicence.dateOfProcuration);
+                maxDeliDate = new Date().setDate(actDate.getDate() - 1);
+                minDeliDate = new Date(actDate.getFullYear() - 20, actDate.getMonth(), actDate.getDate());
+
+                if (procDate <= maxDeliDate && procDate > minDeliDate) {
+                    return true;
+                }
+            }
+
+            return false;
+        };
+
         vm.verifyDeliDate = function () {
             if (vm.customerData.driverLicence.dateOfDeliverance && !vm.validDeliDate()) {
                 vm.showDDerror = true;
@@ -2646,21 +2664,45 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
         vm.verifyProcDate = function () {
 
             if (vm.customerData.driverLicence.dateOfProcuration) {
-                if (!vm.validProcDate()) {
-                    vm.showPDerror = true;
-                    vm.showPDerrorLessDD = false;
-                }
-                else {
+                //if (!vm.validProcDate()) {
+                //
+                //    if(vm.procDgtdeliD()){
+                //        vm.showPDerror = true;
+                //        vm.showPDerrorLessDD = false;
+                //    }
+                //    else{
+                //        vm.showPDerror = false;
+                //        vm.showPDerrorLessDD = true;
+                //    }
+                //
+                //}
+                //else {
+                //    vm.showPDerror = false;
+                //    vm.showPDerrorLessDD = false;
+                //
+                //    if (vm.customerData.driverLicence.dateOfDeliverance
+                //        && (new Date(vm.customerData.driverLicence.dateOfProcuration) < new Date(vm.customerData.driverLicence.dateOfDeliverance))) {
+                //        vm.showPDerrorLessDD = true;
+                //    }
+                //    else {
+                //        vm.showPDerrorLessDD = false;
+                //    }
+                //
+                //}
+
+                if (vm.validProcDateRange()) {
+
                     vm.showPDerror = false;
 
-                    if (vm.customerData.driverLicence.dateOfDeliverance
-                        && (new Date(vm.customerData.driverLicence.dateOfProcuration) < new Date(vm.customerData.driverLicence.dateOfDeliverance))) {
+                    if (vm.procDgtdeliD()) {
+                        vm.showPDerrorLessDD = false;
+                    } else {
                         vm.showPDerrorLessDD = true;
                     }
-                    else {
-                        vm.showPDerrorLessDD = false;
-                    }
 
+                } else {
+                    vm.showPDerror = true;
+                    vm.showPDerrorLessDD = false;
                 }
             }
             else {
@@ -2820,9 +2862,9 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
             //$scope.items = [];
 
             //size = "" | "lg" | "sm"
-            vm.customerData.idformation =  $routeParams.id ;
+            vm.customerData.idformation = $routeParams.id;
 
-            console.log("FORMATION ID",vm.customerData.idformation  )
+            console.log("FORMATION ID", vm.customerData.idformation)
             var modalInstance = $uibModal.open({
                 animation: $scope.animationsEnabled,
                 templateUrl: 'myModalContent.html',

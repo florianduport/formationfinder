@@ -1,20 +1,18 @@
 <div class="container   admin-places">
     <div class="row col-lg-10 col-sm-10 col-lg-10 col-xs-12 col-lg-offset-1 col-sm-offset-1 well">
-        <h2>{{'ADMIN_PAGE_HEAD'| translate}}</h2>
-        <p>{{'ADMIN_PAGE_HEAD_DESCRIPTION'| translate}}</p>
+        <h2>{{'ADMIN_USER_PAGE_HEAD'| translate}}</h2>
+        <p>{{'ADMIN_USER_PAGE_HEAD_DESCRIPTION'| translate}}</p>
 
         <!--Search form  admin-places -->
         <div class="search-form  form-horizontal">
-
-
             <div class="form-group">
                 <form name="simplesearch">
 
                     <div class="input-group">
                         <!--For geolocation uib-typeahead="address for address in getLocation($viewValue)"  -->
 
-                        <input class="form-control" placeholder="{{'CITY_ZIPCODE' | translate}}" type="text"
-                               uib-typeahead="iplace.city for iplace in placesData | filter:$viewValue"
+                        <input class="form-control" placeholder="{{'NAME_USER' | translate}}" type="text"
+                               uib-typeahead="iuser.city for iuser in userlist | filter:$viewValue"
                                ng-model="criteriaList"
                                name="city_zipcode"
                                maxlength="40"
@@ -22,7 +20,7 @@
                                ng-pattern="usernameExpReg"
                                tooltip-placement="top"
                                tooltip-trigger="'none'"
-                               uib-tooltip="{{'CITY_ZIPCODE_ERROR' | translate}}"
+                               uib-tooltip="{{'NAME_USER_ERROR' | translate}}"
                                tooltip-class="customClass"
                                tooltip-is-open="simplesearch.city_zipcode.$dirty && simplesearch.city_zipcode.$invalid"
                         >
@@ -36,14 +34,11 @@
                      ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert()">{{ alert.msg }}
                 </div>
                 <div class="searchComponent" style="margin-top: 3px">
-                    <button type="button" class="btn   btn-primary" ng-click="addPlace()">
-                        {{'NEW_PLACE '| translate }}
-                    </button>
                     <button type="button" class="btn   btn-primary" ng-click="advanceSearch = !advanceSearch">
                         {{'ADVANCED_SEARCH' | translate }}
                     </button>
 
-                    <button type="button"class="btn btn-danger" ng-click="printListPlace( )">{{'PRINT'| translate}}</button>
+                    <!--<button type="button"class="btn btn-danger" ng-click="printListPlace( )">{{'PRINT'| translate}}</button>-->
                     <!--<button type="button" class="btn   btn-primary" ng-click="showMap($event)">-->
                         <!--{{'VIEW_MAP' | translate }}-->
                     <!--</button>-->
@@ -56,19 +51,19 @@
                                 <div class="form-group pull-left row col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                     <div class=" input-group ">
                                             <span class="input-group-addon"
-                                                  id="basic-addon1"><strong>Name:</strong></span>
+                                                  id="basic-addon1"><strong>{{'FIRST_NAME' | translate}}:</strong></span>
                                         <input class="form-control"
                                                type="text"
                                                name="name"
                                                id="name"
                                                maxlength="40"
-                                               placeholder="{{'NAME' | translate}}"
-                                               uib-typeahead="iplace.name for iplace in placesData | filter:$viewValue"
+                                               placeholder="{{'FIRTS_NAME' | translate}}"
+                                               uib-typeahead="iuser.name for iuser in userlist | filter:$viewValue"
                                                ng-model="seachPlaceAux.name"
                                                ng-pattern="usernameExpReg"
                                                tooltip-placement="top"
                                                tooltip-trigger="'none'"
-                                               uib-tooltip="{{'NAME_ERROR' | translate}}"
+                                               uib-tooltip="{{'FIRST_NAME_ERROR' | translate}}"
                                                tooltip-class="customClass"
                                                tooltip-is-open="advancedSearchPlace.name.$dirty && advancedSearchPlace.name.$invalid"
                                                aria-describedby="basic-addon1"/>
@@ -91,7 +86,7 @@
                                                ng-model="seachPlaceAux.address"
                                                maxlength="100"
                                                placeholder="{{'ADDRESS' | translate}}"
-                                               uib-typeahead=" iplace.address for iplace in placesData | filter:$viewValue"
+                                               uib-typeahead="iuser.address for iuser in userlist| filter:$viewValue"
                                                ng-pattern="usernameExpReg"
                                                tooltip-placement="top"
                                                tooltip-trigger="'none'"
@@ -110,59 +105,28 @@
                                 <div class="container">
                                     <div class="row col-xs-10 col-sm-10 col-md-10 col-lg-10 ">
                                         <div class="panel panel-primary" style="margin-right: 15px">
-                                            <div class="panel-heading"><strong class="text-capitalize">Agrement
-                                                data</strong></div>
+                                            <div class="panel-heading"><strong class="text-capitalize">{{'OTHER_DATA_USER_SEARCH' | translate
+                                                }}</strong></div>
                                             <div class="panel-body">
                                                 <div class="container">
-                                                    <div class="form-group pull-left col-xs-8 col-sm-8 col-md-8 col-lg-8 "
-                                                         style="margin-left:1px;margin-right: 2px">
-                                                        <div class=" input-group ">
-                                                            <span class="input-group-addon"
-                                                                  id="basic-addon3"><strong>{{'NAME' | translate}}
-                                                                (*)</strong></span>
-                                                            <input class="form-control"
-                                                                   type="text"
-                                                                   id="nameAgreement"
-                                                                   placeholder="{{'AGREMENTNAME' | translate}}"
-                                                                   uib-typeahead="iplace.agreementName for iplace in placesData | filter:$viewValue"
-                                                                   name="agreement"
-                                                                   autofocus
-                                                                   maxlength="40"
-                                                                   ng-model="seachPlaceAux.agreementName"
-                                                                   ng-pattern="usernameExpReg"
-                                                                   tooltip-placement="top"
-                                                                   tooltip-trigger="'none'"
-                                                                   uib-tooltip="{{'AGREMENTNAME_ERROR' | translate}}"
-                                                                   tooltip-class="customClass"
-                                                                   tooltip-is-open="advancedSearchPlace.agreement.$dirty && advancedSearchPlace.agreement.$invalid"
-
-                                                                   required aria-describedby="basic-addon3"/>
-                                                        </div>
-
-                                                        <!--<span style="color:#cc0000"-->
-                                                        <!--ng-show="advancedSearchPlace.nameAgrement.$dirty && advancedSearchPlace.nameAgrement.$invalid">-->
-                                                        <!--<span ng-show="advancedSearchPlace.nameAgrement.$error.required">Name is required.</span>-->
-                                                        <!--<span ng-show="advancedSearchPlace.nameAgrement.$error.pattern">Invalid name format. You should provide between 2 and 40 words characters.</span>-->
-                                                        <!--</span>-->
-                                                    </div>
 
                                                     <div class="form-group pull-left col-xs-8 col-sm-8 col-md-8 col-lg-8"
                                                          style="margin-left:1px;margin-right: 2px">
 
                                                         <div class=" input-group ">
                                                             <span class="input-group-addon"
-                                                                  id="basic-addon4"><strong>{{'NUMBER_TEXT' | translate
+                                                                  id="basic-addon4"><strong>{{'PHONENUMBER_TEXT' | translate
                                                                 }} (*)</strong></span>
                                                             <input class="form-control" type="text"
                                                                    name="agrementnumber" id="agrementnumber"
                                                                    ng-model="seachPlaceAux.agreementNumber"
                                                                    ng-pattern="numExpReg"
                                                                    maxlength="5"
-                                                                   placeholder="{{'AGREMENTNUMBER' | translate}}"
-                                                                   uib-typeahead="iplace.agreementNumber for iplace in placesData | filter:$viewValue"
+                                                                   placeholder="{{'PHONENUMBER' | translate}}"
+                                                                   uib-typeahead="userlist.phonenumber for userlist in  userlist | filter:$viewValue"
                                                                    tooltip-placement="top"
                                                                    tooltip-trigger="'none'"
-                                                                   uib-tooltip="{{'AGREMENTNUMBER_ERROR' | translate}}"
+                                                                   uib-tooltip="{{'PHONENUMBER_ERROR' | translate}}"
                                                                    tooltip-class="customClass"
                                                                    tooltip-is-open="advancedSearchPlace.agrementnumber.$dirty && advancedSearchPlace.agrementnumber.$invalid"
                                                                    aria-describedby="basic-addon4"/>
@@ -205,17 +169,16 @@
                 <thead style="font-size: 14px">
                 <tr>
                     <!--<th><strong>View</strong></th>-->
-                    <th><strong>{{'TABLE_PLACE_NAME' | translate}}</strong></th>
-                    <th><strong>{{'TABLE_PLACE_ADDRESS' | translate}}</strong></th>
-                    <th><strong>{{'TABLE_PLACE_POSTAL_CODE' | translate}}</strong></th>
-                    <th><strong>{{'TABLE_PLACE_CITY' | translate}}</strong></th>
-                    <th><strong>{{'TABLE_PLACE_AGREMENT' | translate}}</strong></th>
-                    <th><strong>{{'TABLE_PLACE_ACTIVATED' | translate}}</strong></th>
+                    <th><strong>{{'TABLE_USER_NAME' | translate}}</strong></th>
+                    <th><strong>{{'TABLE_USER_FIRSTNAME' | translate}}</strong></th>
+                    <th><strong>{{'TABLE_USER_ADDRESS' | translate}}</strong></th>
+                    <th><strong>{{'TABLE_USER_PHONENUMBER' | translate}}</strong></th>
+                    <th><strong>{{'TABLE_USER_EMAIL' | translate}}</strong></th>
                     <th><strong>{{'TABLE_PLACE_ACTIONS' | translate}}</strong></th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="iplace in places | filter:criteriaList  ">
+                <tr ng-repeat="iuser in userlist | filter:criteriaList  ">
                     <!--<td>-->
                         <!--<form>-->
                             <!--<div class=" input-group ">-->
@@ -224,48 +187,15 @@
                             <!--</div>-->
                         <!--</form>-->
                     <!--</td>-->
-                    <td>{{iplace.name}}</td>
-                    <td>{{iplace.address}}</td>
-                    <td>{{iplace.zipcode}}</td>
-                    <td>{{iplace.city}}</td>
+                    <td>{{iuser.name}}</td>
+                    <td>{{iuser.firstName}}</td>
+                    <td>{{iuser.address}}</td>
+                    <td>{{iuser.phoneNumber}}</td>
+                    <td>{{iuser.email}}</td>
+
                     <td>
-                        <!--Agrement's name-->
-                        <div class="form-group">
-
-                            <div class="input-group">
-                                <!--For geolocation uib-typeahead="address for address in getLocation($viewValue)"-->
-                                <label> <strong>Name: </strong> {{iplace.agreementName}}</label>
-                                <!--<span class="input-group-addon" ><span-->
-                                <!--class="fa fa-photo"></span> </span>-->
-
-                            </div>
-                            <div class="input-group">
-                                <!--For geolocation uib-typeahead="address for address in getLocation($viewValue)"-->
-                                <label><strong>Number: </strong> {{iplace.agreementNumber}}</label>
-                                <!--<span class="input-group-addon" ><span-->
-                                <!--class="fa fa-linux"></span>  </span>-->
-
-                            </div>
-                        </div>
-
-                    </td>
-                    <td>
-
-                         <span class="label label-success" ng-show="iplace.isActivated">
-                        <span class="glyphicon glyphicon-ok"></span>
-                    </span>
-                    <span class="label label-danger" ng-show="!iplace.isActivated">
-                        <span class="glyphicon glyphicon-remove"></span>
-                    </span>
-                        <!--<div class=" input-group ">-->
-                            <!--<input type="checkbox" ng-checked="iplace.isActivated" ng-disabled="checkboxUnable">-->
-
-                        <!--</div>-->
-                    </td>
-                    <td>
-                        <a class="btn btn-primary" ng-click="editPlace(iplace)">{{'EDIT_PLACE' | translate}}</a>
-                        <a class="btn btn-danger" ng-click="deletePlace( iplace)">{{'DELETE'| translate}}</a>
-                        <a class="btn btn-danger" ng-click="printPlace( iplace)">{{'PRINT'| translate}}</a>
+                        <a class="btn btn-primary" ng-click="editUser(iuser)">{{'EDIT_USER' | translate}}</a>
+                        <a class="btn btn-danger" ng-click="deleteUser( iuser)">{{'DELETE'| translate}}</a>
                     </td>
                 </tr>
                 </tbody>

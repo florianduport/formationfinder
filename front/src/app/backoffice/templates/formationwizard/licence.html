@@ -8,6 +8,7 @@
                    ng-pattern="vm.numberRegExp"
                    ng-change="vm.checkCustomerLicenceNumber()"
                    maxlength="12"
+                   placeholder="vm.customerData.driverLicence.number"
                    class="form-control" 
                    type="text" 
                    required />
@@ -27,6 +28,7 @@
             <input name="placeOfDeliverance" id="placeOfDeliverance" 
                    ng-model="vm.customerData.driverLicence.placeOfDeliverance" 
                    maxlength="40"
+                   placeholder="vm.customerData.driverLicence.placeOfDeliverance"
                    class="form-control" type="text" required/>
 
             <span style="color:#cc0000" ng-show="licence.placeOfDeliverance.$dirty && licence.placeOfDeliverance.$invalid">
@@ -41,7 +43,7 @@
                    ng-model="vm.customerData.driverLicence.dateOfDeliverance" 
                    class="form-control" 
                    type="text" required 
-                   placeholder="22/05/2015"
+                   placeholder="vm.customerData.driverLicence.dateOfDeliverance"
                    ng-pattern="vm.dateRegExp"
                    ng-change="vm.verifyDeliDate()"
                    uib-datepicker-popup="{{vm.format}}"
@@ -62,7 +64,7 @@
                    ng-model="vm.customerData.driverLicence.dateOfProcuration" 
                    class="form-control" 
                    type="text" required 
-                   placeholder="16/06/2015"
+                   placeholder="vm.customerData.driverLicence.dateOfProcuration"
                    ng-pattern="vm.dateRegExp"
                    ng-change="vm.verifyProcDate()"
                    uib-datepicker-popup="{{vm.format}}"

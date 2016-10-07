@@ -39,13 +39,28 @@ app.config(["$routeProvider", function ($routeProvider) {
             }
         )
         .when("/formation/create", {
-                controller: "CreateFormationController",
-                templateUrl: "templates/formation/create.html"
-            }
+            controller: "CreateFormationController",
+            templateUrl: "templates/formation/create.html"
+        }
         )
         .when("/formation/update/:id", {
                 controller: "UpdateFormationController",
                 templateUrl: "templates/formation/update.html"
+            }
+        )
+        .when("/formation/details/:id", {
+                controller: "DetailsFormationController",
+                templateUrl: "templates/formation/details.html"
+            }
+        )
+        .when("/formation/listclient/:id", {
+                controller: "UsersFormationController",
+                templateUrl: "templates/formation/listclient.html"
+            }
+        )
+        .when("/formation/client/:id", {
+            controller: "WizardController",
+            templateUrl: "templates/formationwizard/wizardpaginationDateBook.html"
             }
         )
         .when("/animator/manage", {

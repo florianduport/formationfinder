@@ -184,43 +184,123 @@ module.exports = {
       return res.json({status: "error", info: sails.__("PASSWORD_REQUIRED")});
     }
 
-    Login.findOne({
-        username: req.param('username'),
-        password: req.param('password')
-      })
-      .populate('formationCenter')
-      .exec(function (err, loginFounded) {
 
-        if (err) {
-          return res.json({status: "error", info: sails.__("ERROR_SEARCHING_LOGIN")});
-        }
+    Login.native(function (err, collection) {
+      if (err) return res.json({status: "error", info: sails.__("ERROR_SEARCHING_LOGIN")});
 
-        if (!loginFounded) {
-          return res.json({status: "error", info: sails.__("INVALID_USERNAME_PASSWORD")});
-        }
+      collection.find({
+          username: req.param('username'),
+          password: req.param('password')
+        })
+        .toArray(function (err, loginFoundedArray) {
 
-        if (loginFounded.isActivated === false) {
-          return res.json({status: "error", info: sails.__("INVALID_USERNAME_PASSWORD")});
-        }
-
-        resulToken = LoginService.generateLoginToken(loginFounded.id);
-        if (resulToken.status == 'ok') {
-          var result = {};
-          result.token = resulToken.token;
-          if (typeof loginFounded.formationCenter != "undefined") {
-            result.formationCenter = loginFounded.formationCenter.name;
-            result.username = loginFounded.username;
-            result.isMainLogin = loginFounded.isMainLogin;
-
-            return res.json({status: "ok", data: result});
+          if (err) {
+            return res.json({status: "error", info: sails.__("ERROR_SEARCHING_LOGIN")});
           }
-          else
-            return res.json({status: "error", info: sails.__("GENERATE_LOGIN_TOKEN_ERROR")});
-        } else {
-          return res.json({status: "error", info: sails.__("GENERATE_LOGIN_TOKEN_ERROR")});
-        }
 
-      });
+          if (!loginFoundedArray || loginFoundedArray.length === 0) {
+            return res.json({status: "error", info: sails.__("INVALID_USERNAME_PASSWORD")});
+          }
+
+          if (loginFoundedArray[0].isActivated === false) {
+            return res.json({status: "error", info: sails.__("INVALID_USERNAME_PASSWORD")});
+          }
+
+          //If a get here, the authentication process is ok.
+          //Now search the login with populate formationCenter.
+          Login.findOne({
+              id: loginFoundedArray[0]._id
+            })
+            .populate('formationCenter')
+            .exec(function (err, loginFounded) {
+
+              if (err) {
+                return res.json({status: "error", info: sails.__("ERROR_SEARCHING_LOGIN")});
+              }
+
+              resulToken = LoginService.generateLoginToken(loginFounded.id);
+              if (resulToken.status == 'ok') {
+                var result = {};
+                result.token = resulToken.token;
+                if (typeof loginFounded.formationCenter != "undefined") {
+                  result.formationCenter = loginFounded.formationCenter.name;
+                  result.username = loginFounded.username;
+                  result.isMainLogin = loginFounded.isMainLogin;
+
+                  return res.json({status: "ok", data: result});
+                }
+                else
+                  return res.json({status: "error", info: sails.__("GENERATE_LOGIN_TOKEN_ERROR")});
+              } else {
+                return res.json({status: "error", info: sails.__("GENERATE_LOGIN_TOKEN_ERROR")});
+              }
+
+            });
+
+          //
+          //
+          //
+          //
+          //
+          //
+          //  resulToken = LoginService.generateLoginToken(loginFoundedArray[0]._id);
+          //
+          //if (resulToken.status == 'ok') {
+          //  var result = {};
+          //  result.token = resulToken.token;
+          //  if (typeof loginFoundedArray[0].formationCenter != "undefined") {
+          //    result.formationCenter = loginFoundedArray[0].formationCenter.name;
+          //    result.username = loginFoundedArray[0].username;
+          //    result.isMainLogin = loginFoundedArray[0].isMainLogin;
+          //
+          //    return res.json({status: "ok", data: result});
+          //  }
+          //  else
+          //    return res.json({status: "error", info: sails.__("GENERATE_LOGIN_TOKEN_ERROR")});
+          //} else {
+          //  return res.json({status: "error", info: sails.__("GENERATE_LOGIN_TOKEN_ERROR")});
+          //}
+
+        });
+    });
+
+    //Login.findOne({
+    //    username: req.param('username'),
+    //    password: req.param('password')
+    //  })
+    //  .populate('formationCenter')
+    //  .exec(function (err, loginFounded) {
+    //
+    //    if (err) {
+    //      return res.json({status: "error", info: sails.__("ERROR_SEARCHING_LOGIN")});
+    //    }
+    //
+    //    if (!loginFounded) {
+    //      return res.json({status: "error", info: sails.__("INVALID_USERNAME_PASSWORD")});
+    //    }
+    //
+    //    if (loginFounded.isActivated === false) {
+    //      return res.json({status: "error", info: sails.__("INVALID_USERNAME_PASSWORD")});
+    //    }
+    //
+    //    resulToken = LoginService.generateLoginToken(loginFounded.id);
+    //    if (resulToken.status == 'ok') {
+    //      var result = {};
+    //      result.token = resulToken.token;
+    //      if (typeof loginFounded.formationCenter != "undefined") {
+    //        result.formationCenter = loginFounded.formationCenter.name;
+    //        result.username = loginFounded.username;
+    //        result.isMainLogin = loginFounded.isMainLogin;
+    //
+    //        return res.json({status: "ok", data: result});
+    //      }
+    //      else
+    //        return res.json({status: "error", info: sails.__("GENERATE_LOGIN_TOKEN_ERROR")});
+    //    } else {
+    //      return res.json({status: "error", info: sails.__("GENERATE_LOGIN_TOKEN_ERROR")});
+    //    }
+    //
+    //  });
   },
 
   verify: function (req, res) {

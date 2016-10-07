@@ -786,7 +786,7 @@ Parallax
 }
 
 #wizard-step-container li {
-    background-color: #ff8c14;
+    background-color: #67B0D1;
 }
 
 #wizard-step-container li a {
@@ -798,7 +798,7 @@ Parallax
     height: 35px;
     padding-left: 20px;
     padding-right: 20px;
-    background-color: #ff8c14;
+    background-color: #67B0D1;
     margin-bottom: 10px;
 }
 
@@ -928,4 +928,5 @@ input[name="location"] {
     background-color:#5fa4cd;
     color:white;
     font-weight:bold;
+}
 }

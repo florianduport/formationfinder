@@ -16,8 +16,7 @@ module.exports = {
   	},
 
     formation: {
-      model: 'formation',
-      defaultsTo: null
+      model: 'formation'
     },
 
   	civility: {
