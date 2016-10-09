@@ -18,13 +18,13 @@ server {
       alias /data/src/dist/backoffice/;
     }
 
-      location /formationfinder/ {
-          alias /data/src/dist/formationfinder/;
-        }
+    #location /formationfinder/ {
+    #    alias /data/src/dist/formationfinder/;
+    #  }
 
-          location /adminplatform/ {
-                  alias /data/src/dist/adminplatform/;
-                }
+     location /adminplatform/ {
+          alias /data/src/dist/adminplatform/;
+      }
 
 
     #error_page  404              /404.html;
