@@ -320,6 +320,65 @@ module.exports = {
           });
       });
 
+  },
+
+  //-------------------------------------------------------------------------------------
+  searchByFormationCenterWithPagination: function (req, res, next) {
+    if (req.param('formationCenter') === undefined) {
+      return res.json({status: "error", info: "Formation Center Name is required."});
+    }
+
+    var page = 0;
+    var len = 10;
+
+    if (req.param('page') !== undefined) {
+      if (!isNaN(parseInt(req.param('page')))) {
+        page = Math.abs(parseInt(req.param('page')));
+      } else {
+        return res.json({err: 'The page parameter is an invalid string number'});
+      }
+    }
+
+    if (req.param('len') !== undefined) {
+      if (!isNaN(parseInt(req.param('len')))) {
+        len = Math.abs(parseInt(req.param('len')));
+      } else {
+        return res.json({err: 'The len parameter is an invalid string number'});
+      }
+    }
+
+    FormationCenter.findOne({name: req.param('formationCenter')})
+      .exec(function (err, FC) {
+        if (err) {
+          return res.json({status: "error", info: "An error has ocurred searching the Formation Center."});
+        }
+
+        if (!FC) {
+          return res.json({status: "error", info: "No Formation Center with that name."});
+        }
+
+        var query = {
+          where: {formationCenter: FC.id},
+          skip: page * len,
+          limit: len,
+          sort: 'updatedAt DESC'
+        };
+
+        Login.find(query).exec(function (err, Logins) {
+          if (err) {
+            return res.json({status: "error", info: "Error searching Credentials."});
+          }
+
+          Login.count({ formationCenter: FC.id }).exec(function (err, LoginsCounted) {
+            if (err) {
+              return res.json({status: "error", info: "Error counting Credentials."});
+            }
+
+            return res.json({status: "ok", data: Logins, maxSize: LoginsCounted});
+
+          });//Login count.
+        });//Login find.
+      })//Formation Center findOne.
   }
 };
 

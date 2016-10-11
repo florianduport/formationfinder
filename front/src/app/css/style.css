@@ -900,10 +900,10 @@ Parallax
 
 input[name="location"] {
     height: auto;
-    width: 200px;
+    width: 400px;
     padding: 19.5px 0px 19.5px 48px;
     border: 0px none;
     outline: 0px none;
     box-sizing: border-box;
-    font-size: 16dpx;
+    font-size: 20dpx;
 }

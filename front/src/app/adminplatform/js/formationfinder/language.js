@@ -125,6 +125,9 @@ app.config(function ($translateProvider) {
             AT_LEAST_2_CHARACTERS: "Enter at least 2 characters",
             UPDATE_FORMATION_CENTER: "Update Formation Center",
 
+            //------------------------------------------------------------
+            ITEMS_PER_PAGE: "Items per page",
+
 
         })
         .translations('fr', {
@@ -247,6 +250,9 @@ app.config(function ($translateProvider) {
             PHONE_NUMBER_ERROR: "Enter 10 digits starting with '0'",
             AT_LEAST_2_CHARACTERS: "Enter at least 2 characters",
             UPDATE_FORMATION_CENTER: "Update Formation Center",
+
+            //------------------------------------------------------------
+            ITEMS_PER_PAGE: "Items per page",
 
         })
         .translations('es', {
@@ -371,6 +377,9 @@ app.config(function ($translateProvider) {
             PHONE_NUMBER_ERROR: "Entre 10 dígitos comenzando por '0'",
             AT_LEAST_2_CHARACTERS: "Entre al menos 2 caracteres",
             UPDATE_FORMATION_CENTER: "Actualizar Centro de Formación",
+
+            //------------------------------------------------------------
+            ITEMS_PER_PAGE: "Items per page",
 
         });
     ;

@@ -13,6 +13,11 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
     .controller("LoginController", ["$scope", "$rootScope", "$location", "$http",
         function ($scope, $rootScope, $location, $http) {
 
+            //If i get here and the user is logged, go to dashboard.
+            if ($rootScope.userAuthenticated === true) {
+                $location.path('/dashboard');
+            }
+
             $scope.initParameters = function () {
                 $scope.username = null;
                 $scope.password = null;
@@ -65,7 +70,19 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 if ($scope.formationCenters) {
                     delete $scope.formationCenters;
                 }
+
                 $scope.formationCenters = [];
+
+                $scope.len = 5;
+                $scope.maxSize = null;
+                $scope.currentPage = 1;
+
+                $scope.lens = [5, 10, 15, 20];
+
+                $scope.itemsPerPageChance = function () {
+                    $scope.currentPage = 1;
+                    $scope.searchFormationCenters();
+                };
 
             };
             $scope.initParameters();
@@ -74,11 +91,17 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.searchFormationCenters = function () {
 
-                $http.post($rootScope.urlBase + "/formationCenter/searchAllNoPopulate")
+                $http.post($rootScope.urlBase + "/formationCenter/searchAllNoPopulate", {
+                        page: $scope.currentPage - 1,
+                        len: $scope.len
+                    })
                     .success(function (result) {
                         if (result.status === "ok") {
                             $scope.formationCenters = result.data;
                             $scope.showFormationCenter = true;
+
+                            $scope.maxSize = result.maxSize;
+
                         } else {
                             $scope.initParameters();
                             $scope.showFormationCenter = false;
@@ -96,6 +119,10 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 var confirmation = confirm("You are going to delete all Formation Center Objects. Continue?");
 
                 if (confirmation) {
+
+                    //como voy a eliminar, si estoy en la ultima pagina y elimino el ultimo
+                    //elemento de esa pagina, reinicio la paginacion, para que no se quede vacia.
+                    $scope.currentPage = 1;
 
                     $http.post($rootScope.urlBase + "/formationCenter/delete", {
                             id: $scope.formationCenters[index].id
@@ -309,6 +336,10 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     delete $scope.formationcenter.isActivated;
                 }
 
+                console.log("************** Estoy en prepare para update *********************");
+                console.log("formationcenter: ", $scope.formationcenter);
+                console.log("oldAttributes: ", $scope.oldAttributes);
+
 
                 if ($scope.formationcenter.name || $scope.formationcenter.address
                     || $scope.formationcenter.zipCode
@@ -336,6 +367,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                                 alert("Formation Center Updated.");
                                 $location.path('/formationcenter');
                             } else {
+                                searchFormationCenter();
                                 console.log("Error updating Formation Centers: " + result.info);
                                 alert("Error updating Formation Centers: " + result.info);
                             }
@@ -345,6 +377,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             alert("Error updating Formation Centers: " + err);
                         });//End of HTTP.POST.
                 } else {
+                    searchFormationCenter();
                     alert('Enter valid new parameter.');
                 }
             };

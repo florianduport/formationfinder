@@ -196,7 +196,7 @@ module.exports = {
         html: bodytext
       };
 
-      console.log("Sended Mail to Customer for payment ", config)
+     // console.log("Sended Mail to Customer for payment ", config)
 
       result = EmailService.send(config, function (err, result) {
         ///If not error when send mail

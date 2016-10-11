@@ -621,7 +621,7 @@ describe('FormationController', function () {
         price: 100,
         len: 5,
         initialDate: "2016-10-04",
-        finalDate: "2017-05-03"
+        finalDate: "2025-05-03"
       }
 
       request(sails.hooks.http.app)
@@ -679,7 +679,7 @@ describe('FormationController', function () {
           if (typeof firstFormation.place == "undefined")
             done("PLACE UNDEFINED")
           ////Delete all Alert for These Formation Center
-
+          royalMaxPeople = firstFormation.maxPeople
           Alert.destroy({formationCenter: firstFormation.formationCenter}).exec(function (err, resultDestroy) {
             firstFormation.maxPeople = 1
             firstFormation.place = resultObjectPlace.id
@@ -747,9 +747,13 @@ describe('FormationController', function () {
                     assert.equal(2, typeArray.length)
                     assert.equal("New_Costumer", typeArray[0])
                     assert.equal("Formation_Full", typeArray[1])
-                    done();
-                  })
 
+                    Formation.update({id: firstFormation.id}, {
+                       maxPeople: (royalMaxPeople+1)
+                    }).exec(function (err, result){
+                      done();
+                    })
+                  })
                 })
             })
 
@@ -784,7 +788,7 @@ describe('FormationController', function () {
             firstFormation.maxPeople = 1
             firstFormation.place = resultObjectPlace.id
            // console.log("FORMATION ", firstFormation)
-            Formation.update({id: firstFormation.id}, {place:resultObjectPlace.id, maxPeople:firstFormation.maxPeople + 4, isFull: false}).exec(function (err, resultUpdate) {
+            Formation.update({id: firstFormation.id}, {place:resultObjectPlace.id, maxPeople:firstFormation.maxPeople + 6, isFull: false}).exec(function (err, resultUpdate) {
             //  console.log("FORMATION UPDATE", resultUpdate)
               CustomerToInsert = {
                 name: faker.internet.userName(),
@@ -890,7 +894,7 @@ describe('FormationController', function () {
             // console.log("FORMATION ", firstFormation)
             Formation.update({id: firstFormation.id}, {
               place: resultObjectPlace.id,
-              maxPeople: firstFormation.maxPeople + 4,
+              maxPeople: firstFormation.maxPeople + 21,
               isFull: false
             }).exec(function (err, resultUpdate) {
               //  console.log("FORMATION UPDATE", resultUpdate)

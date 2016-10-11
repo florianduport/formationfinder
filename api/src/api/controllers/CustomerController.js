@@ -276,6 +276,50 @@ module.exports = {
       // body...
       return res.json(result);
     });
+  },
+
+    sendMailCustomerBooked(req, res, next) {
+
+      customerObject = req.param("customer");
+
+      if ( typeof customerObject == "undefined"){
+        return res.json( req.__('NOT_CORRECT_CUSTOMER_DATA'));
+      }
+
+      if ( typeof customerObject.id == "undefined"){
+        return res.json( req.__('NOT_CORRECT_CUSTOMER_DATA'));
+      }
+
+      Customer.findOne({id:customerObject.id}).exec(function (err, resultObject){
+
+        if (err) {
+          return res.json( req.__('NOT_CORRECT_CUSTOMER_DATA'));
+        }
+
+        if ( typeof resultObject == "undefined"){
+          return res.json( req.__('NOT_CORRECT_CUSTOMER_DATA'));
+        }
+
+        CustomerServices.sendMailBooked(resultObject, function (err, result){
+          if ( err) {
+            return res.json( req.__('NOT_MAIL_CUSTOMER_BOOKED'));
+          }
+
+          if ( typeof result == "undefined"){
+            return res.json( req.__('NOT_MAIL_CUSTOMER_BOOKED'));
+          }
+
+          if (result.response == "ERROR") {
+            return res.json( result.message);
+          }
+
+          if (result.response == "OK") {
+            return res.json( result);
+          }
+
+        })
+      })
+
   }
 };
 

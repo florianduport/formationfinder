@@ -151,7 +151,6 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
             }
 
         }])
-
     .controller("SearchController", ["$scope", "$rootScope", "$http", "$location", "$routeParams", "$timeout", "NavigatorGeolocation", "NgMap", "$translate",
         function ($scope, $rootScope, $http, $location, $routeParams, $timeout, NavigatorGeolocation, NgMap, $translate) {
             $scope.weekDay = ["Sunday", "Monday", "Tuesday", "Wensday", "Thuesday", "Friday", "Saturday"]
@@ -904,7 +903,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
             $scope.countRecords();
             $scope.getPagableRecords();
 
-            $scope.formationBook = function (formationToReserve) {
+            $scope.formationBook = function (formationToReserve, priceToBuy) {
 
                 console.log("Formacion ", formationToReserve)
 
@@ -977,7 +976,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                 console.log("Places to search", unicdata)
 
                 if (unicdata.length == 0) {
-
+                    ///Show inicial points
                     console.log("INSERTANDO ALERTA")
                     var message = "You must select some formation."
                     $scope.showMessage('danger', message);
@@ -1259,7 +1258,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                 ///
 ///Find formationcenter by position
                 if ($scope.searchInMap == true) {
-                    $http.post($rootScope.urlBase + "/formationcenter/searchformationbyPos", {
+                    $http.post($rootScope.urlBase + "/Place/searchformationbyPos", {
                             "latitude": latitud,
                             "longitude": longitud,
                         })
@@ -2201,33 +2200,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
             $uibModalInstance.dismiss('cancel');
             $scope.formationCenterName = ""
         };
-    })/*.controller('AccordionDemoCtrl',['$scope','$rootScope',"SearchService", function ($scope, $rootScope, SearchService) {
-     $scope.oneAtATime = true;
-
-     $scope.groups = [
-     {
-     title: 'Dynamic Group Header - 1',
-     content: 'Dynamic Group Body - 1'
-     },
-     {
-     title: 'Dynamic Group Header - 2',
-     content: 'Dynamic Group Body - 2'
-     }
-     ];
-
-     $scope.items = ['Item 1', 'Item 2', 'Item 3'];
-
-     $scope.addItem = function() {
-     var newItemNo = $scope.items.length + 1;
-     $scope.items.push('Item ' + newItemNo);
-     };
-
-     $scope.status = {
-     isCustomHeaderOpen: false,
-     isFirstOpen: true,
-     isFirstDisabled: false
-     };
-     }])*/
+    })
     .controller("WizardController", function ($rootScope, $http, $routeParams, $scope, $uibModal, $log, $location) {
 
         var vm = this;
@@ -2573,6 +2546,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                     .success(function (data) {
                         if (data.status === "error") {
                             //Customer not foud in the present year.
+
                             vm.paymentButtonDisabled = false;
                             vm.customerLicenceNumberUsed = false;
                         }
@@ -2692,6 +2666,9 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
             //$scope.items = [];
 
             //size = "" | "lg" | "sm"
+            vm.customerData.idformation =  $routeParams.id ;
+
+            console.log("FORMATION ID",vm.customerData.idformation  )
             var modalInstance = $uibModal.open({
                 animation: $scope.animationsEnabled,
                 templateUrl: 'myModalContent.html',
@@ -2982,7 +2959,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
         };
 
         $scope.customerData = customerData;
-        $scope.price = customerData.amount
+        $scope.price = customerData.amount;
         $scope.showError = false
         //$scope.selected = {
         //    item: $scope.items[0]
@@ -3011,11 +2988,12 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
            // $scope.creditCardData.CardExpirationDate = moment($scope.creditCardData.CardExpirationDate).format("MMYY")
 
            console.log("Date ", dateExpiration)
+           console.log("Formation id", $scope.customerData.idformation )
             $scope.creditCardData.CardExpirationDate = dateExpiration.getMonth() + "" +dateExpiration.getYear()
             console.log("Credit Card Data ", $scope.creditCardData)
             config = {
                 userdata: $scope.customerData,
-                formationidentifier: $routeParams.id,
+                formationidentifier:$scope.customerData.idformation,
                 creditCardData: $scope.creditCardData,
                 price: $scope.price,
                 currency: "EUR"
@@ -3025,29 +3003,38 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
             config.userdata.nacionality = "FR"
             config.userdata.country = "FR"
 
-            console.log("DATA to send to services", config)
+
             selectedItem = {status: "OK"}
+            console.log("DATA to send to services", config)
 ///Modify for paymet services
-            $http.get($rootScope.urlBase + "/Payment/mangopaymentex/", config)
-                .success(function (data, status, headers, config) {
-                    if (data.response !== "OK") {
+            $http.post($rootScope.urlBase + "/Payment/mangopaymentex/", config)
+                .success(function (data) {
+                    console.log("Payment response", data)
+
+                    message = "Payment ok."
+                    mtype = "success"
+                    if (data.response != "OK") {
                         ///Error BIG PROBLEMS
                         $scope.showError = true
-                    }
-                    else {
                         if (data.response == "ERROR") {
                             selectedItem.status = "ERROR"
-                            selectedItem.message = data.message
+                            message = selectedItem.message = data.message
+                            mtype = "error"
                         }
-                        if (vm.paymentMessages.length > 0) {
-                            vm.paymentMessages.splice(0, 1);
-                        }
-                        vm.paymentMessages.push({type: "success", info: "Payment ok."});
-
-                        console.log("Go to recap")
-                        vm.gotoStep(4);
+                    }
+                    else {
+                        selectedItem.result = data.result
                     }
 
+
+
+                    if ($scope.paymentMessages.length > 0) {
+                        $scope.paymentMessages.splice(0, 1);
+                    }
+                    $scope.paymentMessages.push({type:mtype , info:message });
+
+                    console.log("Go to recap")
+                    //$scope.gotoStep(4);
                     $uibModalInstance.close(selectedItem);
                     $uibModalInstance.dismiss('cancel');
                 })

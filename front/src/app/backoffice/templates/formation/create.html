@@ -5,6 +5,9 @@
                 <h2 class="text-center">{{'CREATE_FORMATION' | translate}}</h2>
             </div>
         </div>
+
+        <br>
+
         <div class="row">
             <div class="col col-md-5">
                 <label>{{'SELECT_PLACE' | translate}}</label>
@@ -82,6 +85,19 @@
                                ng-model="formation.isConfirmed"> {{'CONFIRMED' | translate}}
                     </label>
                 </div>
+
+                <br>
+
+                <button class="btn btn-primary btn-block"
+                        type="submit"
+                        ng-disabled="createForm.$invalid"
+                        ng-click="createFormation()">{{'CREATE' | translate}}
+                </button>
+                <button class="btn btn-info btn-block"
+                        type="button"
+                        ng-click="gotoManage()">{{'GO_BACK' | translate}}
+                </button>
+
             </div>
 
             <div class="col col-md-7">
@@ -121,12 +137,12 @@
                                     <strong>{{'START' | translate}}</strong>
                                     <select name="MorningStartH"
                                             ng-model="MorningStartH"
-                                            ng-change="validateDateParameters()"
+                                            ng-change="validateTimeRangeParameters()"
                                             ng-options="hour for hour in Hours">
                                     </select>:
                                     <select name="MorningStartM"
                                             ng-model="MorningStartM"
-                                            ng-change="validateDateParameters()"
+                                            ng-change="validateTimeRangeParameters()"
                                             ng-options="minute for minute in Minutes">
                                     </select>
                                     am
@@ -135,12 +151,12 @@
                                     <strong>{{'END' | translate}}</strong>
                                     <select name="MorningEndH"
                                             ng-model="MorningEndH"
-                                            ng-change="validateDateParameters()"
+                                            ng-change="validateTimeRangeParameters()"
                                             ng-options="hour for hour in Hours">
                                     </select>:
                                     <select name="MorningEndM"
                                             ng-model="MorningEndM"
-                                            ng-change="validateDateParameters()"
+                                            ng-change="validateTimeRangeParameters()"
                                             ng-options="minute for minute in Minutes">
                                     </select>
                                     am
@@ -155,12 +171,12 @@
                                     <strong>{{'START' | translate}}</strong>
                                     <select name="AfternoonStartH"
                                             ng-model="AfternoonStartH"
-                                            ng-change="validateDateParameters()"
+                                            ng-change="validateTimeRangeParameters()"
                                             ng-options="hour for hour in Hours">
                                     </select>:
                                     <select name="AfternoonStartM"
                                             ng-model="AfternoonStartM"
-                                            ng-change="validateDateParameters()"
+                                            ng-change="validateTimeRangeParameters()"
                                             ng-options="minute for minute in Minutes">
                                     </select>
                                     pm
@@ -169,12 +185,12 @@
                                     <strong>{{'END' | translate}}</strong>
                                     <select name="AfternoonEndH"
                                             ng-model="AfternoonEndH"
-                                            ng-change="validateDateParameters()"
+                                            ng-change="validateTimeRangeParameters()"
                                             ng-options="hour for hour in Hours">
                                     </select>:
                                     <select name="AfternoonEndM"
                                             ng-model="AfternoonEndM"
-                                            ng-change="validateDateParameters()"
+                                            ng-change="validateTimeRangeParameters()"
                                             ng-options="minute for minute in Minutes">
                                     </select>
                                     pm
@@ -184,36 +200,40 @@
                         </table>
                     </div>
 
-                    <label></label> <!-- I'am using this label as separator -->
+                    <div style="color:#cc0000" ng-show="InvalidMorningTimeRange">
+                        <span ng-show="true">{{'INVALID_MORNING_TIME_RANGE' | translate}}</span>
+                    </div>
+
+                    <div style="color:#cc0000" ng-show="InvalidAfternoonTimeRange">
+                        <span ng-show="true">{{'INVALID_AFTERNOON_TIME_RANGE' | translate}}</span>
+                    </div>
 
                     <button class="btn btn-info btn-md btn-block"
                             type="button"
-                            ng-disabled="InvalidDateParameters"
+                            ng-disabled="InvalidDateParameters || InvalidAfternoonTimeRange || InvalidMorningTimeRange"
                             ng-click="insertDate()">{{'INSERT' | translate}}
                     </button>
                     <label></label>
                     <div ng-show="formation.dates.length > 0">
-                        <h4><strong>{{'DATES' | translate}}:</strong></h4>
-                        <ul>
-                            <li ng-repeat="(key,fdate) in formation.dates">
-                                <div class="btn-group">
-                                    <button class="btn btn-group btn-warning">{{fdate.date | date:'fullDate'}}</button>
-                                    <button class="btn btn-group btn-danger" ng-click="deleteDate(key)">X</button>
-                                </div>
-                            </li>
-                        </ul>
+                        <div class="panel panel-info">
+                            <div class="panel-heading">{{'DATES' | translate}}:</div>
+                            <!--<h4><strong>{{'DATES' | translate}}:</strong></h4>-->
+                            <div class="panel-body">
+                                <ul>
+                                    <li ng-repeat="(key,fdate) in formation.dates">
+                                        <div class="btn-group">
+                                            <button class="btn btn-group btn-sm btn-warning">{{fdate.date | date:'fullDate'}}
+                                            </button>
+                                            <button class="btn btn-group btn-sm btn-danger" ng-click="deleteDate(key)">X
+                                            </button>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </fieldset>
             </div>
-            <button class="btn btn-primary btn-block"
-                    type="submit"
-                    ng-disabled="createForm.$invalid"
-                    ng-click="createFormation()">{{'CREATE' | translate}}
-            </button>
-            <button class="btn btn-info btn-block"
-                    type="button"
-                    ng-click="gotoManage()">{{'GO_BACK' | translate}}
-            </button>
         </div>
     </form>
 </div>

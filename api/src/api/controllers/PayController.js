@@ -265,31 +265,29 @@ module.exports = {
    */
   mangopaymentex: function (req, res, next) {
 
-
-
-
+    console.log("********************** Estoy en mangopaymentex **********************");
 
     userValue = req.param("userdata")
 
-    if ( typeof userValue == "undefine")
+    if ( typeof userValue == "undefined")
       return res.json({response:"ERROR", message:"Parameter userdata undefined"})
 
     cardValue = req.param("creditCardData")
 
-    if ( typeof cardValue == "undefine")
+    if ( typeof cardValue == "undefined")
       return res.json({response:"ERROR", message:"Parameter creditCardData undefined"})
 
     ///Validate cardValue
 
     mount = req.param("price")
 
-    if ( typeof mount == "undefine")
-      return res.json({response:"ERROR", message:"Parameter mount undefined"})
+    //if ( typeof mount == "undefined")
+    //  return res.json({response:"ERROR", message:"Parameter price undefined"})
     //Validate price
 
     formationcenter = req.param("formationidentifier")
-
-    if ( typeof formationcenter == "undefine")
+    console.log("FORMATION IDENTIFIER ",req.param("formationidentifier") )
+    if ( typeof formationcenter == "undefined")
       return res.json({response:"ERROR", message:"Parameter formationidentifier undefined"})
 
     ///Validate formationcenter name
@@ -297,12 +295,13 @@ module.exports = {
 
     currency = req.param("currency")
 
-    if ( typeof currency == "undefine")
+    if ( typeof currency == "undefined")
       currency = "EUR"
 
 
     //Validate currency
     ///Find FormationCenter Data and amout
+    console.log("FORMATION IDENTIFIER ",formationcenter )
     Formation.findOne({id:formationcenter}).populate("formationCenter").exec( function (err, resultObject) {
 
       if (err) {
@@ -310,7 +309,7 @@ module.exports = {
       }
 
       if ( typeof  resultObject == "undefined") {
-        return res.json({response:"ERROR", message:"No exist data about formation."})
+        return res.json({response:"ERROR", message: sails.__("ERROR_FORMATION_NODATA")})
       }
 
       mount = resultObject.price
@@ -423,7 +422,7 @@ module.exports = {
                               return res.json({response:"ERROR", message:err })
                             }
                             resultObject =  {walleid : result.wallet, userid:result.user, carid:resultCard.card}
-                            return res.json({response:"OK",resultObject})
+                            return res.json({response:"OK",result:resultObject})
 
 
                           });

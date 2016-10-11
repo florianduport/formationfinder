@@ -1,4 +1,12 @@
 {
 	"Welcome": "Bienvenue",
-	"A brand new app.": "Une toute nouvelle application."
+	"A brand new app.": "Une toute nouvelle application.",
+  "NOT_CUSTOMER_DATA":"No exist customer info",
+  "NOT_CORRECT_CUSTOMER_DATA":"No exist customer info",
+  "MAIL_REGISTERED_CUSTOMER_SUBJECT":" You are registered in driver licence's formation",
+  "DEAR": "Dear",
+  "MAIL_CUSTOMER_REGISTERED_HEAD":" You are registered in driver licence's formation ",
+  "NOT_PLACE_DATA":"Not exist place info",
+  "IN_ADRESS":" in address",
+  "UNDEFINED_CONFIG_PARAMETER":"Config parameter undefined"
 }

@@ -206,7 +206,6 @@ module.exports = {
 
   },
 
-
   searchByZipcode: function (req, res, next) {
     // body...
 
@@ -574,7 +573,8 @@ module.exports = {
             ///formation is Full and update its
             ///not insert Customer
 
-
+            customerData.formationCenter = formationFounded.formationCenter
+            customerData.formation = formationFounded.id
             Customer.create(customerData)
               .exec(function (err, customerCreated) {
                 // body...
@@ -617,24 +617,33 @@ module.exports = {
 
                     formationFounded.customers.push(customerCreated.id);
 
-                    console.log("Mostrando la cantidad de customers de la formacion " +
-                    formationFounded.customers.length, formationFounded.maxPeople);
+
+                    ///Send mail to new Customer
+                   // console.log("SEND MAILLL")
+                   CustomerService.sendMailBooked(customerCreated, function(err, resultData){
+                     if (err)
+                      console.log("Error in send Mail to Customer", err)
+                     else if (resultData){
+                       console.log("Sended mail to new Customer", resultData)
+                     }
 
 
-                    if (formationFounded.customers.length == formationFounded.maxPeople) {
-                      formationFounded.isFull = true;
-                    }
+                     if (formationFounded.customers.length >= formationFounded.maxPeople) {
+                       formationFounded.isFull = true;
+                     }
 
-                    Formation.update({id: formationFounded.id},  formationFounded).exec(function (err, resultObject) {
+                     Formation.update({id: formationFounded.id},  formationFounded).exec(function (err, resultObject) {
 
-                      FormationService.isFormationFull(formationFounded, function (err, result) {
-                      //
-                      //  formationFounded.save()
+                       FormationService.isFormationFull(formationFounded, function (err, result) {
+                         //
+                         //  formationFounded.save()
 
-                        console.log("Update Formation")
-                        return res.json({ok: 'book proces complit.'});
-                      })
-                    })
+                         console.log("Update Formation")
+                         return res.json({ok: 'book proces complit.'});
+                       })
+                     })
+                   })
+
                   })
                 })
               });
@@ -1717,6 +1726,67 @@ module.exports = {
       // There are 1 users called 'Flynn'
       // Don't forget to handle your errors
     });
+  },
+  //---------------------------------------------------------------------------------
+
+  searchByFormationCenterWithPagination: function (req, res, next) {
+    if (req.param('formationCenter') === undefined) {
+      return res.json({status: "error", info: "Formation Center Name is required."});
+    }
+
+    var page = 0;
+    var len = 10;
+
+    if (req.param('page') !== undefined) {
+      if (!isNaN(parseInt(req.param('page')))) {
+        page = Math.abs(parseInt(req.param('page')));
+      } else {
+        return res.json({err: 'The page parameter is an invalid string number'});
+      }
+    }
+
+    if (req.param('len') !== undefined) {
+      if (!isNaN(parseInt(req.param('len')))) {
+        len = Math.abs(parseInt(req.param('len')));
+      } else {
+        return res.json({err: 'The len parameter is an invalid string number'});
+      }
+    }
+
+    FormationCenter.findOne({name: req.param('formationCenter')})
+      .exec(function (err, FC) {
+        if (err) {
+          return res.json({status: "error", info: "An error has ocurred searching the Formation Center."});
+        }
+
+        if (!FC) {
+          return res.json({status: "error", info: "No Formation Center with that name."});
+        }
+
+        var query = {
+          where: {formationCenter: FC.id},
+          skip: page * len,
+          limit: len,
+          sort: 'updatedAt DESC'
+        };
+
+        Formation.find(query)
+          .populate('place')
+          .exec(function (err, Formations) {
+            if (err) {
+              return res.json({status: "error", info: "Error searching Formations."});
+            }
+
+            Formation.count({ formationCenter: FC.id }).exec(function (err, FormationsCounted) {
+              if (err) {
+                return res.json({status: "error", info: "Error counting Formations."});
+              }
+
+              return res.json({status: "ok", data: Formations, maxSize: FormationsCounted});
+
+            });//Formation count.
+          });//Formation find.
+      });//Formation Center findOne.
   }
 };
 

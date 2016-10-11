@@ -29,7 +29,9 @@
         </form>
     </div>
     <!-- END CREATE NEW FC AREA -->
+
     <br>
+
     <!-- FILTER AREA -->
     <div class="row" ng-show="showFormationCenter">
         <form class="form-horizontal">
@@ -42,12 +44,35 @@
         </form>
     </div>
     <!-- END FILTER AREA-->
+
     <br>
+
+    <!-- INITIAL PAGINATION -->
+    <div class="row"  ng-show="showFormationCenter">
+        <div class="col col-xs-5">
+            <label class="label label-primary" for="selectLen">{{'ITEMS_PER_PAGE' | translate}}</label>
+            <select ng-options="iLen for iLen in lens"
+                    ng-model="len"
+                    ng-value="5"
+                    ng-change="itemsPerPageChance()"
+                    id="selectLen">
+            </select>
+        </div>
+
+        <div class="col col-xs-7">
+            <div class="text-right">
+                <ul uib-pagination boundary-links="true" items-per-page="len" total-items="maxSize"
+                    rotate="false" boundary-link-numbers="true"
+                    ng-click="searchFormationCenters()" ng-model="currentPage" class="pagination-sm" max-size="3"
+                    previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;">
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- END INITIAL PAGINATION -->
+
     <!-- DISPLAY THE FORMATION CENTERS  -->
     <div class="row">
-        <!--<div class="col col-xs-1">-->
-
-        <!--</div>-->
         <div class="col col-xs-12">
             <div ng-show="!showFormationCenter">
                 <div class="alert alert-danger" role="alert">{{'NOTHING_TO_SHOW' | translate}}</div>
@@ -70,7 +95,7 @@
                     </thead>
                     <tbody>
                     <tr ng-repeat="(key,formationCenter) in formationCenters | filter:criteria">
-                        <td>{{key + 1}}</td>
+                        <td>{{(currentPage - 1) * len + key + 1}}</td>
                         <td>{{formationCenter.name}}</td>
                         <td>{{formationCenter.email}}</td>
                         <td>{{formationCenter.phoneNumber}}</td>
@@ -101,10 +126,31 @@
                 </table>
             </div>
         </div>
-        <!--<div class="col col-xs-1">-->
-
-        <!--</div>-->
     </div>
     <!-- END DISPLAY THE FORMATION CENTERS  -->
+
+    <!-- FINAL PAGINATION -->
+    <div class="row" ng-show="showFormationCenter">
+        <div class="col col-xs-5">
+            <label class="label label-primary" for="selectLen2">{{'ITEMS_PER_PAGE' | translate}}</label>
+            <select ng-options="iLen for iLen in lens"
+                    ng-model="len"
+                    ng-value="5"
+                    ng-change="itemsPerPageChance()"
+                    id="selectLen2">
+            </select>
+        </div>
+
+        <div class="col col-xs-7">
+            <div class="text-right">
+                <ul uib-pagination boundary-links="true" items-per-page="len" total-items="maxSize"
+                    rotate="false" boundary-link-numbers="true"
+                    ng-click="searchFormationCenters()" ng-model="currentPage" class="pagination-sm" max-size="3"
+                    previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;">
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- END FINAL PAGINATION -->
 
 </div>

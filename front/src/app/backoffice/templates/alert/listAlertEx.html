@@ -1,7 +1,7 @@
 <div class="container   admin-places">
     <div class="row col-lg-8 col-sm-8 col-lg-8 col-xs-12 col-lg-offset-1 col-sm-offset-1 well">
 
-        <h2>{{'ADMIN_PAGE_ALERT_HEAD'| translate}}</h2>
+        <h2 class="text-center">{{'ADMIN_PAGE_ALERT_HEAD'| translate}}</h2>
         <p>{{'ADMIN_PAGE_ALERT_HEAD_DESCRIPTION'| translate}}</p>
 
         <!--Search form  admin-places -->
@@ -63,8 +63,8 @@
                                         <span class="input-group-addon"><span
                                                 class="text-info">Init  date:</span></span>
                                         <input tooltip-placement="top" tooltip-trigger="'none'"
-                                               uib-tooltip="Init date field should be date" tooltip-class="customClass"
-                                               tooltip-is-open="myform.initDate.$dirty && myform.initDate.$invalid"
+                                               uib-tooltip= "{{'INIT_DATE_ERROR' | translate }}" tooltip-class="customClass"
+                                               tooltip-is-open="advancedSearchPlace.initDate.$dirty && advancedSearchPlace.initDate.$invalid"
                                                class="form-control md-datepicker-is-showing"
                                                uib-datepicker-popup="{{format}}" is-open="popup1.opened" name="initDate"
                                                ng-pattern="dateRegExp"
@@ -79,8 +79,8 @@
                                     <div class=" input-group date ident-date">
                                         <span class="input-group-addon"><span class="text-info">End date:</span></span>
                                         <input tooltip-placement="bottom" tooltip-trigger="'none'"
-                                               uib-tooltip="End date field should be date" tooltip-class="customClass"
-                                               tooltip-is-open="myform.endDate.$dirty && myform.endDate.$invalid"
+                                               uib-tooltip="{{'END_DATE_ERROR' | translate }}" tooltip-class="customClass"
+                                               tooltip-is-open="advancedSearchPlace.endDate.$dirty && advancedSearchPlace.endDate.$invalid"
                                                class="form-control" uib-datepicker-popup="{{format}}" name="endDate"
                                                ng-pattern="dateRegExp" is-open="popup2.opened"
                                                datepicker-options="dateOptionsSearch" placeholder="" type="text"

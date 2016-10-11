@@ -5295,8 +5295,16 @@ span.customSelect.changed {
     padding: 40px;
 }
 
+.manage .col {
+    margin: 10px 0 !important;
+}
+
 .form-group {
     margin-bottom: 5px !important;
+}
+
+.pagination{
+    margin: 10px 0 !important;
 }
 
 /** Login **/
@@ -5316,7 +5324,7 @@ span.customSelect.changed {
 
 .admin-formation {
     max-width: 800px;
-    padding: 40px;
+    /*padding: 40px;*/
 }
 
 .createFormContainer {
@@ -5337,4 +5345,3 @@ span.customSelect.changed {
 #updateAnimatorContainer {
     max-width: 450px;
 }
-

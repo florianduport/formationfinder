@@ -1,0 +1,13 @@
+systemurladdress=http://137.172.74.220/formationfinder/
+emailsystemadress=dionis@localhost.com
+emailport=25
+emailhost=localhost
+emailsecure=false
+appuser=inoid2016
+apppassphrase=7GuneTv8QdsmMxLpfm2yWi0smLPaZ1szas9YZgRd2SeyzG47tG
+applicationame=Formationfinder
+#DATABASE_CONFIGURATION
+ipdbserver=localhost
+portdbserver=27017
+userdbserver=root
+paswdbserver=root

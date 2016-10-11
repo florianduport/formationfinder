@@ -28,6 +28,8 @@ module.exports = {
 
       var type = req.param("type");
 
+
+
       if (!type || type == "")
         return res.json({response:"ERROR", message:"Not defined type parameter"})
 
@@ -38,6 +40,14 @@ module.exports = {
         date:new Date()
       }
 
+
+      var date = req.param("date");
+      console.log("DATE " , date)
+      if (date && date != ""  ) {
+        currentDate = new Date(date)
+        if ( _.isDate(currentDate))
+         objectToUpdate.date = currentDate
+      }
       Alert.create(objectToUpdate).exec(function(err, resultUpdate){
         if (err) {
           return res.json({response:"ERROR", message:err.message})
@@ -272,17 +282,17 @@ module.exports = {
       return res.json({response:"ERROR", message: 'Invalid date format for finalDate.'});
     }
 
-    if (initialDate) {
-      query.date = {}
-      query.date.gte = new Date(req.param('initialDate'))
+    if (initialDate && finalDate ) {
+
+      query.date= {">=": new Date(req.param('initialDate')),"<=":new Date(req.param('finalDate'))}
+    }
+    else if (initialDate) {
+      query.date= {">=": new Date(req.param('initialDate'))}
+    }
+    else  if (finalDate) {
+      query.date= {"<=":new Date(req.param('finalDate'))}
     }
 
-
-    //console.log("FINAL DATE", finalDate)
-    if (finalDate) {
-      query.date = {}
-      query.date.lte = new Date(req.param('finalDate'))
-    }
 
     if (req.param('text')  ) {
       query.text =   {contains: req.param('text')}
@@ -370,16 +380,15 @@ module.exports = {
       return res.json({response:"ERROR", message: 'Invalid date format for finalDate.'});
     }
 
-    if (initialDate) {
-      query.date = {}
-      query.date.gte = new Date(req.param('initialDate'))
+    if (initialDate && finalDate ) {
+
+      query.date= {">=": new Date(req.param('initialDate')),"<=":new Date(req.param('finalDate'))}
     }
-
-
-    //console.log("FINAL DATE", finalDate)
-    if (finalDate) {
-      query.date = {}
-      query.date.lte = new Date(req.param('finalDate'))
+    else if (initialDate) {
+      query.date= {">=": new Date(req.param('initialDate'))}
+    }
+    else  if (finalDate) {
+      query.date= {"<=":new Date(req.param('finalDate'))}
     }
 
 
@@ -406,7 +415,8 @@ module.exports = {
         return res.json({response:"ERROR", message:"Not exist Formation Center with name " + nameFormation})
 
       query.formationCenter = resultObject.id
-     // console.log("Query count" , query)
+      query.sort = 'date ASC'
+       console.log("Query count" , query)
       Alert.find(query).limit(len).skip(skipv).exec(function (err, result ) {
         if (err) {
           return res.json({response:"ERROR", message:err});
@@ -445,7 +455,7 @@ module.exports = {
 
     language  = req.param('language')
     type = req.param('type')
-    console.log("VIEW RESULT " , language ,type)
+   // console.log("VIEW RESULT " , language ,type)
     if(req.param('type') === undefined || req.param('language') === undefined || languageData[language]  === undefined ||languageData[language][type]  === undefined ){
       return res.json({response:"ERROR", message:"Invalid parameter."})
     }
@@ -457,4 +467,5 @@ module.exports = {
   }
 
 };
+
 

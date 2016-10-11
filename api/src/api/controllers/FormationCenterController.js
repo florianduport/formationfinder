@@ -345,8 +345,36 @@ module.exports = {
     }); //End of FormationCenter.findOne.
   },
 
+  //-----------------------------------------------------------
   searchAllNoPopulate: function (req, res, next) {
-    FormationCenter.find().exec(function (err, FormationCentersFounded) {
+
+    var page = 0;
+    var len = 10;
+
+    if (req.param('page') !== undefined) {
+      if (!isNaN(parseInt(req.param('page')))) {
+        page = Math.abs(parseInt(req.param('page')));
+      } else {
+        return res.json({err: 'The page parameter is an invalid string number'});
+      }
+    }
+
+    if (req.param('len') !== undefined) {
+      if (!isNaN(parseInt(req.param('len')))) {
+        len = Math.abs(parseInt(req.param('len')));
+      } else {
+        return res.json({err: 'The len parameter is an invalid string number'});
+      }
+    }
+
+    var query = {
+      where: {},
+      skip: page * len,
+      limit: len,
+      sort: 'updatedAt DESC'
+    };
+
+    FormationCenter.find(query).exec(function (err, FormationCentersFounded) {
       if (err) {
         return res.json({status: "error", info: "Error searching Formation Centers."});
       }
@@ -355,9 +383,17 @@ module.exports = {
         return res.json({status: "error", info: "There are not Formation Centers."});
       }
 
-      return res.json({status: "ok", data: FormationCentersFounded});
+      FormationCenter.count(query).exec(function (err, FCcounted){
+
+        if (err) {
+          return res.json({status: "error", info: "Error counting Formation Centers."});
+        }
+
+        return res.json({status: "ok", data: FormationCentersFounded, maxSize: FCcounted});
+      });
     });
   },
+
 
   delete: function (req, res, next) {
     if (req.param('id') === undefined) {

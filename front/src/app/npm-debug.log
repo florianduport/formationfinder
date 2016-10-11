@@ -1,0 +1,22 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Bitnami\\nodejs-6.1.0-0\\nodejs\\node.exe',
+1 verbose cli   'C:\\Bitnami\\meanstack-3.2.6-2\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'test' ]
+2 info using npm@3.8.6
+3 info using node@v6.0.0
+4 verbose stack Error: ENOENT: no such file or directory, open 'C:\wamp\www\formationfinder\package.json'
+4 verbose stack     at Error (native)
+5 verbose cwd C:\wamp\www\formationfinder
+6 error Windows_NT 6.1.7600
+7 error argv "C:\\Bitnami\\nodejs-6.1.0-0\\nodejs\\node.exe" "C:\\Bitnami\\meanstack-3.2.6-2\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "test"
+8 error node v6.0.0
+9 error npm  v3.8.6
+10 error path C:\wamp\www\formationfinder\package.json
+11 error code ENOENT
+12 error errno -4058
+13 error syscall open
+14 error enoent ENOENT: no such file or directory, open 'C:\wamp\www\formationfinder\package.json'
+15 error enoent ENOENT: no such file or directory, open 'C:\wamp\www\formationfinder\package.json'
+15 error enoent This is most likely not a problem with npm itself
+15 error enoent and is related to npm not being able to find a file.
+16 verbose exit [ -4058, true ]

@@ -1,6 +1,7 @@
 <div class="manage container well" id="manage-animator">
     <div class="row">
         <h2 class="text-center">{{'ADMIN_ANIMATORS' | translate}}</h2>
+        <br/>
         <form>
             <h4>{{'SEARCH_ANIMATOR_IN_LIST' | translate}}</h4>
             <div class="form-group">
@@ -12,6 +13,7 @@
             </div>
         </form>
     </div>
+    <br/>
     <div class="row">
         <form>
             <div class="form-group">
@@ -24,46 +26,97 @@
         </form>
     </div>
 
-    <div class="row">
+    <br>
 
-        <div ng-show="!(animators.length > 0)">
-            <div class="alert alert-danger" role="alert">{{'NOTHING_TO_SHOW' | translate}}</div>
+    <!-- INITIAL PAGINATION -->
+    <div class="row"  ng-show="showAnimators">
+        <!-- style="background-color: #dae8ff" -->
+        <div class="col col-xs-5">
+            <label class="label label-primary" for="selectLen">{{'ITEMS_PER_PAGE' | translate}}</label>
+            <select ng-options="iLen for iLen in lens"
+                    ng-model="len"
+                    ng-value="5"
+                    ng-change="itemsPerPageChance()"
+                    id="selectLen">
+            </select>
         </div>
 
-        <div class="table-responsive" ng-show="(animators.length > 0)">
-            <table class="table table-condensed">
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th>{{'NAME' | translate}}</th>
-                    <th>{{'FIRST_NAME' | translate}}</th>
-                    <th>{{'TYPE' | translate}}</th>
-                    <th>{{'CITY' | translate}}</th>
-                    <th>{{'ZIPCODE' | translate}}</th>
-                    <th>{{'ACTIONS' | translate}}</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="(key,animator) in animators | filter:criteria">
-                    <td>{{key + 1}}</td>
-                    <td>{{animator.name}}</td>
-                    <td>{{animator.firstName}}</td>
-                    <td>{{animator.type}}</td>
-                    <td>{{animator.city}}</td>
-                    <td>{{animator.zipCode}}</td>
-                    <td>
-                        <button type="button" class="btn btn-sm btn-success" ng-click="editAnimator(key)">
-                            {{'EDIT' | translate}}
-                        </button>
-                        <span></span>
-                        <button type="button" class="btn btn-sm btn-danger" value="Delete" ng-click="deleteAnimator(key)">
-                            {{'DELETE' | translate}}
-                        </button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+        <div class="col col-xs-7">
+            <div class="text-right">
+                <ul uib-pagination boundary-links="true" items-per-page="len" total-items="maxSize"
+                    rotate="false" boundary-link-numbers="true"
+                    ng-click="searchAnimators()" ng-model="currentPage" class="pagination-sm" max-size="3"
+                    previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;">
+                </ul>
+            </div>
         </div>
     </div>
 
+    <div class="row">
+        <div ng-show="showAnimators">
+
+            <div class="table-responsive">
+                <table class="table table-condensed">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>{{'NAME' | translate}}</th>
+                        <th>{{'FIRST_NAME' | translate}}</th>
+                        <th>{{'TYPE' | translate}}</th>
+                        <th>{{'CITY' | translate}}</th>
+                        <th>{{'ZIPCODE' | translate}}</th>
+                        <th>{{'ACTIONS' | translate}}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="(key,animator) in animators | filter:criteria">
+                        <td>{{(currentPage - 1) * len + key + 1}}</td>
+                        <td>{{animator.name}}</td>
+                        <td>{{animator.firstName}}</td>
+                        <td>{{animator.type}}</td>
+                        <td>{{animator.city}}</td>
+                        <td>{{animator.zipCode}}</td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-primary" ng-click="editAnimator(key)">
+                                {{'EDIT' | translate}}
+                            </button>
+                            <span></span>
+                            <button type="button" class="btn btn-sm btn-danger" value="Delete"
+                                    ng-click="deleteAnimator(key)">
+                                {{'DELETE' | translate}}
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row" ng-show="showAnimators">
+        <div class="col col-xs-5">
+            <label class="label label-primary" for="selectLen2">{{'ITEMS_PER_PAGE' | translate}}</label>
+            <select ng-options="iLen for iLen in lens"
+                    ng-model="len"
+                    ng-value="5"
+                    ng-change="itemsPerPageChance()"
+                    id="selectLen2">
+            </select>
+        </div>
+
+        <div class="col col-xs-7">
+            <div class="text-right">
+                <ul uib-pagination boundary-links="true" items-per-page="len" total-items="maxSize"
+                    rotate="false" boundary-link-numbers="true"
+                    ng-click="searchAnimators()" ng-model="currentPage" class="pagination-sm" max-size="3"
+                    previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;">
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div ng-show="!showAnimators">
+            <div class="alert alert-danger" role="alert">{{'NOTHING_TO_SHOW' | translate}}</div>
+        </div>
+    </div>
 </div>

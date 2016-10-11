@@ -1,13 +1,59 @@
-<div class="container well admin-login">
-    <h2 class="text-center">{{'ADMIN_CREDENTIALS' | translate}}</h2>
-    <div class="form-group">
-        <label class="control-label"> {{'CREATE_CREDENTIAL' | translate}}
-            <button class="btn btn-sm btn-info"
-                    ng-click="gotoCreate()">
-                {{'CREATE' | translate}}
-            </button>
-        </label>
+<div class="manage container well admin-login">
+
+    <div class="row">
+        <h2 class="text-center">{{'ADMIN_CREDENTIALS' | translate}}</h2>
+        <br/>
+        <form>
+            <h4>{{'SEARCH_CREDENTIAL_IN_LIST' | translate}}</h4>
+            <div class="form-group">
+                <div class="col-sm-5">
+                    <input class="form-control"
+                           type="text"
+                           ng-model="criteria"/>
+                </div>
+            </div>
+        </form>
     </div>
+
+    <br/>
+
+    <div class="row">
+        <form>
+            <div class="form-group">
+                <label class="control-label"> {{'CREATE_CREDENTIAL' | translate}}
+                    <button class="btn btn-xs btn-info"
+                            ng-click="gotoCreate()">
+                        {{'CREATE' | translate}}
+                    </button>
+                </label>
+            </div>
+        </form>
+    </div>
+
+    <br>
+
+    <div class="row">
+        <div class="col col-xs-5">
+            <label class="label label-primary" for="selectLen">{{'ITEMS_PER_PAGE' | translate}}</label>
+            <select ng-options="iLen for iLen in lens"
+                    ng-model="len"
+                    ng-value="5"
+                    ng-change="itemsPerPageChance()"
+                    id="selectLen">
+            </select>
+        </div>
+
+        <div class="col col-xs-7">
+            <div class="text-right">
+                <ul uib-pagination boundary-links="true" items-per-page="len" total-items="maxSize"
+                    rotate="false" boundary-link-numbers="true"
+                    ng-click="searchLogins()" ng-model="currentPage" class="pagination-sm" max-size="3"
+                    previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;">
+                </ul>
+            </div>
+        </div>
+    </div>
+
 
     <div class="table-responsive">
         <table class="table table-condensed">
@@ -21,8 +67,8 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="(key,login) in logins">
-                <td>{{key + 1}}</td>
+            <tr ng-repeat="(key,login) in logins | filter:criteria">
+                <td>{{(currentPage - 1) * len + key + 1}}</td>
                 <td>{{login.username}}</td>
                 <td>
                     <span class="label label-success" ng-show="login.isMainLogin">
@@ -41,7 +87,7 @@
                     </span>
                 </td>
                 <td>
-                    <button type="button" class="btn btn-sm btn-success" ng-click="editLogin(key)">
+                    <button type="button" class="btn btn-sm btn-primary" ng-click="editLogin(key)">
                         {{'EDIT' | translate}}
                     </button>
                     <span></span>
@@ -53,5 +99,27 @@
             </tr>
             </tbody>
         </table>
+    </div>
+
+    <div class="row">
+        <div class="col col-xs-5">
+            <label class="label label-primary" for="selectLen2">{{'ITEMS_PER_PAGE' | translate}}</label>
+            <select ng-options="iLen for iLen in lens"
+                    ng-model="len"
+                    ng-value="5"
+                    ng-change="itemsPerPageChance()"
+                    id="selectLen2">
+            </select>
+        </div>
+
+        <div class="col col-xs-7">
+            <div class="text-right">
+                <ul uib-pagination boundary-links="true" items-per-page="len" total-items="maxSize"
+                    rotate="false" boundary-link-numbers="true"
+                    ng-click="searchLogins()" ng-model="currentPage" class="pagination-sm" max-size="3"
+                    previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;">
+                </ul>
+            </div>
+        </div>
     </div>
 </div>

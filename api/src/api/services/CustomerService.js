@@ -50,10 +50,10 @@ module.exports = {
 
           //  console.log("Update data customer ", iCustomer)
             objectResult = {};
-            objectResult.costumerid = iCustomer.id
+            objectResult.id = iCustomer.id
             objectResult.formationcenterid = iCustomer.formationCenter
-            objectResult.costumerid = iCustomer.id
-            objectResult.costumername = iCustomer.id
+
+            objectResult.costumername = iCustomer.name
             objectResult.email = iCustomer.email
             objectResult.date = formation.dates[0].date
             iPlace = formation.place
@@ -69,7 +69,7 @@ module.exports = {
           }
         }
       }
-      console.log("Verify formation for send Mail ", resultFormation.length)
+      //console.log("Verify formation for send Mail ", resultFormation.length)
       callbackFunction(resultFormation)
     })
 
@@ -170,7 +170,7 @@ module.exports = {
       callback(iResultCostumerUpdate)
     }
     else {
-      Customer.findOne({id: customerData.costumerid }).populate("formationCenter").exec(function (err, resultObject) {
+      Customer.findOne({id: customerData.id }).populate("formationCenter").exec(function (err, resultObject) {
 
         if (err) {
           iResultCostumerUpdate.err = err.message
@@ -181,8 +181,8 @@ module.exports = {
           callback(iResultCostumerUpdate)
         }
 
-        iResultCostumerUpdate.costumerid = customerData.costumerid
-        if (customerData.email && resultObject.emailsend < 5) {
+        iResultCostumerUpdate.costumerid = customerData.id
+        if (customerData.email ) {
           ///Update all costumer like the started formation´s mail will send
 
 
@@ -210,26 +210,21 @@ module.exports = {
 
           config.costumerid = customerData.id;
 
+         // console.log("REGISTERED MAIL ", config)
+
           result = EmailService.send(config, function (err, result) {
             ///If not error when send mail
             ///0 Ok, 1 Error, 5 all intent
             iResultCostumerUpdate.mailstatus = 5;
             var emailstatus = 5;
-            console.log("Mail send answer ", result.response)
+           // console.log("Mail send answer ", result.response)
             if (result.response != "OK") {
 
-              iResultCostumerUpdate.mailstatus = 1;
-              emailstatus = resultObject.emailsend + 1;
-              ///Update  costumer like the started formation´s mail is sended if not error
-              Customer.update({id: customerData.costumerid}, {emailsend:  emailstatus}).exec(function (err, Costumers) {
-                 // console.log("Update Costumer mail ",  err, Costumers )
-
-              })
+             console.log("Not sended customer email registered")
             }
-            else
-              Customer.update({id: customerData.costumerid}, {emailsend: emailstatus}).exec(function (err, Costumers) {
-                //console.log("Update Costumer mail ",  err, Costumers )
-              })
+            else{
+              console.log("Sended customer email registered")
+            }
 
             callback(iResultCostumerUpdate)
 
@@ -241,6 +236,95 @@ module.exports = {
 
   },
 
+  sendMailBooked: function (customerData, callback) {
+
+    var iResultCostumerUpdate = {}
+
+    if (typeof customerData == "undefined") {
+      console.log("Not data about Customer")
+      callback(iResultCostumerUpdate)
+    }
+    else {
+      Customer.findOne({id: customerData.id }).populate("formationCenter").populate("formation").exec(function (err, resultObject) {
+
+       if (err) {
+          iResultCostumerUpdate.err = err.message
+          callback(iResultCostumerUpdate, null)
+        }
+
+        if (typeof resultObject == "undefined") {
+          callback(iResultCostumerUpdate, null)
+        }
+
+
+
+        iResultCostumerUpdate.costumerid = customerData.id
+        if (customerData.email ) {
+          ///Update all costumer like the started formation´s mail will send
+//Fin place information
+          Place.findOne({id:resultObject.formation.place}).exec( function ( err, resultPlace){
+            if (err) {
+              iResultCostumerUpdate.err = err.message
+              callback(iResultCostumerUpdate, null)
+            }
+
+            if (typeof resultPlace == "undefined") {
+              iResultCostumerUpdate.err = sails.__('NOT_PLACE_DATA')
+              callback(iResultCostumerUpdate, null)
+            }
+
+            ////If exist send Mail with text
+            ///Your course estarted at   in
+            ///and GMail link with extact adress
+            //var initDate = customerData.date
+            var mailSubjet = sails.__('MAIL_REGISTERED_CUSTOMER_SUBJECT')
+
+            ///Set systemurladdress in Configuration collection
+
+            ///INTERNACIONALIZATION
+            var mailHtmlBody = "<b><h4><a hrf=\""+ sails.config.globals.configsystem.systemurladdress+"\">Formationfinder</a> notify :</h4></b></br>"
+            mailHtmlBody +=  "<b><h3>"+  sails.__('DEAR') +"  " + resultObject.name +  "</h3></b></br>"
+            mailHtmlBody +=  "<b><h3>" + sails.__('MAIL_CUSTOMER_REGISTERED_HEAD') + "</h3></b></br>"
+            mailHtmlBody +=  "<b><h3>" + sails.__('IN_ADRESS') + resultPlace.address +  "</h3></b></br>"
+            mailHtmlBody += "<b>Formation Center : " + resultObject.formationCenter.name + "</b><br />"
+            mailHtmlBody += "<b>Formation Center (phone number): " + resultObject.formationCenter.phoneNumber + "</b><br />"
+            mailHtmlBody += "<b>Formation Center (email): " + resultObject.formationCenter.email + "</b><br />"
+
+            var config = {}
+            config = {
+              to: resultObject.email,
+              subject: mailSubjet,
+              html: mailHtmlBody
+            };
+
+            config.costumerid = resultObject.id;
+
+            //console.log("Send Mail ", config)
+
+            result = EmailService.send(config, function (err, result) {
+              ///If not error when send mail
+              ///0 Ok, 1 Error, 5 all intent
+              iResultCostumerUpdate.mailstatus = 5;
+              var emailstatus = 5;
+            //  console.log("Mail send answer ", result.response)
+              if (result.response != "OK") {
+
+                iResultCostumerUpdate.message = result.message
+              }
+
+              callback(iResultCostumerUpdate)
+
+            })
+
+          })
+
+
+        }
+      })
+    }
+
+
+  },
   isValidCustomerData: function (data) {
     // body...
     var isValid = _.isObject(data) && _.isString(data.name)

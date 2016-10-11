@@ -73,14 +73,16 @@ module.exports = {
     }
 
     if (initialDate) {
-      query.date = {}
+      if ( typeof query.date == "undefined" )
+        query.date = {}
       query.date.gte = new Date(req.param('initialDate'))
     }
 
 
     //console.log("FINAL DATE", finalDate)
     if (finalDate) {
-      query.date = {}
+      if ( typeof query.date == "undefined" )
+        query.date = {}
       query.date.lte = new Date(req.param('finalDate'))
     }
 
@@ -100,7 +102,7 @@ module.exports = {
       query.billState =  req.param('billState');
     }
 
-
+console.log("Query bill ", query)
     Bill.find(query).skip(skipv).exec(function (err, result ) {
       if (err) {
         return res.json({response:"ERROR", message:err});
@@ -167,16 +169,19 @@ module.exports = {
     }
 
     if (initialDate) {
-      query.date = {}
+      if ( typeof query.date == "undefined" )
+        query.date = {}
       query.date.gte = new Date(req.param('initialDate'))
     }
 
 
     //console.log("FINAL DATE", finalDate)
     if (finalDate) {
-      query.date = {}
+      if ( typeof query.date == "undefined" )
+        query.date = {}
       query.date.lte = new Date(req.param('finalDate'))
     }
+
 
     if (req.param('amount') !== undefined) {
       if(!isNaN(parseFloat(req.param('amount')))){
@@ -213,12 +218,13 @@ module.exports = {
       query.formationCenter = resultObject.id
       query.sort =  'date ASC'
 
-      //console.log("Query", query)
+      console.log("Query Bill", query)
+
       Bill.find(query).limit(len).skip(skipv).exec(function (err, result ) {
         if (err) {
           return res.json({response:"ERROR", message:err});
         }
-       // console.log("RESULT", query)
+       console.log("RESULT", result)
         return res.json(result);
       })
     })
@@ -283,14 +289,16 @@ module.exports = {
     }
 
     if (initialDate) {
-      query.date = {}
+      if ( typeof query.date == "undefined" )
+        query.date = {}
       query.date.gte = new Date(req.param('initialDate'))
     }
 
 
     //console.log("FINAL DATE", finalDate)
     if (finalDate) {
-      query.date = {}
+      if ( typeof query.date == "undefined" )
+        query.date = {}
       query.date.lte = new Date(req.param('finalDate'))
     }
 

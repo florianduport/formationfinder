@@ -155,6 +155,7 @@ module.exports.cron = {
 
               async.forEach(UserToSendMails, function (Customerdata, callback) {
 
+                console.log("Send mail to user")
                 CustomerServices.sendMailToCostumer(Customerdata, function (result) {
                   ///resultCostumerUpdate.push(iResultCostumerUpdate)
                   callback();

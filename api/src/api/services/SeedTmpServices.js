@@ -8,179 +8,6 @@ module.exports = {
    *
    * */
 
-  validateaAssociations: function () {
-
-    FormationCenter.find({}).then(function (formationCenters) {
-      ///Get id for formation
-      if (formationCenters && formationCenters.length > 0) {
-        iData = formationCenters[0]
-        ///if and only if not exist assoiatios
-        console.log("-----")
-        if (iData.formations.length == 0) {
-          Configuration.find({type: "smtp"}).exec(function userFounded(err, configuration) {
-            if (err || configuration.length == 0) {
-              Configuration.create({
-                name: "mail",
-                type: "smtp",
-                emailsystemadress: "formationfinder@localhost.com",
-                emailport: "25",
-                emailhost: "127.0.0.1",
-                emailuser: "dionis@localhost.com",
-                emailpassword: "",
-                emailsecure: false
-              }).then(function (Configurations) {
-                configuration = Configurations[0];
-                //console.log("Creado el objeto en BD");
-              });
-              /* GMail configuration
-
-
-               Configuration.create({
-               name: "mail",
-               type: "smtp",
-               emailsystemadress: "formationfinder@localhost.com",
-               emailport: "25",
-               emailhost: "smtp.gmail.com",
-               emailuser: "inoid2007@gmail.com",
-               emailpassword: "cibercubano",
-               emailsecure: false
-               }).then(function (Configurations) {
-               configuration = Configurations[0];
-               //console.log("Creado el objeto en BD");
-               });
-               */
-            }
-          })
-
-
-          console.log("-----")
-          async.forEach(formationCenters, function (formationCenter, callback) {
-            var formationid = formationCenter.id;
-
-            var placeFormationAsociation = {
-              formation: [],
-              place: [],
-              customers: []
-            }
-
-            ////Asociate formation
-            async.series({
-              one: function (callback) {
-                ///Asociate place
-                Place.update({}, {formationCenter: formationid}).exec(function (err, Places) {
-                  if (err)
-                    console.log(err)
-
-                  Places.forEach(function (iPlaces, i) {
-                    placeFormationAsociation.place.push(iPlaces.id)
-                  })
-                  //console.log("one")
-                  callback(null, placeFormationAsociation);
-
-                });
-
-                //return formationsArray
-
-
-              },
-              two: function (callback) {
-
-
-                Formation.update({}, {formationCenter: formationid}).exec(function (err, Formations) {
-                  if (err)
-                    console.log(err)
-
-                  Formations.forEach(function (iFormation, i) {
-
-                    placeFormationAsociation.formation.push(iFormation.id)
-                  })
-                  // console.log("two")
-                  callback(null, placeFormationAsociation);
-                });
-
-
-              },
-              three: function (callback) {
-
-                Customer.update({}, {formationCenter: formationid}).exec(function (err, Customers) {
-                  if (err)
-                    console.log(err)
-
-                  Customers.forEach(function (iCustomers, i) {
-
-                    limit = 3;
-                    placeFormationAsociation.formation.forEach(function (iFormation, i) {
-                      if (limit > i) {
-                        ObjectCustomers = Customers[i]
-
-                        Customer.update({id: ObjectCustomers.id}, {
-                          formation: iFormation,
-                          emailsend: 0
-                        }).exec(function (err, CustomersArray) {
-                          if (err)
-                            console.log(err)
-                        })
-
-
-                      }
-                    })
-
-                  });
-                  // console.log("three")
-                  callback(null, placeFormationAsociation);
-                })
-
-              },
-              four: function (callback) {
-
-                placeFormationAsociation.formation.forEach(function (iFormation, index) {
-                  iPlace = placeFormationAsociation.place[index]
-                  if (iPlace !== undefined) {
-                    Formation.update({id: iFormation}, {place: iPlace}).exec(function (err, Formations) {
-                      // console.log("Actualizando formacion con place ", iFormation, iPlace);
-                    })
-                  }
-
-                })
-
-
-                callback(null, placeFormationAsociation);
-
-              },
-              five: function (callback) {
-
-                formationId = placeFormationAsociation.formation[0]
-                Customer.find({}).exec(function (err, CustomersArray) {
-                  if (err)
-                    console.log(err)
-                  for (iCostumer in CustomersArray) {
-                    Formation.update({id: formationId}, {customer: iCostumer.id}).exec(function (err, Formations) {
-                      if (err)
-                        console.log(err)
-                    });
-                  }
-                });
-
-                console.log("five")
-                callback(null, placeFormationAsociation);
-
-              }
-            }, function (err, results) {
-              // results is now equal to: {one: 1, two: 2}
-              if (err)
-                return next(err);
-            });
-
-
-            callback();
-          })
-
-        }
-      }
-    })
-
-
-  },
   validateaAssociationsTMP: function () {
 
     Configuration.find({type: "smtp"}).exec(function userFounded(err, configuration) {
@@ -274,11 +101,11 @@ module.exports = {
         Configuration.create({
           name: "mail",
           type: "smtp",
-          emailsystemadress:  emailconfig.emailsystemadress,
+          emailsystemadress: emailconfig.emailsystemadress,
           emailport: emailconfig.emailport,
           emailhost: emailconfig.emailhost,
           emailuser: emailconfig.emailuser,
-          emailpassword:  emailconfig.emailpassword,
+          emailpassword: emailconfig.emailpassword,
           emailsecure: emailconfig.emailsecure
         }).then(function (Configurations) {
           configuration = Configurations[0];
@@ -305,46 +132,55 @@ module.exports = {
     async.series({
       one: function (callback) {
 
-        FormationCenter.find({}).populate("formations").then(function (formationCenters) {
-
+        FormationCenter.find({}).populate("formations").then(function (formationCentersArray) {
+          flagSearch = false
+          formationCenters = []
+          formationCenters.push(formationCentersArray[0])
           formationCenters.forEach(function (formationCenter, i) {
             //console.log("Formation size in formationcenter " , formationCenter)
             if (formationCenter.formations.length > 0) {
               console.log("!!!! Updated realized and exit !!!!!!", formationCenter.formations.length)
+              //callback(null, placeFormationAsociation);
+              flagSearch = true
               return;
             }
             placeFormationAsociation.formationcenter.push(formationCenter.id)
           });
 
-          ///Asociate place
-          Place.find({}).exec(function (err, Places) {
-            if (err)
-              console.log(err)
-
-            Places.forEach(function (iPlaces, i) {
-              placeFormationAsociation.place.push(iPlaces.id)
-            })
-
-            Formation.find({}).exec(function (err, Formations) {
+          if (flagSearch)
+            callback(null, placeFormationAsociation);
+          else {
+            ///Asociate place
+            Place.find({}).exec(function (err, Places) {
               if (err)
                 console.log(err)
 
-              Formations.forEach(function (iFormation, i) {
-                placeFormationAsociation.formation.push(iFormation.id)
+              Places.forEach(function (iPlaces, i) {
+                placeFormationAsociation.place.push(iPlaces.id)
               })
-              //console.log("one")
 
-              Customer.find({}).exec(function (err, Customers) {
-                Customers.forEach(function (iCustomer, i) {
-                  placeFormationAsociation.customers.push(iCustomer.id)
-                });
-                //console.log("Read al update datas " , placeFormationAsociation)
-                callback(null, placeFormationAsociation);
+              Formation.find({}).exec(function (err, Formations) {
+                if (err)
+                  console.log(err)
+
+                Formations.forEach(function (iFormation, i) {
+                  placeFormationAsociation.formation.push(iFormation.id)
+                })
+                //console.log("one")
+
+                Customer.find({}).exec(function (err, Customers) {
+                  Customers.forEach(function (iCustomer, i) {
+                    placeFormationAsociation.customers.push(iCustomer.id)
+                  });
+                  //console.log("Read al update datas " , placeFormationAsociation)
+                  callback(null, placeFormationAsociation);
 
               });
             });
-          });
-        });
+           });
+          }
+      })
+        ;
         //Asociate formations
 
 
@@ -457,12 +293,12 @@ module.exports = {
           })
 
           ///Seed all Animator to First Formation Center
-          Animator.update({},{formationCenter: formationCenter}).exec(function (err, Animators) {
-            if(err){
+          Animator.update({}, {formationCenter: formationCenter}).exec(function (err, Animators) {
+            if (err) {
               console.log("Error Updating Animator.");
             }
 
-           // console.log("************* Se actualizaron los animators: ", Animators);
+            // console.log("************* Se actualizaron los animators: ", Animators);
           });
 
           ///Seed all Alert to First Formation Center

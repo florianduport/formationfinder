@@ -3,97 +3,244 @@
  */
 
 var faker = require('faker');
-//faker.internet.email()
+// email: faker.internet.email(),
+//"inoid2007@gmail.com"
 faker.locale = "fr"
-module.exports = [ {
-  name: faker.internet.userName(),
-
-  firstName: faker.internet.userName(),
-
+module.exports = [{
+  name: faker.name.lastName(),
+  firstName: faker.name.firstName(),
   email: "inoid2007@gmail.com",
-
   address: faker.address.streetAddress(),
-
-  zipCode:faker.address.zipCode(),
-
-  city:faker.address.city(),
-
-  phoneNumber:faker.phone.phoneNumber(),
-
-
+  zipCode: faker.address.zipCode(),
+  city: faker.address.city(),
+  phoneNumber: faker.phone.phoneNumber(),
   isActivated: faker.random.boolean(),
-
-  walletid:faker.random.words(),
-
-  mangouserid:faker.random.words(),
-  mangobankid:faker.random.words(),
-  mangobankbic:faker.random.words()
+  walletid: faker.random.words(),
+  mangouserid: faker.random.words(),
+  mangobankid: faker.random.words(),
+  mangobankbic: faker.random.words()
 
 },
   {
-    name: faker.internet.userName(),
-    firstName: faker.internet.userName(),
+    name: faker.name.lastName(),
+    firstName: faker.name.firstName(),
     email: "inoid2007@gmail.com",
-
     address: faker.address.streetAddress(),
-
-    zipCode:faker.address.zipCode(),
-
-    city:faker.address.city(),
-
-    phoneNumber:faker.phone.phoneNumber(),
-
-
+    zipCode: faker.address.zipCode(),
+    city: faker.address.city(),
+    phoneNumber: faker.phone.phoneNumber(),
     isActivated: faker.random.boolean(),
+    walletid: faker.random.words(),
+    mangouserid: faker.random.words(),
+    mangobankid: faker.random.words(),
+    mangobankbic: faker.random.words()
 
+  },
+  {
+    name: faker.name.lastName(),
+    firstName: faker.name.firstName(),
+    email: "inoid2007@gmail.com",
+    address: faker.address.streetAddress(),
+    zipCode:faker.address.zipCode(),
+    city:faker.address.city(),
+    phoneNumber:faker.phone.phoneNumber(),
+    isActivated: faker.random.boolean(),
     walletid:faker.random.words(),
-
     mangouserid:faker.random.words(),
     mangobankid:faker.random.words(),
     mangobankbic:faker.random.words()
 
   },
   {
-    name: faker.internet.userName(),
-    firstName: faker.internet.userName(),
+    name: faker.name.lastName(),
+    firstName: faker.name.firstName(),
     email: "inoid2007@gmail.com",
-
     address: faker.address.streetAddress(),
-
     zipCode:faker.address.zipCode(),
-
     city:faker.address.city(),
-
     phoneNumber:faker.phone.phoneNumber(),
-
-
     isActivated: faker.random.boolean(),
-
     walletid:faker.random.words(),
-
     mangouserid:faker.random.words(),
     mangobankid:faker.random.words(),
     mangobankbic:faker.random.words()
 
   },
   {
-    name: faker.internet.userName(),
-    firstName: faker.internet.userName(),
+    name: faker.name.lastName(),
+    firstName: faker.name.firstName(),
     email: "inoid2007@gmail.com",
-
     address: faker.address.streetAddress(),
-
-    zipCode:faker.address.zipCode(),
-
-    city:faker.address.city(),
-
-    phoneNumber:faker.phone.phoneNumber(),
-
-
+    zipCode: faker.address.zipCode(),
+    city: faker.address.city(),
+    phoneNumber: faker.phone.phoneNumber(),
     isActivated: faker.random.boolean(),
+    walletid: faker.random.words(),
+    mangouserid: faker.random.words(),
+    mangobankid: faker.random.words(),
+    mangobankbic: faker.random.words()
 
+  },
+  {
+    name: faker.name.lastName(),
+    firstName: faker.name.firstName(),
+    email: "inoid2007@gmail.com",
+    address: faker.address.streetAddress(),
+    zipCode:faker.address.zipCode(),
+    city:faker.address.city(),
+    phoneNumber:faker.phone.phoneNumber(),
+    isActivated: faker.random.boolean(),
     walletid:faker.random.words(),
+    mangouserid:faker.random.words(),
+    mangobankid:faker.random.words(),
+    mangobankbic:faker.random.words()
 
+  },
+  {
+    name: faker.name.lastName(),
+    firstName: faker.name.firstName(),
+    email: "inoid2007@gmail.com",
+    address: faker.address.streetAddress(),
+    zipCode:faker.address.zipCode(),
+    city:faker.address.city(),
+    phoneNumber:faker.phone.phoneNumber(),
+    isActivated: faker.random.boolean(),
+    walletid:faker.random.words(),
+    mangouserid:faker.random.words(),
+    mangobankid:faker.random.words(),
+    mangobankbic:faker.random.words()
+
+  },
+  {
+    name: faker.name.lastName(),
+    firstName: faker.name.firstName(),
+    email: "inoid2007@gmail.com",
+    address: faker.address.streetAddress(),
+    zipCode: faker.address.zipCode(),
+    city: faker.address.city(),
+    phoneNumber: faker.phone.phoneNumber(),
+    isActivated: faker.random.boolean(),
+    walletid: faker.random.words(),
+    mangouserid: faker.random.words(),
+    mangobankid: faker.random.words(),
+    mangobankbic: faker.random.words()
+
+  },
+  {
+    name: faker.name.lastName(),
+    firstName: faker.name.firstName(),
+    email: "inoid2007@gmail.com",
+    address: faker.address.streetAddress(),
+    zipCode:faker.address.zipCode(),
+    city:faker.address.city(),
+    phoneNumber:faker.phone.phoneNumber(),
+    isActivated: faker.random.boolean(),
+    walletid:faker.random.words(),
+    mangouserid:faker.random.words(),
+    mangobankid:faker.random.words(),
+    mangobankbic:faker.random.words()
+
+  },
+  {
+    name: faker.name.lastName(),
+    firstName: faker.name.firstName(),
+    email: "inoid2007@gmail.com",
+    address: faker.address.streetAddress(),
+    zipCode:faker.address.zipCode(),
+    city:faker.address.city(),
+    phoneNumber:faker.phone.phoneNumber(),
+    isActivated: faker.random.boolean(),
+    walletid:faker.random.words(),
+    mangouserid:faker.random.words(),
+    mangobankid:faker.random.words(),
+    mangobankbic:faker.random.words()
+
+  },
+  {
+    name: faker.name.lastName(),
+    firstName: faker.name.firstName(),
+    email: "inoid2007@gmail.com",
+    address: faker.address.streetAddress(),
+    zipCode: faker.address.zipCode(),
+    city: faker.address.city(),
+    phoneNumber: faker.phone.phoneNumber(),
+    isActivated: faker.random.boolean(),
+    walletid: faker.random.words(),
+    mangouserid: faker.random.words(),
+    mangobankid: faker.random.words(),
+    mangobankbic: faker.random.words()
+
+  },
+  {
+    name: faker.name.lastName(),
+    firstName: faker.name.firstName(),
+    email: "inoid2007@gmail.com",
+    address: faker.address.streetAddress(),
+    zipCode:faker.address.zipCode(),
+    city:faker.address.city(),
+    phoneNumber:faker.phone.phoneNumber(),
+    isActivated: faker.random.boolean(),
+    walletid:faker.random.words(),
+    mangouserid:faker.random.words(),
+    mangobankid:faker.random.words(),
+    mangobankbic:faker.random.words()
+
+  },
+  {
+    name: faker.name.lastName(),
+    firstName: faker.name.firstName(),
+    email: "inoid2007@gmail.com",
+    address: faker.address.streetAddress(),
+    zipCode:faker.address.zipCode(),
+    city:faker.address.city(),
+    phoneNumber:faker.phone.phoneNumber(),
+    isActivated: faker.random.boolean(),
+    walletid:faker.random.words(),
+    mangouserid:faker.random.words(),
+    mangobankid:faker.random.words(),
+    mangobankbic:faker.random.words()
+
+  },
+  {
+    name: faker.name.lastName(),
+    firstName: faker.name.firstName(),
+    email: "inoid2007@gmail.com",
+    address: faker.address.streetAddress(),
+    zipCode: faker.address.zipCode(),
+    city: faker.address.city(),
+    phoneNumber: faker.phone.phoneNumber(),
+    isActivated: faker.random.boolean(),
+    walletid: faker.random.words(),
+    mangouserid: faker.random.words(),
+    mangobankid: faker.random.words(),
+    mangobankbic: faker.random.words()
+
+  },
+  {
+    name: faker.name.lastName(),
+    firstName: faker.name.firstName(),
+    email: "inoid2007@gmail.com",
+    address: faker.address.streetAddress(),
+    zipCode:faker.address.zipCode(),
+    city:faker.address.city(),
+    phoneNumber:faker.phone.phoneNumber(),
+    isActivated: faker.random.boolean(),
+    walletid:faker.random.words(),
+    mangouserid:faker.random.words(),
+    mangobankid:faker.random.words(),
+    mangobankbic:faker.random.words()
+
+  },
+  {
+    name: faker.name.lastName(),
+    firstName: faker.name.firstName(),
+    email: "inoid2007@gmail.com",
+    address: faker.address.streetAddress(),
+    zipCode:faker.address.zipCode(),
+    city:faker.address.city(),
+    phoneNumber:faker.phone.phoneNumber(),
+    isActivated: faker.random.boolean(),
+    walletid:faker.random.words(),
     mangouserid:faker.random.words(),
     mangobankid:faker.random.words(),
     mangobankbic:faker.random.words()

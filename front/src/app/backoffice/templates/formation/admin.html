@@ -1,4 +1,4 @@
-<div class="container well admin-formation">
+<div class="manage container well admin-formation">
     <div class="row">
         <h2 class="text-center">{{'ADMIN_FORMATIONS' | translate}}</h2>
         <form>
@@ -10,11 +10,13 @@
             </div>
         </form>
     </div>
+
     <br/>
+
     <div class="row">
         <div class="form-group">
             <label class="control-label"> {{'CREATE_FORMATION' | translate}}
-                <button class="btn btn-sm btn-info"
+                <button class="btn btn-xs btn-info"
                         ng-click="gotoCreate()">
                     {{'CREATE' | translate}}
                 </button>
@@ -22,13 +24,37 @@
         </div>
     </div>
 
-    <div class="row">
+    <br>
 
-        <div ng-show="!(formations.length > 0)">
+    <!-- INITIAL PAGINATION -->
+    <div class="row" ng-show="showFormations">
+        <div class="col col-xs-5">
+            <label class="label label-primary" for="selectLen">{{'ITEMS_PER_PAGE' | translate}}</label>
+            <select ng-options="iLen for iLen in lens"
+                    ng-model="len"
+                    ng-value="5"
+                    ng-change="itemsPerPageChance()"
+                    id="selectLen">
+            </select>
+        </div>
+
+        <div class="col col-xs-7">
+            <div class="text-right">
+                <ul uib-pagination boundary-links="true" items-per-page="len" total-items="maxSize"
+                    rotate="false" boundary-link-numbers="true"
+                    ng-click="searchFormations()" ng-model="currentPage" class="pagination-sm" max-size="3"
+                    previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;">
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div ng-show="!showFormations">
             <div class="alert alert-danger" role="alert">{{'NOTHING_TO_SHOW' | translate}}</div>
         </div>
 
-        <div class="table-responsive" ng-show="(formations.length > 0)">
+        <div class="table-responsive" ng-show="showFormations">
             <table class="table table-condensed">
                 <!--<table class="table table-striped table-hover table-condensed table-bordered">-->
                 <thead>
@@ -44,7 +70,7 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="(key,formation) in formations | filter:criteria">
-                    <td>{{key + 1}}</td>
+                    <td>{{(currentPage - 1) * len + key + 1}}</td>
                     <td>{{formation.place.name}}</td>
                     <td>{{formation.price}}</td>
                     <td>{{formation.maxPeople}}</td>
@@ -71,6 +97,29 @@
                 </tr>
                 </tbody>
             </table>
+        </div>
+    </div>
+
+    <!-- FINAL PAGINATION -->
+    <div class="row" ng-show="showFormations">
+        <div class="col col-xs-5">
+            <label class="label label-primary" for="selectLen2">{{'ITEMS_PER_PAGE' | translate}}</label>
+            <select ng-options="iLen for iLen in lens"
+                    ng-model="len"
+                    ng-value="5"
+                    ng-change="itemsPerPageChance()"
+                    id="selectLen2">
+            </select>
+        </div>
+
+        <div class="col col-xs-7">
+            <div class="text-right">
+                <ul uib-pagination boundary-links="true" items-per-page="len" total-items="maxSize"
+                    rotate="false" boundary-link-numbers="true"
+                    ng-click="searchFormations()" ng-model="currentPage" class="pagination-sm" max-size="3"
+                    previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;">
+                </ul>
+            </div>
         </div>
     </div>
 </div>

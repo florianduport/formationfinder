@@ -247,6 +247,10 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
     .controller("LoginController", ["$scope", "$rootScope", "$location", "$http", "NgMap", "$log", "$uibModal", "$translate",
         function ($scope, $rootScope, $location, $http, NgMap, $log, $uibModal, $translate) {
 
+            if ($rootScope.userAuthenticated === true) {
+                $location.path('/dashboard');
+            }
+
             $scope.credentials = {};
             $scope.formationCentersNames = [];
 
@@ -437,18 +441,31 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 $location.path('/login/admin');
             };
         }])
-    .controller("AdminLoginController", ["$scope", "$rootScope", "$location", "$http",
-        function ($scope, $rootScope, $location, $http) {
+    .controller("AdminLoginController", ["$scope", "$rootScope", "$location", "$http", "$uibModal",
+        function ($scope, $rootScope, $location, $http, $uibModal) {
 
             $scope.logins = [];
+            $scope.len = 5;
+            $scope.maxSize = null;
+            $scope.currentPage = 1;
+
+            $scope.lens = [5, 10, 15, 20];
+
+            $scope.itemsPerPageChance = function () {
+                $scope.currentPage = 1;
+                $scope.searchLogins();
+            };
 
             $scope.searchLogins = function () {
-                $http.post($rootScope.urlBase + "/login/searchByFormationCenter", {
-                        formationCenter: $rootScope.formationCenter
+                $http.post($rootScope.urlBase + "/login/searchByFormationCenterWithPagination", {
+                        formationCenter: $rootScope.formationCenter,
+                        page: $scope.currentPage - 1,
+                        len: $scope.len
                     })
                     .success(function (result) {
                         if (result.status === "ok") {
                             $scope.logins = result.data;
+                            $scope.maxSize = result.maxSize;
 
                             console.log($scope.logins);
                         } else {
@@ -463,9 +480,20 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.deleteLogin = function (index) {
 
+                if ($rootScope.username === $scope.logins[index].username) {
+
+                    var objeData = {type: "Error"};
+                    $scope.showModalMessage("Can´t delete the actual Credential", objeData);
+                    return;
+                }
+
                 var confirmation = confirm("You are going to delete this Credential. Continue?");
 
                 if (confirmation) {
+
+                    //como voy a eliminar, si estoy en la ultima pagina y elimino el ultimo
+                    //elemento de esa pagina, reinicio la paginacion, para que no se quede vacia.
+                    $scope.currentPage = 1;
 
                     $http.post($rootScope.urlBase + "/login/delete", {
                             username: $scope.logins[index].username,
@@ -494,9 +522,40 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             };
 
             $scope.editLogin = function (index) {
+
+                if ($rootScope.username === $scope.logins[index].username) {
+
+                    var objeData = {type: "Error"};
+                    $scope.showModalMessage("Can´t update the actual Credential", objeData);
+                    return;
+                }
+
                 $location.path('/login/update/' + $scope.logins[index].id);
             };
 
+            $scope.showModalMessage = function (messageshow, objectData) {
+
+                $scope.items = objectData;
+                $scope.items.message = messageshow
+
+                var modalInstance = $uibModal.open({
+                    animation: $scope.animationsEnabled,
+                    templateUrl: 'myModalMessage.html',
+                    controller: 'ModalInstanceCtrl',
+                    size: "",
+                    resolve: {
+                        items: function () {
+                            return $scope.items;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+                    //Empty promise success
+                }, function () {
+                    //Empty promise fault
+                });
+            }
         }])
     .controller("UpdateLogincontroller", ["$scope", "$rootScope", "$routeParams", "$location", "$http",
         function ($scope, $rootScope, $routeParams, $location, $http) {
@@ -655,26 +714,50 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.formations = [];
 
-            $scope.criteria = '';
+            $scope.showFormations = true;
+
+            $scope.len = 5;
+            $scope.maxSize = null;
+            $scope.currentPage = 1;
+
+            $scope.lens = [5, 10, 15, 20];
+
+            $scope.itemsPerPageChance = function () {
+                $scope.currentPage = 1;
+                $scope.searchFormations();
+            };
+
+            //$scope.criteria = '';
 
             $scope.searchFormations = function () {
-                $http.post($rootScope.urlBase + "/formation/searchByFormationCenter", {
-                        formationCenter: $rootScope.formationCenter
+                $http.post($rootScope.urlBase + "/formation/searchByFormationCenterWithPagination", {
+                        formationCenter: $rootScope.formationCenter,
+                        page: $scope.currentPage - 1,
+                        len: $scope.len
                     })
                     .success(function (result) {
                         if (result.status === "ok") {
                             $scope.formations = result.data;
+                            $scope.maxSize = result.maxSize;
+
+                            if ($scope.formations.length > 0) {
+                                $scope.showFormations = true;
+                            } else {
+                                $scope.showFormations = false;
+                            }
+
                         } else {
                             console.log("An error has ocurred searching Formations.");
+                            $scope.showFormations = false;
                         }
 
                     })
                     .error(function (error) {
-                        console.log("An error has ocurred searching Formations.");
+                        console.log("Error searching Formations.");
                         console.log(error);
+                        $scope.showFormations = false;
                     });
             };
-
             $scope.searchFormations();
 
             $scope.deleteFormation = function (index) {
@@ -683,6 +766,10 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                 if (confirmation) {
 
+                    //como voy a eliminar, si estoy en la ultima pagina y elimino el ultimo
+                    //elemento de esa pagina, reinicio la paginacion, para que no se quede vacia.
+                    $scope.currentPage = 1;
+
                     var formation = $scope.formations[index];
 
                     $http.post($rootScope.urlBase + "/formation/deleteByID", {
@@ -690,7 +777,9 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         })
                         .success(function (result) {
                             if (result.status === "ok") {
-                                $scope.formations.splice(index, 1);
+                                //$scope.formations.splice(index, 1);
+
+                                $scope.searchFormations();
 
                                 alert("Formation deleted.");
                             } else {
@@ -1184,27 +1273,51 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
         function ($scope, $rootScope, $location, $http, $uibModal) {
 
             $scope.animators = [];
+            $scope.len = 5;
+            $scope.maxSize = null;
+            $scope.currentPage = 1;
+
+            $scope.showAnimators = true;
+
+            $scope.lens = [5, 10, 15, 20];
+
+            $scope.itemsPerPageChance = function () {
+                $scope.currentPage = 1;
+                $scope.searchAnimators();
+            };
 
             $scope.searchAnimators = function () {
 
-                $http.post($rootScope.urlBase + "/animator/searchByFormationCenter", {
-                        formationCenter: $rootScope.formationCenter
+                $http.post($rootScope.urlBase + "/animator/searchByFormationCenterWithPagination", {
+                        formationCenter: $rootScope.formationCenter,
+                        page: $scope.currentPage - 1,
+                        len: $scope.len
                     })
                     .success(function (result) {
                         if (result.status === "ok") {
                             $scope.animators = result.data;
+                            $scope.maxSize = result.maxSize;
+
+                            if ($scope.animators.length > 0) {
+                                $scope.showAnimators = true;
+                            } else {
+                                $scope.showAnimators = false;
+                            }
+
                             console.log("Animators ok: ", result.data);
+                            console.log("Animators maxSize: ", result.maxSize);
                         } else {
-                            alert();
+                            $scope.showAnimators = false;
+                            alert("Error searching Animators.");
                             console.log("Error searching Animators: ", result.info);
                         }
                     })
                     .error(function (err) {
+                        $scope.showAnimators = false;
                         console.log("Error searching Animators: ", err);
                     });
 
             };
-
             $scope.searchAnimators();
 
             $scope.deleteAnimator = function (index) {
@@ -1215,12 +1328,18 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                     var Aminator = $scope.animators[index];
 
+                    //como voy a eliminar, si estoy en la ultima pagina y elimino el ultimo
+                    //elemento de esa pagina, reinicio la paginacion, para que no se quede vacia.
+                    $scope.currentPage = 1;
+
                     $http.post($rootScope.urlBase + "/animator/deleteByID", {
                             id: Aminator.id
                         })
                         .success(function (result) {
                             if (result.status === "ok") {
-                                $scope.animators.splice(index, 1);
+                                //$scope.animators.splice(index, 1);
+
+                                $scope.searchAnimators();
                                 alert("Animator deleted");
                                 console.log("Animator deleted");
                             } else {
@@ -1315,7 +1434,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     });
             };
 
-            $scope.cancelEdit = function () {
+            $scope.gotoManageAminator = function () {
                 $location.path("/animator/manage");
             };
 
@@ -3417,7 +3536,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
         }])
     .controller("BillListController", ["$scope", "$rootScope", "$http", "$location", "$routeParams", "$timeout", "NavigatorGeolocation", "NgMap", "$uibModal", "$log", "$translate",
         function ($scope, $rootScope, $http, $location, $routeParams, $timeout, NavigatorGeolocation, NgMap, $uibModal, $log, $translate) {
-            $scope.weekDay = ["Sunday", "Monday", "Tuesday", "Wensday", "Thuesday", "Fryday", "Saturday"]
+            $scope.weekDay = ["Sunday", "Monday", "Tuesday", "Wensday", "Thuesday", "Friday", "Saturday"]
 
             $scope.advanceSearch = true
             $scope.checkboxUnable = true
@@ -3487,6 +3606,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.formats = ['dd/MM/yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy'];
             $scope.format = $scope.formats[0];
+            $scope.dateRegExp = /^\d{2}\/\d{2}\/\d{4}$/;
             $scope.toggleMin = function () {
                 $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
                 $scope.dateOptions.minDate = $scope.inlineOptions.minDate;
@@ -3768,7 +3888,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.getReadableDate = function (dateParmt) {
                 value = new Date(dateParmt);
-                resultDate = $scope.weekDay[value.getDay()] + ": " + value.getDate() + "-" + value.getMonth() + "-" + value.getFullYear();
+                resultDate = $scope.weekDay[value.getDay()] + ": " + value.getDate() + "/" + value.getMonth() + "/" + value.getFullYear();
 
                 return resultDate
 
@@ -3855,7 +3975,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                 // console.log("El valor de la forama ", $scope.myform)
 
-                if ($scope.search.initialDate != "" || typeof $scope.search.endDate != "" || $scope.initialPrice != "") {
+                if ($scope.search.initialDate != "" || typeof $scope.search.endDate != "" ) {
                     if (!$scope.advancedSearchPlace.$valid) {
 
                         $scope.errorValid = true
@@ -4082,7 +4202,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
     })
     .controller("AlertListController", ["$scope", "$rootScope", "$http", "$location", "$routeParams", "$timeout", "NavigatorGeolocation", "NgMap", "$uibModal", "$log", "$translate",
         function ($scope, $rootScope, $http, $location, $routeParams, $timeout, NavigatorGeolocation, NgMap, $uibModal, $log, $translate) {
-            $scope.weekDay = ["Sunday", "Monday", "Tuesday", "Wensday", "Thuesday", "Fryday", "Saturday"]
+            $scope.weekDay = ["Sunday", "Monday", "Tuesday", "Wensday", "Thuesday", "Friday", "Saturday"]
             $scope.usernameExpReg = /^([ê|µ|ç|ùàè|áéíóú|a-z|A-Z]*)([\w|\d])*([_|\s]*[\.|\-|\'|ê|ç|ùàè|áéíóú|A-Z|a-z|\d])*$/;
 
 
@@ -4344,6 +4464,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                      }*/
                     config.initialDate = $scope.search.initialDate
 
+                    console.log("Initial date setter", config.initialDate)
+
                 }
 
                 if (typeof $scope.search.endDate != "undefined" || $scope.search.endDate == "") {
@@ -4480,7 +4602,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.getReadableDate = function (dateParmt) {
                 value = new Date(dateParmt);
-                resultDate = $scope.weekDay[value.getDay()] + ": " + value.getDate() + "-" + value.getMonth() + "-" + value.getFullYear();
+                resultDate = $scope.weekDay[value.getDay()] + ": " + value.getDate() + "/" + value.getMonth() + "/" + value.getFullYear();
 
                 return resultDate
 
@@ -4493,7 +4615,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     config.language = "en" //$translate.determinePreferredLanguage()
                     config.type = type
                     traslateValue  = $translate.instant(type) || type ;
-                    console.log("RESULT", traslateValue)
+                 //   console.log("RESULT", traslateValue)
                     return (traslateValue)
 
                     //$http.get($rootScope.urlBase + '/Alert/getAlertType', config)
@@ -4647,8 +4769,12 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                 }
 
+                console.log("Search elements")
                 $scope.countRecordsAlert();
                 $scope.getAlertRecords();
+                console.log("Search elements")
+                console.log("Search elements")
+                console.log("Search elements")
             }
 
 

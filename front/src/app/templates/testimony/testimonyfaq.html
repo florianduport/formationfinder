@@ -40,7 +40,7 @@
 
     <div class="container container-fluid">
         <div class="row">
-            <div align="right" style="color:#000066">
+            <div ng-show="appTestimony.totalItemsTestimony > 0" align="right" style="color:#000066">
                 <!--<ul uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" boundary-links="true" num-pages="numPages"></ul>-->
                 <ul   uib-pagination   boundary-links="true"  items-per-page="appTestimony.itemPerPageTestimony" total-items="appTestimony.totalItemsTestimony" ng-click="getPagableRecordsTestimony()" force-ellipses="true"  max-size="appTestimony.smallnumPages" boundary-link-numbers="true" rotate="true"  ng-model="appTestimony.currentPageTestimony" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
             </div>
@@ -81,7 +81,7 @@
 
 
             </ul>
-            <div align="right" style="color:#000066">
+            <div ng-show="appTestimony.totalItemsTestimony > 0" align="right" style="color:#000066">
                 <ul   uib-pagination boundary-links="true" items-per-page="appTestimony.itemPerPageTestimony" total-items="appTestimony.totalItemsTestimony" ng-click="getPagableRecordsTestimony()" force-ellipses="true"  max-size="appTestimony.smallnumPages" boundary-link-numbers="true" rotate="true" ng-model="appTestimony.currentPageTestimony" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
 
             </div>

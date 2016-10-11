@@ -134,7 +134,6 @@ describe('BillController', function (){
         amount:56
       };
 
-
         request(sails.hooks.http.app)
           .post('/Bill/createBill')
           .send(config)
@@ -373,6 +372,48 @@ describe('BillController', function (){
 
     })
 
+
+
+    it('Search bill with expecific Date ', function (done) {
+      // var app = sails();
+      FormationCenter.find().exec(function (err, resultArray) {
+
+        if (err) done(err)
+
+        firstFormationCenter = resultArray[0]
+
+
+        var config = {
+          date: new Date(Date.parse("2013/06/20")),
+          billNumber: faker.finance.account(),
+          billState: faker.random.boolean(),
+          amount: 56
+        };
+        config.nameformation = firstFormationCenter.name;
+
+        request(sails.hooks.http.app)
+          .post('/Bill/createBill')
+          .send(config)
+          .expect(200, function (err, res) {
+            if (err) return done(err);
+            console.log("RESULT ", res.body)
+            assert.equal(res.body.response, "OK")
+
+            config = {}
+            config.nameformation = firstFormationCenter.name;
+            config.finalDate = "2013/06/20"
+            request(sails.hooks.http.app)
+              .post('/Bill/searchBillByFormationCenter')
+              .send(config)
+              .expect(200, function (err, res) {
+                if (err) return done(err);
+                console.log("RESULT ", res.body)
+                assert.equal(true, res.body.length == 1)
+                done();
+              })
+          })
+         })
+      })
 
     ///------------------------------------
 

@@ -12,7 +12,7 @@
                 <div class=" form-group">
                     <div class=" input-group date" id="daterange">
                         <!--For geolocation uib-typeahead="address for address in getLocation($viewValue)"-->
-                        <input  class="form-control"  placeholder="{{ 'HEADLINE' | translate }}" type="text"  ng-model="criteria"  uib-typeahead="state for state in states | filter:$viewValue" maxlength="40">
+                        <input style="font-size: 16px" class="form-control"  placeholder="{{ 'HEADLINE' | translate }}" type="text"  ng-model="criteria"  uib-typeahead="state for state in states | filter:$viewValue" maxlength="40"  name="location">
 
                         <!--<span class="input-group-addon"  ><span id="datesearch" class="fa fa-calendar" data-provide="datepicker"  data-date-format="mm/dd/yyyy" ng-model="criteria"   ></span></span>-->
                         <span class="input-group-addon"  ng-click="searchFunc($event)"><span class="fa fa-search"></span></span>

@@ -375,7 +375,7 @@ module.exports = {
 
     if ( typeof config == "undefined") {
       callback({response: "ERROR",
-        message: "Config parameter undefined"},null )
+        message: req.__('UNDEFINED_CONFIG_PARAMETER') },null )
       return;
 
     }
@@ -418,6 +418,15 @@ module.exports = {
         message: "User card parameter cardcvx undefined"}, null)
       return;
     }
+    else if (!_.isDate(cardValueEx.CardExpirationDate)) {
+      callback( {response: "ERROR",
+        message: "User card parameter cardcvx undefined"}, null)
+      return;
+    }
+    moment = require('moment');
+    expirationDate = new Date(cardValueEx.CardExpirationDate)
+    console.log("GET DATE IN FORMAT ",expirationDate, moment(expirationDate).format('MMYY') )
+
 
     this.findMangoPayConfiguration( function(err, mango) {
 
@@ -433,7 +442,7 @@ module.exports = {
             Tag: "custom meta",
         UserId: userid,
         CardNumber: cardValueEx.CardNumber,
-        CardExpirationDate: cardValueEx.CardExpirationDate,
+        CardExpirationDate: moment(expirationDate).format('MMYY'),
         CardCvx: cardValueEx.CardCvx,
       }, function (err, card, res) {
             //console.log("RESULT", err)

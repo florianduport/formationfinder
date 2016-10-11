@@ -127,7 +127,14 @@ app.config(function($translateProvider) {
             ANIMATORS:"Animators",
             PLACE:"Places",
             BILLS:"Bills",
-            ALERTS:"Alerts"
+            ALERTS:"Alerts",
+            INIT_DATE_ERROR:"Init date field should be date",
+            END_DATE_ERROR:"End date field should be date",
+            //----------------------------------------------
+            SEARCH_CREDENTIAL_IN_LIST: "Search credentials in the list",
+            ITEMS_PER_PAGE: "Items per page",
+            INVALID_MORNING_TIME_RANGE: "Invalid morning time range",
+            INVALID_AFTERNOON_TIME_RANGE: "Invalid afternoon time range",
 
 
         })
@@ -254,8 +261,12 @@ app.config(function($translateProvider) {
             ANIMATORS:"Animators",
             PLACE:"Lieux",
             BILLS:"Bills",
-            ALERTS:"Alerts"
-
+            ALERTS:"Alerts",
+            //----------------------------------------------
+            SEARCH_CREDENTIAL_IN_LIST: "Search credentials in the list",
+            ITEMS_PER_PAGE: "Items per page",
+            INVALID_MORNING_TIME_RANGE: "Invalid morning time range",
+            INVALID_AFTERNOON_TIME_RANGE: "Invalid afternoon time range",
 
 
         })
@@ -381,7 +392,13 @@ app.config(function($translateProvider) {
         ANIMATORS:"Trabajadores",
         PLACE:"Lugares",
         BILLS:"Cuentas",
-        ALERTS:"Alertas"
+        ALERTS:"Alertas",
+        //----------------------------------------------
+        SEARCH_CREDENTIAL_IN_LIST: "Buscar credenciales en la lista",
+        ITEMS_PER_PAGE: "Elementos por página",
+        INVALID_MORNING_TIME_RANGE: "Rango de tiempo inválido en la mañana",
+        INVALID_AFTERNOON_TIME_RANGE: "Rango de tiempo inválido en la tarde",
+
 
 
     });;
