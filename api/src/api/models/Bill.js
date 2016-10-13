@@ -16,9 +16,13 @@ module.exports = {
   	},
 
   	date: {
-  		type: 'date'
+  		type: 'date',
+      required: true
   	},
-
+    timestamp: {
+      type: "integer",
+      required: true
+    },
   	amount: {
   		type: 'float'
   	},
@@ -32,16 +36,13 @@ module.exports = {
     billState: {
       type: 'boolean'
     },
-      //
-  	//billState: {
-      //type: 'string',
-      //required: true,
-      //enum: ['Paid', 'No'],
-      //defaultsTo: 'No'
-  	//	//Ver si existen un numero predefinido de estados conocidos
-  	//	//Utilizar un enum y de ser posible poner valor por defecto del estado
-  	//}
 
+  },
+
+  beforeCreate: function (values, cb) {
+    values.date.setUTCMilliseconds(0)
+    values.timestamp =  values.date.getTime()
+    cb()
   }
 };
 

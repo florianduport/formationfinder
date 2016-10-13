@@ -388,7 +388,13 @@
                             <div ng-repeat="iformationcenter in formationcenters">
                                 <div ng-repeat="iplace in iformationcenter.places">
                                     <marker position="{{iplace.latitude}}, {{iplace.longitude}}"
-                                            title="Click to zoom"></marker>
+                                            >
+                                        <div> {{iplace.name}} </div>
+                                    </marker>
+
+                                    <!--<custom-marker id="end" position="{{iplace.latitude}}, {{iplace.longitude}}">-->
+                                    <!--<div> {{iplace.name}} </div>-->
+                                <!--</custom-marker>-->
                                 </div>
                             </div>
 

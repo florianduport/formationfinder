@@ -6,9 +6,14 @@
             <h4>{{'SEARCH_ANIMATOR_IN_LIST' | translate}}</h4>
             <div class="form-group">
                 <div class="col-sm-5">
-                    <input class="form-control"
-                           type="text"
-                           ng-model="criteria"/>
+                    <div class="input-group">
+                        <input class="form-control"
+                               type="text"
+                               ng-model="criteria"/>
+                        <span class="input-group-addon" ng-click="clearCriteria()">
+                            <span class="glyphicon glyphicon-erase"></span>
+                        </span>
+                    </div>
                 </div>
             </div>
         </form>
@@ -29,7 +34,7 @@
     <br>
 
     <!-- INITIAL PAGINATION -->
-    <div class="row"  ng-show="showAnimators">
+    <div class="row" ng-show="showAnimators">
         <!-- style="background-color: #dae8ff" -->
         <div class="col col-xs-5">
             <label class="label label-primary" for="selectLen">{{'ITEMS_PER_PAGE' | translate}}</label>
@@ -77,12 +82,12 @@
                         <td>{{animator.city}}</td>
                         <td>{{animator.zipCode}}</td>
                         <td>
-                            <button type="button" class="btn btn-sm btn-primary" ng-click="editAnimator(key)">
+                            <button type="button" class="btn btn-sm btn-primary" ng-click="editAnimator(animator)">
                                 {{'EDIT' | translate}}
                             </button>
                             <span></span>
                             <button type="button" class="btn btn-sm btn-danger" value="Delete"
-                                    ng-click="deleteAnimator(key)">
+                                    ng-click="deleteAnimator(animator)">
                                 {{'DELETE' | translate}}
                             </button>
                         </td>

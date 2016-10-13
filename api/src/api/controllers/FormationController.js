@@ -9,7 +9,7 @@ module.exports = {
   searchByID: function (req, res, next) {
 
     if (req.param('id') === undefined) {
-      return res.json({status: "error", info: "Formation id is required."});
+      return res.json({status: "error", info:sails.__("ERROR_FORMATION_REQUIRED") });
     }
 
     Formation.findOne({id: req.param('id')})
@@ -17,11 +17,11 @@ module.exports = {
       .populate('animators')
       .exec(function (err, FormationFounded) {
         if (err) {
-          return res.json({status: "error", info: "Error searching Formation."});
+          return res.json({status: "error", info:sails.__("ERROR_FORMATION_SEARCHING") });
         }
 
         if (!FormationFounded) {
-          return res.json({status: "error", info: "Formation not found."});
+          return res.json({status: "error", info:  sails.__("ERROR_FORMATION_NOTFOUND") });
         }
 
         return res.json({status: "ok", data: FormationFounded});
@@ -55,16 +55,29 @@ module.exports = {
 
         iFormation.formationCenter = FC.id;
 
-        Formation.create(iFormation)
-          .exec(function (err, cFormation) {
-            if (err || !cFormation) {
-              return res.json({status: "error", info: "Error creating Formation."});
-            }
+        //Search if there is a formation with the same parameters.
+        Formation.findOne({
+          formationCenter: iFormation.formationCenter,
+          maxPeople: iFormation.maxPeople,
+          price: iFormation.price,
+          place: iFormation.place,
+        }).exec(function (err, Founded) {
+          if (err) {
+            return res.json({status: "error", info: sails.__("ERROR_FORMATION_SEARCH_DATA")});
+          }
 
-            return res.json({status: "ok", info: "Formation created.", data: cFormation});
+          if (Founded) {
+            return res.json({status: "error", info: "Error there is other Formation with the same values."});
+          }
 
-          });
-
+          Formation.create(iFormation)
+            .exec(function (err, cFormation) {
+              if (err || !cFormation) {
+                return res.json({status: "error", info: "Error creating Formation."});
+              }
+              return res.json({status: "ok", info: "Formation created.", data: cFormation});
+            });
+        });
       });
   },
 
@@ -74,7 +87,7 @@ module.exports = {
     var nameFormation = reg.param("name");
 
     if (!name || name == "")
-      return next("Not defined Formation´s name")
+      return next(sails.__("ERROR_FORMATION_NOTDEFINED")  )
 
     var page = reg.param("page")
 
@@ -97,17 +110,17 @@ module.exports = {
 
   searchByFormationCenter: function (req, res) {
     if (req.param('formationCenter') === undefined) {
-      return res.json({status: "error", info: "Formation Center Name is required."});
+      return res.json({status: "error", info: sails.__("ERROR_FORMATIONCENTER_NAME_REQUIRED") });
     }
 
     FormationCenter.findOne({name: req.param('formationCenter')})
       .exec(function (err, FC) {
         if (err) {
-          return res.json({status: "error", info: "An error has ocurred searching the Formation Center."});
+          return res.json({status: "error", info: sails.__("ERROR_FORMATIONCENTER_SEARCHING")});
         }
 
         if (!FC) {
-          return res.json({status: "error", info: "No Formation Center with that name."});
+          return res.json({status: "error", info:sails.__("ERROR_FORMATIONCENTER_WITHNAME") });
         }
 
         Formation.find({formationCenter: FC.id})
@@ -116,7 +129,7 @@ module.exports = {
           //probar .sort(updatedAt: 'DESC')
           .exec(function (err, formationsFounded) {
             if (err) {
-              return res.json({status: "error", info: "An error has ocurred searching Formations."});
+              return res.json({status: "error", info:sails.__("ERROR_FORMATION_SEARCH_DATA")});
             }
 
             return res.json({status: "ok", data: formationsFounded});
@@ -127,15 +140,15 @@ module.exports = {
 
   deleteByID: function (req, res) {
     if (req.param('id') === undefined) {
-      return res.json({status: "error", info: "ID parameter is required."});
+      return res.json({status: "error", info: sails.__("ERROR_FORMATION_ID_REQUIED")});
     }
 
     Formation.destroy({id: req.param('id')})
       .exec(function (err) {
         if (err) {
-          return res.json({status: "error", info: "An error has ocurred deleting Formation."});
+          return res.json({status: "error", info: sails.__("ERROR_FORMATION_DELETED")});
         }
-        return res.json({status: "ok", info: "Formation deleted."});
+        return res.json({status: "ok", info: sails.__("SUCESSFUL_FORMATION_DELETED") });
       });
   },
 
@@ -149,7 +162,7 @@ module.exports = {
         page = Math.abs(parseInt(req.param('page')));
       }
       else {
-        return res.json({err: 'The page parameter is an invalid string number'});
+        return res.json({err: sails.__("ERROR_PAGE_INVALID")});
       }
     }
 
@@ -158,7 +171,7 @@ module.exports = {
         len = Math.abs(parseInt(req.param('len')));
       }
       else {
-        return res.json({err: 'The len parameter is an invalid string number'});
+        return res.json({err: sails.__("ERROR_LEN_INVALID")});
       }
     }
 
@@ -168,7 +181,7 @@ module.exports = {
     var nameFormation = req.param("name");
 
     if (!nameFormation || nameFormation == "")
-      return next("Not defined Formation´s name")
+      return   res.json({err: sails.__("ERROR_FORMATION_NAME_REQUIRED")})
 
     Formation.find({
         isFull: false,
@@ -184,20 +197,20 @@ module.exports = {
         if (err) {
           return res.json({
             err: "ERROR",
-            message: "Not result about query"
+            message: sails.__("ERROR_NOT_RESULT")
           });
         }
         // body
         if (Formations.length == 0)
           return res.json({
             err: "ERROR",
-            message: "Not result about query"
+            message: sails.__("ERROR_NOT_RESULT")
           });
         formationTemp = Formations[0]
         if (formationTemp.formationCenter == "undefined")
           return res.json({
             err: "ERROR",
-            message: "Not result about query"
+            message:sails.__("ERROR_NOT_RESULT")
           });
         formationsResponse = Formations;
 
@@ -206,297 +219,297 @@ module.exports = {
 
   },
 
-  searchByZipcode: function (req, res, next) {
-    // body...
-
-
-    zc = req.param('zipcode');
-
-    if (zc === undefined) {
-      return res.json({err: 'No zipcode provided'});
-    }
-
-
-    initialDate = req.param('initialDate');
-    finalDate = req.param('finalDate');
-
-    initialDate = new Date(initialDate);
-    finalDate = new Date(finalDate);
-
-    if (!_.isDate(initialDate) || !_.isDate(finalDate)) {
-      return res.json({err: 'Invalid date format for initialDate or finalDate.'});
-    }
-    var page = 0;
-    var len = 10;
-
-    if (req.param('page') !== undefined) {
-      if (!isNaN(parseInt(req.param('page')))) {
-        page = Math.abs(parseInt(req.param('page')));
-      }
-      else {
-        return res.json({err: 'The page parameter is an invalid string number'});
-      }
-    }
-
-    //console.log("Call Services")
-    if (req.param('len') !== undefined) {
-      if (!isNaN(parseInt(req.param('len')))) {
-        len = Math.abs(parseInt(req.param('len')));
-      }
-      else {
-        return res.json({err: 'The len parameter is an invalid string number'});
-      }
-    }
-    initialDate = req.param('initialDate');
-    finalDate = req.param('finalDate');
-
-    query = {};
-    queryPlace = {};
-
-    // console.log("Validation price", !isNaN(parseInt(req.param('price'))) )
-    // console.log("Validation price", req.param('price') )
-
-    if (req.param('price') && !isNaN(parseInt(req.param('price')))) {
-      query.price = {'>=': req.param('price')};
-      //console.log("Create price restriction")
-    }
-    query.limit = len
-    query.skip = page * len
-    query.isFull = false
-    queryPlace.zipcode = zc
-
-    // console.log("Query" ,queryPlace )
-    // console.log("Query" ,query )
-    Formation.find(query)
-      .populate('place', queryPlace)
-      .populate('formationCenter')
-      .exec(function placesFouded(err, placesFormations) {
-        // body...
-        formationsResponse = [];
-
-        placesFormations.forEach(function (iPlace, index) {
-          if (typeof iPlace.place != "undefined") {
-            iPlace.formationCenter.city = iPlace.place.city;
-            formationsResponse.push({
-
-              formation: iPlace
-            });
-          }
-        });
-
-        return res.json(formationsResponse);
-      });
-
-    /*Place.find({
-     zipcode: zc,
-     skip: page * len,
-     limit: len})
-     .populate('formations')
-     .populate('formationCenter')
-     .exec(function placesFouded(err, places) {
-     // body...
-
-     formationsResponse = [];
-
-     places.forEach(function (place, index) {
-     // body...
-
-     place.formations.forEach(function (actualFormation, index) {
-     // body...
-     formationsResponse.push({
-     formationCenterName: place.formationCenter.name,
-     formation: actualFormation
-     });
-     });
-     });
-
-     return res.json(formationsResponse);
-     });*/
-  },
-
-  countByZipcode: function (req, res, next) {
-
-    // console.log("Call Services")
-    if (req.param('zipcode')) {
-      zc = req.param('zipcode');
-    }
-
-    if (zc === undefined) {
-      return res.json({err: 'No zipcode provided'});
-    }
-    queryPlace = {}
-
-
-    if (zc == "") {
-
-      Formation.count().exec(function countFaq(error, found) {
-        if (error) {
-
-          return res.json({"res": error});
-        }
-
-        //console.log('There are ' + found + ' Faq');
-
-        return res.json({"res": "OK", "size": found})
-
-
-        // There are 1 users called 'Flynn'
-        // Don't forget to handle your errors
-      });
-    } else {
-      queryPlace.zipcode = zc
-
-      Formation.find().populate('place', queryPlace).exec(function countFaq(error, placesFormations) {
-        if (error) {
-          return res.json({"res": error});
-        }
-
-        //console.log('There are ' + found + ' Faq');
-        var counterFormation = 0
-        placesFormations.forEach(function (iPlace, index) {
-          if (typeof iPlace.place != "undefined") {
-            counterFormation++
-          }
-        });
-        return res.json({"res": "OK", "size": counterFormation});
-
-
-        // There are 1 users called 'Flynn'
-        // Don't forget to handle your errors
-      });
-    }
-  },
-
-  searchByCity: function (req, res, next) {
-    // body...
-
-    cityname = req.param('city');
-
-    // console.log("Call Services")
-    if (cityname === undefined) {
-      return res.json({err: 'No city provided'});
-    }
-
-
-    initialDate = req.param('initialDate');
-    finalDate = req.param('finalDate');
-
-    initialDate = new Date(initialDate);
-    finalDate = new Date(finalDate);
-
-    if (!_.isDate(initialDate) || !_.isDate(finalDate)) {
-      return res.json({err: 'Invalid date format for initialDate or finalDate.'});
-    }
-    var page = 0;
-    var len = 10;
-
-    if (req.param('page') !== undefined) {
-      if (!isNaN(parseInt(req.param('page')))) {
-        page = Math.abs(parseInt(req.param('page')));
-      }
-      else {
-        return res.json({err: 'The page parameter is an invalid string number'});
-      }
-    }
-
-    //console.log("Call Services")
-    if (req.param('len') !== undefined) {
-      if (!isNaN(parseInt(req.param('len')))) {
-        len = Math.abs(parseInt(req.param('len')));
-      }
-      else {
-        return res.json({err: 'The len parameter is an invalid string number'});
-      }
-    }
-    initialDate = req.param('initialDate');
-    finalDate = req.param('finalDate');
-
-    query = {};
-    queryPlace = {};
-
-    /// console.log("Validation price", !isNaN(parseInt(req.param('price'))) )
-    // console.log("Validation price", req.param('price') )
-
-    if (req.param('price') && !isNaN(parseInt(req.param('price')))) {
-      query.price = {'>=': req.param('price')};
-      //console.log("Create price restriction")
-    }
-    query.limit = len
-    query.skip = page * len
-    query.isFull = false
-    if (cityname != "")
-      queryPlace.city = {'contains': cityname}
-
-    // console.log("Query" ,queryPlace )
-    // console.log("Query" ,query )
-    Formation.find(query)
-      .populate('place', queryPlace)
-      .populate('formationCenter')
-      .exec(function placesFouded(err, placesFormations) {
-        // body...
-        formationsResponse = [];
-
-        placesFormations.forEach(function (iPlace, index) {
-          if (typeof iPlace.place != "undefined") {
-            iPlace.formationCenter.city = iPlace.place.city;
-            formationsResponse.push({
-              formation: iPlace
-            });
-          }
-        });
-
-        return res.json(formationsResponse);
-      });
-  },
-
-  countByCity: function (req, res, next) {
-    cityname = "";
-
-    // console.log("Call Services")
-    if (req.param('city')) {
-      cityname = req.param('city');
-    }
-    queryPlace = {}
-    if (cityname == "") {
-
-      Formation.count().exec(function countFaq(error, found) {
-        if (error) {
-
-          return res.json({"res": error});
-        }
-
-        //console.log('There are ' + found + ' Faq');
-
-        return res.json({"res": "OK", "size": found})
-
-
-        // There are 1 users called 'Flynn'
-        // Don't forget to handle your errors
-      });
-    } else {
-      queryPlace.city = {'contains': cityname}
-
-      Formation.find().populate('place', queryPlace).exec(function countFaq(error, placesFormations) {
-        if (error) {
-          return res.json({"res": error});
-        }
-
-        //console.log('There are ' + found + ' Faq');
-        var counterFormation = 0
-        placesFormations.forEach(function (iPlace, index) {
-          if (typeof iPlace.place != "undefined") {
-            counterFormation++
-          }
-        });
-        return res.json({"res": "OK", "size": counterFormation});
-
-
-        // There are 1 users called 'Flynn'
-        // Don't forget to handle your errors
-      });
-    }
-
-  },
+  //searchByZipcode: function (req, res, next) {
+  //  // body...
+  //
+  //
+  //  zc = req.param('zipcode');
+  //
+  //  if (zc === undefined) {
+  //    return res.json({err: 'No zipcode provided'});
+  //  }
+  //
+  //
+  //  initialDate = req.param('initialDate');
+  //  finalDate = req.param('finalDate');
+  //
+  //  initialDate = new Date(initialDate);
+  //  finalDate = new Date(finalDate);
+  //
+  //  if (!_.isDate(initialDate) || !_.isDate(finalDate)) {
+  //    return res.json({err: 'Invalid date format for initialDate or finalDate.'});
+  //  }
+  //  var page = 0;
+  //  var len = 10;
+  //
+  //  if (req.param('page') !== undefined) {
+  //    if (!isNaN(parseInt(req.param('page')))) {
+  //      page = Math.abs(parseInt(req.param('page')));
+  //    }
+  //    else {
+  //      return res.json({err: 'The page parameter is an invalid string number'});
+  //    }
+  //  }
+  //
+  //  //console.log("Call Services")
+  //  if (req.param('len') !== undefined) {
+  //    if (!isNaN(parseInt(req.param('len')))) {
+  //      len = Math.abs(parseInt(req.param('len')));
+  //    }
+  //    else {
+  //      return res.json({err: 'The len parameter is an invalid string number'});
+  //    }
+  //  }
+  //  initialDate = req.param('initialDate');
+  //  finalDate = req.param('finalDate');
+  //
+  //  query = {};
+  //  queryPlace = {};
+  //
+  //  // console.log("Validation price", !isNaN(parseInt(req.param('price'))) )
+  //  // console.log("Validation price", req.param('price') )
+  //
+  //  if (req.param('price') && !isNaN(parseInt(req.param('price')))) {
+  //    query.price = {'>=': req.param('price')};
+  //    //console.log("Create price restriction")
+  //  }
+  //  query.limit = len
+  //  query.skip = page * len
+  //  query.isFull = false
+  //  queryPlace.zipcode = zc
+  //
+  //  // console.log("Query" ,queryPlace )
+  //  // console.log("Query" ,query )
+  //  Formation.find(query)
+  //    .populate('place', queryPlace)
+  //    .populate('formationCenter')
+  //    .exec(function placesFouded(err, placesFormations) {
+  //      // body...
+  //      formationsResponse = [];
+  //
+  //      placesFormations.forEach(function (iPlace, index) {
+  //        if (typeof iPlace.place != "undefined") {
+  //          iPlace.formationCenter.city = iPlace.place.city;
+  //          formationsResponse.push({
+  //
+  //            formation: iPlace
+  //          });
+  //        }
+  //      });
+  //
+  //      return res.json(formationsResponse);
+  //    });
+  //
+  //  /*Place.find({
+  //   zipcode: zc,
+  //   skip: page * len,
+  //   limit: len})
+  //   .populate('formations')
+  //   .populate('formationCenter')
+  //   .exec(function placesFouded(err, places) {
+  //   // body...
+  //
+  //   formationsResponse = [];
+  //
+  //   places.forEach(function (place, index) {
+  //   // body...
+  //
+  //   place.formations.forEach(function (actualFormation, index) {
+  //   // body...
+  //   formationsResponse.push({
+  //   formationCenterName: place.formationCenter.name,
+  //   formation: actualFormation
+  //   });
+  //   });
+  //   });
+  //
+  //   return res.json(formationsResponse);
+  //   });*/
+  //},
+  //
+  //countByZipcode: function (req, res, next) {
+  //
+  //  // console.log("Call Services")
+  //  if (req.param('zipcode')) {
+  //    zc = req.param('zipcode');
+  //  }
+  //
+  //  if (zc === undefined) {
+  //    return res.json({err: 'No zipcode provided'});
+  //  }
+  //  queryPlace = {}
+  //
+  //
+  //  if (zc == "") {
+  //
+  //    Formation.count().exec(function countFaq(error, found) {
+  //      if (error) {
+  //
+  //        return res.json({"res": error});
+  //      }
+  //
+  //      //console.log('There are ' + found + ' Faq');
+  //
+  //      return res.json({"res": "OK", "size": found})
+  //
+  //
+  //      // There are 1 users called 'Flynn'
+  //      // Don't forget to handle your errors
+  //    });
+  //  } else {
+  //    queryPlace.zipcode = zc
+  //
+  //    Formation.find().populate('place', queryPlace).exec(function countFaq(error, placesFormations) {
+  //      if (error) {
+  //        return res.json({"res": error});
+  //      }
+  //
+  //      //console.log('There are ' + found + ' Faq');
+  //      var counterFormation = 0
+  //      placesFormations.forEach(function (iPlace, index) {
+  //        if (typeof iPlace.place != "undefined") {
+  //          counterFormation++
+  //        }
+  //      });
+  //      return res.json({"res": "OK", "size": counterFormation});
+  //
+  //
+  //      // There are 1 users called 'Flynn'
+  //      // Don't forget to handle your errors
+  //    });
+  //  }
+  //},
+  //
+  //searchByCity: function (req, res, next) {
+  //  // body...
+  //
+  //  cityname = req.param('city');
+  //
+  //  // console.log("Call Services")
+  //  if (cityname === undefined) {
+  //    return res.json({err: 'No city provided'});
+  //  }
+  //
+  //
+  //  initialDate = req.param('initialDate');
+  //  finalDate = req.param('finalDate');
+  //
+  //  initialDate = new Date(initialDate);
+  //  finalDate = new Date(finalDate);
+  //
+  //  if (!_.isDate(initialDate) || !_.isDate(finalDate)) {
+  //    return res.json({err: 'Invalid date format for initialDate or finalDate.'});
+  //  }
+  //  var page = 0;
+  //  var len = 10;
+  //
+  //  if (req.param('page') !== undefined) {
+  //    if (!isNaN(parseInt(req.param('page')))) {
+  //      page = Math.abs(parseInt(req.param('page')));
+  //    }
+  //    else {
+  //      return res.json({err: 'The page parameter is an invalid string number'});
+  //    }
+  //  }
+  //
+  //  //console.log("Call Services")
+  //  if (req.param('len') !== undefined) {
+  //    if (!isNaN(parseInt(req.param('len')))) {
+  //      len = Math.abs(parseInt(req.param('len')));
+  //    }
+  //    else {
+  //      return res.json({err: 'The len parameter is an invalid string number'});
+  //    }
+  //  }
+  //  initialDate = req.param('initialDate');
+  //  finalDate = req.param('finalDate');
+  //
+  //  query = {};
+  //  queryPlace = {};
+  //
+  //  /// console.log("Validation price", !isNaN(parseInt(req.param('price'))) )
+  //  // console.log("Validation price", req.param('price') )
+  //
+  //  if (req.param('price') && !isNaN(parseInt(req.param('price')))) {
+  //    query.price = {'>=': req.param('price')};
+  //    //console.log("Create price restriction")
+  //  }
+  //  query.limit = len
+  //  query.skip = page * len
+  //  query.isFull = false
+  //  if (cityname != "")
+  //    queryPlace.city = {'contains': cityname}
+  //
+  //  // console.log("Query" ,queryPlace )
+  //  // console.log("Query" ,query )
+  //  Formation.find(query)
+  //    .populate('place', queryPlace)
+  //    .populate('formationCenter')
+  //    .exec(function placesFouded(err, placesFormations) {
+  //      // body...
+  //      formationsResponse = [];
+  //
+  //      placesFormations.forEach(function (iPlace, index) {
+  //        if (typeof iPlace.place != "undefined") {
+  //          iPlace.formationCenter.city = iPlace.place.city;
+  //          formationsResponse.push({
+  //            formation: iPlace
+  //          });
+  //        }
+  //      });
+  //
+  //      return res.json(formationsResponse);
+  //    });
+  //},
+  //
+  //countByCity: function (req, res, next) {
+  //  cityname = "";
+  //
+  //  // console.log("Call Services")
+  //  if (req.param('city')) {
+  //    cityname = req.param('city');
+  //  }
+  //  queryPlace = {}
+  //  if (cityname == "") {
+  //
+  //    Formation.count().exec(function countFaq(error, found) {
+  //      if (error) {
+  //
+  //        return res.json({"res": error});
+  //      }
+  //
+  //      //console.log('There are ' + found + ' Faq');
+  //
+  //      return res.json({"res": "OK", "size": found})
+  //
+  //
+  //      // There are 1 users called 'Flynn'
+  //      // Don't forget to handle your errors
+  //    });
+  //  } else {
+  //    queryPlace.city = {'contains': cityname}
+  //
+  //    Formation.find().populate('place', queryPlace).exec(function countFaq(error, placesFormations) {
+  //      if (error) {
+  //        return res.json({"res": error});
+  //      }
+  //
+  //      //console.log('There are ' + found + ' Faq');
+  //      var counterFormation = 0
+  //      placesFormations.forEach(function (iPlace, index) {
+  //        if (typeof iPlace.place != "undefined") {
+  //          counterFormation++
+  //        }
+  //      });
+  //      return res.json({"res": "OK", "size": counterFormation});
+  //
+  //
+  //      // There are 1 users called 'Flynn'
+  //      // Don't forget to handle your errors
+  //    });
+  //  }
+  //
+  //},
 
   bookFormation: function (req, res, next) {
     // body...
@@ -510,7 +523,7 @@ module.exports = {
 
     //Check the formation ID
     if (formationID === undefined) {
-      return res.json({err: 'You must provide an ID for a formation'});
+      return res.json({err: sails.__("ERROR_FORMATION_ID_REQUIED") });
     }
 
     //Get the customer data, an object with this estructure:
@@ -527,7 +540,7 @@ module.exports = {
 
     //Validate de customer data
     if (customerData === undefined || !CustomerService.isValidCustomerData(customerData)) {
-      return res.json({err: 'You must provide a valid customerData object.'});
+      return res.json({err: sails.__("ERROR_FORMATION_CUSTOMER_REQUIED")  });
     }
 
     //Search the formation.
@@ -543,11 +556,11 @@ module.exports = {
 
         //If the formation does'nt exist or is full send an error.
         if (formationFounded === undefined) {
-          return res.json({err: 'No formation match that id: ' + formationID.toString()});
+          return res.json({err:sails.__("ERROR_FORMATION_SEARCH_ID")  + formationID.toString()});
         }
 
         if (formationFounded.isFull == true) {
-          return res.json({err: 'The formation is full.'});
+          return res.json({err:sails.__("ERROR_FORMATION_FULL") });
         }
 
         //if there is a formation, verify if the customer exist or is a new one.
@@ -587,7 +600,7 @@ module.exports = {
                 }
 
                 if (customerCreated === undefined) {
-                  return res.json({err: 'An error has ocurred when creating the customer'});
+                  return res.json({err: sails.__("ERROR_FORMATION_CREATING_CUSTOMER") });
                 }
 
 
@@ -639,7 +652,7 @@ module.exports = {
                          //  formationFounded.save()
 
                          console.log("Update Formation")
-                         return res.json({ok: 'book proces complit.'});
+                         return res.json({ok:sails.__("SUCESSFUL_FORMATION_CREATING_CUSTOMER") });
                        })
                      })
                    })
@@ -671,10 +684,10 @@ module.exports = {
 
                   formationFounded.save();
 
-                  return res.json({ok: 'book proces complit.'});
+                  return res.json({ok: sails.__("SUCESSFUL_FORMATION_CREATING_CUSTOMER")});
                 }
                 else {
-                  return res.json({err: 'The customer is register in other formation'});
+                  return res.json({err: sails.__("ERROR_FORMATION_EXIST_CUSTOMER") });
                 }
               });
           }
@@ -692,7 +705,7 @@ module.exports = {
 
     // console.log("Call Services")
     if (cityname === undefined) {
-      return res.json({err: 'No city provided'});
+      return res.json({err: sails.__("ERROR_CITY_REQUIRED") });
     }
 
 
@@ -706,11 +719,11 @@ module.exports = {
       finalDate = new Date(finalDate);
 
     if (initialDate && !_.isDate(initialDate)) {
-      return res.json({err: 'Invalid date format for initialDate.'});
+      return res.json({err: sails.__("ERROR_INITIALDATE_INVALID") });
     }
 
     if (finalDate && !_.isDate(finalDate)) {
-      return res.json({err: 'Invalid date format for endDate.'});
+      return res.json({err: sails.__("ERROR_FINALDATE_INVALID")});
     }
     var page = 0;
     var len = 10;
@@ -720,7 +733,7 @@ module.exports = {
         page = Math.abs(parseInt(req.param('page')));
       }
       else {
-        return res.json({err: 'The page parameter is an invalid string number'});
+        return res.json({err:sails.__("ERROR_PAGE_INVALID") });
       }
     }
 
@@ -730,7 +743,7 @@ module.exports = {
         len = Math.abs(parseInt(req.param('len')));
       }
       else {
-        return res.json({err: 'The len parameter is an invalid string number'});
+        return res.json({err: sails.__("ERROR_LEN_INVALID")});
       }
     }
 
@@ -860,7 +873,7 @@ module.exports = {
 
     // console.log("Call Services")
     if (zipcodeData === undefined) {
-      return res.json({err: 'No zipcode provided'});
+      return res.json({err: sails.__("ERROR_ZIPCODE_REQUIRED")});
     }
 
 
@@ -874,11 +887,11 @@ module.exports = {
       finalDate = new Date(finalDate);
 
     if (initialDate && !_.isDate(initialDate)) {
-      return res.json({err: 'Invalid date format for initialDate.'});
+      return res.json({err: sails.__("ERROR_INITIALDATE_INVALID")});
     }
 
     if (finalDate && !_.isDate(finalDate)) {
-      return res.json({err: 'Invalid date format for endDate.'});
+      return res.json({err: sails.__("ERROR_FINALDATE_INVALID")});
     }
     var page = 0;
     var len = 10;
@@ -888,7 +901,7 @@ module.exports = {
         page = Math.abs(parseInt(req.param('page')));
       }
       else {
-        return res.json({err: 'The page parameter is an invalid string number'});
+        return res.json({err:sails.__("ERROR_PAGE_INVALID")});
       }
     }
 
@@ -898,7 +911,7 @@ module.exports = {
         len = Math.abs(parseInt(req.param('len')));
       }
       else {
-        return res.json({err: 'The len parameter is an invalid string number'});
+        return res.json({err: sails.__("ERROR_LEN_INVALID")});
       }
     }
 
@@ -1028,7 +1041,7 @@ module.exports = {
 
     // console.log("Call Services")
     if (cityname === undefined) {
-      return res.json({err: 'No city provided'});
+      return res.json({err: sails.__("ERROR_CITY_REQUIRED")});
     }
 
 
@@ -1048,12 +1061,12 @@ module.exports = {
 
     if (initialDate && !_.isDate(initialDate)) {
 
-      return res.json({err: 'Invalid date format for initialDate'});
+      return res.json({err: sails.__("ERROR_INITIALDATE_INVALID")});
 
     }
 
     if (finalDate && !_.isDate(finalDate)) {
-      return res.json({err: 'Invalid date format for finalDate.'});
+      return res.json({err:  sails.__("ERROR_FINALDATE_INVALID")});
     }
 
     var page = 0;
@@ -1064,7 +1077,7 @@ module.exports = {
         page = Math.abs(parseInt(req.param('page')));
       }
       else {
-        return res.json({err: 'The page parameter is an invalid string number'});
+        return res.json({err: sails.__("ERROR_PAGE_INVALID")});
       }
     }
 
@@ -1074,7 +1087,7 @@ module.exports = {
         len = Math.abs(parseInt(req.param('len')));
       }
       else {
-        return res.json({err: 'The len parameter is an invalid string number'});
+        return res.json({err: sails.__("ERROR_LEN_INVALID")});
       }
     }
 
@@ -1240,7 +1253,7 @@ module.exports = {
 
     // console.log("Call Services")
     if (zipcodeData === undefined) {
-      return res.json({err: 'No zipcode provided'});
+      return res.json({err: sails.__("ERROR_ZIPCODE_INVALID")});
     }
 
 
@@ -1260,12 +1273,12 @@ module.exports = {
 
     if (initialDate && !_.isDate(initialDate)) {
 
-      return res.json({err: 'Invalid date format for initialDate'});
+      return res.json({err: sails.__("ERROR_INITIALDATE_INVALID")});
 
     }
 
     if (finalDate && !_.isDate(finalDate)) {
-      return res.json({err: 'Invalid date format for finalDate.'});
+      return res.json({err: sails.__("ERROR_FINALDATE_INVALID")});
     }
     var page = 0;
     var len = 10;
@@ -1275,7 +1288,7 @@ module.exports = {
         page = Math.abs(parseInt(req.param('page')));
       }
       else {
-        return res.json({err: 'The page parameter is an invalid string number'});
+        return res.json({err: sails.__("ERROR_PAGE_INVALID")});
       }
     }
 
@@ -1285,7 +1298,7 @@ module.exports = {
         len = Math.abs(parseInt(req.param('len')));
       }
       else {
-        return res.json({err: 'The len parameter is an invalid string number'});
+        return res.json({err: sails.__("ERROR_LEN_INVALID")});
       }
     }
 
@@ -1536,60 +1549,60 @@ module.exports = {
      });*/
   },
 
-  searchcityMongo: function (req, res, next) {
-
-    //db.getCollection('formation').find({"dates":{"$elemMatch":{"date":{"$gte":new ISODate("2016-10-04"),"$lte":new ISODate("2017-05-03")}}}})
-    cityv = req.param("city")
-    var ObjectID = require('mongodb').ObjectID
-    Place.find({city: {contains: cityv}}).exec(function (err, resulFormation) {
-
-      arrayData = []
-      var promise;
-      promise = resulFormation.reduce(function (prev, iPlace) {
-        return prev.then(function () {
-          object = iPlace.id
-          arrayData.push(new ObjectID(iPlace.id));
-        });
-      }, Promise.resolve());
-
-      promise.then(function (array) {
-
-
-        parameters = {
-          place: {$in: arrayData},
-          price: {
-            $gte: 50
-          },
-          dates: {
-            $elemMatch: {
-              date: {
-                $gte: new Date("2016-10-04"),
-                $lte: new Date("2017-05-03")
-              }
-            }
-          }
-
-        }
-        Formation.native(function (err, collection) {
-          if (err) return res.serverError(err);
-          //console.log("---")
-          ////Transform all arrayData to new ObjectId [new ObjectID (arrayData[0])]
-          // {"place":{"$all": [new ObjectID(arrayData[0])] },"price":{"$gte":50},"dates":{"$elemMatch":{"date":{"$gte":new Date("2016-10-04"),"$lte":new Date("2017-05-03")}}}}
-
-          //console.log("******")
-          // parameters.place = {$all:[new ObjectID(arrayData[0])]}
-          collection.find(parameters).limit(page).skip(0).toArray(function (err, results) {
-            //console.log("sfdsdfsss " + results);
-            if (err) return res.serverError(err);
-            ////Dados los id buscar un place un el nombre "5797e539e1e9812814a35520"
-            return res.json(results)
-          });
-        });
-      });
-    });
-
-
-  },
+  //searchcityMongo: function (req, res, next) {
+  //
+  //  //db.getCollection('formation').find({"dates":{"$elemMatch":{"date":{"$gte":new ISODate("2016-10-04"),"$lte":new ISODate("2017-05-03")}}}})
+  //  cityv = req.param("city")
+  //  var ObjectID = require('mongodb').ObjectID
+  //  Place.find({city: {contains: cityv}}).exec(function (err, resulFormation) {
+  //
+  //    arrayData = []
+  //    var promise;
+  //    promise = resulFormation.reduce(function (prev, iPlace) {
+  //      return prev.then(function () {
+  //        object = iPlace.id
+  //        arrayData.push(new ObjectID(iPlace.id));
+  //      });
+  //    }, Promise.resolve());
+  //
+  //    promise.then(function (array) {
+  //
+  //
+  //      parameters = {
+  //        place: {$in: arrayData},
+  //        price: {
+  //          $gte: 50
+  //        },
+  //        dates: {
+  //          $elemMatch: {
+  //            date: {
+  //              $gte: new Date("2016-10-04"),
+  //              $lte: new Date("2017-05-03")
+  //            }
+  //          }
+  //        }
+  //
+  //      }
+  //      Formation.native(function (err, collection) {
+  //        if (err) return res.serverError(err);
+  //        //console.log("---")
+  //        ////Transform all arrayData to new ObjectId [new ObjectID (arrayData[0])]
+  //        // {"place":{"$all": [new ObjectID(arrayData[0])] },"price":{"$gte":50},"dates":{"$elemMatch":{"date":{"$gte":new Date("2016-10-04"),"$lte":new Date("2017-05-03")}}}}
+  //
+  //        //console.log("******")
+  //        // parameters.place = {$all:[new ObjectID(arrayData[0])]}
+  //        collection.find(parameters).limit(page).skip(0).toArray(function (err, results) {
+  //          //console.log("sfdsdfsss " + results);
+  //          if (err) return res.serverError(err);
+  //          ////Dados los id buscar un place un el nombre "5797e539e1e9812814a35520"
+  //          return res.json(results)
+  //        });
+  //      });
+  //    });
+  //  });
+  //
+  //
+  //},
 
   searchByDate: function (req, res, next) {
     // body...
@@ -1601,7 +1614,7 @@ module.exports = {
         page = Math.abs(parseInt(req.param('page')));
       }
       else {
-        return res.json({err: 'The page parameter is an invalid string number'});
+        return res.json({err: sails.__("ERROR_PAGE_INVALID")});
       }
     }
 
@@ -1610,7 +1623,7 @@ module.exports = {
         len = Math.abs(parseInt(req.param('len')));
       }
       else {
-        return res.json({err: 'The len parameter is an invalid string number'});
+        return res.json({err: sails.__("ERROR_LEN_INVALID")});
       }
     }
     initialDate = req.param('initialDate');
@@ -1627,14 +1640,14 @@ module.exports = {
 
 
     if (initialDate === 'undefined' || finalDate === 'undefined') {
-      return res.json({err: 'You must provide an initialDate and finalDate string parameters.'});
+      return res.json({err: sails.__("ERROR_FINAL_INITIAL_DATE_INVALID")});
     }
 
     initialDate = new Date(initialDate);
     finalDate = new Date(finalDate);
 
     if (!_.isDate(initialDate) || !_.isDate(finalDate)) {
-      return res.json({err: 'Invalid date format for initialDate or finalDate.'});
+      return res.json({err: sails.__("ERROR_FINAL_INITIAL_DATE") });
     }
 
     resultFormations = [];
@@ -1649,7 +1662,7 @@ module.exports = {
         }
 
         if (formationsFounded === undefined) {
-          return res.json({err: 'No formations founded'});
+          return res.json({err: sails.__("ERROR_FORMATION_NODATA")});
         }
 
         //console.log("Consulta fin " , query);
@@ -1678,17 +1691,17 @@ module.exports = {
     formationDate = req.param('formationDate');
 
     if (id === undefined || formationDate === undefined) {
-      return res.json({err: 'You must provide an id and formationDate.'});
+      return res.json({err: sails.__("ERROR_FORMATIONDATE_ID_NODATA")  });
     }
 
     if (!FormationService.isValidFormationDate(formationDate)) {
-      return res.json({err: 'The formationDate object format is invalid.'})
+      return res.json({err: sails.__("ERROR_FORMATIONDATE_NODATA")})
     }
 
     formationDate.date = new Date(formationDate.date);
 
     if (!_.isDate(formationDate.date)) {
-      return res.json({err: 'The provided date is invalid.'});
+      return res.json({err: sails.__("ERROR_DATE_NODATA") });
     }
 
     Formation.findOne(id)
@@ -1696,11 +1709,11 @@ module.exports = {
         // body...
 
         if (err) {
-          return res.json('An error has ocurred searching the formation.');
+          return res.json(sails.__("ERROR_SEARCH_FORMATION"));
         }
 
         if (formationFounded === undefined) {
-          return res.json('No formation match that ID: ' + id.toString());
+          return res.json(sails.__("ERROR_FORMATION_SEARCH_ID")  + id.toString());
         }
 
         formationFounded.dates.push(formationDate);
@@ -1731,7 +1744,7 @@ module.exports = {
 
   searchByFormationCenterWithPagination: function (req, res, next) {
     if (req.param('formationCenter') === undefined) {
-      return res.json({status: "error", info: "Formation Center Name is required."});
+      return res.json({status: "error", info:sails.__("ERROR_FORMATIONCENTER_REQUIRED") });
     }
 
     var page = 0;
@@ -1741,7 +1754,7 @@ module.exports = {
       if (!isNaN(parseInt(req.param('page')))) {
         page = Math.abs(parseInt(req.param('page')));
       } else {
-        return res.json({err: 'The page parameter is an invalid string number'});
+        return res.json({err:  sails.__("ERROR_PAGE_INVALID")});
       }
     }
 
@@ -1749,18 +1762,18 @@ module.exports = {
       if (!isNaN(parseInt(req.param('len')))) {
         len = Math.abs(parseInt(req.param('len')));
       } else {
-        return res.json({err: 'The len parameter is an invalid string number'});
+        return res.json({err: sails.__("ERROR_LEN_INVALID")});
       }
     }
 
     FormationCenter.findOne({name: req.param('formationCenter')})
       .exec(function (err, FC) {
         if (err) {
-          return res.json({status: "error", info: "An error has ocurred searching the Formation Center."});
+          return res.json({status: "error", info:sails.__("ERROR_SEARCH_FORMATIONCENTER")});
         }
 
         if (!FC) {
-          return res.json({status: "error", info: "No Formation Center with that name."});
+          return res.json({status: "error", info:sails.__("ERROR_NAME_FORMATIONCENTER")});
         }
 
         var query = {
@@ -1774,12 +1787,12 @@ module.exports = {
           .populate('place')
           .exec(function (err, Formations) {
             if (err) {
-              return res.json({status: "error", info: "Error searching Formations."});
+              return res.json({status: "error", info: sails.__("ERROR_FORMATION_SEARCHING") });
             }
 
             Formation.count({ formationCenter: FC.id }).exec(function (err, FormationsCounted) {
               if (err) {
-                return res.json({status: "error", info: "Error counting Formations."});
+                return res.json({status: "error", info:sails.__("ERROR_FORMATION_COUNTING")});
               }
 
               return res.json({status: "ok", data: Formations, maxSize: FormationsCounted});
@@ -1787,6 +1800,87 @@ module.exports = {
             });//Formation count.
           });//Formation find.
       });//Formation Center findOne.
+  },
+
+  updateByID: function (req, res, next) {
+
+    if (req.param('id') === undefined) {
+      return res.json({status: "error", info: "ID parameter is required."});
+    }
+
+    if (req.param('formationCenter') === undefined) {
+      return res.json({status: "error", info: "Formation Center Name is required."});
+    }
+
+    var formationValues = req.param('formationValues');
+
+    if (formationValues === undefined || typeof(formationValues) !== "object") {
+      return res.json({status: "error", info: "Formation object is required."});
+    }
+
+    FormationCenter.findOne({name: req.param('formationCenter')})
+      .exec(function (err, FC) {
+        if (err) {
+          return res.json({status: "error", info: "An error has ocurred searching the Formation Center."});
+        }
+
+        if (!FC) {
+          return res.json({status: "error", info: "No Formation Center with that name."});
+        }
+
+        Formation.findOne({
+          formationCenter: FC.id,
+          id: req.param('id')
+        }).exec(function (err, FormationFounded) {
+
+          if (err) {
+            return res.json({status: "error", info: "Error searching Formation."});
+          }
+
+          if (!FormationFounded) {
+            return res.json({status: "error", info: "No Formation founded."});
+          }
+
+          //Verify if ther is other formation with the same new values.
+          Formation.findOne({
+            maxPeople: formationValues.maxPeople,
+            price: formationValues.price,
+            place: formationValues.place
+          }).exec(function (err, rFormation) {
+
+            if (err) {
+              console.log("Error searching Formation. 2: ");
+              console.log(err);
+              return res.json({status: "error", info: "Error searching duplicated Formation."});
+            }
+
+            if (rFormation && rFormation.id !== FormationFounded.id) {
+              return res.json({status: "error", info: "Other formation exist with the sames values."});
+            }
+
+            console.log("********** Atributos ***********");
+            console.log(formationValues);
+
+            Formation.update({id: FormationFounded.id}, formationValues).exec(function (err, FormationUpdated) {
+
+              if (err) {
+                return res.json({status: "error", info: "Error updating Formation."});
+              }
+
+              if (!FormationUpdated) {
+                return res.json({status: "error", info: "No Formation updated."});
+              }
+
+              //FormationUpdated.animators.add()
+
+              console.log("****************** UPDATED FORMATION *********************");
+              console.log(FormationUpdated);
+
+              return res.json({status: "ok", data: FormationUpdated, info: "Formation updated"});
+            });
+          });
+        });
+      });
   }
 };
 

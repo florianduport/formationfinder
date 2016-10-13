@@ -17,7 +17,7 @@ module.exports = {
   getReadableDate : function (dateParmt) {
     weekDay = ["Sunday", "Monday", "Tuesday", "Wensday", "Thuesday", "Fryday", "Saturday"]
     value = new Date(dateParmt);
-    resultDate = weekDay[value.getDay()] + ": " + value.getDate() + "-" + value.getMonth() + "-" + value.getFullYear();
+    resultDate = weekDay[value.getDay()] + ": " + value.getDate() + "-" + (value.getMonth() + 1) + "-" + value.getFullYear();
 
     return resultDate
 

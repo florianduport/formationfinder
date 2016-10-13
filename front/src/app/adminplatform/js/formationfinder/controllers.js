@@ -114,7 +114,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             };
             $scope.searchFormationCenters();
 
-            $scope.deleteFormationCenter = function (index) {
+            $scope.deleteFormationCenter = function (formationCenter) {
 
                 var confirmation = confirm("You are going to delete all Formation Center Objects. Continue?");
 
@@ -125,7 +125,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     $scope.currentPage = 1;
 
                     $http.post($rootScope.urlBase + "/formationCenter/delete", {
-                            id: $scope.formationCenters[index].id
+                            id: formationCenter.id
                         })
                         .success(function (result) {
                             if (result.status === "ok") {
@@ -147,9 +147,13 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 $location.path('/formationcenter/create');
             };
 
-            $scope.editFormationCenter = function (index) {
-                $location.path('/formationcenter/update/' + $scope.formationCenters[index].id);
-            }
+            $scope.editFormationCenter = function (formationCenter) {
+                $location.path('/formationcenter/update/' + formationCenter.id);
+            };
+
+            $scope.clearCriteria = function () {
+                $scope.criteria = "";
+            };
 
         }])
     .controller("CreateFormationCenterController", ["$scope", "$location", "$http", "$rootScope",

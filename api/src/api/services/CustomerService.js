@@ -195,8 +195,8 @@ module.exports = {
           ///Set systemurladdress in Configuration collection
 
           ///INTERNACIONALIZATION
-          var mailHtmlBody = "<b><h4><a hrf=\""+ sails.config.globals.configsystem.systemurladdress+"\">Formationfinder</a> notify :</h4></b></br>"
-          mailHtmlBody +=  "<b><h3> Formation in address " + customerData.address + " almost started at " + CustomerService.getReadableDate( initDate ) + "</h3></b></br>"
+          var mailHtmlBody = "<b><h4><a hrf=\""+ sails.config.globals.configsystem.systemurladdress+"\">Formationfinder</a> notify :</h4></b><br />"
+          mailHtmlBody +=  "<b><h3> Formation in address " + customerData.address + " almost started at " + CustomerService.getReadableDate( initDate ) + "</h3></b><br />"
           mailHtmlBody += "<b>Formation Center : " + resultObject.formationCenter.name + "</b><br />"
           mailHtmlBody += "<b>Formation Center (phone number): " + resultObject.formationCenter.phoneNumber + "</b><br />"
           mailHtmlBody += "<b>Formation Center (email): " + resultObject.formationCenter.email + "</b><br />"
@@ -219,10 +219,16 @@ module.exports = {
             var emailstatus = 5;
            // console.log("Mail send answer ", result.response)
             if (result.response != "OK") {
-
+              Customer.update({id: customerData.id }, {emailsend:(resultObject.emailsend+1)}).exec(function (err, resultObject){
+                console.log("Update Customer",resultObject )
+              })
              console.log("Not sended customer email registered")
             }
             else{
+
+              Customer.update({id: customerData.id }, {emailsend:emailstatus}).exec(function (err, resultObject){
+                console.log("Update Customer",resultObject )
+              })
               console.log("Sended customer email registered")
             }
 
@@ -282,10 +288,10 @@ module.exports = {
             ///Set systemurladdress in Configuration collection
 
             ///INTERNACIONALIZATION
-            var mailHtmlBody = "<b><h4><a hrf=\""+ sails.config.globals.configsystem.systemurladdress+"\">Formationfinder</a> notify :</h4></b></br>"
-            mailHtmlBody +=  "<b><h3>"+  sails.__('DEAR') +"  " + resultObject.name +  "</h3></b></br>"
-            mailHtmlBody +=  "<b><h3>" + sails.__('MAIL_CUSTOMER_REGISTERED_HEAD') + "</h3></b></br>"
-            mailHtmlBody +=  "<b><h3>" + sails.__('IN_ADRESS') + resultPlace.address +  "</h3></b></br>"
+            var mailHtmlBody = "<b><h4><a hrf=\""+ sails.config.globals.configsystem.systemurladdress+"\">Formationfinder</a> notify :</h4></b><br />"
+            mailHtmlBody +=  "<b><h3>"+  sails.__('DEAR') +"  " + resultObject.name +  "</h3></b><br />"
+            mailHtmlBody +=  "<b><h3>" + sails.__('MAIL_CUSTOMER_REGISTERED_HEAD') + "</h3></b><br />"
+            mailHtmlBody +=  "<b><h3>" + sails.__('IN_ADRESS') + resultPlace.address +  "</h3></b><br />"
             mailHtmlBody += "<b>Formation Center : " + resultObject.formationCenter.name + "</b><br />"
             mailHtmlBody += "<b>Formation Center (phone number): " + resultObject.formationCenter.phoneNumber + "</b><br />"
             mailHtmlBody += "<b>Formation Center (email): " + resultObject.formationCenter.email + "</b><br />"

@@ -42,7 +42,10 @@ module.exports = {
   	date: {
   		type: 'date'
   	},
+    timestamp: {
+      type: "integer",
 
+    },
   	amount: {
   		type: 'float'
   	}

@@ -57,29 +57,42 @@
                             <form name="advancedSearchPlace" class="form-horizontal" role="form">
 
 
-                                <div class=" form-group pull-left row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <div class=" form-vertical pull-left row col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                     <label class="text-info"><strong>Date: </strong></label>
                                     <div class=" input-group date ident-date">
                                         <span class="input-group-addon"><span
                                                 class="text-info">Init  date:</span></span>
                                         <input tooltip-placement="top" tooltip-trigger="'none'"
-                                               uib-tooltip= "{{'INIT_DATE_ERROR' | translate }}" tooltip-class="customClass"
+                                               uib-tooltip="{{'INIT_DATE_ERROR' | translate }}"
+                                               tooltip-class="customClass"
                                                tooltip-is-open="advancedSearchPlace.initDate.$dirty && advancedSearchPlace.initDate.$invalid"
                                                class="form-control md-datepicker-is-showing"
                                                uib-datepicker-popup="{{format}}" is-open="popup1.opened" name="initDate"
                                                ng-pattern="dateRegExp"
                                                datepicker-options="dateOptionsSearch"
                                                placeholder="" type="text" ng-model="search.initialDate">
+
                                     <span class="input-group-addon"><span id="datesearchInit" class="fa fa-calendar "
                                                                           ng-click="open1()"></span></span>
-
                                     </div>
-                                    <!--<span   class="error-message text-danger" ng-show="myform.initDate.$dirty && myform.initDate.$invalid"><p style="text-decoration-color:#f1a417;background: #afd9ee">Init date field should be date</p></span>-->
+                                    <div class=" input-group date ident-date">
+                                        <span class="input-group-addon"><span
+                                                class="text-info">Hour Init:</span></span>
+                                        <div uib-timepicker ng-model="timeInit" hour-step="hstep" minute-step="mstep"
+                                             second-step="sstep" show-seconds="true" show-meridian="false"></div>
 
+
+                                    <span class="input-group-addon"><span class="fa fa-clock-o "
+                                    ></span></span>
+                                    </div>
+                                </div>
+                                <!--<span   class="error-message text-danger" ng-show="myform.initDate.$dirty && myform.initDate.$invalid"><p style="text-decoration-color:#f1a417;background: #afd9ee">Init date field should be date</p></span>-->
+                                <div class=" form-vertical pull-left row col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                     <div class=" input-group date ident-date">
                                         <span class="input-group-addon"><span class="text-info">End date:</span></span>
                                         <input tooltip-placement="bottom" tooltip-trigger="'none'"
-                                               uib-tooltip="{{'END_DATE_ERROR' | translate }}" tooltip-class="customClass"
+                                               uib-tooltip="{{'END_DATE_ERROR' | translate }}"
+                                               tooltip-class="customClass"
                                                tooltip-is-open="advancedSearchPlace.endDate.$dirty && advancedSearchPlace.endDate.$invalid"
                                                class="form-control" uib-datepicker-popup="{{format}}" name="endDate"
                                                ng-pattern="dateRegExp" is-open="popup2.opened"
@@ -88,9 +101,19 @@
                                     <span class="input-group-addon"><span id="datesearchEnd" class="fa fa-calendar"
                                                                           ng-click="open2()"></span></span>
 
+
                                     </div>
                                     <!--<span   class="error-message text-danger" ng-show="myform.endDate.$dirty && myform.endDate.$invalid"><p style="text-decoration-color:#f1a417;background: #afd9ee">End date field should be date</p></span>-->
+                                    <div class=" input-group date ident-date">
+                                        <span class="input-group-addon"><span
+                                                class="text-info">Hour End:</span></span>
+                                        <div uib-timepicker ng-model="timeEnd" hour-step="hstep" minute-step="mstep"
+                                             second-step="sstep" show-seconds="true" show-meridian="false"></div>
 
+
+                                    <span class="input-group-addon"><span class="fa fa-clock-o "
+                                    ></span></span>
+                                    </div>
                                 </div>
 
                             </form>
@@ -132,7 +155,7 @@
                 <tbody>
                 <tr ng-repeat="iAlert in Alerts | filter:criteriaList ">
                     <td>{{getReadableType(iAlert.type)}}</td>
-                    <td>{{ getReadableDate(iAlert.date) }}</td>
+                    <td style="font-size: 12px; text-emphasis: filled">{{ getReadableDate(iAlert.timestamp) }}</td>
                     <td>{{iAlert.text}}</td>
                 </tr>
                 </tbody>

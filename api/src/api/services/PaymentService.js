@@ -85,7 +85,8 @@ module.exports = {
        username: appuser,
        password: apppassphrase,
        production: false,
-       version: 'v2.01'
+       version: 'v2.01',
+       timeout: 1200 * 1000
      })
 
 
@@ -396,35 +397,35 @@ module.exports = {
     }
 
 
-    if ( cardValues == "undefined"){
+    if (typeof  cardValues == "undefined"){
       callback({
         response: "ERROR",
         message: "No exist cardValues parameter"
       }, null )
       return;
     }
-    if (typeof cardValueEx.CardNumber == "undefined") {
+    if (typeof cardValues.CardNumber == "undefined") {
       callback({response: "ERROR",
         message: "User card parameter card number undefined"}, null)
       return;
     }
-    else if (typeof cardValueEx.CardExpirationDate == "undefined") {
+    else if (typeof cardValues.CardExpirationDate == "undefined") {
       callback({response: "ERROR",
         message: "User card parameter card expiration date undefined"}, null)
       return;
     }
-    else if (typeof cardValueEx.CardCvx == "undefined") {
+    else if (typeof cardValues.CardCvx == "undefined") {
       callback( {response: "ERROR",
         message: "User card parameter cardcvx undefined"}, null)
       return;
     }
-    else if (!_.isDate(cardValueEx.CardExpirationDate)) {
+    else if (!_.isDate( new Date (cardValues.CardExpirationDate))) {
       callback( {response: "ERROR",
-        message: "User card parameter cardcvx undefined"}, null)
+        message: "User card expiration date it's not a date"}, null)
       return;
     }
     moment = require('moment');
-    expirationDate = new Date(cardValueEx.CardExpirationDate)
+    expirationDate = new Date(cardValues.CardExpirationDate)
     console.log("GET DATE IN FORMAT ",expirationDate, moment(expirationDate).format('MMYY') )
 
 
@@ -441,9 +442,9 @@ module.exports = {
           mango.card.create({
             Tag: "custom meta",
         UserId: userid,
-        CardNumber: cardValueEx.CardNumber,
-        CardExpirationDate: moment(expirationDate).format('MMYY'),
-        CardCvx: cardValueEx.CardCvx,
+        CardNumber: cardValues.CardNumber,
+        CardExpirationDate:  cardValues.CardExpirationDate,
+        CardCvx: cardValues.CardCvx,
       }, function (err, card, res) {
             //console.log("RESULT", err)
             //console.log("RESULT", res)

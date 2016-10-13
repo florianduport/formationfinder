@@ -25,12 +25,13 @@ module.exports = {
       if (!text || text == "")
         callback({response: "ERROR", message: "Not defined text parameter"}, null)
 
-
+      currentTime = new Date()
       objectToUpdate = {
         text: text,
         type: typeIsFull,
         formationCenter: resultObject.id,
-        date: new Date()
+        date: currentTime,
+        timestamp :currentTime.getTime()
       }
 
       Alert.create(objectToUpdate).exec(function (err, resultUpdate) {
@@ -78,12 +79,13 @@ module.exports = {
       if (!text || text == "")
         callback({response: "ERROR", message: "Not defined text parameter"}, null)
 
-
+      currentTime = new Date()
       objectToUpdate = {
         text: text,
         type: typeIsFull,
         formationCenter: resultObject.id,
-        date: new Date()
+        date: currentTime,
+        timestamp:currentTime.getTime()
       }
 
       Alert.create(objectToUpdate).exec(function (err, resultUpdate) {

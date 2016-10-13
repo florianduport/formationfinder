@@ -24,6 +24,10 @@ module.exports = {
       type: "date",
       required: true
     },
+    timestamp: {
+      type: "integer",
+      required: true
+    },
 
     formationCenter:{
       model: 'formationCenter'
@@ -40,6 +44,12 @@ module.exports = {
 
      return isValid
 
+  },
+
+  beforeCreate: function (values, cb) {
+    values.date.setUTCMilliseconds(0)
+    values.timestamp =  values.date.getTime()
+    cb()
   }
 };
 

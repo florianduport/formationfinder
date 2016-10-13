@@ -14,10 +14,12 @@ module.exports =
     typeOptionArray = ['New_Costumer', 'Formation_Full', 'Place_Unable']
     var faqArray = []
     for ( var iValue = 1 ; iValue <  registerSize; iValue++) {
+      seedDate = faker.date.future()
       faqArray.push( {
         text: faker.lorem.sentence(),
         type: typeOptionArray[faker.random.number(typeOptionArray.length)],
-        date: faker.date.future()
+        date: seedDate,
+        timestamp : seedDate.getTime()
       })
     }
     done(null, faqArray);

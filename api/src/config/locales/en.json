@@ -11,7 +11,24 @@
   "UNDEFINED_CONFIG_PARAMETER":"Config parameter undefined",
 
 
-  "ERROR_FORMATION_NODATA": "No exist data about formation."
+  "ERROR_FORMATION_NODATA": "No exist data about formation.",
+
+///-----------------------------------------------------------------
+
+  "ERROR_FINAL_INITIAL_DATE_INVALID":"You must provide an initialDate and finalDate string parameters.",
+  "ERROR_FINAL_INITIAL_DATE":"Invalid date format for initialDate or finalDate.",
+  "ERROR_FORMATIONDATE_ID_NODATA":"You must provide an id and formationDate.",
+  "ERROR_FORMATIONDATE_NODATA":"The formationDate object format is invalid.",
+  "ERROR_DATE_NODATA":"The provided date is invalid.",
+  "ERROR_SEARCH_FORMATION":"An error has ocurred searching the formation.",
+  "ERROR_FORMATIONCENTER_REQUIRED":"Formation Center Name is required.",
+  "ERROR_SEARCH_FORMATIONCENTER":"An error has ocurred searching the Formation Center.",
+  "ERROR_NAME_FORMATIONCENTER":"No Formation Center with that name.",
+  "ERROR_FORMATION_COUNTING":"Error counting Formations.",
+  "ERROR_FORMATION_NAME_REQUIRED":"Not defined Formation´s name",
+  "ERROR_NOT_RESULT":"Not result about query"
+
+
 
 
 }

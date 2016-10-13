@@ -2688,7 +2688,15 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
 
                 if (typeof selectedItem != undefined) {
                     cardPayment = false
+                    vm.customerData.paid = false
                     if (selectedItem.status == "OK") {
+
+                        ///Update pyment data result to Customer
+                        vm.customerData.paid = true
+                        vm.customerData.walleid = selectedItem.result.walleid
+                        vm.customerData.userid = selectedItem.result.userid
+                        vm.customerData.carid = selectedItem.result.carid
+
                         vm.sucessfulPay = true;
                         vm.showPaymentMessages({type: "success", info: "Book process complit."});
                         cardPayment = true
@@ -2989,7 +2997,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
 
            console.log("Date ", dateExpiration)
            console.log("Formation id", $scope.customerData.idformation )
-            $scope.creditCardData.CardExpirationDate = dateExpiration.getMonth() + "" +dateExpiration.getYear()
+           // $scope.creditCardData.CardExpirationDate = dateExpiration
             console.log("Credit Card Data ", $scope.creditCardData)
             config = {
                 userdata: $scope.customerData,

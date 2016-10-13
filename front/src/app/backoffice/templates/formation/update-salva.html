@@ -1,22 +1,19 @@
-<div class="container formationContainer">
-    <form class="" name="createForm" id="createForm">
+<div class="container well UpdateFormContainer">
+    <form class="" name="updateForm" id="updateForm">
         <div class="row">
             <div class="col">
-                <h2 class="text-center" style="font-family: Montserrat, sans-serif; font-size: 40px">{{'CREATE_FORMATION' | translate}}</h2>
+                <h2 class="text-center">{{'UPDATE_FORMATION_CENTER' | translate}}</h2>
             </div>
         </div>
-
-        <br>
-
         <div class="row">
-            <div class="well col col-md-4">
+            <div class="col col-md-5">
                 <label>{{'SELECT_PLACE' | translate}}</label>
                 <div class="input-group" data-toggle="tooltip" title="{{'SELECT_PLACE' | translate}}">
                     <span class="input-group-addon"><span class="glyphicon glyphicon-map-marker"></span></span>
                     <select ng-model="selectedPlace"
-                            ng-options="place as place.name for place in places track by place.id"
-                            class="form-control"
-                            required>
+                            ng-options="place.name for place in places"
+                            ng-value="formation.place.name"
+                            class="form-control">
                     </select>
                 </div>
 
@@ -29,12 +26,10 @@
                                maxlength="3"
                                name="price"
                                ng-model="formation.price"
-                               ng-pattern="numExpReg"
-                               required>
+                               ng-pattern="numExpReg">
                     </div>
-                    <span style="color:#cc0000" ng-show="createForm.price.$dirty && createForm.price.$invalid">
-                        <span ng-show="createForm.price.$error.required">{{'REQUIRED_FIELD' | translate}}.</span>
-                        <span ng-show="createForm.price.$error.pattern">{{'ONLY_NUMBER' | translate}}.</span>
+                    <span style="color:#cc0000" ng-show="updateForm.price.$dirty && updateForm.price.$invalid">
+                        <span ng-show="updateForm.price.$error.pattern">{{'ONLY_NUMBER' | translate}}.</span>
                     </span>
                 </div>
 
@@ -46,13 +41,11 @@
                                maxlength="3"
                                name="max_people"
                                ng-model="formation.maxPeople"
-                               ng-pattern="numExpReg"
-                               required>
+                               ng-pattern="numExpReg">
                     </div>
                     <span style="color:#cc0000"
-                          ng-show="createForm.max_people.$dirty && createForm.max_people.$invalid">
-                        <span ng-show="createForm.max_people.$error.required">{{'REQUIRED_FIELD' | translate}}.</span>
-                        <span ng-show="createForm.max_people.$error.pattern">{{'ONLY_NUMBER' | translate}}.</span>
+                          ng-show="updateForm.max_people.$dirty && updateForm.max_people.$invalid">
+                        <span ng-show="updateForm.max_people.$error.pattern">{{'ONLY_NUMBER' | translate}}.</span>
                     </span>
                 </div>
 
@@ -60,10 +53,9 @@
                 <div class="input-group" data-toggle="tooltip" title="{{'SELECT_PSYCHOLOGIST' | translate}}">
                     <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
                     <select ng-model="selectedPSY"
-                            ng-options="psy as psy.name for psy in animatorsPSY track by psy.id"
+                            ng-options="psy.name for psy in animatorsPSY"
                             class="form-control"
-                            placeholder="Psychologist"
-                            required>
+                            placeholder="Psychologist">
                     </select>
                 </div>
 
@@ -71,10 +63,9 @@
                 <div class="input-group" data-toggle="tooltip" title="{{'SELECT_BAFM' | translate}}">
                     <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
                     <select ng-model="selectedBAFM"
-                            ng-options="BAFM as BAFM.name for BAFM in animatorsBAFM track by BAFM.id"
+                            ng-options="BAFM.name for BAFM in animatorsBAFM"
                             class="form-control"
-                            placeholder="BAFM/BAFCRI"
-                            required>
+                            placeholder="BAFM/BAFCRI">
                     </select>
                 </div>
 
@@ -85,24 +76,11 @@
                                ng-model="formation.isConfirmed"> {{'CONFIRMED' | translate}}
                     </label>
                 </div>
-
-                <br>
-
-                <button class="btn btn-primary btn-block"
-                        type="submit"
-                        ng-disabled="createForm.$invalid"
-                        ng-click="createFormation()">{{'CREATE' | translate}}
-                </button>
-                <button class="btn btn-info btn-block"
-                        type="button"
-                        ng-click="gotoManage()">{{'GO_BACK' | translate}}
-                </button>
-
             </div>
 
-            <div class="well col col-md-7 col-md-offset-1">
+            <div class="col col-md-7">
                 <fieldset>
-                    <legend>{{'INSERT_DATES' | translate}}</legend>
+                    <legend>{{'UPDATE_DATES' | translate}}</legend>
                     <div class="form-group">
                         <div class="input-group">
                             <input name="DateInput" id="DateInput"
@@ -121,7 +99,7 @@
                             </span>
                         </div>
                         <span style="color:#cc0000"
-                              ng-show="createForm.DateInput.$dirty && createForm.DateInput.$invalid || dateOutOfRange">
+                              ng-show="updateForm.DateInput.$dirty && updateForm.DateInput.$invalid || dateOutOfRange">
                             <span ng-show="true">{{'INSERT_VALID_DATE' | translate}}</span>
                         </span>
                     </div>
@@ -129,7 +107,7 @@
                     <div class="table-responsive">
                         <table class="table" id="timeTable">
                             <tbody>
-                            <tr class="success">
+                            <tr>
                                 <td>
                                     <label class="label label-info">{{'MORNING' | translate}}</label>
                                 </td>
@@ -137,12 +115,12 @@
                                     <strong>{{'START' | translate}}</strong>
                                     <select name="MorningStartH"
                                             ng-model="MorningStartH"
-                                            ng-change="validateTimeRangeParameters()"
+                                            ng-change="validateDateParameters()"
                                             ng-options="hour for hour in Hours">
                                     </select>:
                                     <select name="MorningStartM"
                                             ng-model="MorningStartM"
-                                            ng-change="validateTimeRangeParameters()"
+                                            ng-change="validateDateParameters()"
                                             ng-options="minute for minute in Minutes">
                                     </select>
                                     am
@@ -151,19 +129,19 @@
                                     <strong>{{'END' | translate}}</strong>
                                     <select name="MorningEndH"
                                             ng-model="MorningEndH"
-                                            ng-change="validateTimeRangeParameters()"
+                                            ng-change="validateDateParameters()"
                                             ng-options="hour for hour in Hours">
                                     </select>:
                                     <select name="MorningEndM"
                                             ng-model="MorningEndM"
-                                            ng-change="validateTimeRangeParameters()"
+                                            ng-change="validateDateParameters()"
                                             ng-options="minute for minute in Minutes">
                                     </select>
                                     am
                                 </td>
                             </tr>
 
-                            <tr class="success">
+                            <tr>
                                 <td>
                                     <label class="label label-info">{{'AFTERNOON' | translate}}</label>
                                 </td>
@@ -171,12 +149,12 @@
                                     <strong>{{'START' | translate}}</strong>
                                     <select name="AfternoonStartH"
                                             ng-model="AfternoonStartH"
-                                            ng-change="validateTimeRangeParameters()"
+                                            ng-change="validateDateParameters()"
                                             ng-options="hour for hour in Hours">
                                     </select>:
                                     <select name="AfternoonStartM"
                                             ng-model="AfternoonStartM"
-                                            ng-change="validateTimeRangeParameters()"
+                                            ng-change="validateDateParameters()"
                                             ng-options="minute for minute in Minutes">
                                     </select>
                                     pm
@@ -185,12 +163,12 @@
                                     <strong>{{'END' | translate}}</strong>
                                     <select name="AfternoonEndH"
                                             ng-model="AfternoonEndH"
-                                            ng-change="validateTimeRangeParameters()"
+                                            ng-change="validateDateParameters()"
                                             ng-options="hour for hour in Hours">
                                     </select>:
                                     <select name="AfternoonEndM"
                                             ng-model="AfternoonEndM"
-                                            ng-change="validateTimeRangeParameters()"
+                                            ng-change="validateDateParameters()"
                                             ng-options="minute for minute in Minutes">
                                     </select>
                                     pm
@@ -200,61 +178,36 @@
                         </table>
                     </div>
 
-                    <div style="color:#cc0000" ng-show="InvalidMorningTimeRange">
-                        <span ng-show="true">{{'INVALID_MORNING_TIME_RANGE' | translate}}</span>
-                    </div>
-
-                    <div style="color:#cc0000" ng-show="InvalidAfternoonTimeRange">
-                        <span ng-show="true">{{'INVALID_AFTERNOON_TIME_RANGE' | translate}}</span>
-                    </div>
+                    <label></label> <!-- I'am using this label as separator -->
 
                     <button class="btn btn-info btn-md btn-block"
                             type="button"
-                            ng-disabled="InvalidDateParameters || InvalidAfternoonTimeRange || InvalidMorningTimeRange"
-                            ng-click="insertDate()">{{'INSERT' | translate}}
+                            ng-disabled="InvalidDateParameters"
+                            ng-click="insertDate()">{{'UPDATE' | translate}}
                     </button>
                     <label></label>
                     <div ng-show="formation.dates.length > 0">
-                        <div class="panel panel-info">
-                            <div class="panel-heading">{{'DATES' | translate}}:</div>
-                            <!--<h4><strong>{{'DATES' | translate}}:</strong></h4>-->
-                            <div class="panel-body" style="max-height: 120px;overflow-y: scroll;">
-                                <!--<ul>-->
-                                    <!--<li ng-repeat="(key,fdate) in formation.dates">-->
-                                        <!--<div class="btn-group">-->
-                                            <!--<button class="btn btn-group btn-sm btn-warning">{{fdate.date | date:'fullDate'}}-->
-                                            <!--</button>-->
-                                            <!--<button class="btn btn-group btn-sm btn-danger" ng-click="deleteDate(key)">X-->
-                                            <!--</button>-->
-                                        <!--</div>-->
-                                    <!--</li>-->
-                                <!--</ul>-->
-                                <table class="table table-condensed">
-                                    <tbody>
-                                    <tr ng-repeat="(key,tempDate) in formation.dates">
-                                        <td>
-                                            <div class="btn-group">
-                                                <button type="button"
-                                                        class="btn btn-group btn-default">
-                                                    <label class="label label-info">{{tempDate.date | date}}</label>
-                                                    <span class="badge">am</span> {{tempDate.morning.hourStart+"-"+tempDate.morning.hourEnd}} /
-                                                    <span class="badge">pm</span>{{tempDate.afternoon.hourStart+"-"+tempDate.afternoon.hourEnd}}
-                                                </button>
-                                                <button type="button"
-                                                        class="btn btn-group btn-danger"
-                                                        ng-click="deleteDate(key)">
-                                                    X
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                        <h4><strong>{{'DATES' | translate}}:</strong></h4>
+                        <ul>
+                            <li ng-repeat="(key,fdate) in formation.dates">
+                                <div class="btn-group">
+                                    <button class="btn btn-group btn-warning">{{fdate.date | date}}</button>
+                                    <button class="btn btn-group btn-danger" ng-click="deleteDate(key)">X</button>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
                 </fieldset>
             </div>
+            <button class="btn btn-primary btn-block"
+                    type="submit"
+                    ng-disabled="createForm.$invalid"
+                    ng-click="createFormation()">{{'UPDATE' | translate}}
+            </button>
+            <button class="btn btn-info btn-block"
+                    type="button"
+                    ng-click="gotoManage()">{{'GO_BACK' | translate}}
+            </button>
         </div>
     </form>
 </div>

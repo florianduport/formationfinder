@@ -135,6 +135,13 @@ app.config(function($translateProvider) {
             ITEMS_PER_PAGE: "Items per page",
             INVALID_MORNING_TIME_RANGE: "Invalid morning time range",
             INVALID_AFTERNOON_TIME_RANGE: "Invalid afternoon time range",
+        ///--------------------------------------------------------------------
+
+            ERROR_END_DATE:"Sorry, End date isn´t correct",
+            ERROR_ALERT_SEARCH:"Sorry, search don´t have results",
+      ////----------------------------------------------------------------------------------
+            MESSAGE_DELETE_PLACE:"Are you sure delete these place.",
+            DELETE_PLACE_SUCESSFUL:"Place delete sucessful",
 
 
         })
@@ -267,6 +274,18 @@ app.config(function($translateProvider) {
             ITEMS_PER_PAGE: "Items per page",
             INVALID_MORNING_TIME_RANGE: "Invalid morning time range",
             INVALID_AFTERNOON_TIME_RANGE: "Invalid afternoon time range",
+            //----------------------------------------------
+            SEARCH_CREDENTIAL_IN_LIST: "Search credentials in the list",
+            ITEMS_PER_PAGE: "Items per page",
+            INVALID_MORNING_TIME_RANGE: "Invalid morning time range",
+            INVALID_AFTERNOON_TIME_RANGE: "Invalid afternoon time range",
+            //----------------------------------------------
+            SEARCH_CREDENTIAL_IN_LIST: "Search credentials in the list",
+            ITEMS_PER_PAGE: "Items per page",
+            INVALID_MORNING_TIME_RANGE: "Invalid morning time range",
+            INVALID_AFTERNOON_TIME_RANGE: "Invalid afternoon time range",
+
+
 
 
         })
@@ -398,6 +417,12 @@ app.config(function($translateProvider) {
         ITEMS_PER_PAGE: "Elementos por página",
         INVALID_MORNING_TIME_RANGE: "Rango de tiempo inválido en la mañana",
         INVALID_AFTERNOON_TIME_RANGE: "Rango de tiempo inválido en la tarde",
+        //----------------------------------------------
+        SEARCH_CREDENTIAL_IN_LIST: "Buscar credenciales en la lista",
+        ITEMS_PER_PAGE: "Elementos por página",
+        INVALID_MORNING_TIME_RANGE: "Rango de tiempo inválido en la mañana",
+        INVALID_AFTERNOON_TIME_RANGE: "Rango de tiempo inválido en la tarde",
+
 
 
 

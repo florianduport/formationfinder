@@ -122,20 +122,28 @@ describe('data seeding', function(){
           }
 
           ////Fin all formationcenter id
+          ////Fin all formationcenter id
           async.series({
-              one: function (callback) {
+            one: function (callback) {
 
-                FormationCenter.find({}).populate("formations").then(function(formationCenters) {
+              FormationCenter.find({}).populate("formations").then(function (formationCentersArray) {
+                flagSearch = false
+                formationCenters = []
+                formationCenters.push(formationCentersArray[0])
+                formationCenters.forEach(function (formationCenter, i) {
+                  //console.log("Formation size in formationcenter " , formationCenter)
+                  if (formationCenter.formations.length > 0) {
+                    console.log("!!!! Updated realized and exit !!!!!!", formationCenter.formations.length)
+                    //callback(null, placeFormationAsociation);
+                    flagSearch = true
+                    return;
+                  }
+                  placeFormationAsociation.formationcenter.push(formationCenter.id)
+                });
 
-                  formationCenters.forEach(function (formationCenter, i ){
-                    //console.log("Formation size in formationcenter " , formationCenter)
-                    if (formationCenter.formations.length > 0) {
-                      console.log("!!!! Updated realized and exit !!!!!!" ,formationCenter.formations.length)
-                      return;
-                    }
-                    placeFormationAsociation.formationcenter.push(formationCenter.id)
-                  });
-
+                if (flagSearch)
+                  callback(null, placeFormationAsociation);
+                else {
                   ///Asociate place
                   Place.find({}).exec(function (err, Places) {
                     if (err)
@@ -164,94 +172,92 @@ describe('data seeding', function(){
                       });
                     });
                   });
-                });
-                //Asociate formations
-
-
-
-              },
-              two: function (callback) {
-                ///Size formation center
-                if (placeFormationAsociation.formationcenter.length == 0 || placeFormationAsociation.formation.length == 0) {
-                  console.log("No information for update")
-                  callback(null, placeFormationAsociation);
                 }
-                else {
+              })
+              ;
+              //Asociate formations
 
-                  sizeElement =  Math.floor(placeFormationAsociation.formation.length / placeFormationAsociation.formationcenter.length)
 
-                  //console.log("Asigned formation by Formation Center ", sizeElement)
+            },
+            two: function (callback) {
+              ///Size formation center
+              if (placeFormationAsociation.formationcenter.length == 0 || placeFormationAsociation.formation.length == 0) {
+                console.log("No information for update")
+                callback(null, placeFormationAsociation);
+              }
+              else {
 
-                  sizeFormationCenter  = placeFormationAsociation.formationcenter.length
+                sizeElement = Math.floor(placeFormationAsociation.formation.length / placeFormationAsociation.formationcenter.length)
 
-                  sizeFormation = placeFormationAsociation.formation.length
+                //console.log("Asigned formation by Formation Center ", sizeElement)
 
-                  //console.log("Formation´s size ", placeFormationAsociation.formation.length)
-                  offset = 0;
-                  for ( var iElement = 0; iElement < sizeFormationCenter; iElement++) {
-                    idFormationCenter = placeFormationAsociation.formationcenter[iElement]
-                    //console.log("Update formation and place by formationcenter id")
-                    for ( var iAsigned = 0; iAsigned < sizeElement; iAsigned++) {
-                      idFormation = placeFormationAsociation.formation[offset]
-                      idPlace = placeFormationAsociation.place[offset]
-                      Formation.update({id: idFormation}, {place: idPlace, formationCenter:idFormationCenter}).exec(function (err, Formations) {
-                         console.log("Actualizando formacion con place y Formation Center ");
-                      })
+                sizeFormationCenter = placeFormationAsociation.formationcenter.length
 
-                      Place.update({id: idPlace}, {formations: idFormation, formationCenter:idFormationCenter}).exec(function (err, Places) {
-                        //console.log("Actualizando place  con formation y Formation Center ");
-                      })
-                      offset++;
-                    }
+                sizeFormation = placeFormationAsociation.formation.length
+
+                //console.log("Formation´s size ", placeFormationAsociation.formation.length)
+                offset = 0;
+                for (var iElement = 0; iElement < sizeFormationCenter; iElement++) {
+                  idFormationCenter = placeFormationAsociation.formationcenter[iElement]
+                  //console.log("Update formation and place by formationcenter id")
+                  for (var iAsigned = 0; iAsigned < sizeElement; iAsigned++) {
+                    idFormation = placeFormationAsociation.formation[offset]
+                    idPlace = placeFormationAsociation.place[offset]
+                    Formation.update({id: idFormation}, {
+                      place: idPlace,
+                      formationCenter: idFormationCenter
+                    }).exec(function (err, Formations) {
+                      // console.log("Actualizando formacion con place y Formation Center ");
+                    })
+
+                    Place.update({id: idPlace}, {
+                      formations: idFormation,
+                      formationCenter: idFormationCenter
+                    }).exec(function (err, Places) {
+                      //console.log("Actualizando place  con formation y Formation Center ");
+                    })
+                    offset++;
                   }
-                  callback(null, placeFormationAsociation);
                 }
+                callback(null, placeFormationAsociation);
+              }
 
-              },
-              three: function (callback) {
+            },
+            three: function (callback) {
 
-
+              if (placeFormationAsociation.formationcenter.length == 0 || placeFormationAsociation.formation.length == 0) {
+                console.log("No information for update Customer")
+                callback(null, placeFormationAsociation);
+              }
+              else {
                 formationData = placeFormationAsociation.formation[0]
                 formationCenter = placeFormationAsociation.formationcenter[0]
-                Customer.update({}, {formationCenter: formationCenter,  formation: formationData,
-                  emailsend: 0}).exec(function (err, Customers) {
+                Customer.update({}, {
+                  formationCenter: formationCenter, formation: formationData,
+                  emailsend: 0
+                }).exec(function (err, Customers) {
                   if (err)
                     console.log(err)
 
                   console.log("Three step update Costumer")
                   callback(null, placeFormationAsociation);
                 })
-              },
+              }
+            },
 
-              four: function (callback) {
+            four: function (callback) {
 
-                console.log("------ Process End -------")
-                Place.native(function (err, collection) {
-                  collection.ensureIndex({location: '2dsphere'}, function () {
+              console.log("------ Process End -------")
+              callback(null, placeFormationAsociation);
 
-                    // It's very important to trigger this callack method when you are finished
-                    // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
-                    console.log("Index to 2dsphere location atributes in Place colection")
-                    callback(null, placeFormationAsociation);
-                  });
-                });
+            },
+            five: function (callback) {
 
-
-
-              },
-              five: function(callback) {
-
-                Formation.native(function (err, collection) {
-                  collection.ensureIndex({place: 1}, function () {
-
-                    // It's very important to trigger this callack method when you are finished
-                    // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
-                    console.log("Index to 2dsphere location atributes in Place colection")
-
-
-                  });
-                });
-
+              if (placeFormationAsociation.formationcenter.length == 0 || placeFormationAsociation.formation.length == 0) {
+                console.log("No information for update")
+                callback(null, placeFormationAsociation);
+              }
+              else {
                 formationCenter = placeFormationAsociation.formationcenter[0]
                 if (typeof formationCenter != "undefined") {
                   Login.update({username: "root"}, {formationCenter: formationCenter}).exec(function (err, Formations) {
@@ -281,12 +287,12 @@ describe('data seeding', function(){
                 })
 
                 ///Seed all Animator to First Formation Center
-                Animator.update({},{formationCenter: formationCenter}).exec(function (err, Animators) {
-                  if(err){
+                Animator.update({}, {formationCenter: formationCenter}).exec(function (err, Animators) {
+                  if (err) {
                     console.log("Error Updating Animator.");
                   }
 
-                  ///console.log("************* Se actualizaron los animators: ", Animators);
+                  // console.log("************* Se actualizaron los animators: ", Animators);
                 });
 
                 ///Seed all Alert to First Formation Center
@@ -305,23 +311,39 @@ describe('data seeding', function(){
 
                   });
                 });
-
-
                 callback(null, placeFormationAsociation);
+              }
+            },
+            six: function (callback) {
+              //Use with INTERNET
+              if (placeFormationAsociation.formationcenter.length == 0 || placeFormationAsociation.formation.length == 0) {
+                console.log("No information for update")
+                callback(null, placeFormationAsociation);
+              }
+              else {
+                FormationCenter.find({}).exec(function (err, formationCenterArray) {
+                  if (err)
+                    console.log(err)
+                  formationCenterArray.forEach(function (iFormation, i) {
+                    PaymentService.makeWalletToFormationCenter(iFormation.name,
+                      function resultServices(err, result) {
+                        if (err) {
+                          console.log("ERROR", err)
+                        }
 
+                        console.log("Payment data  ", result)
+                      })
+                  });
+                  console.log("SIX")
+                  callback(null, placeFormationAsociation);
+                });
               }
             }
-            , function (err, results) {
-              // results is now equal to: {one: 1, two: 2}
-
-
-              if (err)
-                return next(err);
-              console.log("MAIL CONFIG" , emailconfig)
-              done();
-            });
-
-
+          }, function (err, results) {
+            // results is now equal to: {one: 1, two: 2}
+            if (err)
+              return next(err);
+          });
         });
 
       }

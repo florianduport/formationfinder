@@ -117,7 +117,8 @@
                                         <span class="input-group-addon"><span
                                                 class="text-info">Init  date:</span></span>
                                         <input tooltip-placement="top" tooltip-trigger="'none'"
-                                               uib-tooltip="{{'INIT_DATE_ERROR' | translate }}" tooltip-class="customClass"
+                                               uib-tooltip="{{'INIT_DATE_ERROR' | translate }}"
+                                               tooltip-class="customClass"
                                                tooltip-is-open="advancedSearchPlace.initDate.$dirty && advancedSearchPlace.initDate.$invalid"
                                                class="form-control md-datepicker-is-showing"
                                                uib-datepicker-popup="{{format}}" is-open="popup1.opened" name="initDate"
@@ -126,14 +127,27 @@
                                                placeholder="" type="text" ng-model="search.initialDate">
                                     <span class="input-group-addon"><span id="datesearchInit" class="fa fa-calendar "
                                                                           ng-click="open1()"></span></span>
-
                                     </div>
+                                        <div class=" input-group date ident-date">
+                                        <span class="input-group-addon"><span
+                                                class="text-info">Hour Init:</span></span>
+                                            <div uib-timepicker ng-model="timeInit" hour-step="hstep"
+                                                 minute-step="mstep"
+                                                 second-step="sstep" show-seconds="true" show-meridian="false"></div>
+
+
+                                    <span class="input-group-addon"><span class="fa fa-clock-o "
+                                    ></span></span>
+                                        </div>
+
+
                                     <!--<span   class="error-message text-danger" ng-show="myform.initDate.$dirty && myform.initDate.$invalid"><p style="text-decoration-color:#f1a417;background: #afd9ee">Init date field should be date</p></span>-->
 
                                     <div class=" input-group date ident-date">
                                         <span class="input-group-addon"><span class="text-info">End date:</span></span>
                                         <input tooltip-placement="bottom" tooltip-trigger="'none'"
-                                               uib-tooltip="{{'END_DATE_ERROR' | translate }}" tooltip-class="customClass"
+                                               uib-tooltip="{{'END_DATE_ERROR' | translate }}"
+                                               tooltip-class="customClass"
                                                tooltip-is-open="advancedSearchPlace.endDate.$dirty && advancedSearchPlace.endDate.$invalid"
                                                class="form-control" uib-datepicker-popup="{{format}}" name="endDate"
                                                ng-pattern="dateRegExp" is-open="popup2.opened"
@@ -144,7 +158,16 @@
 
                                     </div>
                                     <!--<span   class="error-message text-danger" ng-show="myform.endDate.$dirty && myform.endDate.$invalid"><p style="text-decoration-color:#f1a417;background: #afd9ee">End date field should be date</p></span>-->
+                                    <div class=" input-group date ident-date">
+                                        <span class="input-group-addon"><span
+                                                class="text-info">Hour End:</span></span>
+                                        <div uib-timepicker ng-model="timeEnd" hour-step="hstep" minute-step="mstep"
+                                             second-step="sstep" show-seconds="true" show-meridian="false"></div>
 
+
+                                    <span class="input-group-addon"><span class="fa fa-clock-o "
+                                    ></span></span>
+                                    </div>
                                 </div>
 
                             </form>
@@ -182,17 +205,17 @@
                     <th><strong>Date</strong></th>
                     <th><strong>Bill Number</strong></th>
                     <th><strong>Paid</strong></th>
-                    <th><strong>Actions</strong></th>
+                    <!--<th><strong>Actions</strong></th>-->
                 </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="iBill in Bills | filter:criteriaList ">
                     <td>{{iBill.amount}}</td>
-                    <td>{{ getReadableDate(iBill.date) }}</td>
+                    <td>{{ getReadableDate(iBill.timestamp) }}</td>
                     <td>{{iBill.billNumber}}</td>
                     <td>
                         <!--<div class=" input-group ">-->
-                            <!--<input type="checkbox" ng-checked="iBill.billState" ng-disabled="checkboxUnable">-->
+                        <!--<input type="checkbox" ng-checked="iBill.billState" ng-disabled="checkboxUnable">-->
 
                         <!--</div>-->
 
@@ -203,16 +226,16 @@
                         <span class="glyphicon glyphicon-remove"></span>
                     </span>
                     </td>
-                    <td>
-                        <a class="btn btn-primary" ng-disabled="iBill.billState" ng-click="makePayment(iBill)">Pay</a>
-                        <!--<a class="btn btn-danger" ng-click="deleteBill(iBill)">Delete</a>-->
-                    </td>
+                    <!--<td>-->
+                        <!--<a class="btn btn-primary" ng-disabled="iBill.billState" ng-click="makePayment(iBill)">Pay</a>-->
+                        <!--&lt;!&ndash;<a class="btn btn-danger" ng-click="deleteBill(iBill)">Delete</a>&ndash;&gt;-->
+                    <!--</td>-->
                 </tr>
                 </tbody>
             </table>
             <div align="right" style="color:#000066" ng-show="appAlert.totalItemsBill > 0">
 
-            <!--<ul uib-pagination boundary-links="true" items-per-page="appBill.itemPerPageBill"-->
+                <!--<ul uib-pagination boundary-links="true" items-per-page="appBill.itemPerPageBill"-->
                 <!--total-items="appBill.totalItemsBill"-->
                 <!--ng-click="getBillRecords()" ng-model="appBill.currentPageBill" class="pagination-sm"-->
                 <!--previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;">-->

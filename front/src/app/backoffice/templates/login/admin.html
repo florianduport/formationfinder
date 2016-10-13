@@ -7,9 +7,14 @@
             <h4>{{'SEARCH_CREDENTIAL_IN_LIST' | translate}}</h4>
             <div class="form-group">
                 <div class="col-sm-5">
-                    <input class="form-control"
-                           type="text"
-                           ng-model="criteria"/>
+                    <div class="input-group">
+                        <input class="form-control"
+                               type="text"
+                               ng-model="criteria"/>
+                        <span class="input-group-addon" ng-click="clearCriteria()">
+                            <span class="glyphicon glyphicon-erase"></span>
+                        </span>
+                    </div>
                 </div>
             </div>
         </form>
@@ -87,12 +92,12 @@
                     </span>
                 </td>
                 <td>
-                    <button type="button" class="btn btn-sm btn-primary" ng-click="editLogin(key)">
+                    <button type="button" class="btn btn-sm btn-primary" ng-click="editLogin(login)">
                         {{'EDIT' | translate}}
                     </button>
                     <span></span>
                     <span></span>
-                    <button type="button" class="btn btn-sm btn-danger" value="Delete" ng-click="deleteLogin(key)">
+                    <button type="button" class="btn btn-sm btn-danger" value="Delete" ng-click="deleteLogin(login)">
                         {{'DELETE' | translate}}
                     </button>
                 </td>

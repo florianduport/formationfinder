@@ -98,11 +98,34 @@ module.exports = {
     if ( typeof userValue == "undefine")
       return res.json({response:"ERROR", message:"Parameter userValue undefined"})
 
-    cardValue = req.param("cardata")
+    cardValue = req.param("creditCardData")
 
-    if ( typeof cardValue == "undefine")
-      return res.json({response:"ERROR", message:"Parameter cardValue undefined"})
+    if ( typeof cardValue == "undefined")
+      return res.json({response:"ERROR", message:"Parameter creditCardData undefined"})
 
+    ///Modified  expiration date
+    if ( typeof cardValue.CardExpirationDate == "undefined")
+      return res.json({response:"ERROR", message:"Parameter CardExpirationDate of creditCardData undefined"})
+
+
+    if ( !_.isDate(new Date (cardValue.CardExpirationDate)))
+      return res.json({response:"ERROR", message:"Parameter CardExpirationDate of creditCardData not it's a date"})
+
+
+    ///Validate formationcenter name
+    ///Modified  expiration date
+    if ( typeof userValue.birthDate == "undefined")
+      return res.json({response:"ERROR", message:"Parameter birthDate of userValue is undefined"})
+
+
+    if ( !_.isDate(new Date (userValue.birthDate )))
+      return res.json({response:"ERROR", message:"Parameter birthDate of userValue not it's a date"})
+
+    userValue.birthDate = moment(userValue.birthDate).unix() //.format('DDMMYY').u
+
+    ///Validate cardValue
+    moment = require('moment');
+    cardValue.CardExpirationDate =  moment(cardValue.CardExpirationDate).format('MMYY');
     ///Validate cardValue
 
     mount = req.param("price")
@@ -277,8 +300,29 @@ module.exports = {
     if ( typeof cardValue == "undefined")
       return res.json({response:"ERROR", message:"Parameter creditCardData undefined"})
 
-    ///Validate cardValue
+    ///Modified  expiration date
+    if ( typeof cardValue.CardExpirationDate == "undefined")
+      return res.json({response:"ERROR", message:"Parameter CardExpirationDate of creditCardData undefined"})
 
+
+    if ( !_.isDate(new Date (cardValue.CardExpirationDate)))
+      return res.json({response:"ERROR", message:"Parameter CardExpirationDate of creditCardData not it's a date"})
+
+
+    ///Validate formationcenter name
+    ///Modified  expiration date
+    if ( typeof userValue.birthDate == "undefined")
+      return res.json({response:"ERROR", message:"Parameter birthDate of userValue is undefined"})
+
+
+    if ( !_.isDate(new Date (userValue.birthDate )))
+      return res.json({response:"ERROR", message:"Parameter birthDate of userValue not it's a date"})
+
+    userValue.birthDate = moment(userValue.birthDate).unix() //.format('DDMMYY').u
+
+    ///Validate cardValue
+    moment = require('moment');
+    cardValue.CardExpirationDate =  moment(cardValue.CardExpirationDate).format('MMYY');
     mount = req.param("price")
 
     //if ( typeof mount == "undefined")
@@ -289,8 +333,6 @@ module.exports = {
     console.log("FORMATION IDENTIFIER ",req.param("formationidentifier") )
     if ( typeof formationcenter == "undefined")
       return res.json({response:"ERROR", message:"Parameter formationidentifier undefined"})
-
-    ///Validate formationcenter name
 
 
     currency = req.param("currency")
@@ -367,7 +409,7 @@ module.exports = {
               ///Register user card to mangopay
 
 
-              console.log("CALL FUNCTION")
+              console.log("CALL FUNCTION" , cardValue)
 
               PaymentService.createCard( cardValue, config,  result.user,  // var CustomerServices = require('../../api/services/CustomerService')
                 function resultServices ( err, resultCard ) {
@@ -434,6 +476,160 @@ module.exports = {
             });
         }
       });
+    })
+
+
+  },
+  /**
+   * `PayController.makepay()`
+   * User data
+   */
+  mangopaymentFormationCenterex: function (req, res, next) {
+
+    console.log("********************** Estoy en mangopaymentex **********************");
+
+    cardValue = req.param("creditCardData")
+
+    if ( typeof cardValue == "undefined")
+      return res.json({response:"ERROR", message:"Parameter creditCardData undefined"})
+
+    ///Modified  expiration date
+    if ( typeof cardValue.CardExpirationDate == "undefined")
+      return res.json({response:"ERROR", message:"Parameter CardExpirationDate of creditCardData undefined"})
+
+
+    if ( !_.isDate(new Date (cardValue.CardExpirationDate)))
+      return res.json({response:"ERROR", message:"Parameter CardExpirationDate of creditCardData not it's a date"})
+
+
+
+    ///Validate cardValue
+    moment = require('moment');
+    cardValue.CardExpirationDate =  moment(cardValue.CardExpirationDate).format('MMYY');
+    mount = req.param("price")
+
+    //if ( typeof mount == "undefined")
+    //  return res.json({response:"ERROR", message:"Parameter price undefined"})
+    //Validate price
+
+    formationcenter = req.param("formationidentifier")
+    console.log("FORMATION IDENTIFIER ",req.param("formationidentifier") )
+    if ( typeof formationcenter == "undefined")
+      return res.json({response:"ERROR", message:"Parameter formationidentifier undefined"})
+
+
+    currency = req.param("currency")
+
+    if ( typeof currency == "undefined")
+      currency = "EUR"
+     Configuration.findOne({mangouser:{"!":"undefined"},mangowallet:{"!":"undefined"}}).exec(function(err, configuration){
+
+    //Validate currency
+    ///Find FormationCenter Data and amout
+    console.log("FORMATION IDENTIFIER ",formationcenter )
+    FormationCenter.findOne({id:formationcenter}).exec( function (err, resultObject) {
+
+      if (err) {
+        return res.json({response:"ERROR", message:err.message})
+      }
+
+      if ( typeof  resultObject == "undefined") {
+        return res.json({response:"ERROR", message: sails.__("ERROR_FORMATION_NODATA")})
+      }
+
+      mount = resultObject.price
+      formationcenter  = resultObject.name
+
+      ///Find walletid and userid in Formationcenter register
+      console.log("REALICE PAY")
+      PaymentService.validateFormatinCenterInformation (formationcenter, function (err, result) {
+        //FormationCenter.findOne({name:formationcenter}).exec(function (err, formationCenterData){
+
+
+
+
+
+          ///Create natural user and wallet
+
+              if (err) {
+                console.log(err)
+                return res.json({response:"ERROR", message:err.message })
+              }
+
+
+
+              ///Register user card to mangopay
+
+
+              console.log("CALL FUNCTION" , cardValue)
+
+              PaymentService.createCard( cardValue, config,  resultObject.mangouser,  // var CustomerServices = require('../../api/services/CustomerService')
+                function resultServices ( err, resultCard ) {
+                  if (err) {
+                    console.log(err)
+                    return res.json({response:"ERROR", message:err })
+                  }
+                  //User card parameter card number undefined
+
+                  //console.log("=======" +  result.card)
+
+                  ///Remmeber money count is in cents 1100 centes
+                  testAmount = 12; //It's 120 euro
+                  debiteFundsEx =  {
+                    Currency: "EUR",
+                    Amount: mount
+                  }
+
+
+                  ///10% money for may platform
+
+                  ///Get data about money pay to our marketplace
+                  ourMarketPlacePrice = 0
+                  feesEx = {
+                    Currency: "EUR",
+                    Amount:  ourMarketPlacePrice
+                  }
+
+                  ///Payin to Mango
+                  console.log("PAY TO MANGO")
+                  PaymentService.makeBuyToMango( result.mangouser, result.mangouser, result.mangowallet  , resultCard.card ,debiteFundsEx, feesEx,  // var CustomerServices = require('../../api/services/CustomerService')
+                    function resultServices ( err, resultObject ) {
+                      if (err) {
+                        console.log(err)
+                        return res.json({response:"ERROR", message:err })
+                      }
+
+
+                      ///Transfer the user walletid to Formationcenter Wallet id.
+
+                      FormationCenter.findOne({name:formationcenter}).exec(function (err, formationCenterData) {
+                        if (err) {
+                          console.log("Paso algo grave", err)
+                          return res.json({response:"ERROR", message:err.message})
+                        }
+
+                        console.log("Formation Center", formationCenterData)
+                        PaymentService.transferWalletToWallet( formationCenterData.mangouser, formationCenterData.mangowallet ,configuration.mangouser, configuration.mangowallet, debiteFundsEx, feesEx,
+                          function resultServices ( err, resultData ) {
+                            if (err) {
+                              console.log("Paso algo", err)
+                              return res.json({response:"ERROR", message:err })
+                            }
+                            resultObject =  {walleid : formationCenterData.mangowallet , userid: formationCenterData.mangouser, carid:resultCard.card}
+                            return res.json({response:"OK",result:resultObject})
+
+
+                          });
+
+                      })
+
+                    });
+                })
+
+        })
+
+      });
+
     })
 
 

@@ -32,12 +32,13 @@ module.exports = {
 
       if (!type || type == "")
         return res.json({response:"ERROR", message:"Not defined type parameter"})
-
+      currentTime = new Date()
       objectToUpdate = {
         text:text,
         type:type,
         formationCenter:resultObject.id,
-        date:new Date()
+        date:currentTime,
+        timestamp:currentTime.getTime()
       }
 
 
@@ -81,12 +82,13 @@ module.exports = {
       if (!text || text == "")
         return res.json({response:"ERROR", message:"Not defined text parameter"})
 
-
+      currentTime = new Date()
       objectToUpdate = {
         text:text,
         type: typeIsFull,
         formationCenter:resultObject.id,
-        date:new Date()
+        date:currentTime,
+        timestamp:currentTime.getTime()
       }
 
       Alert.create(objectToUpdate).exec(function(err, resultUpdate){
@@ -126,12 +128,13 @@ module.exports = {
       if (!text || text == "")
         return res.json({response:"ERROR", message:"Not defined text parameter"})
 
-
+      currentTime = new Date()
       objectToUpdate = {
         text:text,
         type:typeIsFull,
         formationCenter:resultObject.id,
-        date:new Date()
+        date:currentTime,
+        timestamp:currentTime.getTime()
       }
 
       Alert.create(objectToUpdate).exec(function(err, resultUpdate){
@@ -382,13 +385,20 @@ module.exports = {
 
     if (initialDate && finalDate ) {
 
-      query.date= {">=": new Date(req.param('initialDate')),"<=":new Date(req.param('finalDate'))}
+      if (req.param('initialDate') == req.param('finalDate') ) {
+        dateNew =JSON.parse(req.param('initialDate'));
+        query.date=  new Date(dateNew)
+      }
+      else
+        query.date= { '>=': new Date(req.param('initialDate')),'<=':new Date(req.param('finalDate'))}
     }
     else if (initialDate) {
-      query.date= {">=": new Date(req.param('initialDate'))}
+      dateNew =req.param('initialDate');
+      query.date= {'>=': new Date(dateNew)}
     }
     else  if (finalDate) {
-      query.date= {"<=":new Date(req.param('finalDate'))}
+      dateNew =JSON.parse(req.param('finalDate'));
+      query.date= {'<=':new Date(dateNew)}
     }
 
 

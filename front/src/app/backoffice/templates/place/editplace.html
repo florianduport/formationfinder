@@ -154,10 +154,10 @@
                 <div class="panel-body">
                     <div style="height: 450px;">
                         <div id="">
-                            <ng-map zoom="8" center="48.864716, 2.349014"
-                                    on-click="vm.click()" style="height:100%;">
+                            <ng-map zoom="8" center="{{place.latitude}}, {{place.longitude}}"
+                                    on-click="click()" style="height:450px;">
                             <marker position="48.864716, 2.349014"  icon="img/icons/paris.png"></marker>
-                                <marker position="{{place.latitude}}, {{place.longitude}}"  title="Click to zoom"></marker>
+                                <marker position="{{place.latitude}},{{place.longitude}} "  title="Click to zoom"></marker>
                             <!--&lt;!&ndash;<div ng-repeat="iformationcenter in formationcenters">&ndash;&gt;-->
                             <!--<div ng-repeat="iplace in iformationcenter.places">-->
                             <!--<marker position="{{iplace.latitude}}, {{iplace.longitude}}"  title="Click to zoom"></marker>-->

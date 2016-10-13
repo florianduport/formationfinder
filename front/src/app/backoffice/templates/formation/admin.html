@@ -4,9 +4,14 @@
         <form>
             <h4>{{'SEARCH_FORMATIONS_IN_LIST' | translate}}</h4>
             <div class="form-group col-xs-5">
-                <input class="form-control"
-                       type="text"
-                       ng-model="criteria"/>
+                <div class="input-group">
+                    <input class="form-control"
+                           type="text"
+                           ng-model="criteria"/>
+                    <span class="input-group-addon" ng-click="clearCriteria()">
+                            <span class="glyphicon glyphicon-erase"></span>
+                    </span>
+                </div>
             </div>
         </form>
     </div>
@@ -84,14 +89,14 @@
                     </span>
                     </td>
                     <td>
-                        <!--<button type="button"-->
-                        <!--class="btn btn-sm btn-success"-->
-                        <!--ng-click="editFormation(key)">Edit-->
-                        <!--</button>-->
+                        <button type="button"
+                                class="btn btn-sm btn-primary"
+                                ng-click="editFormation(formation)">Edit
+                        </button>
                         <span></span>
                         <button type="button"
                                 class="btn btn-sm btn-danger"
-                                ng-click="deleteFormation(key)">{{'DELETE' | translate}}
+                                ng-click="deleteFormation(formation)">{{'DELETE' | translate}}
                         </button>
                     </td>
                 </tr>

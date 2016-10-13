@@ -17,8 +17,10 @@ module.exports =
     var faqArray = []
     for ( var iValue = 1 ; iValue <  registerSize; iValue++) {
       today = new Date ()
+      seedDate = new Date (today.setDate(today.getDate() - faker.random.number(30)))
       faqArray.push( {
-        date: new Date (today.setDate(today.getDate() - faker.random.number(30))) ,
+        date: seedDate ,
+        timestamp : seedDate.getTime(),
         amount: faker.commerce.price(50, 250),
         billNumber: faker.finance.account(),
         billState: faker.random.boolean(),

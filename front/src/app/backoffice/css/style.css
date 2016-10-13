@@ -5327,10 +5327,12 @@ span.customSelect.changed {
     /*padding: 40px;*/
 }
 
-.createFormContainer {
-    max-width: 800px;
+.formationContainer {
+    max-width: 900px;
     padding: 40px;
 }
+
+
 
 /** Animator **/
 
