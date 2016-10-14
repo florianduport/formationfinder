@@ -22,8 +22,14 @@ module.exports = {
     },
 
   	maxPeople: {
-  		type: 'integer'
+  		type: 'integer',
+      defaultsTo: 20
   	},
+
+    currentNumberOfPeople: {
+      type: 'integer',
+      defaultsTo: 0
+    },
 
   	price: {
   		type: 'float'
@@ -34,12 +40,12 @@ module.exports = {
     },
 
     isFull: {
-      type: 'boolean'
+      type: 'boolean',
+      defaultsTo: false
     },
 
   	place: {
-  		model: 'place',
-
+  		model: 'place'
   	},
 
   	animators: {

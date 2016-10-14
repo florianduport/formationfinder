@@ -911,6 +911,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 $location.path("/formation/update/" + iFormation.id);
             };
 
+
             $scope.detailsFormation = function (iFormation) {
                 $location.path("/formation/details/" + iFormation.id);
             };
@@ -2527,6 +2528,620 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.gotoManageAminator = function () {
                 $location.path("/animator/manage/");
+            };
+
+            $scope.showModalMessage = function (messageshow, objectData) {
+
+                $scope.items = objectData;
+                $scope.items.message = messageshow
+
+                var modalInstance = $uibModal.open({
+                    animation: $scope.animationsEnabled,
+                    templateUrl: 'myModalMessage.html',
+                    controller: 'ModalInstanceCtrl',
+                    size: "",
+                    resolve: {
+                        items: function () {
+                            return $scope.items;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+
+                }, function () {
+
+                });
+            };
+        }])
+    .controller("WaitingRoomManageController", ["$scope", "$rootScope", "$location", "$http", "$uibModal", "$translate",
+        function ($scope, $rootScope, $location, $http, $uibModal, $translate) {
+
+            $scope.WaitingRoomCustomersList = [];
+
+            $scope.showWaitingRoomListPDF = function () {
+
+                var pdfDocument = {};
+
+                pdfDocument.styles = {
+                    PrincipalHeader: {
+                        fontSize: 20,
+                        bold: true,
+                        alignment: 'center',
+                        margin: [0, 0, 0, 20]
+                    }
+                };
+
+                pdfDocument.pageMargins = [40, 60, 40, 60];
+
+                pdfDocument.footer = function (currentPage, pageCount) {
+                    return {
+                        text: [
+                            {
+                                text: 'Backoffice services.  Page: ' + currentPage + ' of ' + pageCount,
+                                alignment: 'right', italics: true, fontSize: 10, margin: [0, 0, 20, 20]
+                            },
+                        ]
+                    }
+                }
+
+                pdfDocument.content = [];
+
+                pdfDocument.content.push({
+                    text: 'Waiting Room List',
+                    style: 'PrincipalHeader'
+                });
+
+                pdfDocument.content.push({
+                    text: [
+                        {text: 'Formation Center: ', bold: true, fontSize: 16},
+                        {text: $rootScope.formationCenter + '\n', fontSize: 16, margin: [0, 0, 0, 20]},
+                        {text: 'Generated at: ', bold: true, italics: true, margin: [0, 15, 0, 20]},
+                        {text: new Date().toDateString(), italics: true, margin: [0, 0, 0, 20]}
+                    ]
+                });
+
+                pdfDocument.content.push({
+                    text: 'Customers',
+                    alignment: 'center',
+                    fontSize: 18,
+                    margin: [0, 30, 0, 15]
+                });
+
+
+                //Prepare the table content with the customers information.
+                var CustomerList = {
+                    table: {
+                        headerRows: 1,
+                        widths: ['auto', 'auto', 'auto', 'auto', '*', '*'],
+                        body: [
+                            [
+                                {text: 'No.', bold: true},
+                                {text: 'Civ.', bold: true},
+                                {text: 'Name', bold: true},
+                                {text: 'FistName', bold: true},
+                                {text: 'Phone Number', bold: true},
+                                {text: 'Email', bold: true}
+                            ]
+                        ]
+                    },
+                    layout: 'lightHorizontalLines'
+                };
+
+                var lgth = $scope.WaitingRoomCustomersList.length;
+
+                for (var i = 0; i < lgth; i++) {
+                    CustomerList.table.body.push([
+                        (i + 1).toString(),
+                        $scope.WaitingRoomCustomersList[i].civility,
+                        $scope.WaitingRoomCustomersList[i].name,
+                        $scope.WaitingRoomCustomersList[i].firstName,
+                        $scope.WaitingRoomCustomersList[i].phoneNumber,
+                        $scope.WaitingRoomCustomersList[i].email
+                    ]);
+                }
+
+                pdfDocument.content.push(CustomerList);
+
+                pdfMake.createPdf(pdfDocument).open();
+            };
+
+            $scope.printWaitingRoomCustomersList = function () {
+
+
+                $http.post($rootScope.urlBase + "/FormationCenter/getWaitingRoomCustomerListByFormationCenter", {
+                        formationCenter: $rootScope.formationCenter
+                    })
+                    .success(function (result) {
+                        if (result.status === "ok") {
+                            $scope.WaitingRoomCustomersList = result.data;
+                            $scope.showWaitingRoomListPDF();
+
+                        } else {
+                            var objeData = {type: $translate.instant('ERROR')};
+                            $scope.showModalMessage(result.info, objeData);
+                        }
+                    })
+                    .error(function (err) {
+                        var objeData = {type: $translate.instant('ERROR')};
+                        $scope.showModalMessage($translate.instant('ERROR_PRINTING_WAITING_ROOM'), objeData);
+                    })
+            };
+
+            $scope.showCourrierTypeMinistere = function () {
+
+                var pdfDocument = {};
+
+                pdfDocument.styles = {
+                    PrincipalHeader: {
+                        fontSize: 16,
+                        bold: true,
+                        alignment: 'center',
+                        margin: [0, 0, 0, 20]
+                    }
+                };
+
+                pdfDocument.content = [];
+
+                pdfDocument.content.push({
+                    text: 'Réclamation au fichier National du Permis de Conduire',
+                    style: 'PrincipalHeader',
+                });
+
+                pdfDocument.content.push({
+                    text: 'Suite à votre stage dans le cadre de la récupération de points (cas 1), la Préfecture rejette la réattribution des 4 points en opposant que vos points perdus ne sont pas encore décomptés.\n',
+                    alignment: 'justified'
+                });
+
+                pdfDocument.content.push({
+                    text: 'Nous vous conseillons alors de transmettre un courrier accompagné d’un dossier le plus complet possible.',
+                    alignment: 'justified'
+                });
+
+                pdfDocument.content.push({
+                    text: '\n\n\n\n'
+                });
+
+                pdfDocument.content.push({
+                    text: 'Ce courrier est a adresser en lettre recommandée à :\n\n',
+                    alignment: 'left'
+                });
+
+                pdfDocument.content.push({
+                    text: 'Ministère de l’Intérieur \n27 cours des Petites Ecuries - 77185 Lognes\nou',
+                    alignment: 'left'
+                });
+
+                pdfDocument.content.push({
+                    text: 'Ministère de l’Intérieur - Fichier National du Permis de Conduire \nplace Beauvau -75008 Paris\n\n\n\n',
+                    alignment: 'left'
+                });
+
+                pdfDocument.content.push([
+                    'A joindre au courrier :',
+                    {
+                        ul: [
+                            'la photocopie de l\'attestation de suivi de stage',
+                            'la photocopie d\'avis de contravention(s)',
+                            'la preuve du paiement de l\'amende forfaitaire si celle-ci vous a été proposée.',
+                            'la photocopie de décisions judiciaires notamment une ordonnance pénale (s’il y a lieu)',
+                            'les divers courriers du Ministère vous informant de la perte de points'
+                        ]
+                    }
+                ]);
+
+
+                pdfMake.createPdf(pdfDocument).open();
+
+            };
+
+            $scope.showDemandeInterruption = function () {
+
+                var pdfDocument = {};
+
+                pdfDocument.content = [];
+
+                pdfDocument.content.push({
+                    text: 'DEMANDE D\'INTERRUPTION DE L\'ACTION EN RECOUVREMENT\n',
+                    alignment: 'center',
+                    fontSize: 15
+                });
+
+                pdfDocument.content.push({
+                    text: 'de l\'amende\n\n',
+                    alignment: 'center',
+                    margin: [0, 6, 0, 0]
+                });
+
+                pdfDocument.content.push({
+                    text: 'à adresser au comptable du trésor du lieu de la commission de l\'infraction\n\n\n\n',
+                    alignment: 'center',
+                    italics: true
+                });
+
+                pdfDocument.content.push({
+                    columns: [
+                        'Je soussigné(e) NOM:',
+                        'PRENOM :'
+                    ]
+                });
+
+                pdfDocument.content.push({
+                    text: '(Nom et prénom(s) du titulaire du permis de conduire entrant dans le cadre de la période probatoire et auteur d\'une infraction ayant donné lieu à une perte d\'au moins 3 points.)',
+                    alignment: 'justified',
+                    italics: true,
+                    margin: [0, 10, 0, 5],
+                    fontSize: 10
+                });
+
+                pdfDocument.content.push({
+                    text: 'ayant suivi un stage de sensibilisation à la sécurité routière, en application des articles R. 223-4 et suivants du code de la route, demande :',
+                    alignment: 'justified',
+                    italics: true,
+                    margin: [0, 10, 0, 5],
+                    fontSize: 10
+                });
+
+
+                pdfDocument.content.push({
+                    text: 'L\'INTERRUPTION DE L\'ACTION EN RECOUVREMENT DE L\'AMENDE.',
+                    alignment: 'left',
+                    margin: [0, 15, 0, 5],
+                    fontSize: 16
+                });
+
+                pdfDocument.content.push({
+                    text: 'Je transmets :',
+                    alignment: 'left',
+                    margin: [0, 6, 0, 5],
+                });
+
+                pdfDocument.content.push([
+                    {
+                        text: 'a) Les principales caractéristiques de la décision judiciaire :',
+                        fontSize: 12,
+                        margin: [0, 6, 0, 8]
+                    },
+                    {
+                        ul: [
+                            {text: 'la nature de la décision (1) :', margin: [0, 0, 0, 8]},
+                            {text: 'la date et les références de la décision :', margin: [0, 0, 0, 8]},
+                            {text: 'la juridiction ayant prononcé la décision :', margin: [0, 0, 0, 8]},
+                            {text: 'le montant de l\'amende encourue :'}
+                        ],
+                        fontSize: 10
+                    },
+                    {
+                        text: 'b) Une copie de la lettre 48 N adressée par le ministère de l\'intérieur.',
+                        fontSize: 12,
+                        margin: [0, 6, 0, 8]
+                    },
+                    {
+                        text: 'c) Une copie de l\'attestation de suivi de stage remise par la personne responsable de la formation spécifique, titulaire de l\'agrément.',
+                        fontSize: 12, margin: [0, 6, 0, 24]
+                    }
+                ]);
+
+                pdfDocument.content.push({
+                    columns: [
+                        'Fait à :',
+                        'le:',
+                        'Signature :'
+                    ]
+                });
+
+
+                pdfDocument.content.push({
+                    text: '(1) Décision de justice : amende forfaitaire majorée ou composition pénale ou jugement ou arrêt ou joursamende, ou ordonnance pénale...',
+                    alignment: 'left',
+                    margin: [0, 150, 0, 20],
+                    fontSize: 10
+                });
+
+
+                pdfMake.createPdf(pdfDocument).open();
+            };
+
+            $scope.showDemandeRemboursement = function () {
+
+                var pdfDocument = {};
+
+                pdfDocument.content = [];
+
+                pdfDocument.pageSize = 'LEGAL',
+
+                    pdfDocument.content.push({
+                        text: 'DEMANDE DE REMBOURSEMENT D’AMENDE SUITE AU SUIVI\nDU STAGE DE SENSIBILISATION A LA SECURITE ROUTIERE',
+                        alignment: 'center',
+                        fontSize: 14
+                    });
+
+                var tempText = '\n\nJe soussigné(e) (1) ………………………………………………………………………………………………………………………………………';
+                tempText += '\nRenseignements sur le demandeur :';
+                tempText += '\nAdresse : …………………………………………………………………………………………………………………………………………………………';
+                tempText += '\nCode postal : …………………………………………………… Ville : …………………………………………………………………………………';
+                tempText += '\nTéléphone fixe : ………………………………………………/téléphone portable : …………………………………………………………';
+                tempText += '\nCourriel : ………………………………………………………………@………………………………………………………………………………………\n\n';
+
+                pdfDocument.content.push({
+                    text: tempText,
+                    alignment: 'justified',
+                    fontSize: 12
+                });
+
+                pdfDocument.content.push({
+                    text: 'ayant suivi un stage de sensibilisation à la sécurité routière, en application des articles R. 223-4 et suivants du code de la route, demande :',
+                    alignment: 'justified',
+                    fontSize: 12
+                });
+
+                //Aqui de ir la imagen del cuadrito
+
+                pdfDocument.content.push({
+                    text: '\nLe remboursement de l’amende (2).',
+                    alignment: 'left',
+                    fontSize: 12,
+                    bold: true
+                });
+
+                pdfDocument.content.push({
+                    text: 'Montant de l’amende à rembourser : ………………………………………………………………………………………………………………………',
+                    alignment: 'justified',
+                    fontSize: 12,
+                    italics: true
+                });
+
+                pdfDocument.content.push({
+                    text: 'Je transmets dans tous les cas :',
+                    alignment: 'left',
+                    fontSize: 12,
+                    italics: true
+                });
+
+
+                pdfDocument.content.push({
+                    ul: [
+                        {text: 'une copie de la lettre 48 N adressée par le ministère de l’intérieur ;'},
+                        {text: 'un relevé d’identité bancaire libellé au nom et adresse du demandeur (3) ;'},
+                        {text: 'une copie de l’attestation de suivi de stage de sensibilisation à la sécurité routière ;'},
+                        {text: 'la date et le mode de paiement de l’amende (4) ;'},
+                        {text: 'la preuve du paiement de l’amende : original de la « partie à conserver » du timbre-amende, copie du relevé de compte bancaire …'},
+                    ]
+                });
+
+
+                pdfDocument.content.push({
+                    text: '\nDe plus, selon la nature de l’amende si:',
+                    alignment: 'left',
+                    fontSize: 12,
+                    margin: [0, 0, 0, 10]
+                });
+
+                pdfDocument.content.push([
+                    {text: 'Il s’agit d’une décision judiciaire', fontSize: 12, italics: true},
+                    {text: '(2) (amende forfaitaire majorée, jugement ou arrêt, ordonnance pénale …) :', fontSize: 12},
+                    {
+                        text: 'Je transmets l’original de l’avis d’amende (avis d’amende forfaitaire majorée, relevé de condamnation pénale, etc.).',
+                        fontSize: 12
+                    },
+                    {
+                        text: 'J’adresse le dossier de demande de remboursement complet au centre des finances publiques mentionné sur l’avis réclamant le paiement de l’amende (5).',
+                        fontSize: 12
+                    },
+                    {
+                        text: 'Nota. – Les amendes de composition pénale (suite à une décision judiciaire) ne peuvent faire l’objet d’un remboursement.',
+                        fontSize: 11,
+                        margin: [0, 5, 0, 5],
+                        alignment: 'justified'
+                    },
+
+                    {
+                        text: 'Il s’agit d’une amende forfaitaire (2) :',
+                        alignment: 'left',
+                        fontSize: 12,
+                        italics: true
+                    },
+
+                    {
+                        text: 'Je transmets l’original de l’avis de contravention.',
+                        alignment: 'left',
+                        fontSize: 12
+                    }
+                ]);
+
+                pdfDocument.content.push({
+                    text: [
+                        {
+                            text: 'Lorsqu’il s’agit d’une infraction relevée par contrôle automatisé (radars vitesse et dispositifs feux rouges),',
+                            fontSize: 12,
+                            italics: true,
+                            alignment: 'justified'
+                        },
+                        'j’adresse le dossier complet de demande de remboursement à la trésorerie du contrôle automatisé à Rennes : TCA, service des remboursements, CS 81239, 35012 Rennes Cedex.\n\n',
+                        {
+                            text: 'Pour tous les autres cas,',
+                            fontSize: 12,
+                            italics: true,
+                            alignment: 'justified'
+                        },
+                        'j’adresse le dossier complet de demande de remboursement à la direction départementale des finances publiques du département du lieu de commission de l’infraction (5).'
+                    ]
+                });
+
+                pdfDocument.content.push({
+                    text: 'L’interruption de l’action en recouvrement de l’amende (2).',
+                    bold: true,
+                    fontSize: 12,
+                    alignment: 'left',
+                    margin: [0, 8, 0, 8]
+                });
+
+                pdfDocument.content.push({
+                    text: 'Je transmets :'
+                });
+
+                pdfDocument.content.push({
+                    ul: [
+                        'l’original de l’avis d’amende (amende forfaitaire majorée, relevé de condamnation pénale, etc.) :',
+                        'une copie de la lettre 48 N adressée par le ministère de l’intérieur ;',
+                        'une copie de l’attestation de suivi de stage remise par la personne responsable de la formation spécifique, titulaire de l’agrément.'
+                    ],
+                    alignment: 'justify'
+                });
+
+                pdfDocument.content.push([
+                    {
+                        text: 'J’adresse le dossier de demande au centre des finances publiques (5) mentionné sur l’avis réclamant le paiement de l’amende.'
+                    },
+                    {
+                        text: 'Fait à ………………………………………………………………………………………………………………………………………………………………,'
+                    },
+                    {
+                        text: 'le ………………………………………………………………………………………………………………………………………………………………………'
+                    }
+                ]);
+
+                pdfDocument.content.push({
+                    text: '(Signature du demandeur)',
+                    alignment: 'right',
+                    italics: true,
+                    margin: [0, 20, 0, 30]
+                });
+
+                pdfDocument.content.push({
+                    text: '______________',
+                    alignment: 'left'
+                });
+
+                pdfDocument.content.push({
+                    ol: [
+                        'Nom et prénom(s) du titulaire du permis de conduire entrant dans le cadre de la période probatoire et auteur d’une infraction ayant donné lieu à une perte d’au moins 3 points.',
+                        'Case à cocher.',
+                        'Si le titulaire du compte n’est pas le demandeur, transmettre les documents suffisants pour justifier de la discordance (copie du livret de famille, par exemple).',
+                        'Timbre-amende, chèque, virement, télépaiement.',
+                        'Dans le cadre de l’instruction du dossier, le comptable des finances publiques peut demander toute autre pièce complémentaire qui s’avérerait nécessaire.'
+                    ],
+                    fontSize: 8,
+                    alignment: 'left'
+                });
+
+
+                pdfMake.createPdf(pdfDocument).open();
+
+            };
+
+            $scope.gotoAddCustomers = function () {
+
+                $location.path("/waitingroom/customeradd");
+            };
+
+            $scope.showModalMessage = function (messageshow, objectData) {
+
+                $scope.items = objectData;
+                $scope.items.message = messageshow
+
+                var modalInstance = $uibModal.open({
+                    animation: $scope.animationsEnabled,
+                    templateUrl: 'myModalMessage.html',
+                    controller: 'ModalInstanceCtrl',
+                    size: "",
+                    resolve: {
+                        items: function () {
+                            return $scope.items;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+
+                }, function () {
+
+                });
+            };
+        }])
+    .controller("WaitingRoomCustomerAddController", ["$scope", "$rootScope", "$location", "$http", "$uibModal", "$translate",
+        function ($scope, $rootScope, $location, $http, $uibModal, $translate) {
+
+            $scope.formations = [];
+
+            $scope.customers = [];
+
+            $scope.selectedFormation = {};
+
+            $scope.selectedCustomer = {};
+
+            var searchCustomers = function () {
+
+                $http.post($rootScope.urlBase + "/Customer/searchByFormationCenterInWaitingRoom", {
+                        formationCenter: $rootScope.formationCenter
+                    })
+                    .success(function (result) {
+                        if (result.status === "ok") {
+                            $scope.customers = result.data;
+
+                            $scope.selectedCustomer = $scope.customers[0];
+
+                        } else {
+                            var objeData = {type: $translate.instant('ERROR')};
+                            $scope.showModalMessage(result.info, objeData);
+                        }
+                    })
+                    .error(function (err) {
+                        var objeData = {type: $translate.instant('ERROR')};
+                        $scope.showModalMessage($translate.instant('ERROR_SEARCHING_CUSTOMERS'), objeData);
+                    });
+            };
+            searchCustomers();
+
+            var searchFormations = function () {
+
+                $http.post($rootScope.urlBase + "/Formation/searchByFormationCenter", {
+                        formationCenter: $rootScope.formationCenter
+                    })
+                    .success(function (result) {
+                        if (result.status === "ok") {
+                            $scope.formations = result.data;
+
+                            $scope.selectedFormation = $scope.formations[0];
+
+                        } else {
+                            var objeData = {type: $translate.instant('ERROR')};
+                            $scope.showModalMessage(result.info, objeData);
+                        }
+                    })
+                    .error(function (err) {
+                        var objeData = {type: $translate.instant('ERROR')};
+                        $scope.showModalMessage($translate.instant('ERROR_SEARCHING_FORMATIONS'), objeData);
+                    });
+            };
+            searchFormations();
+
+            $scope.addCustomerToFormation = function () {
+
+                $http.post($rootScope.urlBase + "/formation/addCustomerFromWaitingRoom", {
+                        formationCenter: $rootScope.formationCenter,
+                        id: $scope.selectedFormation.id,
+                        customer: $scope.selectedCustomer.id
+                    })
+                    .success(function (result) {
+                        if (result.status === "ok") {
+
+                            var objeData = {type: $translate.instant('INFO')};
+                            $scope.showModalMessage(result.info, objeData);
+
+                        } else {
+                            objeData = {type: $translate.instant('ERROR')};
+                            $scope.showModalMessage(result.info, objeData);
+                        }
+                    })
+                    .error(function (err) {
+                        var objeData = {type: $translate.instant('ERROR')};
+                        $scope.showModalMessage($translate.instant('ERROR_USING_SERVICE'), objeData);
+                    })
+                    .finally(function () {
+                        searchCustomers();
+                    });
+
             };
 
             $scope.showModalMessage = function (messageshow, objectData) {
@@ -6150,277 +6765,343 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             };
 
             $scope.okAttestation = function () {
-                    $scope.formation ;
+                $scope.formation;
 
-                    var docDefinition = {
-                        content: [],
-                        styles: {
-                            firstheader: {
-                                fontSize: 20,
-                                bold: true,
-                                margin: [0, 0, 0, 10]
-                            },
-                            header: {
-                                fontSize: 20,
-                                bold: true,
-                                margin: [0, 0, 0, 10],
-                                alignment: 'center'
-                            },
-                            subheader: {
-                                fontSize: 16,
-                                bold: true,
-                                margin: [0, 20, 0, 5]
-                            },
-                            subheaderText: {
-                                fontSize: 11,
-                                bold: true,
-                                margin: [0, 20, 0, 5]
-                            },
-                            normalText: {
-                                fontSize: 14,
-                                italic: true,
-                                margin: [0, 20, 0, 5]
-                            },
-                            normalTextOther: {
-                                fontSize: 12,
-                                italic: true,
-                                margin: [0, 20, 0, 5]
-                            },
-                            itemsTable: {
-                                margin: [0, 0, 0, 15]
-                            },
-                            itemsTableHeader: {
-                                bold: true,
-                                fontSize: 13,
-                                color: 'black'
-                            },
-                            totalsTable: {
-                                bold: true,
-                                margin: [0, 30, 0, 0]
-                            }
+                var docDefinition = {
+                    content: [],
+                    styles: {
+                        firstheader: {
+                            fontSize: 20,
+                            bold: true,
+                            margin: [0, 0, 0, 10]
                         },
-                        defaultStyle: {}
-                    }
-
-                    ////Build pdf for  customer
-
-                    var items = $scope.formation.customers.map(function (iplace) {
-                        return [iplace.name, iplace.address, iplace.email];
-                    });
-
-                    //{ text: $translate.instant('TABLE_PLACE_NAME'), style: 'itemsTableHeader' },
-                    //{ text:  $translate.instant('TABLE_PLACE_ADDRESS'), style: 'itemsTableHeader' },
-                    //{ text: $translate.instant('TABLE_PLACE_POSTAL_CODE'), style: 'itemsTableHeader' },
-                    //{ text:  $translate.instant('TABLE_PLACE_CITY'), style: 'itemsTableHeader' },
-                    //{ text: $translate.instant('TABLE_PLACE_AGREMENT'), style: 'itemsTableHeader' },
-                    //{ text: $translate.instant('TABLE_PLACE_ACTIVATED'), style: 'itemsTableHeader' },
-                    //{ text: $translate.instant('TABLE_PLACE_ACTIONS'), style: 'itemsTableHeader' },
-                    //console.log("ITEMS",items )
-
-                    //console.log("Consulta fin " , query);
-                    arraySize =  $scope.formation.customers.length
-
-                    currentDate = $scope.getReadableDate (new Date())
-                    $scope.formation.customers.forEach(function (iCustomer, index) {
-
-                        //  console.log("Initial date",  formation.initialDate()," +++++ ", formation.finalDate() )
-                        docDefinition.header= {
-                            //columns: [
-                            //{ text: $scope.formation.place.address, alignment: 'left',style:'firstheader'},
-                            //
-                            //]
+                        header: {
+                            fontSize: 20,
+                            bold: true,
+                            margin: [0, 0, 0, 10],
+                            alignment: 'center'
+                        },
+                        subheader: {
+                            fontSize: 16,
+                            bold: true,
+                            margin: [0, 20, 0, 5]
+                        },
+                        subheaderText: {
+                            fontSize: 11,
+                            bold: true,
+                            margin: [0, 20, 0, 5]
+                        },
+                        normalText: {
+                            fontSize: 14,
+                            italic: true,
+                            margin: [0, 20, 0, 5]
+                        },
+                        normalTextOther: {
+                            fontSize: 12,
+                            italic: true,
+                            margin: [0, 20, 0, 5]
+                        },
+                        itemsTable: {
+                            margin: [0, 0, 0, 15]
+                        },
+                        itemsTableHeader: {
+                            bold: true,
+                            fontSize: 13,
+                            color: 'black'
+                        },
+                        totalsTable: {
+                            bold: true,
+                            margin: [0, 30, 0, 0]
                         }
-// {image:"../../img/logo-bin.png", alignment: 'rigth'}
-                        docDefinition.content.push({ columns: [
-                            { text: $scope.formation.place.address, alignment: 'left',style:'firstheader'},
-
-                        ]})
-                        docDefinition.content.push({text: $translate.instant('TITLE_ATTESTATION_PAGE'), style: 'header'})
-                        docDefinition.content.push({text: $translate.instant('ATTESTATION_CAS1_PAGE'),alignment: 'left', style: 'subheaderText'})
-                        docDefinition.content.push({text: $translate.instant('ATTESTATION_CAS2_PAGE'),alignment: 'left', style: 'subheaderText'})
-                        docDefinition.content.push({text: $translate.instant('ATTESTATION_CAS3_PAGE'),alignment: 'left', style: 'subheaderText'})
-                        docDefinition.content.push({text: $translate.instant('ATTESTATION_CAS4_PAGE'),alignment: 'left', style: 'subheaderText'})
-                        sigText =  $translate.instant('FOOT_SING_ATTESTATION_PAGE') + " "
-                        sigTextEnd =  ", "+  $translate.instant('TEXT_SING_ATTESTATION_PAGE')
-                        sigText2 =  $translate.instant('N_0') + " " + $scope.formation.place.agreementNumber + ", "+  $translate.instant('END_SING_ATTESTATION_PAGE') + " :"
-                        docDefinition.content.push({text:[{text:sigText},{text:$scope.formation.place.agreementName,bold:true},{text:sigTextEnd},{text:sigText2}] ,alignment: 'left', style: 'normalText'})
-
-                        //docDefinition.content.push({text: sigText2 ,alignment: 'left', style: 'normalText'})
-                        //docDefinition.content.push({text: $translate.instant('ADMIN_PAGE_HEAD'), style: 'header'})
-                        //docDefinition.content.push({text: $translate.instant('ADMIN_PAGE_HEAD_DESCRIPTION'), alignment: 'left'})
-                        //docDefinition.content.push({ text: '\n\nLists inside columns', style: 'header' })
-
-                        licenceNumber = (iCustomer.driverLicence !== undefined)?iCustomer.driverLicence.number:""
-                        licenceNumberDate = (iCustomer.driverLicence !== undefined)? iCustomer.driverLicence.dateOfDeliverance:""
-                        licenceNumberPlace = (iCustomer.driverLicence !== undefined)?iCustomer.driverLicence.placeOfDeliverance:""
-                        dateValue = $scope.getReadableDate( iCustomer.birthDate);
-                        docDefinition.content.push({
-                            columns: [
-                                {
-                                    ul: [
-                                        {text:[{text: $translate.instant('NAME_ATTESTATION_PAGE') + ": " },{text: iCustomer.name, bold:true}]},
-                                        {text:[{text: $translate.instant('BIRTHDATE_ATTESTATION_PAGE') + ": " },{text: dateValue, bold:true}]},
-                                        {text:[{text: $translate.instant('ADDRESS_ATTESTATION_PAGE') + ": " },{text: iCustomer.address, bold:true}]},
-                                        {text:[{text: $translate.instant('ZIPCODE_ATTESTATION_PAGE') + ": " },{text: String(iCustomer.zipCode), bold:true}]},
-
-                                       ]
-                                },
-                                {
-                                    ul: [
-                                        {text:[{text: $translate.instant('FIRSTNAME_ATTESTATION_PAGE') + ": " },{text: iCustomer.firstName, bold:true}]},
-                                        {text:[{text: $translate.instant('BIRTHCITY_ATTESTATION_PAGE') + ": " },{text: iCustomer.birthCity, bold:true}]},
-                                        {text:[{text: $translate.instant('LIVEADDRESS_ATTESTATION_PAGE') + ": " },{text: iCustomer.city, bold:true}]},
-                                        
-
-                                    ]
-                                }
-                            ]
-                        })
-
-                        if (licenceNumber !== undefined) {
-                            columns[0].ul.push(   $translate.instant('NOLICENCE_ATTESTATION_PAGE')  + ": " + licenceNumber)
-                        }
-
-                        if (licenceNumberDate !== undefined) {
-                            columns[0].ul.push(  $translate.instant('NOLICENCEDATE_ATTESTATION_PAGE')  + ": " +   $scope.getReadableDate (licenceNumberDate))
-                        }
-
-                        if (licenceNumberPlace !== undefined) {
-                            columns[1].ul.push(   $translate.instant('NOLICENCEPLACE_ATTESTATION_PAGE')  + ": " + licenceNumberPlace)
-
-                        }
-                        docDefinition.content.push({text:  $translate.instant('DATE_CONFIRMATION_ATTESTATION_PAGE') + " :", style: 'normalTextOther'})
-
-                        ////Set formatio dates
-
-                        //data = [iCustomer.name, iCustomer.address, iCustomer.email]
-                        //tableObject = {
-                        //    style: 'itemsTable',
-                        //    table: {
-                        //        widths: ['*', 'auto', 'auto'],
-                        //        body: [
-                        //            [
-                        //                {text: $translate.instant('TABLE_PLACE_NAME'), style: 'itemsTableHeader'},
-                        //                {text: $translate.instant('TABLE_PLACE_ADDRESS'), style: 'itemsTableHeader'},
-                        //                {text: $translate.instant('TABLE_PLACE_CITY'), style: 'itemsTableHeader'}
-                        //
-                        //
-                        //            ]
-                        //        ].concat([data])
-                        //    },
-                        //
-                        //    layout: 'noBorders'
-                        //}
-                        ////
-                        //////Validate page break
-                        //if ((arraySize - 1) > index)
-                        //    tableObject.pageBreak='after'
-
-                        docDefinition.content.push({text:  " ", style: 'subheader'})
-
-                        docDefinition.content.push({text: $translate.instant('DATE_ARTICLE') + " :" + currentDate , style: 'normalTextOther'})
-                        data = [$translate.instant('SING_CACHET'), $translate.instant('SINGS'), $translate.instant('SING')]
-                        tableObject = {
-                            style: 'itemsTable',
-                            table: {
-                                widths: [200, 200, 200 ],
-                                body: [
-                                    [
-                                        {text: $translate.instant('CENTER_DIRECTOR_ATTESTATION_PAGE'), style: 'itemsTableHeader'},
-                                        {text: $translate.instant('WORKERS_ATTESTATION_PAGE'), style: 'itemsTableHeader'},
-                                        {text: $translate.instant('CUSTOMERS_ATTESTATION_PAGE'), style: 'itemsTableHeader'}
-
-
-                                    ]
-                                ].concat([data])
-                            },
-
-                            layout: 'noBorders'
-                        }
-                        //
-                        ////Validate page break
-                        if ((arraySize - 1) > index)
-                            tableObject.pageBreak='after'
-
-                        docDefinition.content.push( tableObject)
-
-                        console.log("Create estructure")
-                    });
-                    console.log("Continue function",  docDefinition.content)
-                    //var docDefinition = {
-                    //    content: [
-                    //        {text: $translate.instant('ADMIN_PAGE_HEAD'), style: 'header'},
-                    //        {text: $translate.instant('ADMIN_PAGE_HEAD_DESCRIPTION'), alignment: 'left'},
-                    //        { text: '\n\nLists inside columns', style: 'header' },
-                    //        {
-                    //            columns: [
-                    //                {
-                    //                    ul: [
-                    //                        'item 1',
-                    //                        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Malit profecta versatur nomine ocurreret multavit',
-                    //                    ]
-                    //                },
-                    //                {
-                    //                    ul: [
-                    //                        'item 1',
-                    //                        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Malit profecta versatur nomine ocurreret multavit',
-                    //                    ]
-                    //                }
-                    //            ]
-                    //        },
-                    //
-                    //        {text: 'Data', style: 'subheader'},
-                    //        {
-                    //            style: 'itemsTable',
-                    //            table: {
-                    //                widths: ['*', 'auto', 'auto'],
-                    //                body: [
-                    //                    [
-                    //                        {text: $translate.instant('TABLE_PLACE_NAME'), style: 'itemsTableHeader'},
-                    //                        {text: $translate.instant('TABLE_PLACE_ADDRESS'), style: 'itemsTableHeader'},
-                    //                        {text: $translate.instant('TABLE_PLACE_CITY'), style: 'itemsTableHeader'}
-                    //
-                    //
-                    //                    ]
-                    //                ].concat(items)
-                    //            },
-                    //            pageBreak: 'after',
-                    //            layout: 'noBorders'
-                    //        }
-                    //
-                    //    ],
-                    //    styles: {
-                    //        header: {
-                    //            fontSize: 20,
-                    //            bold: true,
-                    //            margin: [0, 0, 0, 10],
-                    //            alignment: 'center'
-                    //        },
-                    //        subheader: {
-                    //            fontSize: 16,
-                    //            bold: true,
-                    //            margin: [0, 20, 0, 5]
-                    //        },
-                    //        itemsTable: {
-                    //            margin: [0, 0, 0, 8]
-                    //        },
-                    //        itemsTableHeader: {
-                    //            bold: true,
-                    //            fontSize: 13,
-                    //            color: 'black'
-                    //        },
-                    //        totalsTable: {
-                    //            bold: true,
-                    //            margin: [0, 30, 0, 0]
-                    //        }
-                    //    },
-                    //    defaultStyle: {}
-                    //};
-
-                    pdfMake.createPdf(docDefinition).open()
-
+                    },
+                    defaultStyle: {}
                 }
 
+                ////Build pdf for  customer
+
+                var items = $scope.formation.customers.map(function (iplace) {
+                    return [iplace.name, iplace.address, iplace.email];
+                });
+
+                //{ text: $translate.instant('TABLE_PLACE_NAME'), style: 'itemsTableHeader' },
+                //{ text:  $translate.instant('TABLE_PLACE_ADDRESS'), style: 'itemsTableHeader' },
+                //{ text: $translate.instant('TABLE_PLACE_POSTAL_CODE'), style: 'itemsTableHeader' },
+                //{ text:  $translate.instant('TABLE_PLACE_CITY'), style: 'itemsTableHeader' },
+                //{ text: $translate.instant('TABLE_PLACE_AGREMENT'), style: 'itemsTableHeader' },
+                //{ text: $translate.instant('TABLE_PLACE_ACTIVATED'), style: 'itemsTableHeader' },
+                //{ text: $translate.instant('TABLE_PLACE_ACTIONS'), style: 'itemsTableHeader' },
+                //console.log("ITEMS",items )
+
+                //console.log("Consulta fin " , query);
+                arraySize = $scope.formation.customers.length
+
+                currentDate = $scope.getReadableDate(new Date())
+                $scope.formation.customers.forEach(function (iCustomer, index) {
+
+                    //  console.log("Initial date",  formation.initialDate()," +++++ ", formation.finalDate() )
+                    docDefinition.header = {
+                        //columns: [
+                        //{ text: $scope.formation.place.address, alignment: 'left',style:'firstheader'},
+                        //
+                        //]
+                    }
+// {image:"../../img/logo-bin.png", alignment: 'rigth'}
+                    docDefinition.content.push({
+                        columns: [
+                            {text: $scope.formation.place.address, alignment: 'left', style: 'firstheader'},
+
+                        ]
+                    })
+                    docDefinition.content.push({text: $translate.instant('TITLE_ATTESTATION_PAGE'), style: 'header'})
+                    docDefinition.content.push({
+                        text: $translate.instant('ATTESTATION_CAS1_PAGE'),
+                        alignment: 'left',
+                        style: 'subheaderText'
+                    })
+                    docDefinition.content.push({
+                        text: $translate.instant('ATTESTATION_CAS2_PAGE'),
+                        alignment: 'left',
+                        style: 'subheaderText'
+                    })
+                    docDefinition.content.push({
+                        text: $translate.instant('ATTESTATION_CAS3_PAGE'),
+                        alignment: 'left',
+                        style: 'subheaderText'
+                    })
+                    docDefinition.content.push({
+                        text: $translate.instant('ATTESTATION_CAS4_PAGE'),
+                        alignment: 'left',
+                        style: 'subheaderText'
+                    })
+                    sigText = $translate.instant('FOOT_SING_ATTESTATION_PAGE') + " "
+                    sigTextEnd = ", " + $translate.instant('TEXT_SING_ATTESTATION_PAGE')
+                    sigText2 = $translate.instant('N_0') + " " + $scope.formation.place.agreementNumber + ", " + $translate.instant('END_SING_ATTESTATION_PAGE') + " :"
+                    docDefinition.content.push({
+                        text: [{text: sigText}, {
+                            text: $scope.formation.place.agreementName,
+                            bold: true
+                        }, {text: sigTextEnd}, {text: sigText2}], alignment: 'left', style: 'normalText'
+                    })
+
+                    //docDefinition.content.push({text: sigText2 ,alignment: 'left', style: 'normalText'})
+                    //docDefinition.content.push({text: $translate.instant('ADMIN_PAGE_HEAD'), style: 'header'})
+                    //docDefinition.content.push({text: $translate.instant('ADMIN_PAGE_HEAD_DESCRIPTION'), alignment: 'left'})
+                    //docDefinition.content.push({ text: '\n\nLists inside columns', style: 'header' })
+
+                    licenceNumber = (iCustomer.driverLicence !== undefined) ? iCustomer.driverLicence.number : ""
+                    licenceNumberDate = (iCustomer.driverLicence !== undefined) ? iCustomer.driverLicence.dateOfDeliverance : ""
+                    licenceNumberPlace = (iCustomer.driverLicence !== undefined) ? iCustomer.driverLicence.placeOfDeliverance : ""
+                    dateValue = $scope.getReadableDate(iCustomer.birthDate);
+                    docDefinition.content.push({
+                        columns: [
+                            {
+                                ul: [
+                                    {
+                                        text: [{text: $translate.instant('NAME_ATTESTATION_PAGE') + ": "}, {
+                                            text: iCustomer.name,
+                                            bold: true
+                                        }]
+                                    },
+                                    {
+                                        text: [{text: $translate.instant('BIRTHDATE_ATTESTATION_PAGE') + ": "}, {
+                                            text: dateValue,
+                                            bold: true
+                                        }]
+                                    },
+                                    {
+                                        text: [{text: $translate.instant('ADDRESS_ATTESTATION_PAGE') + ": "}, {
+                                            text: iCustomer.address,
+                                            bold: true
+                                        }]
+                                    },
+                                    {
+                                        text: [{text: $translate.instant('ZIPCODE_ATTESTATION_PAGE') + ": "}, {
+                                            text: String(iCustomer.zipCode),
+                                            bold: true
+                                        }]
+                                    },
+
+                                ]
+                            },
+                            {
+                                ul: [
+                                    {
+                                        text: [{text: $translate.instant('FIRSTNAME_ATTESTATION_PAGE') + ": "}, {
+                                            text: iCustomer.firstName,
+                                            bold: true
+                                        }]
+                                    },
+                                    {
+                                        text: [{text: $translate.instant('BIRTHCITY_ATTESTATION_PAGE') + ": "}, {
+                                            text: iCustomer.birthCity,
+                                            bold: true
+                                        }]
+                                    },
+                                    {
+                                        text: [{text: $translate.instant('LIVEADDRESS_ATTESTATION_PAGE') + ": "}, {
+                                            text: iCustomer.city,
+                                            bold: true
+                                        }]
+                                    },
+
+
+                                ]
+                            }
+                        ]
+                    })
+
+                    if (licenceNumber !== undefined) {
+                        columns[0].ul.push($translate.instant('NOLICENCE_ATTESTATION_PAGE') + ": " + licenceNumber)
+                    }
+
+                    if (licenceNumberDate !== undefined) {
+                        columns[0].ul.push($translate.instant('NOLICENCEDATE_ATTESTATION_PAGE') + ": " + $scope.getReadableDate(licenceNumberDate))
+                    }
+
+                    if (licenceNumberPlace !== undefined) {
+                        columns[1].ul.push($translate.instant('NOLICENCEPLACE_ATTESTATION_PAGE') + ": " + licenceNumberPlace)
+
+                    }
+                    docDefinition.content.push({
+                        text: $translate.instant('DATE_CONFIRMATION_ATTESTATION_PAGE') + " :",
+                        style: 'normalTextOther'
+                    })
+
+                    ////Set formatio dates
+
+                    //data = [iCustomer.name, iCustomer.address, iCustomer.email]
+                    //tableObject = {
+                    //    style: 'itemsTable',
+                    //    table: {
+                    //        widths: ['*', 'auto', 'auto'],
+                    //        body: [
+                    //            [
+                    //                {text: $translate.instant('TABLE_PLACE_NAME'), style: 'itemsTableHeader'},
+                    //                {text: $translate.instant('TABLE_PLACE_ADDRESS'), style: 'itemsTableHeader'},
+                    //                {text: $translate.instant('TABLE_PLACE_CITY'), style: 'itemsTableHeader'}
+                    //
+                    //
+                    //            ]
+                    //        ].concat([data])
+                    //    },
+                    //
+                    //    layout: 'noBorders'
+                    //}
+                    ////
+                    //////Validate page break
+                    //if ((arraySize - 1) > index)
+                    //    tableObject.pageBreak='after'
+
+                    docDefinition.content.push({text: " ", style: 'subheader'})
+
+                    docDefinition.content.push({
+                        text: $translate.instant('DATE_ARTICLE') + " :" + currentDate,
+                        style: 'normalTextOther'
+                    })
+                    data = [$translate.instant('SING_CACHET'), $translate.instant('SINGS'), $translate.instant('SING')]
+                    tableObject = {
+                        style: 'itemsTable',
+                        table: {
+                            widths: [200, 200, 200],
+                            body: [
+                                [
+                                    {
+                                        text: $translate.instant('CENTER_DIRECTOR_ATTESTATION_PAGE'),
+                                        style: 'itemsTableHeader'
+                                    },
+                                    {text: $translate.instant('WORKERS_ATTESTATION_PAGE'), style: 'itemsTableHeader'},
+                                    {text: $translate.instant('CUSTOMERS_ATTESTATION_PAGE'), style: 'itemsTableHeader'}
+
+
+                                ]
+                            ].concat([data])
+                        },
+
+                        layout: 'noBorders'
+                    }
+                    //
+                    ////Validate page break
+                    if ((arraySize - 1) > index)
+                        tableObject.pageBreak = 'after'
+
+                    docDefinition.content.push(tableObject)
+
+                    console.log("Create estructure")
+                });
+                console.log("Continue function", docDefinition.content)
+                //var docDefinition = {
+                //    content: [
+                //        {text: $translate.instant('ADMIN_PAGE_HEAD'), style: 'header'},
+                //        {text: $translate.instant('ADMIN_PAGE_HEAD_DESCRIPTION'), alignment: 'left'},
+                //        { text: '\n\nLists inside columns', style: 'header' },
+                //        {
+                //            columns: [
+                //                {
+                //                    ul: [
+                //                        'item 1',
+                //                        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Malit profecta versatur nomine ocurreret multavit',
+                //                    ]
+                //                },
+                //                {
+                //                    ul: [
+                //                        'item 1',
+                //                        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Malit profecta versatur nomine ocurreret multavit',
+                //                    ]
+                //                }
+                //            ]
+                //        },
+                //
+                //        {text: 'Data', style: 'subheader'},
+                //        {
+                //            style: 'itemsTable',
+                //            table: {
+                //                widths: ['*', 'auto', 'auto'],
+                //                body: [
+                //                    [
+                //                        {text: $translate.instant('TABLE_PLACE_NAME'), style: 'itemsTableHeader'},
+                //                        {text: $translate.instant('TABLE_PLACE_ADDRESS'), style: 'itemsTableHeader'},
+                //                        {text: $translate.instant('TABLE_PLACE_CITY'), style: 'itemsTableHeader'}
+                //
+                //
+                //                    ]
+                //                ].concat(items)
+                //            },
+                //            pageBreak: 'after',
+                //            layout: 'noBorders'
+                //        }
+                //
+                //    ],
+                //    styles: {
+                //        header: {
+                //            fontSize: 20,
+                //            bold: true,
+                //            margin: [0, 0, 0, 10],
+                //            alignment: 'center'
+                //        },
+                //        subheader: {
+                //            fontSize: 16,
+                //            bold: true,
+                //            margin: [0, 20, 0, 5]
+                //        },
+                //        itemsTable: {
+                //            margin: [0, 0, 0, 8]
+                //        },
+                //        itemsTableHeader: {
+                //            bold: true,
+                //            fontSize: 13,
+                //            color: 'black'
+                //        },
+                //        totalsTable: {
+                //            bold: true,
+                //            margin: [0, 30, 0, 0]
+                //        }
+                //    },
+                //    defaultStyle: {}
+                //};
+
+                pdfMake.createPdf(docDefinition).open()
+
+            }
 
 
             $scope.okPrintList = function () {
@@ -6476,17 +7157,27 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     defaultStyle: {}
                 }
 
-                docDefinition.content.push({ columns: [
-                    { text: "Dates :", style:'normalText'},
-                    { text:[{text: $translate.instant('ADDRESS_ATTESTATION_PAGE') + ": " },{text: $scope.formation.place.address, bold:true}]},
+                docDefinition.content.push({
+                    columns: [
+                        {text: "Dates :", style: 'normalText'},
+                        {
+                            text: [{text: $translate.instant('ADDRESS_ATTESTATION_PAGE') + ": "}, {
+                                text: $scope.formation.place.address,
+                                bold: true
+                            }]
+                        },
 
-                ]})
+                    ]
+                })
 
                 var items = $scope.formation.customers.map(function (iplace) {
                     return [iplace.name, iplace.firstName, iplace.phoneNumber, ""];
                 });
 
-                docDefinition.content.push({text:  " Liste des stagiaires inscrits et pré­inscrits :", style: 'normalTextOther'})
+                docDefinition.content.push({
+                    text: " Liste des stagiaires inscrits et pré­inscrits :",
+                    style: 'normalTextOther'
+                })
 
                 tableObject = {
                     style: 'itemsTable',

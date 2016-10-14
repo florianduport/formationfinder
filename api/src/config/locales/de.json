@@ -80,7 +80,6 @@
   "CUSTMOMER_MAIL":"Email:",
   "CUSTMOMER_PHONE":"Phone: ",
   "CUSTMOMER_ADRESS":"Address: ",
-
   "INVALID_TYPE_PARAMETER": "Invalid 'type' parameter",
   "ERROR_SEARCHING_ANIMATOR": "Error searching animator",
   "ERROR_SEARCHING_ANIMATORS": "Error searching animators",
@@ -121,5 +120,22 @@
   "EMAIL_IN_USE": "Email in use",
   "PHONENUMBER_IN_USE": "Phonenumber in use",
   "ERROR_UPDATING_FORMATION_CENTER": "Error updating formation center",
-  "FORMATION_CENTER_UPDATED": " Formation center updated"
+  "FORMATION_CENTER_UPDATED": " Formation center updated",
+
+  "FORMATION_CENTER_ID_REQUIRED": "Formation Center id is required",
+  "ERROR_CREATING_WAITING_ROOM": "Error creating Waiting Room",
+  "WAITING_ROOM_CREATED": "Waiting Room created",
+  "ERROR_SEARCHING_WAITING_ROOM": "Error searching Waiting Room",
+  "WAITING_ROOM_NO_FOUNDED": "Waiting Room no founded",
+  "WAITING_ROOM_REQUIRED": "waitingroom parameter is required",
+  "ERROR_SEARCHING_CUSTOMER": "Error searching customer",
+  "CUSTOMER_NO_FOUNDED": "Customer no founded",
+  "CUSTOMER_DATA_REQUIRED": "Customer data required",
+  "ERROR_CUSTOMER_EXIST": "The customer exist in the system",
+  "ERROR_CREATING_CUSTOMER": "Error creating customer",
+  "CUSTOMER_ADDED_TO_WAITING_ROOM": "Customer added to the Waiting Room",
+  "ERROR_SEARCHING_CUSTOMERS": "Error searching customers",
+  "WAITING_ROOM_IS_EMPTY": "La sala de espera está vacía",
+  "ERROR_CUSTOMER_ID_REQUIED": "Customer id is required",
+  "CUSTOMER_ADDED_TO_FORMATION": "Customer added successfully to the formation"
 }

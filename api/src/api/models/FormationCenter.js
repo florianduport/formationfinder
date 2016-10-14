@@ -11,9 +11,9 @@ module.exports = {
 
   attributes: {
 
-  	isActivated: {
-  		type: 'boolean'
-  	},
+    isActivated: {
+      type: 'boolean'
+    },
 
     name: {
       type: 'string',
@@ -57,22 +57,20 @@ module.exports = {
       type: 'string'
     },
 
-
-
     animators: {
-  		collection: 'animator',
-  		via: 'formationCenter'
-  	},
+      collection: 'animator',
+      via: 'formationCenter'
+    },
 
-  	places: {
-  		collection: 'place',
-  		via: 'formationCenter'
-  	},
+    places: {
+      collection: 'place',
+      via: 'formationCenter'
+    },
 
-  	bills: {
-  		collection: 'bill',
-  		via: 'formationCenter'
-  	},
+    bills: {
+      collection: 'bill',
+      via: 'formationCenter'
+    },
 
 
     customerBills: {
@@ -93,9 +91,36 @@ module.exports = {
     alerts: {
       collection: 'alert',
       via: 'formationCenter'
+    },
+
+    waitingRoom: {
+      model: 'waitingRoom'
     }
 
+  },
 
+  afterCreate: function (newFormationCenter, cb) {
+
+    WaitingRoom.create({
+      formationCenter: newFormationCenter.id
+    }).exec(function (err, waitingRoomCreated) {
+      if (err || !waitingRoomCreated) {
+        return res.json({status: "error", info: sails.__("ERROR_CREATING_WAITING_ROOM")});
+      }
+
+      FormationCenter.update({id: newFormationCenter.id}, {waitingRoom: waitingRoomCreated.id})
+        .exec(function (err, formationCenterUpdated) {
+          if(err){
+            cb(err)
+          }
+
+          if(!formationCenterUpdated){
+            cb("No formation center updated with the waiting room");
+          }
+
+          cb();
+        });
+    })
   }
 };
 

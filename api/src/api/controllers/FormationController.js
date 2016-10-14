@@ -1538,46 +1538,131 @@ module.exports = {
       });
   },
 
-  searchUsersByFormation: function (req, res, next){
+  searchUsersByFormation: function (req, res, next) {
     idStr = req.param('id');
 
     console.log("Search data object ---------------------------------->>>>>>>>  ", idStr)
-    if (idStr === undefined ) {
+    if (idStr === undefined) {
       return res.json({err: sails.__("ERROR_FORMATIONDATE_ID_NODATA")});
     }
 
-    Formation.findOne({id:idStr}).populate("customers").exec(function (err, formationObject){
+    Formation.findOne({id: idStr}).populate("customers").exec(function (err, formationObject) {
       console.log("Search data object")
-      if (typeof formationObject != "undefined"){
+      if (typeof formationObject != "undefined") {
         console.log("Send information ", formationObject.customers.length)
-        return res.json({status:"ok", data:formationObject.customers})
+        return res.json({status: "ok", data: formationObject.customers})
       }
       return res.json([])
     })
   },
 
-  sendMailToCustomer: function  (req, res, next){
+  sendMailToCustomer: function (req, res, next) {
     idStr = req.param('id');
 
     console.log("Search data object ---------------------------------->>>>>>>>  ", idStr)
-    if (idStr === undefined ) {
+    if (idStr === undefined) {
       return res.json({err: sails.__("ERROR_FORMATIONDATE_ID_NODATA")});
     }
 
-    from =  req.param('from');
+    from = req.param('from');
 
-    subject =  req.param('subject');
+    subject = req.param('subject');
 
-    subject =  req.param('text');
+    subject = req.param('text');
 
-    FormationServices.sendMessageToCustomer(idStr, from, subject, text).exec(function (err, result){
+    FormationServices.sendMessageToCustomer(idStr, from, subject, text).exec(function (err, result) {
       console.log("Search data object")
-      if (typeof err != "undefined"){
+      if (typeof err != "undefined") {
         console.log("Send information ", formationObject.customers.length)
-        return res.json({status:"error", message:err.message})
+        return res.json({status: "error", message: err.message})
       }
       return res.json([])
     })
+  },
+
+  addCustomerFromWaitingRoom: function (req, res, next) {
+
+    if (req.param('formationCenter') === undefined) {
+      return res.json({status: "error", info: sails.__("FORMATION_CENTER_NAME_REQUIRED")});
+    }
+
+    if (req.param('id') === undefined) {
+      return res.json({status: "error", info: sails.__("ERROR_FORMATION_ID_REQUIED")});
+    }
+
+    if (req.param('customer') === undefined) {
+      return res.json({status: "error", info: sails.__("ERROR_CUSTOMER_ID_REQUIED")});
+    }
+
+    //First search the formation center.
+    FormationCenter.findOne({name: req.param('formationCenter')})
+      .exec(function (err, FC) {
+        if (err) {
+          return res.json({status: "error", info: sails.__("ERROR_SEARCHING_FORMATION_CENTER")});
+        }
+
+        if (!FC) {
+          return res.json({status: "error", info: sails.__("FORMATION_CENTER_NO_FOUNDED")});
+        }
+
+        //Second search the formation in the formation center.
+        Formation.findOne({
+            id: req.param('id'),
+            formationCenter: FC.id
+          })
+          .exec(function (err, formationFounded) {
+
+            if (err) {
+              return res.json({status: "error", info: sails.__("ERROR_SEARCHING_FORMATION")});
+            }
+
+            if (!formationFounded) {
+              return res.json({status: "error", info: sails.__("ERROR_FORMATION_NOTFOUND")});
+            }
+
+            //If the formation exist, check if is full.
+            if (!formationFounded.isNotFull()) {
+              return res.json({status: "error", info: sails.__("ERROR_FORMATION_FULL")});
+            }
+
+            //Now search the customer in the formation center's waiting room.
+            Customer.findOne({
+                id: req.param('customer'),
+                formationCenter: FC.id,
+                waitingRoom: FC.waitingRoom
+              })
+              .exec(function (err, customerFounded) {
+
+                if(err){
+                  return res.json({status: "error", info: sails.__("ERROR_SEARCHING_CUSTOMER")});
+                }
+
+                if(!customerFounded){
+                  return res.json({status: "error", info: sails.__("CUSTOMER_NO_FOUNDED")});
+                }
+
+                //If a get here, the formation center, formation and customer exist, and the formation is not full
+                //So i can insert the customer.
+                formationFounded.customers.add(customerFounded.id);
+                formationFounded.currentNumberOfPeople++;
+                formationFounded.save();
+
+
+                //Now update the customer, he is not more in the waiting room.
+                customerFounded.waitingRoom = null;
+                customerFounded.save();
+
+                //check if the formation got full.
+                if(formationFounded.currentNumberOfPeople === formationFounded.maxPeople){
+                  formationFounded.isFull = true;
+                }
+
+                formationFounded.save();
+
+                return res.json({status: "ok", info: sails.__("CUSTOMER_ADDED_TO_FORMATION")});
+              });
+          });
+      });
   }
 };
 

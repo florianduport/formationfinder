@@ -23,6 +23,7 @@
   "ERROR_FORMATION_NAME_REQUIRED":"Not defined Formation´s name",
   "ERROR_NOT_RESULT":"Not result about query",
   "ERROR_FORMATION_REQUIRED":"Formation id is required.",
+  "ERROR_CUSTOMER_REQUIRED":"Customer id is required.",
   "ERROR_FORMATION_SEARCHING":"Error searching Formation.",
   "ERROR_FORMATION_NOTFOUND":"Formation not found.",
   "ERROR_FORMATIONCENTERDATA_NAME_REQUIRED": "Formation Center Name is required.",
@@ -80,7 +81,6 @@
   "CUSTMOMER_MAIL":"Email:",
   "CUSTMOMER_PHONE":"Phone: ",
   "CUSTMOMER_ADRESS":"Address: ",
-
   "INVALID_TYPE_PARAMETER": "Parámetro 'type' inválido",
   "ERROR_SEARCHING_ANIMATOR": "Error buscando animator",
   "ERROR_SEARCHING_ANIMATORS": "Error buscando animators",
@@ -121,6 +121,23 @@
   "EMAIL_IN_USE": "Email en uso",
   "PHONENUMBER_IN_USE": "Número telefónico en uso",
   "ERROR_UPDATING_FORMATION_CENTER": "Error actualizando centro de formación",
-  "FORMATION_CENTER_UPDATED": "Centro de formación actualizado"
+  "FORMATION_CENTER_UPDATED": "Centro de formación actualizado",
+
+  "FORMATION_CENTER_ID_REQUIRED": "id del Centro de Formación requerido",
+  "ERROR_CREATING_WAITING_ROOM": "Error creando sala de espera",
+  "WAITING_ROOM_CREATED": "Sala de espera creada",
+  "ERROR_SEARCHING_WAITING_ROOM": "Error buscando sala de espera",
+  "WAITING_ROOM_NO_FOUNDED": "Sala de espera no encontrada",
+  "WAITING_ROOM_REQUIRED": "El parámetro waitingroom es requerido",
+  "ERROR_SEARCHING_CUSTOMER": "Error buscando cliente",
+  "CUSTOMER_NO_FOUNDED": "Cliente no encontrado",
+  "CUSTOMER_DATA_REQUIRED": "Datos de cliente requeridos",
+  "ERROR_CUSTOMER_EXIST": "El cliente ya existe en el sistema",
+  "ERROR_CREATING_CUSTOMER": "Error creando cliente",
+  "CUSTOMER_ADDED_TO_WAITING_ROOM": "Cliente agregado a la sala de espera",
+  "ERROR_SEARCHING_CUSTOMERS": "Error buscando clientes",
+  "WAITING_ROOM_IS_EMPTY": "Waiting room is empty",
+  "ERROR_CUSTOMER_ID_REQUIED": "El id del cliente es requerido",
+  "CUSTOMER_ADDED_TO_FORMATION": "Cliente agregado a la formación satisfactoriamente"
 
 }

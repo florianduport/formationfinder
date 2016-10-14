@@ -89,19 +89,103 @@
                     </span>
                     </td>
                     <td>
-                        <button type="button"
-                                class="btn btn-sm btn-primary" ng-class="[formation.costumer.length>0,btn-info]"
-                                ng-click="detailsFormation(formation)">{{'DETAILS' | translate}}
-                        </button>
-                        <button type="button"
-                                class="btn btn-sm btn-primary"
-                                ng-click="editFormation(formation)">{{'EDIT' | translate}}
-                        </button>
-                        <span></span>
-                        <button type="button"
-                                class="btn btn-sm btn-danger"
-                                ng-click="deleteFormation(formation)">{{'DELETE' | translate}}
-                        </button>
+                        <!--<div class="dropdown">-->
+                        <!--<button class="btn btn-default btn-xs dropdown-toggle"-->
+                        <!--type="button" id="actionsDropdown" data-toggle="dropdown"-->
+                        <!--aria-haspopup="true" aria-expanded="true">-->
+                        <!--{{'ACTIONS' | translate}}-->
+                        <!--<span class="caret"></span>-->
+                        <!--</button>-->
+
+                        <!--<ul class="dropdown-menu" aria-labelledby="actionsDropdown">-->
+                        <!--<li><a role="button" ng-click="detailsFormation(formation)">{{'DETAILS' | translate}}</a></li>-->
+                        <!--<li><a role="button" ng-click="editFormation(formation)">{{'EDIT' | translate}}</a></li>-->
+                        <!--<li><a role="button" ng-click="deleteFormation(formation)">{{'DELETE' | translate}}</a></li>-->
+                        <!--&lt;!&ndash;<li role="separator" class="divider"></li>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<li><a href="#">Separated link</a></li>&ndash;&gt;-->
+                        <!--</ul>-->
+                        <!--</div>-->
+
+                        <!--<button type="button"-->
+                        <!--class="btn btn-sm btn-primary" ng-class="[formation.costumer.length>0,btn-info]"-->
+                        <!--ng-click="detailsFormation(formation)">{{'DETAILS' | translate}}-->
+                        <!--</button>-->
+                        <!--<button type="button"-->
+                        <!--class="btn btn-sm btn-primary"-->
+                        <!--ng-click="editFormation(formation)">{{'EDIT' | translate}}-->
+                        <!--</button>-->
+                        <!--<span></span>-->
+                        <!--<button type="button"-->
+                        <!--class="btn btn-sm btn-danger"-->
+                        <!--ng-click="deleteFormation(formation)">{{'DELETE' | translate}}-->
+                        <!--</button>-->
+                        <!--<div class="btn-group" role="group" aria-label="...">-->
+                            <!--<button type="button"-->
+                                    <!--class="btn btn-xs btn-primary" ng-class="[formation.costumer.length>0,btn-info]"-->
+                                    <!--ng-click="detailsFormation(formation)"-->
+                                    <!--title="{{'DETAILS' | translate}}"-->
+                                    <!--data-toggle="tooltip">-->
+                                <!--<span class="glyphicon glyphicon-info-sign"></span>-->
+                            <!--</button>-->
+
+                            <!--<button type="button"-->
+                                    <!--class="btn btn-xs btn-primary"-->
+                                    <!--ng-click="editFormation(formation)"-->
+                                    <!--title="{{'EDIT' | translate}}"-->
+                                    <!--data-toggle="tooltip">-->
+                                <!--<span class="glyphicon glyphicon-pencil"></span>-->
+                            <!--</button>-->
+
+                            <!--<button type="button"-->
+                                    <!--class="btn btn-xs btn-success"-->
+                                    <!--ng-click="addCustomer(formation)"-->
+                                    <!--title="{{'EDIT' | translate}}"-->
+                                    <!--data-toggle="tooltip">-->
+                                <!--<span class="glyphicon glyphicon-user"></span>-->
+                            <!--</button>-->
+
+                            <!--<button type="button"-->
+                                    <!--class="btn btn-xs btn-danger"-->
+                                    <!--ng-click="deleteFormation(formation)"-->
+                                    <!--title="{{'DELETE' | translate}}"-->
+                                    <!--data-toggle="tooltip">-->
+                                <!--<span class="glyphicon glyphicon-trash"></span>-->
+                            <!--</button>-->
+                        <!--</div>-->
+
+                        <div class="btn-group" role="group" aria-label="...">
+                            <button type="button"
+                                    class="btn btn-sm btn-default" ng-class="[formation.costumer.length>0,btn-info]"
+                                    ng-click="detailsFormation(formation)"
+                                    title="{{'DETAILS' | translate}}"
+                                    data-toggle="tooltip">
+                                <span class="glyphicon glyphicon-info-sign"></span>
+                            </button>
+
+                            <button type="button"
+                                    class="btn btn-sm btn-default"
+                                    ng-click="editFormation(formation)"
+                                    title="{{'EDIT' | translate}}"
+                                    data-toggle="tooltip">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                            </button>
+
+                            <button type="button"
+                                    class="btn btn-sm btn-default"
+                                    ng-click="addCustomer(formation)"
+                                    title="{{'ADD_CUSTOMER' | translate}}"
+                                    data-toggle="tooltip">
+                                <span class="glyphicon glyphicon-user"></span>
+                            </button>
+
+                            <button type="button"
+                                    class="btn btn-sm btn-default"
+                                    ng-click="deleteFormation(formation)"
+                                    title="{{'DELETE' | translate}}"
+                                    data-toggle="tooltip">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </div>
                     </td>
                 </tr>
                 </tbody>

@@ -1,0 +1,40 @@
+<div class="manage container well" id="customer-add">
+    <form class="" name="customeraddForm" id="customeraddForm">
+        <div class="row">
+            <div class="col col-xs-12">
+                <h2 class="text-center">
+                    {{'ADD_CUSTOMERS_TO_FORMATIONS' | translate}}
+                </h2>
+
+                <br/>
+
+                <div class="form-group">
+                    <label>{{'SELECT_CUSTOMER' | translate}}</label>
+                    <div class="input-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                        <select ng-model="selectedCustomer"
+                                class="form-control"
+                                ng-options="customer as customer.name for customer in customers track by customer.id">
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>{{'SELECT_FORMATION' | translate}}</label>
+                    <div class="input-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-map-marker"></span></span>
+                        <select ng-model="selectedFormation"
+                                class="form-control"
+                                ng-options="formation as formation.place.name for formation in formations track by formation.id">
+                        </select>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-primary btn-block"
+                        ng-click="addCustomerToFormation()">
+                    {{'ADD' | translate}}
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

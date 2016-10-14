@@ -5347,3 +5347,15 @@ span.customSelect.changed {
 #updateAnimatorContainer {
     max-width: 450px;
 }
+
+/*** Waiting room ***/
+
+#waiting-room .panel-heading {
+    background: #3c4d5d !important;
+    color: #ffffff !important;
+    border-color: #2a3c4b !important;
+}
+
+#customer-add {
+    max-width: 600px;
+}

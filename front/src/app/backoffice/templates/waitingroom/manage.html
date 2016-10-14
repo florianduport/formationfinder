@@ -1,0 +1,87 @@
+<div class="manage container well" id="waiting-room">
+
+    <div class="row">
+        <div class="col col-lg-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">{{'DOCUMENTS' | translate}}</div>
+
+                <div class="panel-body">
+                    <button class="btn btn-default btn-block"
+                            ng-click="showCourrierTypeMinistere()">
+                        Courrier type Ministere
+                    </button>
+
+                    <button class="btn btn-default btn-block"
+                            ng-click="showDemandeInterruption()">
+                        Demande d'interruption
+                    </button>
+
+                    <button class="btn btn-default btn-block"
+                            ng-click="showDemandeRemboursement()">
+                        Demande de remboursement
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col col-lg-4">
+            <div class="panel panel-primary">
+                <!--<div class="panel-heading">{{'DOCUMENTS' | translate}}</div>-->
+                <div class="panel-heading">Liste des stagiaires en salle d'attente</div>
+
+                <div class="panel-body">
+                    <button class="btn btn-danger btn-block">Inscrire en salle d'attente</button>
+                    <button class="btn btn-default btn-block" ng-click="gotoAddCustomers()">
+                        Add customers to formations
+                    </button>
+                    <br>
+
+                    <p class="text-center">Aucun stagiaire</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col col-lg-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">Stagiaire</div>
+
+                <div class="panel-body">
+                    <button class="btn btn-default btn-block" ng-click="printWaitingRoomCustomersList()">Imprimer la liste</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col col-lg-5">
+            <div class="panel panel-primary">
+                <div class="panel-heading">Carte Bancaire</div>
+
+                <div class="panel-body">
+                    <p class="text-center">
+                        <span class="glyphicon glyphicon-lock"></span>
+                        Paiement sécurisé
+                    </p>
+
+                    <p class="text-center">
+                        Cryptage SSL utilisé par la banque Crédit du Nord.
+                    </p>
+
+                    <!--Poner las imagenes de las tarjetas de banco-->
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div><!-- END PRINCIPAL DIV -->

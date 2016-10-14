@@ -199,7 +199,6 @@ app.config(function($translateProvider) {
             LIVEADDRESS_ATTESTATION_PAGE:"Ville",
             NOLICENCEPLACE_ATTESTATION_PAGE:"Par la Préfecture de",
             DATE_ARTICLE: "Created at ",
-        //------ Piterson last change -------------------
             ERROR_USING_AUTH_SERVICE: "Error using auth service",
             INVALID_USERNAME_PASSWORD: "Invalid username/password combination. Please check and try again",
             CREDENTIAL_CREATED: "Credential created",
@@ -248,7 +247,17 @@ app.config(function($translateProvider) {
             TABLE_PLACE_CITY:"City",
             TABLE_PLACE_AGREMENT:"Agrement",
             TABLE_PLACE_ACTIVATED:"Activated",
-            TABLE_PLACE_ACTIONS:"Actions"
+            TABLE_PLACE_ACTIONS:"Actions",
+            //------ Piterson last change -------------------
+            WAITING_ROOM: "Waitting room",
+            DOCUMENTS: "Documents",
+            ERROR_PRINTING_WAITING_ROOM: "Error printing waiting room's customers list",
+            ADD_CUSTOMER: "Add customer from waiting room",
+            ADD_CUSTOMERS_TO_FORMATIONS: "Add customers in waiting room to formations",
+            SELECT_CUSTOMER: "Select customer",
+            SELECT_FORMATION: "Select formation",
+            ERROR_SEARCHING_CUSTOMERS: "Error searching customers",
+            ADD: "Add"
 
 
         })
@@ -442,7 +451,6 @@ app.config(function($translateProvider) {
             LIVEADDRESS_ATTESTATION_PAGE:"Ville",
             NOLICENCEPLACE_ATTESTATION_PAGE:"Par la Préfecture de",
             DATE_ARTICLE: "Le ",
-            //------ Piterson last change -------------------
             ERROR_USING_AUTH_SERVICE: "Error using auth service",
             INVALID_USERNAME_PASSWORD: "Invalid username/password combination. Please check and try again",
             CREDENTIAL_CREATED: "Credential created",
@@ -490,7 +498,15 @@ app.config(function($translateProvider) {
             TABLE_PLACE_CITY:"City",
             TABLE_PLACE_AGREMENT:"Agrement",
             TABLE_PLACE_ACTIVATED:"Activated",
-            TABLE_PLACE_ACTIONS:"Actions"
+            TABLE_PLACE_ACTIONS:"Actions",
+            //------ Piterson last change -------------------
+            WAITING_ROOM: "Waitting room",
+            DOCUMENTS: "Documents",
+            ERROR_PRINTING_WAITING_ROOM: "Error printing waiting room's customers list",
+            ADD_CUSTOMER: "Add customer from waiting room",
+            ADD_CUSTOMERS_TO_FORMATIONS: "Add customers to formations",
+            ERROR_SEARCHING_CUSTOMERS: "Error searching customers",
+            ADD: "Add"
 
         })
     .translations('es', {
@@ -680,7 +696,6 @@ app.config(function($translateProvider) {
         LIVEADDRESS_ATTESTATION_PAGE:"Ville",
         NOLICENCEPLACE_ATTESTATION_PAGE:"Par la Préfecture de",
         DATE_ARTICLE: "Creado el ",
-        //------ Piterson last change -------------------
         ERROR_USING_AUTH_SERVICE: "Error usando servicio de autenticación",
         INVALID_USERNAME_PASSWORD: "Combinación usuario/contraseña inválida. Verifique y trate otra vez.",
         CREDENTIAL_CREATED: "Credencial creada",
@@ -728,7 +743,15 @@ app.config(function($translateProvider) {
         TABLE_PLACE_CITY:"City",
         TABLE_PLACE_AGREMENT:"Agrement",
         TABLE_PLACE_ACTIVATED:"Activated",
-        TABLE_PLACE_ACTIONS:"Actions"
+        TABLE_PLACE_ACTIONS:"Actions",
+        //------ Piterson last change -------------------
+        WAITING_ROOM: "Sala de espera",
+        DOCUMENTS: "Documentos",
+        ERROR_PRINTING_WAITING_ROOM: "Error imprimiento lista de clientes en la sala de espera",
+        ADD_CUSTOMER: "Adicionar cliente desde la sala de espera",
+        ADD_CUSTOMERS_TO_FORMATIONS: "Adicionar clientes de la sala de espera a las formaciones",
+        ERROR_SEARCHING_CUSTOMERS: "Error buscando clientes",
+        ADD: "Adicionar"
 
     });
      $translateProvider.preferredLanguage('en');

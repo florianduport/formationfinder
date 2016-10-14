@@ -87,7 +87,11 @@ module.exports = {
   	customerBills: {
   		collection: 'customerBill' ,
   		via: 'customer'
-  	}
+  	},
+
+    waitingRoom: {
+      model: 'waitingRoom'
+    }
 
   },
   searchByLicenceNumberInYear: function (licence, year, callback) {

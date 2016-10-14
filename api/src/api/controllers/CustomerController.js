@@ -341,6 +341,31 @@ module.exports = {
          }
        return res.json({status: "ok", data: customerObject});
      })
-   }
+   },
+
+  searchByFormationCenterInWaitingRoom: function (req, res, next) {
+
+    if (req.param('formationCenter') === undefined) {
+      return res.json({status: "error", info: sails.__("FORMATION_CENTER_NAME_REQUIRED")});
+    }
+
+    FormationCenter.findOne({name: req.param('formationCenter')})
+      .exec(function (err, FC) {
+        if (err) {
+          return res.json({status: "error", info: sails.__("ERROR_SEARCHING_FORMATION_CENTER")});
+        }
+
+        if (!FC) {
+          return res.json({status: "error", info: sails.__("FORMATION_CENTER_NO_FOUNDED")});
+        }
+
+        Customer.find({formationCenter: FC.id, waitingRoom: FC.waitingRoom}).exec(function (err, Customers) {
+          if (err) {
+            return res.json({status: "error", info: sails.__("ERROR_SEARCHING_CUSTOMER")});
+          }
+          return res.json({status: "ok", data: Customers});
+        });
+      });
+  }
 };
 
