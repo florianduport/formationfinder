@@ -32,7 +32,6 @@
   "ERROR_FORMATION_CREATING": "Error creating Formation.",
   "SUCESSFUL_FORMATION_CREATING": "Formation created.",
   "ERROR_FORMATION_NOTDEFINED": "Not defined Formation´s name",
-  "ERROR_FORMATIONCENTER_NAME_REQUIRED": "Formation Center Name is required.",
   "ERROR_FORMATIONCENTER_SEARCHING": "An error has ocurred searching the Formation Center.",
   "ERROR_FORMATIONCENTER_WITHNAME": "No Formation Center with that name.",
   "ERROR_FORMATION_SEARCH_DATA": "An error has ocurred searching Formations.",
@@ -121,7 +120,6 @@
   "PHONENUMBER_IN_USE": "Phonenumber in use",
   "ERROR_UPDATING_FORMATION_CENTER": "Error updating formation center",
   "FORMATION_CENTER_UPDATED": " Formation center updated",
-
   "FORMATION_CENTER_ID_REQUIRED": "Formation Center id is required",
   "ERROR_CREATING_WAITING_ROOM": "Error creating Waiting Room",
   "WAITING_ROOM_CREATED": "Waiting Room created",

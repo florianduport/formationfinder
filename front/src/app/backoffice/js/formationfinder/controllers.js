@@ -911,13 +911,16 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 $location.path("/formation/update/" + iFormation.id);
             };
 
-
             $scope.detailsFormation = function (iFormation) {
                 $location.path("/formation/details/" + iFormation.id);
             };
 
             $scope.clearCriteria = function () {
                 $scope.criteria = "";
+            };
+
+            $scope.addCustomerFromWaitingRoom = function (iFormation) {
+                $location.path("/waitingroom/customeradd/" + iFormation.id);
             };
 
             $scope.showModalConfirmDelete = function (iFormation) {
@@ -2580,10 +2583,10 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             {
                                 text: 'Backoffice services.  Page: ' + currentPage + ' of ' + pageCount,
                                 alignment: 'right', italics: true, fontSize: 10, margin: [0, 0, 20, 20]
-                            },
+                            }
                         ]
                     }
-                }
+                };
 
                 pdfDocument.content = [];
 
@@ -2647,7 +2650,6 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             };
 
             $scope.printWaitingRoomCustomersList = function () {
-
 
                 $http.post($rootScope.urlBase + "/FormationCenter/getWaitingRoomCustomerListByFormationCenter", {
                         formationCenter: $rootScope.formationCenter
@@ -3032,7 +3034,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.gotoAddCustomers = function () {
 
-                $location.path("/waitingroom/customeradd");
+                //here we use "no_id" to say that no search for especific formation.
+                $location.path("/waitingroom/customeradd/no_id");
             };
 
             $scope.showModalMessage = function (messageshow, objectData) {
@@ -3059,8 +3062,10 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 });
             };
         }])
-    .controller("WaitingRoomCustomerAddController", ["$scope", "$rootScope", "$location", "$http", "$uibModal", "$translate",
-        function ($scope, $rootScope, $location, $http, $uibModal, $translate) {
+    .controller("WaitingRoomCustomerAddController", ["$scope", "$rootScope", "$location", "$http", "$uibModal", "$translate", "$routeParams",
+        function ($scope, $rootScope, $location, $http, $uibModal, $translate, $routeParams) {
+
+            var formationID = $routeParams.formation_id;
 
             $scope.formations = [];
 
@@ -3069,6 +3074,20 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             $scope.selectedFormation = {};
 
             $scope.selectedCustomer = {};
+
+            var selectFormation = function () {
+
+                if (!formationID) {
+                    return;
+                }
+
+                for (var i = 0; i < $scope.formations.length; i++) {
+                    if (formationID === $scope.formations[i].id) {
+                        $scope.selectedFormation = $scope.formations[i];
+                        return;
+                    }
+                }
+            };
 
             var searchCustomers = function () {
 
@@ -3102,7 +3121,11 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         if (result.status === "ok") {
                             $scope.formations = result.data;
 
-                            $scope.selectedFormation = $scope.formations[0];
+                            if (formationID !== "no_id") {
+                                selectFormation();
+                            } else {
+                                $scope.selectedFormation = $scope.formations[0];
+                            }
 
                         } else {
                             var objeData = {type: $translate.instant('ERROR')};
@@ -3166,6 +3189,17 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 }, function () {
 
                 });
+            };
+
+            $scope.goBack = function () {
+
+                var urlPath = $location.path();
+
+                if(urlPath.indexOf("/no_id") < 0){
+                    $location.path("/formation/admin");
+                }else {
+                    $location.path("/waitingroom/manage");
+                }
             };
         }])
     .controller("FormationCenterManagementController", ["$scope", "$rootScope", "$location", "$http", "NgMap", "$log",
@@ -6766,448 +6800,979 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.okAttestation = function () {
                 $scope.formation;
-
-                var docDefinition = {
-                    content: [],
-                    styles: {
-                        firstheader: {
-                            fontSize: 20,
-                            bold: true,
-                            margin: [0, 0, 0, 10]
-                        },
-                        header: {
-                            fontSize: 20,
-                            bold: true,
-                            margin: [0, 0, 0, 10],
-                            alignment: 'center'
-                        },
-                        subheader: {
-                            fontSize: 16,
-                            bold: true,
-                            margin: [0, 20, 0, 5]
-                        },
-                        subheaderText: {
-                            fontSize: 11,
-                            bold: true,
-                            margin: [0, 20, 0, 5]
-                        },
-                        normalText: {
-                            fontSize: 14,
-                            italic: true,
-                            margin: [0, 20, 0, 5]
-                        },
-                        normalTextOther: {
-                            fontSize: 12,
-                            italic: true,
-                            margin: [0, 20, 0, 5]
-                        },
-                        itemsTable: {
-                            margin: [0, 0, 0, 15]
-                        },
-                        itemsTableHeader: {
-                            bold: true,
-                            fontSize: 13,
-                            color: 'black'
-                        },
-                        totalsTable: {
-                            bold: true,
-                            margin: [0, 30, 0, 0]
-                        }
-                    },
-                    defaultStyle: {}
+                if ($scope.formation.customers.length <= 0) {
+                    $scope.items = {};
+                    $scope.items.message = $translate.instant('NOT_CUSTOMER')
+                    $scope.showModalMessage($scope.items.message, $scope.items)
                 }
-
-                ////Build pdf for  customer
-
-                var items = $scope.formation.customers.map(function (iplace) {
-                    return [iplace.name, iplace.address, iplace.email];
-                });
-
-                //{ text: $translate.instant('TABLE_PLACE_NAME'), style: 'itemsTableHeader' },
-                //{ text:  $translate.instant('TABLE_PLACE_ADDRESS'), style: 'itemsTableHeader' },
-                //{ text: $translate.instant('TABLE_PLACE_POSTAL_CODE'), style: 'itemsTableHeader' },
-                //{ text:  $translate.instant('TABLE_PLACE_CITY'), style: 'itemsTableHeader' },
-                //{ text: $translate.instant('TABLE_PLACE_AGREMENT'), style: 'itemsTableHeader' },
-                //{ text: $translate.instant('TABLE_PLACE_ACTIVATED'), style: 'itemsTableHeader' },
-                //{ text: $translate.instant('TABLE_PLACE_ACTIONS'), style: 'itemsTableHeader' },
-                //console.log("ITEMS",items )
-
-                //console.log("Consulta fin " , query);
-                arraySize = $scope.formation.customers.length
-
-                currentDate = $scope.getReadableDate(new Date())
-                $scope.formation.customers.forEach(function (iCustomer, index) {
-
-                    //  console.log("Initial date",  formation.initialDate()," +++++ ", formation.finalDate() )
-                    docDefinition.header = {
-                        //columns: [
-                        //{ text: $scope.formation.place.address, alignment: 'left',style:'firstheader'},
-                        //
-                        //]
-                    }
-// {image:"../../img/logo-bin.png", alignment: 'rigth'}
-                    docDefinition.content.push({
-                        columns: [
-                            {text: $scope.formation.place.address, alignment: 'left', style: 'firstheader'},
-
-                        ]
-                    })
-                    docDefinition.content.push({text: $translate.instant('TITLE_ATTESTATION_PAGE'), style: 'header'})
-                    docDefinition.content.push({
-                        text: $translate.instant('ATTESTATION_CAS1_PAGE'),
-                        alignment: 'left',
-                        style: 'subheaderText'
-                    })
-                    docDefinition.content.push({
-                        text: $translate.instant('ATTESTATION_CAS2_PAGE'),
-                        alignment: 'left',
-                        style: 'subheaderText'
-                    })
-                    docDefinition.content.push({
-                        text: $translate.instant('ATTESTATION_CAS3_PAGE'),
-                        alignment: 'left',
-                        style: 'subheaderText'
-                    })
-                    docDefinition.content.push({
-                        text: $translate.instant('ATTESTATION_CAS4_PAGE'),
-                        alignment: 'left',
-                        style: 'subheaderText'
-                    })
-                    sigText = $translate.instant('FOOT_SING_ATTESTATION_PAGE') + " "
-                    sigTextEnd = ", " + $translate.instant('TEXT_SING_ATTESTATION_PAGE')
-                    sigText2 = $translate.instant('N_0') + " " + $scope.formation.place.agreementNumber + ", " + $translate.instant('END_SING_ATTESTATION_PAGE') + " :"
-                    docDefinition.content.push({
-                        text: [{text: sigText}, {
-                            text: $scope.formation.place.agreementName,
-                            bold: true
-                        }, {text: sigTextEnd}, {text: sigText2}], alignment: 'left', style: 'normalText'
-                    })
-
-                    //docDefinition.content.push({text: sigText2 ,alignment: 'left', style: 'normalText'})
-                    //docDefinition.content.push({text: $translate.instant('ADMIN_PAGE_HEAD'), style: 'header'})
-                    //docDefinition.content.push({text: $translate.instant('ADMIN_PAGE_HEAD_DESCRIPTION'), alignment: 'left'})
-                    //docDefinition.content.push({ text: '\n\nLists inside columns', style: 'header' })
-
-                    licenceNumber = (iCustomer.driverLicence !== undefined) ? iCustomer.driverLicence.number : ""
-                    licenceNumberDate = (iCustomer.driverLicence !== undefined) ? iCustomer.driverLicence.dateOfDeliverance : ""
-                    licenceNumberPlace = (iCustomer.driverLicence !== undefined) ? iCustomer.driverLicence.placeOfDeliverance : ""
-                    dateValue = $scope.getReadableDate(iCustomer.birthDate);
-                    docDefinition.content.push({
-                        columns: [
-                            {
-                                ul: [
-                                    {
-                                        text: [{text: $translate.instant('NAME_ATTESTATION_PAGE') + ": "}, {
-                                            text: iCustomer.name,
-                                            bold: true
-                                        }]
-                                    },
-                                    {
-                                        text: [{text: $translate.instant('BIRTHDATE_ATTESTATION_PAGE') + ": "}, {
-                                            text: dateValue,
-                                            bold: true
-                                        }]
-                                    },
-                                    {
-                                        text: [{text: $translate.instant('ADDRESS_ATTESTATION_PAGE') + ": "}, {
-                                            text: iCustomer.address,
-                                            bold: true
-                                        }]
-                                    },
-                                    {
-                                        text: [{text: $translate.instant('ZIPCODE_ATTESTATION_PAGE') + ": "}, {
-                                            text: String(iCustomer.zipCode),
-                                            bold: true
-                                        }]
-                                    },
-
-                                ]
+                else {
+                    var docDefinition = {
+                        content: [],
+                        styles: {
+                            firstheader: {
+                                fontSize: 20,
+                                bold: true,
+                                margin: [0, 0, 0, 10]
                             },
-                            {
-                                ul: [
-                                    {
-                                        text: [{text: $translate.instant('FIRSTNAME_ATTESTATION_PAGE') + ": "}, {
-                                            text: iCustomer.firstName,
-                                            bold: true
-                                        }]
-                                    },
-                                    {
-                                        text: [{text: $translate.instant('BIRTHCITY_ATTESTATION_PAGE') + ": "}, {
-                                            text: iCustomer.birthCity,
-                                            bold: true
-                                        }]
-                                    },
-                                    {
-                                        text: [{text: $translate.instant('LIVEADDRESS_ATTESTATION_PAGE') + ": "}, {
-                                            text: iCustomer.city,
-                                            bold: true
-                                        }]
-                                    },
-
-
-                                ]
+                            header: {
+                                fontSize: 20,
+                                bold: true,
+                                margin: [0, 0, 0, 10],
+                                alignment: 'center'
+                            },
+                            subheader: {
+                                fontSize: 16,
+                                bold: true,
+                                margin: [0, 20, 0, 5]
+                            },
+                            subheaderText: {
+                                fontSize: 11,
+                                bold: true,
+                                margin: [0, 20, 0, 5]
+                            },
+                            normalText: {
+                                fontSize: 14,
+                                italic: true,
+                                margin: [0, 20, 0, 5]
+                            },
+                            normalTextOther: {
+                                fontSize: 12,
+                                italic: true,
+                                margin: [0, 20, 0, 5]
+                            },
+                            itemsTable: {
+                                margin: [0, 0, 0, 15]
+                            },
+                            itemsTableHeader: {
+                                bold: true,
+                                fontSize: 13,
+                                color: 'black'
+                            },
+                            totalsTable: {
+                                bold: true,
+                                margin: [0, 30, 0, 0]
                             }
-                        ]
-                    })
-
-                    if (licenceNumber !== undefined) {
-                        columns[0].ul.push($translate.instant('NOLICENCE_ATTESTATION_PAGE') + ": " + licenceNumber)
-                    }
-
-                    if (licenceNumberDate !== undefined) {
-                        columns[0].ul.push($translate.instant('NOLICENCEDATE_ATTESTATION_PAGE') + ": " + $scope.getReadableDate(licenceNumberDate))
-                    }
-
-                    if (licenceNumberPlace !== undefined) {
-                        columns[1].ul.push($translate.instant('NOLICENCEPLACE_ATTESTATION_PAGE') + ": " + licenceNumberPlace)
-
-                    }
-                    docDefinition.content.push({
-                        text: $translate.instant('DATE_CONFIRMATION_ATTESTATION_PAGE') + " :",
-                        style: 'normalTextOther'
-                    })
-
-                    ////Set formatio dates
-
-                    //data = [iCustomer.name, iCustomer.address, iCustomer.email]
-                    //tableObject = {
-                    //    style: 'itemsTable',
-                    //    table: {
-                    //        widths: ['*', 'auto', 'auto'],
-                    //        body: [
-                    //            [
-                    //                {text: $translate.instant('TABLE_PLACE_NAME'), style: 'itemsTableHeader'},
-                    //                {text: $translate.instant('TABLE_PLACE_ADDRESS'), style: 'itemsTableHeader'},
-                    //                {text: $translate.instant('TABLE_PLACE_CITY'), style: 'itemsTableHeader'}
-                    //
-                    //
-                    //            ]
-                    //        ].concat([data])
-                    //    },
-                    //
-                    //    layout: 'noBorders'
-                    //}
-                    ////
-                    //////Validate page break
-                    //if ((arraySize - 1) > index)
-                    //    tableObject.pageBreak='after'
-
-                    docDefinition.content.push({text: " ", style: 'subheader'})
-
-                    docDefinition.content.push({
-                        text: $translate.instant('DATE_ARTICLE') + " :" + currentDate,
-                        style: 'normalTextOther'
-                    })
-                    data = [$translate.instant('SING_CACHET'), $translate.instant('SINGS'), $translate.instant('SING')]
-                    tableObject = {
-                        style: 'itemsTable',
-                        table: {
-                            widths: [200, 200, 200],
-                            body: [
-                                [
-                                    {
-                                        text: $translate.instant('CENTER_DIRECTOR_ATTESTATION_PAGE'),
-                                        style: 'itemsTableHeader'
-                                    },
-                                    {text: $translate.instant('WORKERS_ATTESTATION_PAGE'), style: 'itemsTableHeader'},
-                                    {text: $translate.instant('CUSTOMERS_ATTESTATION_PAGE'), style: 'itemsTableHeader'}
-
-
-                                ]
-                            ].concat([data])
                         },
-
-                        layout: 'noBorders'
+                        defaultStyle: {}
                     }
+
+                    ////Build pdf for  customer
+
+                    var items = $scope.formation.customers.map(function (iplace) {
+                        return [iplace.name, iplace.address, iplace.email];
+                    });
+
+                    //{ text: $translate.instant('TABLE_PLACE_NAME'), style: 'itemsTableHeader' },
+                    //{ text:  $translate.instant('TABLE_PLACE_ADDRESS'), style: 'itemsTableHeader' },
+                    //{ text: $translate.instant('TABLE_PLACE_POSTAL_CODE'), style: 'itemsTableHeader' },
+                    //{ text:  $translate.instant('TABLE_PLACE_CITY'), style: 'itemsTableHeader' },
+                    //{ text: $translate.instant('TABLE_PLACE_AGREMENT'), style: 'itemsTableHeader' },
+                    //{ text: $translate.instant('TABLE_PLACE_ACTIVATED'), style: 'itemsTableHeader' },
+                    //{ text: $translate.instant('TABLE_PLACE_ACTIONS'), style: 'itemsTableHeader' },
+                    //console.log("ITEMS",items )
+
+                    //console.log("Consulta fin " , query);
+                    arraySize = $scope.formation.customers.length
+
+                    currentDate = $scope.getReadableDate(new Date())
+                    $scope.formation.customers.forEach(function (iCustomer, index) {
+
+                        //  console.log("Initial date",  formation.initialDate()," +++++ ", formation.finalDate() )
+                        docDefinition.header = {
+                            //columns: [
+                            //{ text: $scope.formation.place.address, alignment: 'left',style:'firstheader'},
+                            //
+                            //]
+                        }
+// {image:"../../img/logo-bin.png", alignment: 'rigth'}
+                        docDefinition.content.push({
+                            columns: [
+                                {text: $scope.formation.place.address, alignment: 'left', style: 'firstheader'},
+
+                            ]
+                        })
+                        docDefinition.content.push({
+                            text: $translate.instant('TITLE_ATTESTATION_PAGE'),
+                            style: 'header'
+                        })
+                        docDefinition.content.push({
+                            text: $translate.instant('ATTESTATION_CAS1_PAGE'),
+                            alignment: 'left',
+                            style: 'subheaderText'
+                        })
+                        docDefinition.content.push({
+                            text: $translate.instant('ATTESTATION_CAS2_PAGE'),
+                            alignment: 'left',
+                            style: 'subheaderText'
+                        })
+                        docDefinition.content.push({
+                            text: $translate.instant('ATTESTATION_CAS3_PAGE'),
+                            alignment: 'left',
+                            style: 'subheaderText'
+                        })
+                        docDefinition.content.push({
+                            text: $translate.instant('ATTESTATION_CAS4_PAGE'),
+                            alignment: 'left',
+                            style: 'subheaderText'
+                        })
+                        sigText = $translate.instant('FOOT_SING_ATTESTATION_PAGE') + " "
+                        sigTextEnd = ", " + $translate.instant('TEXT_SING_ATTESTATION_PAGE')
+                        sigText2 = $translate.instant('N_0') + " " + $scope.formation.place.agreementNumber + ", " + $translate.instant('END_SING_ATTESTATION_PAGE') + " :"
+                        docDefinition.content.push({
+                            text: [{text: sigText}, {
+                                text: $scope.formation.place.agreementName,
+                                bold: true
+                            }, {text: sigTextEnd}, {text: sigText2}], alignment: 'left', style: 'normalText'
+                        })
+
+                        //docDefinition.content.push({text: sigText2 ,alignment: 'left', style: 'normalText'})
+                        //docDefinition.content.push({text: $translate.instant('ADMIN_PAGE_HEAD'), style: 'header'})
+                        //docDefinition.content.push({text: $translate.instant('ADMIN_PAGE_HEAD_DESCRIPTION'), alignment: 'left'})
+                        //docDefinition.content.push({ text: '\n\nLists inside columns', style: 'header' })
+
+                        licenceNumber = (iCustomer.driverLicence !== undefined) ? iCustomer.driverLicence.number : ""
+                        licenceNumberDate = (iCustomer.driverLicence !== undefined) ? iCustomer.driverLicence.dateOfDeliverance : ""
+                        licenceNumberPlace = (iCustomer.driverLicence !== undefined) ? iCustomer.driverLicence.placeOfDeliverance : ""
+                        dateValue = $scope.getReadableDate(iCustomer.birthDate);
+                        docDefinition.content.push({
+                            columns: [
+                                {
+                                    ul: [
+                                        {
+                                            text: [{text: $translate.instant('NAME_ATTESTATION_PAGE') + ": "}, {
+                                                text: iCustomer.name,
+                                                bold: true
+                                            }]
+                                        },
+                                        {
+                                            text: [{text: $translate.instant('BIRTHDATE_ATTESTATION_PAGE') + ": "}, {
+                                                text: dateValue,
+                                                bold: true
+                                            }]
+                                        },
+                                        {
+                                            text: [{text: $translate.instant('ADDRESS_ATTESTATION_PAGE') + ": "}, {
+                                                text: iCustomer.address,
+                                                bold: true
+                                            }]
+                                        },
+                                        {
+                                            text: [{text: $translate.instant('ZIPCODE_ATTESTATION_PAGE') + ": "}, {
+                                                text: String(iCustomer.zipCode),
+                                                bold: true
+                                            }]
+                                        },
+
+                                    ]
+                                },
+                                {
+                                    ul: [
+                                        {
+                                            text: [{text: $translate.instant('FIRSTNAME_ATTESTATION_PAGE') + ": "}, {
+                                                text: iCustomer.firstName,
+                                                bold: true
+                                            }]
+                                        },
+                                        {
+                                            text: [{text: $translate.instant('BIRTHCITY_ATTESTATION_PAGE') + ": "}, {
+                                                text: iCustomer.birthCity,
+                                                bold: true
+                                            }]
+                                        },
+                                        {
+                                            text: [{text: $translate.instant('LIVEADDRESS_ATTESTATION_PAGE') + ": "}, {
+                                                text: iCustomer.city,
+                                                bold: true
+                                            }]
+                                        },
+
+
+                                    ]
+                                }
+                            ]
+                        })
+
+                        if (licenceNumber !== undefined) {
+                            columns[0].ul.push($translate.instant('NOLICENCE_ATTESTATION_PAGE') + ": " + licenceNumber)
+                        }
+
+                        if (licenceNumberDate !== undefined) {
+                            columns[0].ul.push($translate.instant('NOLICENCEDATE_ATTESTATION_PAGE') + ": " + $scope.getReadableDate(licenceNumberDate))
+                        }
+
+                        if (licenceNumberPlace !== undefined) {
+                            columns[1].ul.push($translate.instant('NOLICENCEPLACE_ATTESTATION_PAGE') + ": " + licenceNumberPlace)
+
+                        }
+                        docDefinition.content.push({
+                            text: $translate.instant('DATE_CONFIRMATION_ATTESTATION_PAGE') + " :",
+                            style: 'normalTextOther'
+                        })
+
+                        ////Set formatio dates
+
+                        //data = [iCustomer.name, iCustomer.address, iCustomer.email]
+                        //tableObject = {
+                        //    style: 'itemsTable',
+                        //    table: {
+                        //        widths: ['*', 'auto', 'auto'],
+                        //        body: [
+                        //            [
+                        //                {text: $translate.instant('TABLE_PLACE_NAME'), style: 'itemsTableHeader'},
+                        //                {text: $translate.instant('TABLE_PLACE_ADDRESS'), style: 'itemsTableHeader'},
+                        //                {text: $translate.instant('TABLE_PLACE_CITY'), style: 'itemsTableHeader'}
+                        //
+                        //
+                        //            ]
+                        //        ].concat([data])
+                        //    },
+                        //
+                        //    layout: 'noBorders'
+                        //}
+                        ////
+                        //////Validate page break
+                        //if ((arraySize - 1) > index)
+                        //    tableObject.pageBreak='after'
+
+                        docDefinition.content.push({text: " ", style: 'subheader'})
+
+                        docDefinition.content.push({
+                            text: $translate.instant('DATE_ARTICLE') + " :" + currentDate,
+                            style: 'normalTextOther'
+                        })
+                        data = [$translate.instant('SING_CACHET'), $translate.instant('SINGS'), $translate.instant('SING')]
+                        tableObject = {
+                            style: 'itemsTable',
+                            table: {
+                                widths: [200, 200, 200],
+                                body: [
+                                    [
+                                        {
+                                            text: $translate.instant('CENTER_DIRECTOR_ATTESTATION_PAGE'),
+                                            style: 'itemsTableHeader'
+                                        },
+                                        {
+                                            text: $translate.instant('WORKERS_ATTESTATION_PAGE'),
+                                            style: 'itemsTableHeader'
+                                        },
+                                        {
+                                            text: $translate.instant('CUSTOMERS_ATTESTATION_PAGE'),
+                                            style: 'itemsTableHeader'
+                                        }
+
+
+                                    ]
+                                ].concat([data])
+                            },
+
+                            layout: 'noBorders'
+                        }
+                        //
+                        ////Validate page break
+                        if ((arraySize - 1) > index)
+                            tableObject.pageBreak = 'after'
+
+                        docDefinition.content.push(tableObject)
+
+                        console.log("Create estructure")
+                    });
+                    console.log("Continue function", docDefinition.content)
+                    //var docDefinition = {
+                    //    content: [
+                    //        {text: $translate.instant('ADMIN_PAGE_HEAD'), style: 'header'},
+                    //        {text: $translate.instant('ADMIN_PAGE_HEAD_DESCRIPTION'), alignment: 'left'},
+                    //        { text: '\n\nLists inside columns', style: 'header' },
+                    //        {
+                    //            columns: [
+                    //                {
+                    //                    ul: [
+                    //                        'item 1',
+                    //                        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Malit profecta versatur nomine ocurreret multavit',
+                    //                    ]
+                    //                },
+                    //                {
+                    //                    ul: [
+                    //                        'item 1',
+                    //                        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Malit profecta versatur nomine ocurreret multavit',
+                    //                    ]
+                    //                }
+                    //            ]
+                    //        },
                     //
-                    ////Validate page break
-                    if ((arraySize - 1) > index)
-                        tableObject.pageBreak = 'after'
+                    //        {text: 'Data', style: 'subheader'},
+                    //        {
+                    //            style: 'itemsTable',
+                    //            table: {
+                    //                widths: ['*', 'auto', 'auto'],
+                    //                body: [
+                    //                    [
+                    //                        {text: $translate.instant('TABLE_PLACE_NAME'), style: 'itemsTableHeader'},
+                    //                        {text: $translate.instant('TABLE_PLACE_ADDRESS'), style: 'itemsTableHeader'},
+                    //                        {text: $translate.instant('TABLE_PLACE_CITY'), style: 'itemsTableHeader'}
+                    //
+                    //
+                    //                    ]
+                    //                ].concat(items)
+                    //            },
+                    //            pageBreak: 'after',
+                    //            layout: 'noBorders'
+                    //        }
+                    //
+                    //    ],
+                    //    styles: {
+                    //        header: {
+                    //            fontSize: 20,
+                    //            bold: true,
+                    //            margin: [0, 0, 0, 10],
+                    //            alignment: 'center'
+                    //        },
+                    //        subheader: {
+                    //            fontSize: 16,
+                    //            bold: true,
+                    //            margin: [0, 20, 0, 5]
+                    //        },
+                    //        itemsTable: {
+                    //            margin: [0, 0, 0, 8]
+                    //        },
+                    //        itemsTableHeader: {
+                    //            bold: true,
+                    //            fontSize: 13,
+                    //            color: 'black'
+                    //        },
+                    //        totalsTable: {
+                    //            bold: true,
+                    //            margin: [0, 30, 0, 0]
+                    //        }
+                    //    },
+                    //    defaultStyle: {}
+                    //};
 
-                    docDefinition.content.push(tableObject)
-
-                    console.log("Create estructure")
-                });
-                console.log("Continue function", docDefinition.content)
-                //var docDefinition = {
-                //    content: [
-                //        {text: $translate.instant('ADMIN_PAGE_HEAD'), style: 'header'},
-                //        {text: $translate.instant('ADMIN_PAGE_HEAD_DESCRIPTION'), alignment: 'left'},
-                //        { text: '\n\nLists inside columns', style: 'header' },
-                //        {
-                //            columns: [
-                //                {
-                //                    ul: [
-                //                        'item 1',
-                //                        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Malit profecta versatur nomine ocurreret multavit',
-                //                    ]
-                //                },
-                //                {
-                //                    ul: [
-                //                        'item 1',
-                //                        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Malit profecta versatur nomine ocurreret multavit',
-                //                    ]
-                //                }
-                //            ]
-                //        },
-                //
-                //        {text: 'Data', style: 'subheader'},
-                //        {
-                //            style: 'itemsTable',
-                //            table: {
-                //                widths: ['*', 'auto', 'auto'],
-                //                body: [
-                //                    [
-                //                        {text: $translate.instant('TABLE_PLACE_NAME'), style: 'itemsTableHeader'},
-                //                        {text: $translate.instant('TABLE_PLACE_ADDRESS'), style: 'itemsTableHeader'},
-                //                        {text: $translate.instant('TABLE_PLACE_CITY'), style: 'itemsTableHeader'}
-                //
-                //
-                //                    ]
-                //                ].concat(items)
-                //            },
-                //            pageBreak: 'after',
-                //            layout: 'noBorders'
-                //        }
-                //
-                //    ],
-                //    styles: {
-                //        header: {
-                //            fontSize: 20,
-                //            bold: true,
-                //            margin: [0, 0, 0, 10],
-                //            alignment: 'center'
-                //        },
-                //        subheader: {
-                //            fontSize: 16,
-                //            bold: true,
-                //            margin: [0, 20, 0, 5]
-                //        },
-                //        itemsTable: {
-                //            margin: [0, 0, 0, 8]
-                //        },
-                //        itemsTableHeader: {
-                //            bold: true,
-                //            fontSize: 13,
-                //            color: 'black'
-                //        },
-                //        totalsTable: {
-                //            bold: true,
-                //            margin: [0, 30, 0, 0]
-                //        }
-                //    },
-                //    defaultStyle: {}
-                //};
-
-                pdfMake.createPdf(docDefinition).open()
-
+                    pdfMake.createPdf(docDefinition).open()
+                }
             }
 
 
             $scope.okPrintList = function () {
                 $scope.formation;
-
-                var docDefinition = {
-                    content: [],
-                    styles: {
-                        firstheader: {
-                            fontSize: 20,
-                            bold: true,
-                            margin: [0, 0, 0, 10]
-                        },
-                        header: {
-                            fontSize: 20,
-                            bold: true,
-                            margin: [0, 0, 0, 10],
-                            alignment: 'center'
-                        },
-                        subheader: {
-                            fontSize: 16,
-                            bold: true,
-                            margin: [0, 20, 0, 5]
-                        },
-                        subheaderText: {
-                            fontSize: 11,
-                            bold: true,
-                            margin: [0, 20, 0, 5]
-                        },
-                        normalText: {
-                            fontSize: 14,
-                            italic: true,
-                            margin: [0, 20, 0, 5]
-                        },
-                        normalTextOther: {
-                            fontSize: 12,
-                            italic: true,
-                            margin: [0, 20, 0, 5]
-                        },
-                        itemsTable: {
-                            margin: [0, 0, 0, 15]
-                        },
-                        itemsTableHeader: {
-                            bold: true,
-                            fontSize: 13,
-                            color: 'black'
-                        },
-                        totalsTable: {
-                            bold: true,
-                            margin: [0, 30, 0, 0]
-                        }
-                    },
-                    defaultStyle: {}
+                if ($scope.formation.customers.length <= 0) {
+                    $scope.items = {};
+                    $scope.items.message = $translate.instant('NOT_CUSTOMER')
+                    $scope.showModalMessage($scope.items.message, $scope.items)
                 }
+                else {
+                    var docDefinition = {
+                        content: [],
+                        styles: {
+                            firstheader: {
+                                fontSize: 20,
+                                bold: true,
+                                margin: [0, 0, 0, 10]
+                            },
+                            header: {
+                                fontSize: 20,
+                                bold: true,
+                                margin: [0, 0, 0, 10],
+                                alignment: 'center'
+                            },
+                            subheader: {
+                                fontSize: 16,
+                                bold: true,
+                                margin: [0, 20, 0, 5]
+                            },
+                            subheaderText: {
+                                fontSize: 11,
+                                bold: true,
+                                margin: [0, 20, 0, 5]
+                            },
+                            normalText: {
+                                fontSize: 14,
+                                italic: true,
+                                margin: [0, 20, 0, 5]
+                            },
+                            normalTextOther: {
+                                fontSize: 12,
+                                italic: true,
+                                margin: [0, 20, 0, 5]
+                            },
+                            itemsTable: {
+                                margin: [0, 0, 0, 15]
+                            },
+                            itemsTableHeader: {
+                                bold: true,
+                                fontSize: 13,
+                                color: 'black'
+                            },
+                            totalsTable: {
+                                bold: true,
+                                margin: [0, 30, 0, 0]
+                            }
+                        },
+                        defaultStyle: {}
+                    }
 
-                docDefinition.content.push({
-                    columns: [
-                        {text: "Dates :", style: 'normalText'},
-                        {
-                            text: [{text: $translate.instant('ADDRESS_ATTESTATION_PAGE') + ": "}, {
-                                text: $scope.formation.place.address,
-                                bold: true
-                            }]
+                    docDefinition.content.push({
+                        columns: [
+                            {text: "Dates :", style: 'normalText'},
+                            {
+                                text: [{text: $translate.instant('ADDRESS_ATTESTATION_PAGE') + ": "}, {
+                                    text: $scope.formation.place.address,
+                                    bold: true
+                                }]
+                            },
+
+                        ]
+                    })
+
+                    var items = $scope.formation.customers.map(function (iplace) {
+                        return [iplace.name, iplace.firstName, iplace.phoneNumber, ""];
+                    });
+
+                    docDefinition.content.push({
+                        text: " Liste des stagiaires inscrits et pré­inscrits :",
+                        style: 'normalTextOther'
+                    })
+
+                    tableObject = {
+                        style: 'itemsTable',
+                        table: {
+                            widths: ['auto', 'auto', 'auto', 'auto'],
+                            body: [
+                                [
+                                    {text: $translate.instant('TABLE_PLACE_NAME'), style: 'itemsTableHeader'},
+                                    {text: $translate.instant('FIRSTNAME_ATTESTATION_PAGE'), style: 'itemsTableHeader'},
+                                    {text: $translate.instant('TABLE_PLACE_PHONE'), style: 'itemsTableHeader'},
+                                    {text: "STATUS", style: 'itemsTableHeader'}
+
+
+                                ]
+                            ].concat(items)
                         },
 
-                    ]
-                })
 
-                var items = $scope.formation.customers.map(function (iplace) {
-                    return [iplace.name, iplace.firstName, iplace.phoneNumber, ""];
-                });
-
-                docDefinition.content.push({
-                    text: " Liste des stagiaires inscrits et pré­inscrits :",
-                    style: 'normalTextOther'
-                })
-
-                tableObject = {
-                    style: 'itemsTable',
-                    table: {
-                        widths: ['auto', 'auto', 'auto', 'auto'],
-                        body: [
-                            [
-                                {text: $translate.instant('TABLE_PLACE_NAME'), style: 'itemsTableHeader'},
-                                {text: $translate.instant('FIRSTNAME_ATTESTATION_PAGE'), style: 'itemsTableHeader'},
-                                {text: $translate.instant('TABLE_PLACE_PHONE'), style: 'itemsTableHeader'},
-                                {text: "STATUS", style: 'itemsTableHeader'}
+                    }
+                    //
+                    ////Validate page break
 
 
-                            ]
-                        ].concat(items)
-                    },
-
-
+                    docDefinition.content.push(tableObject)
+                    pdfMake.createPdf(docDefinition).open()
                 }
-                //
-                ////Validate page break
-
-
-                docDefinition.content.push(tableObject)
-                pdfMake.createPdf(docDefinition).open()
-
             }
 
             $scope.okShieldAtestation = function () {
-                $scope.formation;
+                if ($scope.formation.customers.length <= 0) {
+                    $scope.items = {};
+                    $scope.items.message = $translate.instant('NOT_CUSTOMER')
+                    $scope.showModalMessage($scope.items.message, $scope.items)
+                }
+                else {
+
+                    //var docDefinition = {
+                    //    content: [
+                    //        { text: 'Tables', style: 'header' },
+                    //        'Official documentation is in progress, this document is just a glimpse of what is possible with pdfmake and its layout engine.',
+                    //        { text: 'A simple table (no headers, no width specified, no spans, no styling)', style: 'subheader' },
+                    //        'The following table has nothing more than a body array',
+                    //        {
+                    //            style: 'tableExample',
+                    //            table: {
+                    //                body: [
+                    //                    ['Column 1', 'Column 2', 'Column 3'],
+                    //                    ['One value goes here', 'Another one here', 'OK?']
+                    //                ]
+                    //            }
+                    //        },
+                    //        { text: 'A simple table with nested elements', style: 'subheader' },
+                    //        'It is of course possible to nest any other type of nodes available in pdfmake inside table cells',
+                    //        {
+                    //            style: 'tableExample',
+                    //            table: {
+                    //                body: [
+                    //                    ['Column 1', 'Column 2', 'Column 3'],
+                    //                    [
+                    //                        {
+                    //                            stack: [
+                    //                                'Let\'s try an unordered list',
+                    //                                {
+                    //                                    ul: [
+                    //                                        'item 1',
+                    //                                        'item 2'
+                    //                                    ]
+                    //                                }
+                    //                            ]
+                    //                        },
+                    //                        /* a nested table will appear here as soon as I fix a bug */
+                    //                        [
+                    //                            'or a nested table',
+                    //                            {
+                    //                                table: {
+                    //                                    body: [
+                    //                                        [ 'Col1', 'Col2', 'Col3'],
+                    //                                        [ '1', '2', '3'],
+                    //                                        [ '1', '2', '3']
+                    //                                    ]
+                    //                                },
+                    //                            }
+                    //                        ],
+                    //                        { text: [
+                    //                            'Inlines can be ',
+                    //                            { text: 'styled\n', italics: true },
+                    //                            { text: 'easily as everywhere else', fontSize: 10 } ]
+                    //                        }
+                    //                    ]
+                    //                ]
+                    //            }
+                    //        },
+                    //        { text: 'Defining column widths', style: 'subheader' },
+                    //        'Tables support the same width definitions as standard columns:',
+                    //        {
+                    //            bold: true,
+                    //            ul: [
+                    //                'auto',
+                    //                'star',
+                    //                'fixed value'
+                    //            ]
+                    //        },
+                    //        {
+                    //            style: 'tableExample',
+                    //            table: {
+                    //                widths: [100, '*', 200, '*'],
+                    //                body: [
+                    //                    [ 'width=100', 'star-sized', 'width=200', 'star-sized'],
+                    //                    [ 'fixed-width cells have exactly the specified width', { text: 'nothing interesting here', italics: true, color: 'gray' }, { text: 'nothing interesting here', italics: true, color: 'gray' }, { text: 'nothing interesting here', italics: true, color: 'gray' }]
+                    //                ]
+                    //            }
+                    //        },
+                    //        { text: 'Headers', style: 'subheader' },
+                    //        'You can declare how many rows should be treated as a header. Headers are automatically repeated on the following pages',
+                    //        { text: [ 'It is also possible to set keepWithHeaderRows to make sure there will be no page-break between the header and these rows. Take a look at the document-definition and play with it. If you set it to one, the following table will automatically start on the next page, since there\'s not enough space for the first row to be rendered here' ], color: 'gray', italics: true },
+                    //        {
+                    //            style: 'tableExample',
+                    //            table: {
+                    //                headerRows: 1,
+                    //                // dontBreakRows: true,
+                    //                // keepWithHeaderRows: 1,
+                    //                body: [
+                    //                    [{ text: 'Header 1', style: 'tableHeader' }, { text: 'Header 2', style: 'tableHeader' }, { text: 'Header 3', style: 'tableHeader' }],
+                    //                    [
+                    //                        'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+                    //                    ]
+                    //                ]
+                    //            }
+                    //        },
+                    //        { text: 'Column/row spans', style: 'subheader' },
+                    //        'Each cell-element can set a rowSpan or colSpan',
+                    //        {
+                    //            style: 'tableExample',
+                    //            color: '#444',
+                    //            table: {
+                    //                widths: [ 200, 'auto', 'auto' ],
+                    //                headerRows: 2,
+                    //                // keepWithHeaderRows: 1,
+                    //                body: [
+                    //                    [{ text: 'Header with Colspan = 2', style: 'tableHeader', colSpan: 2, alignment: 'center' }, {}, { text: 'Header 3', style: 'tableHeader', alignment: 'center' }],
+                    //                    [{ text: 'Header 1', style: 'tableHeader', alignment: 'center' }, { text: 'Header 2', style: 'tableHeader', alignment: 'center' }, { text: 'Header 3', style: 'tableHeader', alignment: 'center' }],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ { rowSpan: 3, text: 'rowSpan set to 3\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor' }, 'Sample value 2', 'Sample value 3' ],
+                    //                    [ '', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', { colSpan: 2, rowSpan: 2, text: 'Both:\nrowSpan and colSpan\ncan be defined at the same time' }, '' ],
+                    //                    [ 'Sample value 1', '', '' ],
+                    //                ]
+                    //            }
+                    //        },
+                    //        { text: 'Styling tables', style: 'subheader' },
+                    //        'You can provide a custom styler for the table. Currently it supports:',
+                    //        {
+                    //            ul: [
+                    //                'line widths',
+                    //                'line colors',
+                    //                'cell paddings',
+                    //            ]
+                    //        },
+                    //        'with more options coming soon...\n\npdfmake currently has a few predefined styles (see them on the next page)',
+                    //        { text: 'noBorders:', fontSize: 14, bold: true, pageBreak: 'before', margin: [0, 0, 0, 8] },
+                    //        {
+                    //            style: 'tableExample',
+                    //            table: {
+                    //                headerRows: 1,
+                    //                body: [
+                    //                    [{ text: 'Header 1', style: 'tableHeader' }, { text: 'Header 2', style: 'tableHeader'}, { text: 'Header 3', style: 'tableHeader' }],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                ]
+                    //            },
+                    //            layout: 'noBorders'
+                    //        },
+                    //        { text: 'headerLineOnly:', fontSize: 14, bold: true, margin: [0, 20, 0, 8] },
+                    //        {
+                    //            style: 'tableExample',
+                    //            table: {
+                    //                headerRows: 1,
+                    //                body: [
+                    //                    [{ text: 'Header 1', style: 'tableHeader' }, { text: 'Header 2', style: 'tableHeader'}, { text: 'Header 3', style: 'tableHeader' }],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                ]
+                    //            },
+                    //            layout: 'headerLineOnly'
+                    //        },
+                    //        { text: 'lightHorizontalLines:', fontSize: 14, bold: true, margin: [0, 20, 0, 8] },
+                    //        {
+                    //            style: 'tableExample',
+                    //            table: {
+                    //                headerRows: 1,
+                    //                body: [
+                    //                    [{ text: 'Header 1', style: 'tableHeader' }, { text: 'Header 2', style: 'tableHeader'}, { text: 'Header 3', style: 'tableHeader' }],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                ]
+                    //            },
+                    //            layout: 'lightHorizontalLines'
+                    //        },
+                    //        { text: 'but you can provide a custom styler as well', margin: [0, 20, 0, 8] },
+                    //        {
+                    //            style: 'tableExample',
+                    //            table: {
+                    //                headerRows: 1,
+                    //                body: [
+                    //                    [{ text: 'Header 1', style: 'tableHeader' }, { text: 'Header 2', style: 'tableHeader'}, { text: 'Header 3', style: 'tableHeader' }],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                ]
+                    //            },
+                    //            layout: {
+                    //                hLineWidth: function(i, node) {
+                    //                    return (i === 0 || i === node.table.body.length) ? 2 : 1;
+                    //                },
+                    //                vLineWidth: function(i, node) {
+                    //                    return (i === 0 || i === node.table.widths.length) ? 2 : 1;
+                    //                },
+                    //                hLineColor: function(i, node) {
+                    //                    return (i === 0 || i === node.table.body.length) ? 'black' : 'gray';
+                    //                },
+                    //                vLineColor: function(i, node) {
+                    //                    return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
+                    //                },
+                    //                // paddingLeft: function(i, node) { return 4; },
+                    //                // paddingRight: function(i, node) { return 4; },
+                    //                // paddingTop: function(i, node) { return 2; },
+                    //                // paddingBottom: function(i, node) { return 2; }
+                    //            }
+                    //        }
+                    //    ],
+                    //    styles: {
+                    //        header: {
+                    //            fontSize: 18,
+                    //            bold: true,
+                    //            margin: [0, 0, 0, 10]
+                    //        },
+                    //        subheader: {
+                    //            fontSize: 16,
+                    //            bold: true,
+                    //            margin: [0, 10, 0, 5]
+                    //        },
+                    //        tableExample: {
+                    //            margin: [0, 5, 0, 15]
+                    //        },
+                    //        tableHeader: {
+                    //            bold: true,
+                    //            fontSize: 13,
+                    //            color: 'black'
+                    //        }
+                    //    },
+                    //    defaultStyle: {
+                    //        // alignment: 'justify'
+                    //    }
+                    //};
+
+
+                    var docDefinition = {
+                        content: [
+                            {
+                                style: 'tableExample',
+                                color: '#445',
+                                table: {
+                                    widths: [200, 200, 200],
+                                    body: [
+                                        [
+                                            {text: 'Column 2'}
+                                            ,
+                                            {text: 'Column 2'},
+                                            {text: 'Column 3'}
+                                        ]
+                                    ]
+                                },
+                                layout: "noBorders"
+                            },
+                            {
+                                columns: [
+                                    {
+                                        text: 'A simple table with nested elements', style: 'subheader'
+                                    },
+                                    {
+                                        text: 'A simple table with nested elements', style: 'subheader'
+                                    }
+                                ]
+                            },
+
+                            {
+                                style: 'tableExample',
+                                color: '#222',
+                                widths: [100, 'auto', 'auto', 'auto', 'auto', 'auto'],
+                                table: {
+                                    headerRows: 2,
+                                    body: [
+                                        [{
+                                            rowSpan: 2,
+                                            text: 'rowSpan set to 3\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor'
+                                        }, {rowSpan: 2, text: 'Cas'}, {
+                                            text: 'Header with Colspan = 2',
+                                            style: 'tableHeader',
+                                            colSpan: 2,
+                                            alignment: 'center'
+                                        }, {}, {
+                                            text: 'Header with Colspan = 2',
+                                            style: 'tableHeader',
+                                            colSpan: 2,
+                                            alignment: 'center'
+                                        }, {}],
+                                        ['Column 1', 'Column 2', 'Column 3', 'Column 1', 'Column 2', 'Column 3'],
+                                        ['Pepe de Jose', '-', '-', '-', '-', '-'],
+                                        ['Marcos Antonio de Jose', '2', '', '', '', '']
+                                    ]
+                                },
+                            },
+                            //{ text: 'A simple table with nested elements', style: 'subheader' },
+                            //'It is of course possible to nest any other type of nodes available in pdfmake inside table cells',
+                            //{
+                            //    style: 'tableExample',
+                            //    table: {
+                            //        body: [
+                            //            ['Column 1', 'Column 2', 'Column 3'],
+                            //            [
+                            //                {
+                            //                    stack: [
+                            //                        'Let\'s try an unordered list',
+                            //                        {
+                            //                            ul: [
+                            //                                'item 1',
+                            //                                'item 2'
+                            //                            ]
+                            //                        }
+                            //                    ]
+                            //                },
+                            //                /* a nested table will appear here as soon as I fix a bug */
+                            //                [
+                            //                    'or a nested table',
+                            //                    {
+                            //                        table: {
+                            //                            body: [
+                            //                                [ 'Col1', 'Col2', 'Col3'],
+                            //                                [ '1', '2', '3'],
+                            //                                [ '1', '2', '3']
+                            //                            ]
+                            //                        },
+                            //                    }
+                            //                ],
+                            //                { text: [
+                            //                    'Inlines can be ',
+                            //                    { text: 'styled\n', italics: true },
+                            //                    { text: 'easily as everywhere else', fontSize: 10 } ]
+                            //                }
+                            //            ]
+                            //        ]
+                            //    }
+                            //},
+                            //{ text: 'Defining column widths', style: 'subheader' },
+                            //'Tables support the same width definitions as standard columns:',
+                            //{
+                            //    bold: true,
+                            //    ul: [
+                            //        'auto',
+                            //        'star',
+                            //        'fixed value'
+                            //    ]
+                            //},
+                            //{
+                            //    style: 'tableExample',
+                            //    table: {
+                            //        widths: [100, '*', 200, '*'],
+                            //        body: [
+                            //            [ 'width=100', 'star-sized', 'width=200', 'star-sized'],
+                            //            [ 'fixed-width cells have exactly the specified width', { text: 'nothing interesting here', italics: true, color: 'gray' }, { text: 'nothing interesting here', italics: true, color: 'gray' }, { text: 'nothing interesting here', italics: true, color: 'gray' }]
+                            //        ]
+                            //    }
+                            //},
+                            //{ text: 'Headers', style: 'subheader' },
+                            //'You can declare how many rows should be treated as a header. Headers are automatically repeated on the following pages',
+                            //{ text: [ 'It is also possible to set keepWithHeaderRows to make sure there will be no page-break between the header and these rows. Take a look at the document-definition and play with it. If you set it to one, the following table will automatically start on the next page, since there\'s not enough space for the first row to be rendered here' ], color: 'gray', italics: true },
+                            //{
+                            //    style: 'tableExample',
+                            //    table: {
+                            //        headerRows: 1,
+                            //        // dontBreakRows: true,
+                            //        // keepWithHeaderRows: 1,
+                            //        body: [
+                            //            [{ text: 'Header 1', style: 'tableHeader' }, { text: 'Header 2', style: 'tableHeader' }, { text: 'Header 3', style: 'tableHeader' }],
+                            //            [
+                            //                'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+                            //            ]
+                            //        ]
+                            //    }
+                            //},
+                            //{ text: 'Column/row spans', style: 'subheader' },
+                            //'Each cell-element can set a rowSpan or colSpan',
+                            //{
+                            //    style: 'tableExample',
+                            //    color: '#444',
+                            //    table: {
+                            //        widths: [ 200, 'auto', 'auto' ],
+                            //        headerRows: 2,
+                            //        // keepWithHeaderRows: 1,
+                            //        body: [
+                            //            [{ text: 'Header with Colspan = 2', style: 'tableHeader', colSpan: 2, alignment: 'center' }, {}, { text: 'Header 3', style: 'tableHeader', alignment: 'center' }],
+                            //            [{ text: 'Header 1', style: 'tableHeader', alignment: 'center' }, { text: 'Header 2', style: 'tableHeader', alignment: 'center' }, { text: 'Header 3', style: 'tableHeader', alignment: 'center' }],
+                            //            [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                            //            [ { rowSpan: 3, text: 'rowSpan set to 3\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor' }, 'Sample value 2', 'Sample value 3' ],
+                            //            [ '', 'Sample value 2', 'Sample value 3' ],
+                            //            [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                            //            [ 'Sample value 1', { colSpan: 2, rowSpan: 2, text: 'Both:\nrowSpan and colSpan\ncan be defined at the same time' }, '' ],
+                            //            [ 'Sample value 1', '', '' ],
+                            //        ]
+                            //    }
+                            //},
+                            //{ text: 'Styling tables', style: 'subheader' },
+                            //'You can provide a custom styler for the table. Currently it supports:',
+                            //{
+                            //    ul: [
+                            //        'line widths',
+                            //        'line colors',
+                            //        'cell paddings',
+                            //    ]
+                            //},
+                            //'with more options coming soon...\n\npdfmake currently has a few predefined styles (see them on the next page)',
+                            //{ text: 'noBorders:', fontSize: 14, bold: true, pageBreak: 'before', margin: [0, 0, 0, 8] },
+                            //{
+                            //    style: 'tableExample',
+                            //    table: {
+                            //        headerRows: 1,
+                            //        body: [
+                            //            [{ text: 'Header 1', style: 'tableHeader' }, { text: 'Header 2', style: 'tableHeader'}, { text: 'Header 3', style: 'tableHeader' }],
+                            //            [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                            //            [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                            //            [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                            //            [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                            //            [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                            //        ]
+                            //    },
+                            //    layout: 'noBorders'
+                            //},
+                            //{ text: 'headerLineOnly:', fontSize: 14, bold: true, margin: [0, 20, 0, 8] },
+                            //{
+                            //    style: 'tableExample',
+                            //    table: {
+                            //        headerRows: 1,
+                            //        body: [
+                            //            [{ text: 'Header 1', style: 'tableHeader' }, { text: 'Header 2', style: 'tableHeader'}, { text: 'Header 3', style: 'tableHeader' }],
+                            //            [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                            //            [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                            //            [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                            //            [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                            //            [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                            //        ]
+                            //    },
+                            //    layout: 'headerLineOnly'
+                            //},
+                            //{ text: 'lightHorizontalLines:', fontSize: 14, bold: true, margin: [0, 20, 0, 8] },
+                            //{
+                            //    style: 'tableExample',
+                            //    table: {
+                            //        headerRows: 1,
+                            //        body: [
+                            //            [{ text: 'Header 1', style: 'tableHeader' }, { text: 'Header 2', style: 'tableHeader'}, { text: 'Header 3', style: 'tableHeader' }],
+                            //            [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                            //            [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                            //            [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                            //            [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                            //            [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                            //        ]
+                            //    },
+                            //    layout: 'lightHorizontalLines'
+                            //},
+                            //{ text: 'but you can provide a custom styler as well', margin: [0, 20, 0, 8] },
+                            //{
+                            //    style: 'tableExample',
+                            //    table: {
+                            //        headerRows: 1,
+                            //        body: [
+                            //            [{ text: 'Header 1', style: 'tableHeader' }, { text: 'Header 2', style: 'tableHeader'}, { text: 'Header 3', style: 'tableHeader' }],
+                            //            [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                            //            [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                            //            [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                            //            [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                            //            [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                            //        ]
+                            //    },
+                            //    layout: {
+                            //        hLineWidth: function(i, node) {
+                            //            return (i === 0 || i === node.table.body.length) ? 2 : 1;
+                            //        },
+                            //        vLineWidth: function(i, node) {
+                            //            return (i === 0 || i === node.table.widths.length) ? 2 : 1;
+                            //        },
+                            //        hLineColor: function(i, node) {
+                            //            return (i === 0 || i === node.table.body.length) ? 'black' : 'gray';
+                            //        },
+                            //        vLineColor: function(i, node) {
+                            //            return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
+                            //        },
+                            //        // paddingLeft: function(i, node) { return 4; },
+                            //        // paddingRight: function(i, node) { return 4; },
+                            //        // paddingTop: function(i, node) { return 2; },
+                            //        // paddingBottom: function(i, node) { return 2; }
+                            //    }
+                            //}
+                        ],
+                        styles: {
+                            header: {
+                                fontSize: 18,
+                                bold: true,
+                                margin: [0, 0, 0, 10]
+                            },
+                            subheader: {
+                                fontSize: 16,
+                                bold: true,
+                                margin: [0, 10, 0, 5]
+                            },
+                            tableExample: {
+                                margin: [0, 5, 0, 15]
+                            },
+                            tableHeader: {
+                                bold: true,
+                                fontSize: 13,
+                                color: 'black'
+                            }
+                        },
+                        defaultStyle: {
+                            // alignment: 'justify'
+                        }
+                    };
+
+                    pdfMake.createPdf(docDefinition).open()
+                }
             }
 
             $scope.okContacterUser = function () {
@@ -7300,6 +7865,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             };
             initParameters();
+
 
             $scope.searchFormationUser = function () {
 
@@ -8699,7 +9265,10 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 .success(function (result) {
                     if (result.status === "ok") {
                         vm.customerData = result.data;
-                        console.log("Customer data", currentCustomer)
+                        $scope.formationId = vm.customerData.formation
+                        console.log("Customer data", vm.customerData)
+                        ///---------------------------------------------////
+                        $scope.searchFormation();
 
 
                     } else {
@@ -8721,6 +9290,49 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
         };
 
         $scope.searchCustomer()
+
+        $scope.searchFormation = function () {
+
+            $http.post($rootScope.urlBase + "/formation/searchByID", {
+                    id: $scope.formationId
+                })
+                .success(function (result) {
+                    if (result.status === "ok") {
+                        $scope.formation = result.data;
+                        console.log("Formation data", $scope.formation)
+                        $scope.selectedPlace = $scope.formation.place;
+
+                        //Populate the select inputs with the animators.
+                        //var len = $scope.formation.animators.length;
+                        //for (var i = 0; i < len; i++) {
+                        //    if ($scope.formation.animators[i].type === "PSY") {
+                        //        $scope.selectedPSY = $scope.formation.animators[i];
+                        //    }
+                        //
+                        //    if ($scope.formation.animators[i].type === "BAFM") {
+                        //        $scope.selectedBAFM = $scope.formation.animators[i];
+                        //    }
+                        //}
+
+                        console.log("La formation para updatear tiene: ", $scope.formation);
+                    } else {
+                        console.log("Error searching Formation: ", result.info);
+
+                        objeData = {type: $translate.instant('ERROR')};
+                        $scope.showModalMessage($translate.instant('ERROR_SEARCHING_FORMATION') + ": " + result.info, objeData);
+                        //alert("Error searching Formation: " + result.info);
+                    }
+                })
+                .error(function (err) {
+                    console.log("Error searching Formation: ", err);
+
+                    objeData = {type: $translate.instant('ERROR')};
+                    $scope.showModalMessage($translate.instant('ERROR_SEARCHING_FORMATION') + ": " + err, objeData);
+
+                    //alert("Error searching Formation: " + err);
+                });
+        };
+
         $scope.showModalMessage = function (messageshow, objectData) {
 
             $scope.items = objectData;
@@ -8746,8 +9358,105 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
         };
 
-        $scope.creationAttestation = function () {
+        $scope.weekDay = ["Sunday", "Monday", "Tuesday", "Wensday", "Thuesday", "Friday", "Saturday"]
 
+        $scope.getReadableDate = function (dateParmt) {
+            // console.log("DATE PARAMETER ", dateParmt)
+            value = new Date(dateParmt);
+            resultDate = $scope.weekDay[value.getDay()] + ": " + value.getDate() + "/" + value.getMonth() + "/" + value.getFullYear();
+
+            return resultDate
+
+        };
+
+        $scope.creationAttestation = function () {
+            currentDate = new Date()
+            var docDefinition = {
+                content: [
+                    {
+                        columns: [
+                            {
+                                text: [
+                                    {text: $translate.instant('ATTESTATION_PAYMENT'), style: 'subheader'},
+                                    {text: $translate.instant('INCRIPTION_VALIDE'), style: 'subheader'},
+                                    {text: "", style: 'subheader'},
+                                    {text: $translate.instant('COMUNICATION_DEMANDE'), style: 'subheader'},
+                                    {text: "", style: 'subheaderText'},
+                                    {text: $translate.instant('MODE_PAYMENT'), style: 'subheader'},
+
+
+                                ]
+                            },
+                            {
+                                text: [
+                                    {
+                                        text: $translate.instant('ADDRESS') + ": " + $scope.formation.place.address,
+                                        style: 'subheader'
+                                    },
+                                    {text: " ", style: 'subheader'},
+                                    {text: $scope.getReadableDate(currentDate), style: 'subheader'},
+                                ]
+                            }
+                        ]
+                    },
+
+                    {
+                        style: 'tableExample',
+                        color: '#222',
+                        widths: ['auto'],
+                        table: {
+
+                            body: [
+                                [{
+                                    text: [
+                                        {text: $translate.instant('BENEFICIARIE') + ": " + vm.customerData.name + " " + vm.customerData.firstName},
+
+                                    ]
+                                },
+
+                                ],
+                                [{text: $translate.instant('MODELE_REGLEMENTAIRE') + ": "}],
+                                [{text: " "}],
+                                [{text: $translate.instant('PRICE_DATA') + ": " + $scope.formation.price}],
+                                [{text: " "}],
+                                [{text: $translate.instant('PAYMENT_CONDITIONS')}],
+                            ],
+
+                        },
+                        layout: 'noBorders'
+                    },
+                ],
+                styles: {
+                    header: {
+                        fontSize: 18,
+                        bold: true,
+                        margin: [0, 0, 0, 10]
+                    },
+                    subheader: {
+                        fontSize: 16,
+                        bold: true,
+                        margin: [0, 10, 0, 5]
+                    },
+                    subheaderText: {
+                        fontSize: 11,
+                        bold: true,
+                        margin: [0, 20, 0, 5]
+                    },
+                    tableExample: {
+                        margin: [0, 5, 0, 15]
+                    },
+                    tableHeader: {
+                        bold: true,
+                        fontSize: 13,
+                        color: 'read'
+                    }
+                },
+                defaultStyle: {
+                    // alignment: 'justify'
+                }
+            };
+
+            pdfMake.createPdf(docDefinition).open()
 
         }
 

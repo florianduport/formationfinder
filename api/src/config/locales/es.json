@@ -122,7 +122,6 @@
   "PHONENUMBER_IN_USE": "Número telefónico en uso",
   "ERROR_UPDATING_FORMATION_CENTER": "Error actualizando centro de formación",
   "FORMATION_CENTER_UPDATED": "Centro de formación actualizado",
-
   "FORMATION_CENTER_ID_REQUIRED": "id del Centro de Formación requerido",
   "ERROR_CREATING_WAITING_ROOM": "Error creando sala de espera",
   "WAITING_ROOM_CREATED": "Sala de espera creada",
@@ -136,7 +135,7 @@
   "ERROR_CREATING_CUSTOMER": "Error creando cliente",
   "CUSTOMER_ADDED_TO_WAITING_ROOM": "Cliente agregado a la sala de espera",
   "ERROR_SEARCHING_CUSTOMERS": "Error buscando clientes",
-  "WAITING_ROOM_IS_EMPTY": "Waiting room is empty",
+  "WAITING_ROOM_IS_EMPTY": "La sala de espera esta vacia",
   "ERROR_CUSTOMER_ID_REQUIED": "El id del cliente es requerido",
   "CUSTOMER_ADDED_TO_FORMATION": "Cliente agregado a la formación satisfactoriamente"
 

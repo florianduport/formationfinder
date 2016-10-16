@@ -11,9 +11,9 @@ module.exports = {
 
   attributes: {
 
-    isActivated: {
-      type: 'boolean'
-    },
+  	isActivated: {
+  		type: 'boolean'
+  	},
 
     name: {
       type: 'string',
@@ -57,20 +57,22 @@ module.exports = {
       type: 'string'
     },
 
+
+
     animators: {
-      collection: 'animator',
-      via: 'formationCenter'
-    },
+  		collection: 'animator',
+  		via: 'formationCenter'
+  	},
 
-    places: {
-      collection: 'place',
-      via: 'formationCenter'
-    },
+  	places: {
+  		collection: 'place',
+  		via: 'formationCenter'
+  	},
 
-    bills: {
-      collection: 'bill',
-      via: 'formationCenter'
-    },
+  	bills: {
+  		collection: 'bill',
+  		via: 'formationCenter'
+  	},
 
 
     customerBills: {

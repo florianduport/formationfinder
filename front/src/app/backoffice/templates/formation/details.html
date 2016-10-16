@@ -286,11 +286,11 @@
                 <div class="panel panel-info">
                     <div class="panel-heading">{{'OPTION_FORMATION' | translate}}:</div>
                     <div class="panel-body" style="max-height: 120px;overflow-y: scroll;">
-                        <a ng-click="okAttestation()">{{'CREATION_ATTESTATION' | translate}}</a>
+                        <a ng-click="okAttestation()"  ng-disabled="(formation.customers.length>0)?false:true">{{'CREATION_ATTESTATION' | translate}}</a>
                         <br/>
-                        <a ng-click="okPrintList()">{{'PRINT_LIST' | translate}}</a>
+                        <a ng-click="okPrintList()"  ng-disabled="(formation.customers.length>0)?false:true">{{'PRINT_LIST' | translate}}</a>
                         <br/>
-                        <a ng-click="okShieldAtestation()">{{'DETAILS_SHIELD' | translate}}</a>
+                        <a ng-click="okShieldAtestation()"  ng-disabled="(formation.customers.length>0)?false:true"> {{'DETAILS_SHIELD' | translate}}</a>
                         <br/>
                         <a ng-click="okContacterUser()"  ng-disabled="(formation.customers.length>0)?false:true" >{{'CONTACTER_USERS' | translate}}</a>
                     </div>
@@ -343,7 +343,7 @@
 
                     <div class="form-group">
                         <label for="name">
-                            Message</label>
+                            {{'EMAIL_MESSAGE' | translate}}</label>
                             <textarea name="message" id="message" class="form-control" rows="9" cols="25"
                                       required="required"
                                       placeholder="Message" ng-model="messagebody"></textarea>

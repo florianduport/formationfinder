@@ -108,10 +108,10 @@ app.config(["$routeProvider", function ($routeProvider) {
                 templateUrl: "templates/waitingroom/manage.html"
             }
         )
-        .when("/waitingroom/customeradd", {
+        .when("/waitingroom/customeradd/:formation_id", {
                 controller: "WaitingRoomCustomerAddController",
                 templateUrl: "templates/waitingroom/customeradd.html"
             }
         )
         .otherwise("/dashboard");
-}])
+}]);

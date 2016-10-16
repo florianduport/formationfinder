@@ -71,6 +71,8 @@ module.exports = {
   },
 
 
+
+
   costumerBooked: function (formationFounded, customerObject, callback) {
 
     if (typeof formationFounded == "undefined") {
@@ -228,7 +230,72 @@ module.exports = {
 
     })
 
-  }
+  },
 
+  sendMessageToCustomer: function (idStr, from, subject, text, callback){
+
+
+    if ( idStr === undefined ){
+      callback("Undefined formation identifier", null)
+    }
+
+    if ( from === undefined ){
+      callback("Undefined from email", null)
+    }
+
+    if ( text === undefined ){
+      callback("Undefined email text", null)
+    }
+
+    Formation.findOne({id:idStr}).populate('customers').exec(function (err, formationObject){
+      if (err) {
+        callback("Error in search formation", null)
+        return;
+      }
+
+      if (formationObject === undefined){
+        callback("Error in search formation", null)
+        return;
+      }
+
+      if (formationObject.customers === undefined || formationObject.customers.length == 0 ){
+        callback("Error in search formation, not exist customer in formation", null)
+        return;
+      }
+
+      bodytext = "<p><strong>" +  text + "</strong></p>"
+      formationObject.customers.foreach(function (iCustomer, index){
+
+        var config = {}
+        config = {
+          to: iCustomer.email,
+          from:from,
+          subject: subject,
+          html: bodytext
+        };
+
+        result = EmailService.send(config, function (err, result) {
+          ///If not error when send mail
+          ///0 Ok, 1 Error, 5 all intent
+
+          console.log("Mail send answer ", result.response)
+          //if (result.response != "OK") {
+          //  ////Create Log and Alert for formationCenter
+          //  callback( result, null )
+          //  return;
+          //}
+          //else {
+          //  callback(null, result)
+          //  return;
+          //}
+        });
+      })
+
+      callback(null, "OK")
+    })
+
+
+
+  }
 
 };

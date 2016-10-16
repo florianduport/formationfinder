@@ -122,7 +122,6 @@
   "PHONENUMBER_IN_USE": "Phonenumber in use",
   "ERROR_UPDATING_FORMATION_CENTER": "Error updating formation center",
   "FORMATION_CENTER_UPDATED": " Formation center updated",
-
   "FORMATION_CENTER_ID_REQUIRED": "Formation Center id is required",
   "ERROR_CREATING_WAITING_ROOM": "Error creating Waiting Room",
   "WAITING_ROOM_CREATED": "Waiting Room created",
@@ -138,9 +137,7 @@
   "ERROR_SEARCHING_CUSTOMERS": "Error searching customers",
   "WAITING_ROOM_IS_EMPTY": "Waiting room is empty",
   "ERROR_CUSTOMER_ID_REQUIED": "Customer id is required",
-
   "ERROR_SEARCHING_FORMATION": "Error searching formation",
   "CUSTOMER_ADDED_TO_FORMATION": "Customer added successfully to the formation"
-
 
 }

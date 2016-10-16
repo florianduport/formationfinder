@@ -2,7 +2,7 @@
  * Created by dionis on 7/14/2016.
  */
 
-  //use faker for creating customer for the waiting room.
+//use faker for creating customer for the waiting room.
 var faker = require('faker');
 faker.locale = "fr"
 
@@ -180,11 +180,11 @@ module.exports = {
                   //console.log("Read al update datas " , placeFormationAsociation)
                   callback(null, placeFormationAsociation);
 
+                });
               });
             });
-           });
           }
-      })
+        })
         ;
         //Asociate formations
 
@@ -243,10 +243,10 @@ module.exports = {
         else {
           formationData = placeFormationAsociation.formation[0]
           formationCenter = placeFormationAsociation.formationcenter[0]
-          Customer.find().exec(function (err,resultArray){
+          Customer.find().exec(function (err, resultArray) {
             ///---------------------------------------------
             resultArray.forEach(function (iCustomer, i) {
-              Customer.update({id:iCustomer.id}, {
+              Customer.update({id: iCustomer.id}, {
                 formationCenter: formationCenter, formation: formationData,
                 emailsend: 0
               }).exec(function (err, Customers) {
@@ -256,7 +256,7 @@ module.exports = {
 
               })
             })
-              ///---------------------------------------------
+            ///---------------------------------------------
             callback(null, placeFormationAsociation);
           })
 
@@ -333,39 +333,39 @@ module.exports = {
           //search the formation center used in previous functions and then
           //Create some customer for the waiting room.
           FormationCenter.findOne({id: formationCenter})
-          .exec(function (err, founded) {
+            .exec(function (err, founded) {
 
-            var Customers = [];
+              var Customers = [];
 
-            for(var i = 0; i < 20; i++) {
-              Customers.push({
-                name: faker.name.lastName(),
-                firstName: faker.name.firstName(),
-                email: "inoid2007@gmail.com",
-                address: faker.address.streetAddress(),
-                zipCode: faker.address.zipCode(),
-                city: faker.address.city(),
-                phoneNumber: faker.phone.phoneNumber(),
-                birthDate: faker.date.past(),
-                birthCity: faker.address.city(),
-                reasonOfFormation: faker.lorem.paragraph(),
-                civility: "M",
-                number: faker.random.number(),
-                emailsend: 0,
-                formationCenter: founded.id,
-                waitingRoom: founded.waitingRoom
-              });
-            }
-
-            Customer.create(Customers).exec(function (err, created) {
-              if(err){
-                console.log("****************************************************************************");
-                console.log("********** ERROR GENERATING CUSTOMERS FOR THE WAITING ROOM *****************");
-                console.log("****************************************************************************");
+              for (var i = 0; i < 20; i++) {
+                Customers.push({
+                  name: faker.name.lastName(),
+                  firstName: faker.name.firstName(),
+                  email: "inoid2007@gmail.com",
+                  address: faker.address.streetAddress(),
+                  zipCode: faker.address.zipCode(),
+                  city: faker.address.city(),
+                  phoneNumber: faker.phone.phoneNumber(),
+                  birthDate: faker.date.past(),
+                  birthCity: faker.address.city(),
+                  reasonOfFormation: faker.lorem.paragraph(),
+                  civility: "M",
+                  number: faker.random.number(),
+                  emailsend: 0,
+                  formationCenter: founded.id,
+                  waitingRoom: founded.waitingRoom
+                });
               }
-            });
 
-          });
+              Customer.create(Customers).exec(function (err, created) {
+                if (err) {
+                  console.log("****************************************************************************");
+                  console.log("********** ERROR GENERATING CUSTOMERS FOR THE WAITING ROOM *****************");
+                  console.log("****************************************************************************");
+                }
+              });
+
+            });
 
           callback(null, placeFormationAsociation);
         }

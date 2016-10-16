@@ -1538,45 +1538,45 @@ module.exports = {
       });
   },
 
-  searchUsersByFormation: function (req, res, next) {
+  searchUsersByFormation: function (req, res, next){
     idStr = req.param('id');
 
     console.log("Search data object ---------------------------------->>>>>>>>  ", idStr)
-    if (idStr === undefined) {
+    if (idStr === undefined ) {
       return res.json({err: sails.__("ERROR_FORMATIONDATE_ID_NODATA")});
     }
 
-    Formation.findOne({id: idStr}).populate("customers").exec(function (err, formationObject) {
+    Formation.findOne({id:idStr}).populate("customers").exec(function (err, formationObject){
       console.log("Search data object")
-      if (typeof formationObject != "undefined") {
+      if (typeof formationObject != "undefined"){
         console.log("Send information ", formationObject.customers.length)
-        return res.json({status: "ok", data: formationObject.customers})
+        return res.json({status:"ok", data:formationObject.customers})
       }
       return res.json([])
     })
   },
 
-  sendMailToCustomer: function (req, res, next) {
+  sendMailToCustomer: function  (req, res, next){
     idStr = req.param('id');
 
     console.log("Search data object ---------------------------------->>>>>>>>  ", idStr)
-    if (idStr === undefined) {
+    if (idStr === undefined ) {
       return res.json({err: sails.__("ERROR_FORMATIONDATE_ID_NODATA")});
     }
 
-    from = req.param('from');
+    from =  req.param('from');
 
-    subject = req.param('subject');
+    subject =  req.param('subject');
 
-    subject = req.param('text');
+    text =  req.param('text');
 
-    FormationServices.sendMessageToCustomer(idStr, from, subject, text).exec(function (err, result) {
+    FormationServices.sendMessageToCustomer(idStr, from, subject, text).exec(function (err, result){
       console.log("Search data object")
-      if (typeof err != "undefined") {
+      if (typeof err != "undefined"){
         console.log("Send information ", formationObject.customers.length)
-        return res.json({status: "error", message: err.message})
+        return res.json({status:"error", message:err.message})
       }
-      return res.json([])
+      return res.json({status:"ok", message:"sended"})
     })
   },
 

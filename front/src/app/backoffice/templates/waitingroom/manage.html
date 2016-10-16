@@ -8,17 +8,17 @@
                 <div class="panel-body">
                     <button class="btn btn-default btn-block"
                             ng-click="showCourrierTypeMinistere()">
-                        Courrier type Ministere
+                        {{'COURRIER_TYPE_MINISTERE' | translate}}
                     </button>
 
                     <button class="btn btn-default btn-block"
                             ng-click="showDemandeInterruption()">
-                        Demande d'interruption
+                        {{'DEMANDE_INTERRUPTION' | translate}}
                     </button>
 
                     <button class="btn btn-default btn-block"
                             ng-click="showDemandeRemboursement()">
-                        Demande de remboursement
+                        {{'DEMANDE_REMBOURSEMENT' | translate}}
                     </button>
                 </div>
 
@@ -28,17 +28,20 @@
 
         <div class="col col-lg-4">
             <div class="panel panel-primary">
-                <!--<div class="panel-heading">{{'DOCUMENTS' | translate}}</div>-->
-                <div class="panel-heading">Liste des stagiaires en salle d'attente</div>
+                <div class="panel-heading">
+                    {{'LISTE_DES_STAGIAIRES_EN_SALLE_D_ATTENTE' | translate}}
+                </div>
 
                 <div class="panel-body">
-                    <button class="btn btn-danger btn-block">Inscrire en salle d'attente</button>
+                    <button class="btn btn-danger btn-block">
+                        {{'INSCRIRE_EN_SALLE_D_ATTENTE' | translate}}
+                    </button>
                     <button class="btn btn-default btn-block" ng-click="gotoAddCustomers()">
-                        Add customers to formations
+                        {{'ADD_CUSTOMERS_TO_FORMATIONS2' | translate}}
                     </button>
                     <br>
 
-                    <p class="text-center">Aucun stagiaire</p>
+                    <p class="text-center">{{'AUCUN_STAGIAIRE' | translate}}</p>
 
                 </div>
 
@@ -51,30 +54,35 @@
     <div class="row">
         <div class="col col-lg-4">
             <div class="panel panel-primary">
-                <div class="panel-heading">Stagiaire</div>
+                <div class="panel-heading">
+                    {{'STAGIAIRE' | translate}}
+                </div>
 
                 <div class="panel-body">
-                    <button class="btn btn-default btn-block" ng-click="printWaitingRoomCustomersList()">Imprimer la liste</button>
+                    <button class="btn btn-default btn-block" ng-click="printWaitingRoomCustomersList()">
+                        {{'IMPRIMER_LA_LISTE' | translate}}
+                    </button>
                 </div>
 
             </div>
         </div>
     </div>
 
-
     <div class="row">
-        <div class="col col-lg-5">
+        <div class="col col-lg-4">
             <div class="panel panel-primary">
-                <div class="panel-heading">Carte Bancaire</div>
+                <div class="panel-heading">
+                    {{'CARTE_BANCAIRE' | translate}}
+                </div>
 
                 <div class="panel-body">
                     <p class="text-center">
                         <span class="glyphicon glyphicon-lock"></span>
-                        Paiement sécurisé
+                        {{'PAIMENT_SECURISE' | translate}}
                     </p>
 
-                    <p class="text-center">
-                        Cryptage SSL utilisé par la banque Crédit du Nord.
+                    <p class="text-center" style="font-size: 12px">
+                        {{'CRYPTAGE_SSL' | translate}}
                     </p>
 
                     <!--Poner las imagenes de las tarjetas de banco-->

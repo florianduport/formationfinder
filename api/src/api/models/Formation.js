@@ -136,7 +136,7 @@ module.exports = {
       for (var i = 0; i < lth; i++) {
         dates.push(this.dates[i]);
         dates[i].date = new Date(dates[i].date);
-      };
+      }
 
       return dates;
     },

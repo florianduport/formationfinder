@@ -210,7 +210,7 @@ module.exports = {
   },
   ///Update al costumer id with send mailed result
   ///parameter is Array with object { idcostumer, sendmailed} result
-    updatemailnotify: function ( costumerArray) {
+  updatemailnotify: function ( costumerArray) {
         ////Para cada elemento del arreglo  actualizar en la base de datoss
 
       async.forEach(costumerArray, function (CustomerObject, callback) {
@@ -244,7 +244,7 @@ module.exports = {
       });
     },
 
-   searchByLicenceInYear: function (req, res, next) {
+  searchByLicenceInYear: function (req, res, next) {
     // body...
 
     result = {};
@@ -279,7 +279,7 @@ module.exports = {
     });
   },
 
-    sendMailCustomerBooked(req, res, next) {
+  sendMailCustomerBooked(req, res, next) {
 
       customerObject = req.param("customer");
 
@@ -323,11 +323,11 @@ module.exports = {
 
   },
 
-   searchbyformation:function(req, res, next){
+  searchbyformation:function(req, res, next){
 
    },
 
-   searchById : function (req, res, next){
+  searchById : function (req, res, next){
      idStr = req.param('id')
 
      if (idStr === undefined) {
