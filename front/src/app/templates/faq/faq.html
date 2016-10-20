@@ -10,7 +10,7 @@
                 <div class=" form-group">
                     <div  class="input-group" >
                         <!--For geolocation uib-typeahead="address for address in getLocation($viewValue)"-->
-                        <input  class="form-control"  placeholder="Question?" type="text"  uib-typeahead="state for state in states | filter:$viewValue" ng-model="faqList" maxlength="100">
+                        <input  class="form-control"  placeholder="{{'FAQ_TEXT' | translate}}" type="text"  uib-typeahead="state for state in states | filter:$viewValue" ng-model="faqList" maxlength="100">
 
 
                         <span class="input-group-addon"  ng-click="searchFaqList()"><span class="fa fa-search"></span></span>

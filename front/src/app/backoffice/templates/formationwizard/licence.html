@@ -43,7 +43,7 @@
                    ng-model="vm.customerData.driverLicence.dateOfDeliverance" 
                    class="form-control" 
                    type="text" required 
-                   placeholder="vm.customerData.driverLicence.dateOfDeliverance"
+                   placeholder="{{getReadableDate( vm.customerData.driverLicence.dateOfDeliverance)}}"
                    ng-pattern="vm.dateRegExp"
                    ng-change="vm.verifyDeliDate()"
                    uib-datepicker-popup="{{vm.format}}"

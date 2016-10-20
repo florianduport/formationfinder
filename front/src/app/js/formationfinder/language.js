@@ -38,6 +38,8 @@ app.config(function($translateProvider) {
             CITY:"City",
             SEARCH_IN_MAP:"Search in map",
             ITEMS_PER_PAGE: "Items per page",
+            FAQ_TEXT:"FAQs Questions?",
+            TESTIMONY_TEXT:"Testimonies Questions?",
 
         })
         .translations('fr', {
@@ -75,6 +77,8 @@ app.config(function($translateProvider) {
             CITY:"City",
             SEARCH_IN_MAP:"Search in map",
             ITEMS_PER_PAGE: "Items per page",
+            FAQ_TEXT:"FAQs Questions?",
+            TESTIMONY_TEXT:"Testimonies Questions?",
         })
     .translations('es', {
         HEADLINE: 'Hey, das ist meine großartige App!',
@@ -110,7 +114,9 @@ app.config(function($translateProvider) {
         BUTTON_RESERVER:"Reservar",
         CITY:"City",
         SEARCH_IN_MAP:"Buscar usando el mapa",
-        ITEMS_PER_PAGE: "Elementos por página"
+        ITEMS_PER_PAGE: "Elementos por página",
+        FAQ_TEXT:"FAQs Questions?",
+        TESTIMONY_TEXT:"Testimonies Questions?",
 
     });;
      $translateProvider.preferredLanguage('en');

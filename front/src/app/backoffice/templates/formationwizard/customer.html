@@ -647,7 +647,7 @@
                                    class="form-control"
                                    type="text"
                                    required
-                                   placeholder="vm.customerData.birthDate"
+                                   placeholder="{{getReadableDate( vm.customerData.birthDate)}}"
                                    uib-datepicker-popup="{{vm.format}}"
                                    is-open="vm.popupBirthDate.opened"
                                    datepicker-options="vm.BirthDateOptions"/>

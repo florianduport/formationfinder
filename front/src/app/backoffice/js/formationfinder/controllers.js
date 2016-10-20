@@ -3195,9 +3195,9 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                 var urlPath = $location.path();
 
-                if(urlPath.indexOf("/no_id") < 0){
+                if (urlPath.indexOf("/no_id") < 0) {
                     $location.path("/formation/admin");
-                }else {
+                } else {
                     $location.path("/waitingroom/manage");
                 }
             };
@@ -6798,6 +6798,15 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             };
 
+            $scope.getReadableDateEx = function (dateParmt) {
+                // console.log("DATE PARAMETER ", dateParmt)
+                value = new Date(dateParmt);
+                resultDate = $scope.weekDay[value.getDay()] + " " + value.getDate() + "/" + value.getMonth() + "/" + value.getFullYear();
+
+                return resultDate
+
+            };
+
             $scope.okAttestation = function () {
                 $scope.formation;
                 if ($scope.formation.customers.length <= 0) {
@@ -6832,6 +6841,11 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             },
                             normalText: {
                                 fontSize: 14,
+                                italic: true,
+                                margin: [0, 20, 0, 5]
+                            },
+                            minText: {
+                                fontSize: 12,
                                 italic: true,
                                 margin: [0, 20, 0, 5]
                             },
@@ -6916,13 +6930,13 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             style: 'subheaderText'
                         })
                         sigText = $translate.instant('FOOT_SING_ATTESTATION_PAGE') + " "
-                        sigTextEnd = ", " + $translate.instant('TEXT_SING_ATTESTATION_PAGE')
+                        sigTextEnd = ", " + $translate.instant('TEXT_SING_ATTESTATION_PAGE') + " "
                         sigText2 = $translate.instant('N_0') + " " + $scope.formation.place.agreementNumber + ", " + $translate.instant('END_SING_ATTESTATION_PAGE') + " :"
                         docDefinition.content.push({
                             text: [{text: sigText}, {
                                 text: $scope.formation.place.agreementName,
                                 bold: true
-                            }, {text: sigTextEnd}, {text: sigText2}], alignment: 'left', style: 'normalText'
+                            }, {text: sigTextEnd}, {text: sigText2}], alignment: 'left', style: 'minText'
                         })
 
                         //docDefinition.content.push({text: sigText2 ,alignment: 'left', style: 'normalText'})
@@ -6934,80 +6948,88 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         licenceNumberDate = (iCustomer.driverLicence !== undefined) ? iCustomer.driverLicence.dateOfDeliverance : ""
                         licenceNumberPlace = (iCustomer.driverLicence !== undefined) ? iCustomer.driverLicence.placeOfDeliverance : ""
                         dateValue = $scope.getReadableDate(iCustomer.birthDate);
-                        docDefinition.content.push({
-                            columns: [
-                                {
-                                    ul: [
-                                        {
-                                            text: [{text: $translate.instant('NAME_ATTESTATION_PAGE') + ": "}, {
-                                                text: iCustomer.name,
-                                                bold: true
-                                            }]
-                                        },
-                                        {
-                                            text: [{text: $translate.instant('BIRTHDATE_ATTESTATION_PAGE') + ": "}, {
-                                                text: dateValue,
-                                                bold: true
-                                            }]
-                                        },
-                                        {
-                                            text: [{text: $translate.instant('ADDRESS_ATTESTATION_PAGE') + ": "}, {
-                                                text: iCustomer.address,
-                                                bold: true
-                                            }]
-                                        },
-                                        {
-                                            text: [{text: $translate.instant('ZIPCODE_ATTESTATION_PAGE') + ": "}, {
-                                                text: String(iCustomer.zipCode),
-                                                bold: true
-                                            }]
-                                        },
 
-                                    ]
-                                },
-                                {
-                                    ul: [
-                                        {
-                                            text: [{text: $translate.instant('FIRSTNAME_ATTESTATION_PAGE') + ": "}, {
-                                                text: iCustomer.firstName,
-                                                bold: true
-                                            }]
-                                        },
-                                        {
-                                            text: [{text: $translate.instant('BIRTHCITY_ATTESTATION_PAGE') + ": "}, {
-                                                text: iCustomer.birthCity,
-                                                bold: true
-                                            }]
-                                        },
-                                        {
-                                            text: [{text: $translate.instant('LIVEADDRESS_ATTESTATION_PAGE') + ": "}, {
-                                                text: iCustomer.city,
-                                                bold: true
-                                            }]
-                                        },
+                        console.log("Show data ", docDefinition.content )
+                        position = 7*(index+1)
+
+                        columns =  [
+                            {
+                                ul: [
+                                    {
+                                        text: [{text: $translate.instant('NAME_ATTESTATION_PAGE') + ": "}, {
+                                            text: iCustomer.name,
+                                            bold: true
+                                        }]
+                                    },
+                                    {
+                                        text: [{text: $translate.instant('BIRTHDATE_ATTESTATION_PAGE') + ": "}, {
+                                            text: dateValue,
+                                            bold: true
+                                        }]
+                                    },
+                                    {
+                                        text: [{text: $translate.instant('ADDRESS_ATTESTATION_PAGE') + ": "}, {
+                                            text: iCustomer.address,
+                                            bold: true
+                                        }]
+                                    },
+                                    {
+                                        text: [{text: $translate.instant('ZIPCODE_ATTESTATION_PAGE') + ": "}, {
+                                            text: String(iCustomer.zipCode),
+                                            bold: true
+                                        }]
+                                    },
+
+                                ]
+                            },
+                            {
+                                ul: [
+                                    {
+                                        text: [{text: $translate.instant('FIRSTNAME_ATTESTATION_PAGE') + ": "}, {
+                                            text: iCustomer.firstName,
+                                            bold: true
+                                        }]
+                                    },
+                                    {
+                                        text: [{text: $translate.instant('BIRTHCITY_ATTESTATION_PAGE') + ": "}, {
+                                            text: iCustomer.birthCity,
+                                            bold: true
+                                        }]
+                                    },
+                                    {
+                                        text: [{text: $translate.instant('LIVEADDRESS_ATTESTATION_PAGE') + ": "}, {
+                                            text: iCustomer.city,
+                                            bold: true
+                                        }]
+                                    },
 
 
-                                    ]
-                                }
-                            ]
-                        })
+                                ]
+                            }
+                        ]
 
                         if (licenceNumber !== undefined) {
-                            columns[0].ul.push($translate.instant('NOLICENCE_ATTESTATION_PAGE') + ": " + licenceNumber)
+                            columns[0].ul.push($translate.instant('NOLICENCE_ATTESTATION_PAGE') + ": " + String(licenceNumber))
                         }
 
                         if (licenceNumberDate !== undefined) {
-                            columns[0].ul.push($translate.instant('NOLICENCEDATE_ATTESTATION_PAGE') + ": " + $scope.getReadableDate(licenceNumberDate))
+                            columns[0].ul.push($translate.instant('NOLICENCEDATE_ATTESTATION_PAGE') + ": " + $scope.getReadableDate(new Date (licenceNumberDate)))
                         }
 
                         if (licenceNumberPlace !== undefined) {
                             columns[1].ul.push($translate.instant('NOLICENCEPLACE_ATTESTATION_PAGE') + ": " + licenceNumberPlace)
 
                         }
+                        value = {}
+                        value.columns = columns
+                        docDefinition.content.push( value )
+
+
                         docDefinition.content.push({
                             text: $translate.instant('DATE_CONFIRMATION_ATTESTATION_PAGE') + " :",
                             style: 'normalTextOther'
                         })
+
 
                         ////Set formatio dates
 
@@ -7034,12 +7056,60 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         //if ((arraySize - 1) > index)
                         //    tableObject.pageBreak='after'
 
-                        docDefinition.content.push({text: " ", style: 'subheader'})
+                        //docDefinition.content.push({text: " ", style: 'subheader'})
+
+                        dateList = ""
+                        counter = 0
+                        $scope.formation.dates.forEach(function (iDate, index) {
+                            if ( index > 0)
+                                dateList += " " +  $translate.instant('CONJUNCTION') + " "
+                            dateList += $scope.getReadableDateEx(iDate.date)
+                        })
+
+                        docDefinition.content.push({
+                            text: dateList,
+                            style: 'normalTextOther'
+                        })
+
 
                         docDefinition.content.push({
                             text: $translate.instant('DATE_ARTICLE') + " :" + currentDate,
                             style: 'normalTextOther'
                         })
+
+                        ///Get Animators
+                        //BAFM/BAFCRI:
+                        //Psychologue
+                        animatorOne = ["","" , ""]
+                        animatorTouw = ["","" , ""]
+                        console.log("Animators " , $scope.formation.animators )
+
+                        if ($scope.formation.animators.length > 0) {
+                            $scope.formation.animators.forEach(function (iAnimator, index) {
+                                nType = ""
+                                if (iAnimator.type == "BAFM") {
+                                        nType = "BAFM/BAFCRI"
+                                }
+                                else  if (iAnimator.type == "PSY") {
+                                    nType = "Psychologue"
+                                }
+
+
+                                if ( index == 0) {
+
+                                    animatorOne[1] = { text: nType + " " +iAnimator.name + " " +  iAnimator.firstName ,  alignment: 'rigth'}
+                                }
+
+                                if ( index == 1) {
+
+                                    animatorTouw[1] =  { text: nType + " " +iAnimator.name + " " +  iAnimator.firstName , alignment: 'rigth'}
+                                }
+
+
+
+                            })
+                        }
+
                         data = [$translate.instant('SING_CACHET'), $translate.instant('SINGS'), $translate.instant('SING')]
                         tableObject = {
                             style: 'itemsTable',
@@ -7062,7 +7132,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
 
                                     ]
-                                ].concat([data])
+                                ].concat([data]).concat([animatorOne]).concat([animatorTouw])
                             },
 
                             layout: 'noBorders'
@@ -7074,9 +7144,9 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                         docDefinition.content.push(tableObject)
 
-                        console.log("Create estructure")
+                        //console.log("Create estructure")
                     });
-                    console.log("Continue function", docDefinition.content)
+                   // console.log("Continue function", docDefinition.content)
                     //var docDefinition = {
                     //    content: [
                     //        {text: $translate.instant('ADMIN_PAGE_HEAD'), style: 'header'},
@@ -7150,6 +7220,31 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     pdfMake.createPdf(docDefinition).open()
                 }
             }
+            $scope.printWaitingRoomCustomersList = function (callback) {
+
+                $http.post($rootScope.urlBase + "/FormationCenter/getWaitingRoomCustomerListByFormationCenter", {
+                        formationCenter: $rootScope.formationCenter
+                    })
+                    .success(function (result) {
+                        if (result.status === "ok") {
+                            $scope.WaitingRoomCustomersList = result.data;
+                            callback(null, null)
+
+
+                        } else {
+                            var objeData = {type: $translate.instant('ERROR')};
+                            //$scope.showModalMessage(result.info, objeData);
+                            callback(null, null)
+                        }
+                    })
+                    .error(function (err) {
+                        var objeData = {type: $translate.instant('ERROR')};
+                        //$scope.showModalMessage($translate.instant('ERROR_PRINTING_WAITING_ROOM'), objeData);
+                        callback(null, null)
+                    })
+
+
+            };
 
 
             $scope.okPrintList = function () {
@@ -7210,52 +7305,77 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         defaultStyle: {}
                     }
 
-                    docDefinition.content.push({
-                        columns: [
-                            {text: "Dates :", style: 'normalText'},
-                            {
-                                text: [{text: $translate.instant('ADDRESS_ATTESTATION_PAGE') + ": "}, {
-                                    text: $scope.formation.place.address,
-                                    bold: true
-                                }]
-                            },
-
-                        ]
+                    dateList = ""
+                    counter = 0
+                    $scope.formation.dates.forEach(function (iDate, index) {
+                        if ( index > 0)
+                            dateList += " " +  $translate.instant('CONJUNCTION') + " "
+                        dateList += $scope.getReadableDateEx(iDate.date)
                     })
 
+
+                    docDefinition.content.push(
+                            {text:[{text: "Dates :", style: 'normalText'},{text: dateList}]}
+
+
+
+                   )
+                    docDefinition.content.push(
+                    {
+                        text: [{text: $translate.instant('ADDRESS_ATTESTATION_PAGE') + ": "}, {
+                            text: $scope.formation.place.address,
+                            bold: true
+                        }]
+                    })
+                    valueItems = $translate.instant('PREINSCRIT')
                     var items = $scope.formation.customers.map(function (iplace) {
-                        return [iplace.name, iplace.firstName, iplace.phoneNumber, ""];
+                        return [iplace.name, iplace.firstName, iplace.phoneNumber, "FORMATIONFINDER", String($scope.formation.price),valueItems ];
                     });
 
-                    docDefinition.content.push({
-                        text: " Liste des stagiaires inscrits et pré­inscrits :",
-                        style: 'normalTextOther'
+                    ////Search waiting room users
+                    $scope.printWaitingRoomCustomersList( function ( err, resultData){
+
+                        var itemsWaiting = $scope.WaitingRoomCustomersList.map(function (iplace) {
+                            return [iplace.name, iplace.firstName, iplace.phoneNumber, "WAITING ROOM", "-", $translate.instant('PREINSCRIT')];
+                        });
+                        docDefinition.content.push({
+                            text: " Liste des stagiaires inscrits et pré­inscrits :",
+                            style: 'normalTextOther'
+                        })
+
+                        tableObject = {
+                            style: 'itemsTable',
+                            table: {
+                                widths: ['auto', 'auto', 'auto', 'auto','auto','auto'],
+                                body: [
+                                    [
+                                        {text: $translate.instant('TABLE_PLACE_NAME'), style: 'itemsTableHeader'},
+                                        {text: $translate.instant('FIRSTNAME_ATTESTATION_PAGE'), style: 'itemsTableHeader'},
+                                        {text: $translate.instant('TABLE_PLACE_PHONE'), style: 'itemsTableHeader'},
+                                        {text:  $translate.instant('TABLE_PLACE_INSCRIT'), style: 'itemsTableHeader'},
+                                        {text: $translate.instant('TABLE_PLACE_PRINCE'), style: 'itemsTableHeader'},
+                                        {text: $translate.instant('TABLE_PLACE_STATUS'), style: 'itemsTableHeader'},
+
+
+                                    ]
+                                ].concat(items)
+                            },
+
+
+                        }
+
+
+                        if (itemsWaiting.length > 0){
+                            tableObject.table.body.concat(itemsWaiting)
+                        }
+                        //
+                        ////Validate page break
+
+
+                        docDefinition.content.push(tableObject)
+                        pdfMake.createPdf(docDefinition).open()
+
                     })
-
-                    tableObject = {
-                        style: 'itemsTable',
-                        table: {
-                            widths: ['auto', 'auto', 'auto', 'auto'],
-                            body: [
-                                [
-                                    {text: $translate.instant('TABLE_PLACE_NAME'), style: 'itemsTableHeader'},
-                                    {text: $translate.instant('FIRSTNAME_ATTESTATION_PAGE'), style: 'itemsTableHeader'},
-                                    {text: $translate.instant('TABLE_PLACE_PHONE'), style: 'itemsTableHeader'},
-                                    {text: "STATUS", style: 'itemsTableHeader'}
-
-
-                                ]
-                            ].concat(items)
-                        },
-
-
-                    }
-                    //
-                    ////Validate page break
-
-
-                    docDefinition.content.push(tableObject)
-                    pdfMake.createPdf(docDefinition).open()
                 }
             }
 
@@ -7499,31 +7619,89 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     //};
 
 
+                    //dates: [{
+                    //    date: faker.date.past([], new Date("12/12/2015")),
+                    //    morning: {
+                    //        hourStart: "07:00",
+                    //        hourEnd: "12:00"
+                    //    },
+                    //    afternoon: {
+                    //        hourStart: "04:00",
+                    //        hourEnd: "06:00"
+                    //    }
+                    //}, {
+                    //    date: faker.date.future(),
+                    //    morning: {
+                    //        hourStart: "08:00",
+                    //        hourEnd: "12:00"
+                    //    },
+                    //    afternoon: {
+                    //        hourStart: "03:00",
+                    //        hourEnd: "06:00"
+                    //    }
+                    //}],
+
+                    dateList = ""
+                    counter = 0
+                    $scope.formation.dates.forEach(function (iDate, index) {
+                        if ( index > 0)
+                            dateList += " " +  $translate.instant('CONJUNCTION') + " "
+                        dateList += $scope.getReadableDateEx(iDate.date)
+                    })
+
+
+                    currentDate = $scope.getReadableDate(new Date())
+
+                    sigText2 = ", " + $translate.instant('TITULAIRE') + " " + $scope.formation.place.agreementNumber
+                    //docDefinition.content.push({
+                    //    text: [{text: ""}, {
+                    //        text: $scope.formation.place.agreementName,
+                    //        bold: true
+                    //    },  {text: sigText2}], alignment: 'left', style: 'normalText'
+                    //})
+                    var items = $scope.formation.customers.map(function (iplace) {
+                        return [iplace.name + " " + iplace.firstName ,"" ,"" ,"" ,"" ,"" ];
+                    });
+
                     var docDefinition = {
                         content: [
                             {
                                 style: 'tableExample',
                                 color: '#445',
                                 table: {
-                                    widths: [200, 200, 200],
+                                    widths: [200, 200, 100],
                                     body: [
                                         [
-                                            {text: 'Column 2'}
+                                            {text: ''}
                                             ,
-                                            {text: 'Column 2'},
-                                            {text: 'Column 3'}
+                                            {text: $translate.instant('EMARGEMENT_TITLE'), bold: true},
+                                            {text: $scope.formation.place.address, fontSize: 10, bold: true}
                                         ]
-                                    ]
+                                    ].concat([[{text: ''}
+                                        ,
+                                        {text: ''}
+                                        ,
+                                        {text: $translate.instant('DATE_ARTICLE') + "" , fontSize: 10, bold: true}
+                                        ]])
+                                        .concat([[{text: ''}
+                                            ,
+                                            {text: ''}
+                                            ,
+                                            {text:  currentDate, fontSize: 10, bold: true}
+                                        ]])
                                 },
                                 layout: "noBorders"
                             },
                             {
                                 columns: [
                                     {
-                                        text: 'A simple table with nested elements', style: 'subheader'
+                                        text: dateList,fontSize: 10, bold: true
                                     },
                                     {
-                                        text: 'A simple table with nested elements', style: 'subheader'
+                                        text: [{text: ""}, {
+                                            text: $scope.formation.place.agreementName,
+                                            bold: true
+                                        },  {text: sigText2}]
                                     }
                                 ]
                             },
@@ -7531,28 +7709,29 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             {
                                 style: 'tableExample',
                                 color: '#222',
-                                widths: [100, 'auto', 'auto', 'auto', 'auto', 'auto'],
+                                widths: [100, 'auto', 200, 200, 200, 200],
                                 table: {
                                     headerRows: 2,
                                     body: [
                                         [{
                                             rowSpan: 2,
-                                            text: 'rowSpan set to 3\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor'
+                                            text: $translate.instant('NAMEDATA'),
+                                            alignment: 'center',
+                                            bold:true
                                         }, {rowSpan: 2, text: 'Cas'}, {
-                                            text: 'Header with Colspan = 2',
+                                            text: $translate.instant('DAY1'),
                                             style: 'tableHeader',
                                             colSpan: 2,
                                             alignment: 'center'
                                         }, {}, {
-                                            text: 'Header with Colspan = 2',
+                                            text: $translate.instant('DAY2'),
                                             style: 'tableHeader',
                                             colSpan: 2,
                                             alignment: 'center'
                                         }, {}],
-                                        ['Column 1', 'Column 2', 'Column 3', 'Column 1', 'Column 2', 'Column 3'],
-                                        ['Pepe de Jose', '-', '-', '-', '-', '-'],
-                                        ['Marcos Antonio de Jose', '2', '', '', '', '']
-                                    ]
+                                        ['Column 1', 'Column 2',  $translate.instant('MORNING'),  $translate.instant('AFTERNOON'), $translate.instant('MORNING'),   $translate.instant('AFTERNOON')],
+
+                                    ].concat(items)
                                 },
                             },
                             //{ text: 'A simple table with nested elements', style: 'subheader' },
@@ -7745,6 +7924,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             //        // paddingBottom: function(i, node) { return 2; }
                             //    }
                             //}
+                            //['Pepe de Jose', '-', '-', '-', '-', '-'],
+                           // ['Marcos Antonio de Jose', '2', '', '', '', '']
                         ],
                         styles: {
                             header: {
@@ -7789,7 +7970,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     var modalInstance = $uibModal.open({
                         animation: $scope.animationsEnabled,
                         templateUrl: 'ModalSendEmailMessage.html',
-                        controller: 'ModalInstanceCtrl',
+                        controller: 'ModalInstanceCtrlMail',
                         size: "",
                         resolve: {
                             items: function () {
@@ -7800,8 +7981,40 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                     modalInstance.result.then(function (selectedItem) {
 
-                    }, function () {
+                        console.log("Object for send messajes", selectedItem)
 
+                        config = {}
+                        config.id = $routeParams.id
+                        config.mailuser = $routeParams.mailuser
+                        config.from = $routeParams.mailsender
+                        config.subject = $routeParams.mailsubject
+                        config.text = $routeParams.messagebody
+
+                        $http.post($rootScope.urlBase + "/formation/sendMailToCustomer", config)
+                            .success(function (result) {
+                                if (result.status === "ok") {
+                                    $scope.formation = result.message;
+                                    console.log("Formation data", result.message)
+
+                                } else {
+                                    console.log("Error searching Formation: ", result.message);
+
+                                    objeData = {type: $translate.instant('ERROR')};
+                                    $scope.showModalMessage($translate.instant('ERROR_SEND_MAIL') + ": " + result.message, objeData);
+                                    //alert("Error searching Formation: " + result.info);
+                                }
+                            })
+                            .error(function (err) {
+                                console.log("Error searching Formation: ", err);
+
+                                objeData = {type: $translate.instant('ERROR')};
+                                $scope.showModalMessage($translate.instant('ERROR_SEND_MAIL') + ": " + err, objeData);
+
+                                //alert("Error searching Formation: " + err);
+                            });
+
+                    }, function () {
+                        //console.log("Object for send messajes", selectedItem)
                     });
                 }
             }
@@ -8542,7 +8755,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
         vm.zipcodeRegExp = /^\d{5}$/;
         vm.nameRegExp = /^[A-Za-z][A-Za-z\s]+$/;
         vm.emailRedExp = /^[a-z][_a-z0-9-]*(\.[_a-z0-9-]+)*@[a-z][a-z0-9-]*(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/;
-        vm.dateRegExp = /^\d{2}\/\d{2}\/\d{4}$/;
+        vm.dateRegExp = /^\d{2}\/\d{1,2}\/\d{4}$/;
         vm.numberRegExp = /^\d{12}$/;
         vm.numberRegExpCard = /^\d{3}$/;
 
@@ -9433,7 +9646,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         margin: [0, 0, 0, 10]
                     },
                     subheader: {
-                        fontSize: 16,
+                        fontSize: 12,
                         bold: true,
                         margin: [0, 10, 0, 5]
                     },
@@ -9460,6 +9673,14 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
         }
 
+        $scope.getReadableDate = function (dateParmt) {
+            // console.log("DATE PARAMETER ", dateParmt)
+            value = new Date(dateParmt);
+            resultDate =  value.getDate() + "/" + value.getMonth() + "/" + value.getFullYear();
+
+            return resultDate
+
+        };
         $scope.createConvocation = function () {
 
         }
@@ -9645,6 +9866,30 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
         }
 
 
+    })
+    .controller('ModalInstanceCtrlMail', function ($scope, $uibModalInstance, items) {
+
+        $scope.items = items;
+        $scope.selected = {
+            item: $scope.items
+        };
+
+        $scope.ok = function () {
+            $scope.selected.item.action = "OK"
+            $scope.selected.item.mailuser = $scope.mailuser
+            $scope.selected.item.mailsender = $scope.mailsender
+            $scope.selected.item.mailsubject = $scope.mailsubject
+            $scope.selected.item.messagebody = $scope.messagebody
+
+            $uibModalInstance.close($scope.selected.item);
+            $uibModalInstance.dismiss('cancel');
+
+        };
+
+        $scope.cancel = function () {
+            $uibModalInstance.dismiss('cancel');
+            $scope.formationCenterName = ""
+        };
     })
 
 
