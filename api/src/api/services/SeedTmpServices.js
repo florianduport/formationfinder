@@ -341,7 +341,7 @@ module.exports = {
                 Customers.push({
                   name: faker.name.lastName(),
                   firstName: faker.name.firstName(),
-                  email: "inoid2007@gmail.com",
+                  email: "juan.piterson@gmx.com",
                   address: faker.address.streetAddress(),
                   zipCode: faker.address.zipCode(),
                   city: faker.address.city(),

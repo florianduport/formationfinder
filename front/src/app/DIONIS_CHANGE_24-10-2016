@@ -1,0 +1,10 @@
+
+Backoffice templates/formation/admin (Ahora se muestra en la formacion con usuarios un icono en el resto no)
+Backoffice templates/formationwizard
+
+Backoffice js/formationfinder/AdminFormationController
+Backoffice js/formationfinder/WizardController
+
+Sails
+  FormationController/searchByFormationCenterWithPagination
+

@@ -1014,6 +1014,23 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             }
 
+            $scope.showUserButton = function (customer) {
+                if ( typeof customer != "undefined" ) {
+                    if (customer.length > 0){
+                        //console.log("Show value")
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+            $scope.okViewUsers = function (formation) {
+
+                $scope.formation;
+
+                $location.path("/formation/listclient/" + formation.id);
+            }
+
         }])
     .controller("UpdateFormationController", ["$scope", "$routeParams", "$rootScope", "$location", "$http", "$uibModal", "$translate",
         function ($scope, $routeParams, $rootScope, $location, $http, $uibModal, $translate) {
@@ -7228,6 +7245,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     .success(function (result) {
                         if (result.status === "ok") {
                             $scope.WaitingRoomCustomersList = result.data;
+
+                           // console.log("Waiting Room list ", $scope.WaitingRoomCustomersList )
                             callback(null, null)
 
 
@@ -7335,9 +7354,13 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     ////Search waiting room users
                     $scope.printWaitingRoomCustomersList( function ( err, resultData){
 
-                        var itemsWaiting = $scope.WaitingRoomCustomersList.map(function (iplace) {
-                            return [iplace.name, iplace.firstName, iplace.phoneNumber, "WAITING ROOM", "-", $translate.instant('PREINSCRIT')];
-                        });
+                        //console.log("List WaitingRoom --->", )
+                        var itemsWaiting = []
+                        //if ($scope.WaitingRoomCustomersList.length > 0) {
+                        //    itemsWaiting  = $scope.WaitingRoomCustomersList.map(function (iplace) {
+                        //    return [iplace.name, iplace.firstName, iplace.phoneNumber, "WAITING ROOM", "-", $translate.instant('PREINSCRIT')];
+                        //});
+                        //}
                         docDefinition.content.push({
                             text: " Liste des stagiaires inscrits et pré­inscrits :",
                             style: 'normalTextOther'
@@ -7358,18 +7381,11 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
 
                                     ]
-                                ].concat(items)
+                                ].concat(items).concat(itemsWaiting)
                             },
 
 
                         }
-
-
-                        if (itemsWaiting.length > 0){
-                            tableObject.table.body.concat(itemsWaiting)
-                        }
-                        //
-                        ////Validate page break
 
 
                         docDefinition.content.push(tableObject)
@@ -7387,260 +7403,6 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 }
                 else {
 
-                    //var docDefinition = {
-                    //    content: [
-                    //        { text: 'Tables', style: 'header' },
-                    //        'Official documentation is in progress, this document is just a glimpse of what is possible with pdfmake and its layout engine.',
-                    //        { text: 'A simple table (no headers, no width specified, no spans, no styling)', style: 'subheader' },
-                    //        'The following table has nothing more than a body array',
-                    //        {
-                    //            style: 'tableExample',
-                    //            table: {
-                    //                body: [
-                    //                    ['Column 1', 'Column 2', 'Column 3'],
-                    //                    ['One value goes here', 'Another one here', 'OK?']
-                    //                ]
-                    //            }
-                    //        },
-                    //        { text: 'A simple table with nested elements', style: 'subheader' },
-                    //        'It is of course possible to nest any other type of nodes available in pdfmake inside table cells',
-                    //        {
-                    //            style: 'tableExample',
-                    //            table: {
-                    //                body: [
-                    //                    ['Column 1', 'Column 2', 'Column 3'],
-                    //                    [
-                    //                        {
-                    //                            stack: [
-                    //                                'Let\'s try an unordered list',
-                    //                                {
-                    //                                    ul: [
-                    //                                        'item 1',
-                    //                                        'item 2'
-                    //                                    ]
-                    //                                }
-                    //                            ]
-                    //                        },
-                    //                        /* a nested table will appear here as soon as I fix a bug */
-                    //                        [
-                    //                            'or a nested table',
-                    //                            {
-                    //                                table: {
-                    //                                    body: [
-                    //                                        [ 'Col1', 'Col2', 'Col3'],
-                    //                                        [ '1', '2', '3'],
-                    //                                        [ '1', '2', '3']
-                    //                                    ]
-                    //                                },
-                    //                            }
-                    //                        ],
-                    //                        { text: [
-                    //                            'Inlines can be ',
-                    //                            { text: 'styled\n', italics: true },
-                    //                            { text: 'easily as everywhere else', fontSize: 10 } ]
-                    //                        }
-                    //                    ]
-                    //                ]
-                    //            }
-                    //        },
-                    //        { text: 'Defining column widths', style: 'subheader' },
-                    //        'Tables support the same width definitions as standard columns:',
-                    //        {
-                    //            bold: true,
-                    //            ul: [
-                    //                'auto',
-                    //                'star',
-                    //                'fixed value'
-                    //            ]
-                    //        },
-                    //        {
-                    //            style: 'tableExample',
-                    //            table: {
-                    //                widths: [100, '*', 200, '*'],
-                    //                body: [
-                    //                    [ 'width=100', 'star-sized', 'width=200', 'star-sized'],
-                    //                    [ 'fixed-width cells have exactly the specified width', { text: 'nothing interesting here', italics: true, color: 'gray' }, { text: 'nothing interesting here', italics: true, color: 'gray' }, { text: 'nothing interesting here', italics: true, color: 'gray' }]
-                    //                ]
-                    //            }
-                    //        },
-                    //        { text: 'Headers', style: 'subheader' },
-                    //        'You can declare how many rows should be treated as a header. Headers are automatically repeated on the following pages',
-                    //        { text: [ 'It is also possible to set keepWithHeaderRows to make sure there will be no page-break between the header and these rows. Take a look at the document-definition and play with it. If you set it to one, the following table will automatically start on the next page, since there\'s not enough space for the first row to be rendered here' ], color: 'gray', italics: true },
-                    //        {
-                    //            style: 'tableExample',
-                    //            table: {
-                    //                headerRows: 1,
-                    //                // dontBreakRows: true,
-                    //                // keepWithHeaderRows: 1,
-                    //                body: [
-                    //                    [{ text: 'Header 1', style: 'tableHeader' }, { text: 'Header 2', style: 'tableHeader' }, { text: 'Header 3', style: 'tableHeader' }],
-                    //                    [
-                    //                        'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-                    //                    ]
-                    //                ]
-                    //            }
-                    //        },
-                    //        { text: 'Column/row spans', style: 'subheader' },
-                    //        'Each cell-element can set a rowSpan or colSpan',
-                    //        {
-                    //            style: 'tableExample',
-                    //            color: '#444',
-                    //            table: {
-                    //                widths: [ 200, 'auto', 'auto' ],
-                    //                headerRows: 2,
-                    //                // keepWithHeaderRows: 1,
-                    //                body: [
-                    //                    [{ text: 'Header with Colspan = 2', style: 'tableHeader', colSpan: 2, alignment: 'center' }, {}, { text: 'Header 3', style: 'tableHeader', alignment: 'center' }],
-                    //                    [{ text: 'Header 1', style: 'tableHeader', alignment: 'center' }, { text: 'Header 2', style: 'tableHeader', alignment: 'center' }, { text: 'Header 3', style: 'tableHeader', alignment: 'center' }],
-                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
-                    //                    [ { rowSpan: 3, text: 'rowSpan set to 3\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor' }, 'Sample value 2', 'Sample value 3' ],
-                    //                    [ '', 'Sample value 2', 'Sample value 3' ],
-                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
-                    //                    [ 'Sample value 1', { colSpan: 2, rowSpan: 2, text: 'Both:\nrowSpan and colSpan\ncan be defined at the same time' }, '' ],
-                    //                    [ 'Sample value 1', '', '' ],
-                    //                ]
-                    //            }
-                    //        },
-                    //        { text: 'Styling tables', style: 'subheader' },
-                    //        'You can provide a custom styler for the table. Currently it supports:',
-                    //        {
-                    //            ul: [
-                    //                'line widths',
-                    //                'line colors',
-                    //                'cell paddings',
-                    //            ]
-                    //        },
-                    //        'with more options coming soon...\n\npdfmake currently has a few predefined styles (see them on the next page)',
-                    //        { text: 'noBorders:', fontSize: 14, bold: true, pageBreak: 'before', margin: [0, 0, 0, 8] },
-                    //        {
-                    //            style: 'tableExample',
-                    //            table: {
-                    //                headerRows: 1,
-                    //                body: [
-                    //                    [{ text: 'Header 1', style: 'tableHeader' }, { text: 'Header 2', style: 'tableHeader'}, { text: 'Header 3', style: 'tableHeader' }],
-                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
-                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
-                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
-                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
-                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
-                    //                ]
-                    //            },
-                    //            layout: 'noBorders'
-                    //        },
-                    //        { text: 'headerLineOnly:', fontSize: 14, bold: true, margin: [0, 20, 0, 8] },
-                    //        {
-                    //            style: 'tableExample',
-                    //            table: {
-                    //                headerRows: 1,
-                    //                body: [
-                    //                    [{ text: 'Header 1', style: 'tableHeader' }, { text: 'Header 2', style: 'tableHeader'}, { text: 'Header 3', style: 'tableHeader' }],
-                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
-                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
-                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
-                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
-                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
-                    //                ]
-                    //            },
-                    //            layout: 'headerLineOnly'
-                    //        },
-                    //        { text: 'lightHorizontalLines:', fontSize: 14, bold: true, margin: [0, 20, 0, 8] },
-                    //        {
-                    //            style: 'tableExample',
-                    //            table: {
-                    //                headerRows: 1,
-                    //                body: [
-                    //                    [{ text: 'Header 1', style: 'tableHeader' }, { text: 'Header 2', style: 'tableHeader'}, { text: 'Header 3', style: 'tableHeader' }],
-                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
-                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
-                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
-                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
-                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
-                    //                ]
-                    //            },
-                    //            layout: 'lightHorizontalLines'
-                    //        },
-                    //        { text: 'but you can provide a custom styler as well', margin: [0, 20, 0, 8] },
-                    //        {
-                    //            style: 'tableExample',
-                    //            table: {
-                    //                headerRows: 1,
-                    //                body: [
-                    //                    [{ text: 'Header 1', style: 'tableHeader' }, { text: 'Header 2', style: 'tableHeader'}, { text: 'Header 3', style: 'tableHeader' }],
-                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
-                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
-                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
-                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
-                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
-                    //                ]
-                    //            },
-                    //            layout: {
-                    //                hLineWidth: function(i, node) {
-                    //                    return (i === 0 || i === node.table.body.length) ? 2 : 1;
-                    //                },
-                    //                vLineWidth: function(i, node) {
-                    //                    return (i === 0 || i === node.table.widths.length) ? 2 : 1;
-                    //                },
-                    //                hLineColor: function(i, node) {
-                    //                    return (i === 0 || i === node.table.body.length) ? 'black' : 'gray';
-                    //                },
-                    //                vLineColor: function(i, node) {
-                    //                    return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
-                    //                },
-                    //                // paddingLeft: function(i, node) { return 4; },
-                    //                // paddingRight: function(i, node) { return 4; },
-                    //                // paddingTop: function(i, node) { return 2; },
-                    //                // paddingBottom: function(i, node) { return 2; }
-                    //            }
-                    //        }
-                    //    ],
-                    //    styles: {
-                    //        header: {
-                    //            fontSize: 18,
-                    //            bold: true,
-                    //            margin: [0, 0, 0, 10]
-                    //        },
-                    //        subheader: {
-                    //            fontSize: 16,
-                    //            bold: true,
-                    //            margin: [0, 10, 0, 5]
-                    //        },
-                    //        tableExample: {
-                    //            margin: [0, 5, 0, 15]
-                    //        },
-                    //        tableHeader: {
-                    //            bold: true,
-                    //            fontSize: 13,
-                    //            color: 'black'
-                    //        }
-                    //    },
-                    //    defaultStyle: {
-                    //        // alignment: 'justify'
-                    //    }
-                    //};
-
-
-                    //dates: [{
-                    //    date: faker.date.past([], new Date("12/12/2015")),
-                    //    morning: {
-                    //        hourStart: "07:00",
-                    //        hourEnd: "12:00"
-                    //    },
-                    //    afternoon: {
-                    //        hourStart: "04:00",
-                    //        hourEnd: "06:00"
-                    //    }
-                    //}, {
-                    //    date: faker.date.future(),
-                    //    morning: {
-                    //        hourStart: "08:00",
-                    //        hourEnd: "12:00"
-                    //    },
-                    //    afternoon: {
-                    //        hourStart: "03:00",
-                    //        hourEnd: "06:00"
-                    //    }
-                    //}],
-
                     dateList = ""
                     counter = 0
                     $scope.formation.dates.forEach(function (iDate, index) {
@@ -7653,12 +7415,6 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     currentDate = $scope.getReadableDate(new Date())
 
                     sigText2 = ", " + $translate.instant('TITULAIRE') + " " + $scope.formation.place.agreementNumber
-                    //docDefinition.content.push({
-                    //    text: [{text: ""}, {
-                    //        text: $scope.formation.place.agreementName,
-                    //        bold: true
-                    //    },  {text: sigText2}], alignment: 'left', style: 'normalText'
-                    //})
                     var items = $scope.formation.customers.map(function (iplace) {
                         return [iplace.name + " " + iplace.firstName ,"" ,"" ,"" ,"" ,"" ];
                     });
@@ -7709,7 +7465,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             {
                                 style: 'tableExample',
                                 color: '#222',
-                                widths: [100, 'auto', 200, 200, 200, 200],
+                                widths: [100, 'auto', 400, 400, 400, 400],
                                 table: {
                                     headerRows: 2,
                                     body: [
@@ -8024,6 +7780,11 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 $scope.formation;
 
                 $location.path("/formation/listclient/" + $scope.formation.id);
+            }
+
+            $scope.showImage = function () {
+
+
             }
 
         }])
@@ -9480,6 +9241,10 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         vm.customerData = result.data;
                         $scope.formationId = vm.customerData.formation
                         console.log("Customer data", vm.customerData)
+                        vm.customerData.birthDate =  $scope.getReadableDate( vm.customerData.birthDate)
+                        $scope.birthDate = vm.customerData.birthDate
+                        vm.customerData.driverLicence.dateOfDeliverance = $scope.getReadableDate(  vm.customerData.driverLicence.dateOfDeliverance)
+                        vm.customerData.driverLicence.dateOfProcuration = $scope.getReadableDate(   vm.customerData.driverLicence.dateOfProcuration)
                         ///---------------------------------------------////
                         $scope.searchFormation();
 
@@ -9618,21 +9383,18 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         color: '#222',
                         widths: ['auto'],
                         table: {
-
+                            headerRows: 1,
                             body: [
                                 [{
                                     text: [
-                                        {text: $translate.instant('BENEFICIARIE') + ": " + vm.customerData.name + " " + vm.customerData.firstName},
+                                        {text: $translate.instant('ADRESS_FORMATION') + ": " + $scope.formation.place.address }
 
                                     ]
                                 },
 
                                 ],
                                 [{text: $translate.instant('MODELE_REGLEMENTAIRE') + ": "}],
-                                [{text: " "}],
-                                [{text: $translate.instant('PRICE_DATA') + ": " + $scope.formation.price}],
-                                [{text: " "}],
-                                [{text: $translate.instant('PAYMENT_CONDITIONS')}],
+                                [{text: $translate.instant('PRECENSES')}],
                             ],
 
                         },
@@ -9681,7 +9443,183 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             return resultDate
 
         };
+
+        $scope.getReadableDateEx = function (dateParmt) {
+            // console.log("DATE PARAMETER ", dateParmt)
+            value = new Date(dateParmt);
+            resultDate = $scope.weekDay[value.getDay()] + " " + value.getDate() + "/" + value.getMonth() + "/" + value.getFullYear();
+
+            return resultDate
+
+        };
         $scope.createConvocation = function () {
+
+            dateList = ""
+            counter = 0
+            $scope.formation.dates.forEach(function (iDate, index) {
+                if ( index > 0)
+                    dateList += " " +  $translate.instant('CONJUNCTION') + " "
+                dateList += $scope.getReadableDateEx(iDate.date)
+            })
+
+
+            currentDate = $scope.getReadableDate(new Date())
+            var docDefinition = {
+                content: [
+                     {
+                        text: $translate.instant('CONVOCATION_TITLE'), style: 'header', alignment:"center"
+                     },
+                    {
+                        text: "", style: 'header', alignment:"center"
+                    },
+                     {
+                        columns: [
+                            {
+                                text: [
+                                    {text: $translate.instant('INSCRIPCION_CONFIRME'), style: 'subheader'},
+
+
+                                ]
+                            },
+                            {
+                                text: [
+                                    {
+                                        text:  vm.customerData.name + " " +  vm.customerData.firstName,
+                                        style: 'textData', alignment:"rigth"
+                                    },
+
+
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        columns: [
+                            {
+                                text: [
+
+                                    {text: $translate.instant('COMUNICATION_INFO'), style: 'textDataSimple'},
+
+
+                                ]
+                            },
+                            {
+                                text: [
+                                    {text:vm.customerData.address, style: 'textDataSimple',alignment:"rigth"}
+
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        text: vm.customerData.name + " " +  vm.customerData.firstName + " " + $translate.instant('THANKS_ABOUT') , style: 'subheader', alignment:"left"
+                    },
+                    {
+                        text: $translate.instant('THANKS_ABOUT_LINE'), style: 'subheader', alignment:"left"
+                    },
+
+                    {
+                        text: "" , style: 'subheader', alignment:"left"
+                    },
+
+                    {
+                        text: $translate.instant('PLACE_HORAIRE') , style: 'textData', alignment:"left"
+                    },
+
+                    {
+                        style: 'tableExample',
+                        color: '#222',
+                        widths: ['1000'],
+                        headerRows: 1,
+                        table: {
+
+                            body: [
+                                [{
+                                    text: [
+                                        {text: $translate.instant('ADRESS_FORMATION') + ": " + $scope.formation.place.address},
+
+                                    ]
+                                },
+
+                                ],
+                                [{text:[{text: dateList},{text:""},{ text:$translate.instant('PRECENSES'),alignment:"center" , bold: true}]}],
+                            ],
+
+                        },
+
+                    },
+                    {
+                        text: $translate.instant('RULER1') , style: 'textData', alignment:"left"
+                    },
+
+                    {
+                        style: 'tableExample',
+                        color: '#222',
+                        widths: ['2000'],
+                        headerRows: 1,
+                        table: {
+
+                            body: [
+                                [{ul:[{text:$translate.instant('RULER11')},{text:$translate.instant('RULER12')}]}
+                                ],
+
+                            ],
+
+                        },
+
+                    },
+                    {
+                        text: $translate.instant('INFORMATION_IMPORTANT') , style: 'subheader', alignment:"left"
+                    },
+                    {
+                        ul:[
+                            {text:[{text:$translate.instant('INFORMATION_IMPORTANT1')},{text: $translate.instant('INFORMATION_IMPORTANT11')},{text: $translate.instant('INFORMATION_IMPORTANT111')},{text: $translate.instant('INFORMATION_IMPORTANT12')},{text: $translate.instant('INFORMATION_IMPORTANT13')}]},
+                            {text:[{text:$translate.instant('INFORMATION_IMPORTANT22') },{text: $translate.instant('INFORMATION_IMPORTANT21')},{text: $translate.instant('INFORMATION_IMPORTANT212')},{text: $translate.instant('INFORMATION_IMPORTANT23')},{text: $translate.instant('INFORMATION_IMPORTANT24')}]},
+                        ]
+                    }
+                ],
+                styles: {
+                    header: {
+                        fontSize: 18,
+                        bold: true,
+                        margin: [0, 0, 0, 10]
+                    },
+                    subheader: {
+                        fontSize: 12,
+                        bold: true,
+                        margin: [0, 5, 0, 5]
+                    },
+                    subheaderText: {
+                        fontSize: 11,
+                        bold: true,
+                        margin: [0, 20, 0, 5]
+                    },
+                    tableExample: {
+                        margin: [0, 5, 0, 15]
+                    },
+                    tableHeader: {
+                        bold: true,
+                        fontSize: 13,
+                        color: 'read'
+                    },
+                    textData: {
+                        bold: true,
+                        fontSize: 10,
+                        color: 'read'
+                    },
+                    textDataSimple: {
+                        bold: false,
+                        fontSize: 10,
+                        color: 'read'
+                    }
+                },
+                defaultStyle: {
+                    // alignment: 'justify'
+                }
+            };
+
+            pdfMake.createPdf(docDefinition).open()
+
 
         }
 

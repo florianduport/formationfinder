@@ -43,7 +43,7 @@
                    ng-model="vm.customerData.driverLicence.dateOfDeliverance" 
                    class="form-control" 
                    type="text" required 
-                   placeholder="{{getReadableDate( vm.customerData.driverLicence.dateOfDeliverance)}}"
+                   placeholder="{{ vm.customerData.driverLicence.dateOfDeliverance}}"
                    ng-pattern="vm.dateRegExp"
                    ng-change="vm.verifyDeliDate()"
                    uib-datepicker-popup="{{vm.format}}"
@@ -64,7 +64,7 @@
                    ng-model="vm.customerData.driverLicence.dateOfProcuration" 
                    class="form-control" 
                    type="text" required 
-                   placeholder="vm.customerData.driverLicence.dateOfProcuration"
+                   placeholder="{{vm.customerData.driverLicence.dateOfProcuration}}"
                    ng-pattern="vm.dateRegExp"
                    ng-change="vm.verifyProcDate()"
                    uib-datepicker-popup="{{vm.format}}"
