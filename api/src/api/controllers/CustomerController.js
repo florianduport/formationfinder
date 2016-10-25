@@ -162,12 +162,12 @@ module.exports = {
           return next(err);
 
         console.log("**** Ejecucion de la ultima instruccion**** ")
-        //var valResult = {resultFormation }
+        var valResult = {resultFormation }
         console.log(resultFormation);
         if (res)
           return res.json(resultFormation);
         else
-          return {message:""}
+          return {resultFormation}
 
       });
 
@@ -279,7 +279,6 @@ module.exports = {
     });
   },
 
-<<<<<<< HEAD
   searchIfNotExistByLicence: function (req, res, next) {
 
     var result = {};
@@ -312,9 +311,48 @@ module.exports = {
   },
 
   sendMailCustomerBooked(req, res, next) {
-=======
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
 
+      customerObject = req.param("customer");
+
+      if ( typeof customerObject == "undefined"){
+        return res.json( req.__('NOT_CORRECT_CUSTOMER_DATA'));
+      }
+
+      if ( typeof customerObject.id == "undefined"){
+        return res.json( req.__('NOT_CORRECT_CUSTOMER_DATA'));
+      }
+
+      Customer.findOne({id:customerObject.id}).exec(function (err, resultObject){
+
+        if (err) {
+          return res.json( req.__('NOT_CORRECT_CUSTOMER_DATA'));
+        }
+
+        if ( typeof resultObject == "undefined"){
+          return res.json( req.__('NOT_CORRECT_CUSTOMER_DATA'));
+        }
+
+        CustomerServices.sendMailBooked(resultObject, function (err, result){
+          if ( err) {
+            return res.json( req.__('NOT_MAIL_CUSTOMER_BOOKED'));
+          }
+
+          if ( typeof result == "undefined"){
+            return res.json( req.__('NOT_MAIL_CUSTOMER_BOOKED'));
+          }
+
+          if (result.response == "ERROR") {
+            return res.json( result.message);
+          }
+
+          if (result.response == "OK") {
+            return res.json( result);
+          }
+
+        })
+      })
+
+  },
 
   searchbyformation:function(req, res, next){
 

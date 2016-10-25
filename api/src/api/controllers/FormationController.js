@@ -465,13 +465,13 @@ module.exports = {
     // console.log("Validation price", req.param('price') )
 
     if (req.param('price') && !isNaN(parseInt(req.param('price')))) {
-      query.price = {$lte: req.param('price')};
+      query.price = {$gte: req.param('price')};
       //console.log("Create price restriction")
     }
     //query.limit = len
     //query.skip = page * len
     skip = page * len
-    //query.sort = 'ASC price'
+
     //console.log("INITIAL DATE", initialDate)
     if (initialDate) {
       if (!query.dates) {
@@ -493,7 +493,7 @@ module.exports = {
       }
       query.dates.$elemMatch.date.$lte = new Date(req.param('finalDate'))
     }
-    //query.sort = 'ASC price'
+
     query.isFull = false
     ///---------------------------------------------------------------------------------
 
@@ -633,7 +633,7 @@ module.exports = {
     // console.log("Validation price", req.param('price') )
 
     if (req.param('price') && !isNaN(parseInt(req.param('price')))) {
-      query.price = {$lte: req.param('price')};
+      query.price = {$gte: req.param('price')};
       //console.log("Create price restriction")
     }
     //query.limit = len
@@ -661,7 +661,7 @@ module.exports = {
       }
       query.dates.$elemMatch.date.$lte = new Date(req.param('finalDate'))
     }
-    //query.sort = 'ASC price'
+
     query.isFull = false
     ///---------------------------------------------------------------------------------
 
@@ -706,7 +706,7 @@ module.exports = {
 
           //console.log("******")
           // parameters.place = {$all:[new ObjectID(arrayData[0])]}
-          collection.find(query).sort('price').toArray(function (err, results) {
+          collection.find(query).toArray(function (err, results) {
             // console.log("sfdsdfsss " + results);
             if (err) return res.serverError(err);
             ////Dados los id buscar un place un el nombre "5797e539e1e9812814a35520"
@@ -809,7 +809,7 @@ module.exports = {
     // console.log("Validation price", req.param('price') )
 
     if (req.param('price') && !isNaN(parseInt(req.param('price')))) {
-      query.price = {$lte: req.param('price')};
+      query.price = {$gte: req.param('price')};
       //console.log("Create price restriction")
     }
     //query.limit = len
@@ -827,7 +827,7 @@ module.exports = {
       query.dates.$elemMatch.date.$gte = new Date(req.param('initialDate'))
     }
 
-   // query.sort = 'price ASC'
+
     //console.log("FINAL DATE", finalDate)
     if (finalDate) {
       if (!query.dates) {
@@ -878,7 +878,7 @@ module.exports = {
 
          }*/
 
-         console.log("QUERY: " , query)
+        /// console.log("QUERY: " , query)
         Formation.native(function (err, collection) {
           if (err) return res.serverError(err);
           //console.log("---")
@@ -921,7 +921,7 @@ module.exports = {
               },
               // 3rd param is the function to call when everything's done
               function (err) {                // All tasks are done now
-                 console.log("ANSWER ID", formationArray.length);
+                // console.log("ANSWER ID", formationArray.length);
                 return res.json(formationArray)
               }
             );
@@ -1020,7 +1020,7 @@ module.exports = {
     // console.log("Validation price", req.param('price') )
 
     if (req.param('price') && !isNaN(parseInt(req.param('price')))) {
-      query.price = {$lte: req.param('price')};
+      query.price = {$gte: req.param('price')};
       //console.log("Create price restriction")
     }
     //query.limit = len
@@ -1048,7 +1048,7 @@ module.exports = {
       }
       query.dates.$elemMatch.date.$lte = new Date(req.param('finalDate'))
     }
-    //query.sort = 'ASC price'
+
     query.isFull = false
     ///---------------------------------------------------------------------------------
 
@@ -1440,11 +1440,7 @@ module.exports = {
 
         Formation.find(query)
           .populate('place')
-<<<<<<< HEAD
           .populate ('customers')
-=======
-            .populate ('customers')
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
           .exec(function (err, Formations) {
             if (err) {
               return res.json({status: "error", info: sails.__("ERROR_FORMATION_SEARCHING")});

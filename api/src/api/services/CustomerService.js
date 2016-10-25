@@ -43,7 +43,7 @@ module.exports = {
     sendnotify = 5
     //
     Formation.find({"dates.date": {"lte": date}}).populate('customers').populate("place").exec(function (err, resultArray) {
-      // console.log("Formation results ", resultArray.length)
+       console.log("Formation results ", resultArray.length)
       for (iTrForm in resultArray) {
         formation = resultArray[iTrForm]
         // console.log("Update data customer ", formation)
