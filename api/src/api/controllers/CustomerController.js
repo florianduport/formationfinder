@@ -247,10 +247,10 @@ module.exports = {
   searchByLicenceInYear: function (req, res, next) {
     // body...
 
-    result = {};
-    licence = req.param('licence');
+    var result = {};
+    var licence = req.param('licence');
 
-    year = new Date();
+    var year = new Date();
     year = year.getFullYear();
 
     if(licence === undefined || !_.isString(licence)){
@@ -276,6 +276,37 @@ module.exports = {
     Customer.searchByLicenceNumberInYear(licence, year, function (result) {
       // body...
       return res.json(result);
+    });
+  },
+
+  searchIfNotExistByLicence: function (req, res, next) {
+
+    var result = {};
+    var licence = req.param('licence');
+
+    if(licence === undefined || !_.isString(licence)){
+      result.status = "error";
+      result.info = sails.__("INVALID_LICENCE_STRING");
+
+      return res.json(result);
+    }
+
+    Customer.findOne({
+      "driverLicence.number": licence
+    }).exec(function (err, CustomerFounded) {
+
+      if (err) {
+        return res.json({status: "error", info: sails.__("ERROR_SEARCHING_CUSTOMER")});
+      }
+
+      //If the customer exist, send an error.
+      if (CustomerFounded) {
+        return res.json({status: "error", info: sails.__("ERROR_CUSTOMER_EXIST")});
+      }
+
+      //customer does not exits.
+      return res.json({status: "ok"});
+
     });
   },
 

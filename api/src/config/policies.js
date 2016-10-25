@@ -93,5 +93,9 @@ module.exports.policies = {
     'create': 'authenticated',
     'deleteByID': 'authenticated',
     'updateByID': 'authenticated'
+  },
+
+  WaitingRoomController: {
+    '*': 'authenticated'
   }
 };

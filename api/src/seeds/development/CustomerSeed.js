@@ -9,67 +9,87 @@ var faker = require('faker');
 faker.locale = "fr"
 module.exports = [
   {
-  name: faker.internet.userName(),
-  firstName:faker.name.firstName(),
-  email: "inoid2007@gmail.com",
-  address: faker.address.streetAddress(),
-  zipCode:faker.address.zipCode(),
-  city:faker.address.city(),
-  phoneNumber:faker.phone.phoneNumber(),
-  birthDate:faker.date.past(),
-  birthCity:faker.address.city(),
-  reasonOfFormation:faker.lorem.paragraph(),
-  civility:"M",
-  number:  faker.random.number(),
-    emailsend:0
+    name: faker.name.lastName(),
+    firstName: faker.name.firstName(),
+    email: "juan.piterson85@gmail.com",
+    address: faker.address.streetAddress(),
+    zipCode: faker.address.zipCode(),
+    city: faker.address.city(),
+    phoneNumber: faker.phone.phoneNumber(),
+    birthDate: faker.date.past(),
+    birthCity: faker.address.city(),
+    reasonOfFormation: faker.lorem.paragraph(),
+    civility: "M",
+    emailsend: 0,
+    driverLicence: {
+      "number": faker.random.number({max:999999999999, min:100000000000}).toString(),
+      "placeOfDeliverance": faker.address.city(),
+      "dateOfDeliverance": "2016-10-06T05:00:00.000Z",
+      "dateOfProcuration": "2016-10-14T05:00:00.000Z"
+    }
 
-},
+  },
 
   {
-    name: faker.internet.userName(),
-    firstName:faker.name.firstName(),
-    email: "inoid2007@gmail.com",
+    name: faker.name.lastName(),
+    firstName: faker.name.firstName(),
+    email: "juan.piterson85@gmail.com",
     address: faker.address.streetAddress(),
-    zipCode:faker.address.zipCode(),
-    city:faker.address.city(),
-    phoneNumber:faker.phone.phoneNumber(),
-    birthDate:faker.date.past(),
-    birthCity:faker.address.city(),
-    reasonOfFormation:faker.lorem.paragraph(),
-    civility:"M",
-    number:  faker.random.number(),
-    emailsend:0
+    zipCode: faker.address.zipCode(),
+    city: faker.address.city(),
+    phoneNumber: faker.phone.phoneNumber(),
+    birthDate: faker.date.past(),
+    birthCity: faker.address.city(),
+    reasonOfFormation: faker.lorem.paragraph(),
+    civility: "M",
+    emailsend: 0,
+    driverLicence: {
+      "number": faker.random.number({max:999999999999, min:100000000000}).toString(),
+      "placeOfDeliverance": faker.address.city(),
+      "dateOfDeliverance": "2016-10-06T05:00:00.000Z",
+      "dateOfProcuration": "2016-10-14T05:00:00.000Z"
+    }
 
   },
   {
-    name: faker.internet.userName(),
-    firstName:faker.name.firstName(),
-    email: "inoid2007@gmail.com",
+    name: faker.name.lastName(),
+    firstName: faker.name.firstName(),
+    email: "juan.piterson85@gmail.com",
     address: faker.address.streetAddress(),
-    zipCode:faker.address.zipCode(),
-    city:faker.address.city(),
-    phoneNumber:faker.phone.phoneNumber(),
-    birthDate:faker.date.past(),
-    birthCity:faker.address.city(),
-    reasonOfFormation:faker.lorem.paragraph(),
-    civility:"M",
-    number:  faker.random.number(),
-    emailsend:0
+    zipCode: faker.address.zipCode(),
+    city: faker.address.city(),
+    phoneNumber: faker.phone.phoneNumber(),
+    birthDate: faker.date.past(),
+    birthCity: faker.address.city(),
+    reasonOfFormation: faker.lorem.paragraph(),
+    civility: "M",
+    emailsend: 0,
+    driverLicence: {
+      "number": faker.random.number({max:999999999999, min:100000000000}).toString(),
+      "placeOfDeliverance": faker.address.city(),
+      "dateOfDeliverance": "2016-10-06T05:00:00.000Z",
+      "dateOfProcuration": "2016-10-14T05:00:00.000Z"
+    }
 
   },
   {
-    name: faker.internet.userName(),
-    firstName:faker.name.firstName(),
-    email: "inoid2007@gmail.com",
+    name: faker.name.lastName(),
+    firstName: faker.name.firstName(),
+    email: "juan.piterson85@gmail.com",
     address: faker.address.streetAddress(),
-    zipCode:faker.address.zipCode(),
-    city:faker.address.city(),
-    phoneNumber:faker.phone.phoneNumber(),
-    birthDate:faker.date.past(),
-    birthCity:faker.address.city(),
-    reasonOfFormation:faker.lorem.paragraph(),
-    civility:"M",
-    number:  faker.random.number(),
-    emailsend:0
+    zipCode: faker.address.zipCode(),
+    city: faker.address.city(),
+    phoneNumber: faker.phone.phoneNumber(),
+    birthDate: faker.date.past(),
+    birthCity: faker.address.city(),
+    reasonOfFormation: faker.lorem.paragraph(),
+    civility: "M",
+    emailsend: 0,
+    driverLicence: {
+      "number": faker.random.number({max:999999999999, min:100000000000}).toString(),
+      "placeOfDeliverance": faker.address.city(),
+      "dateOfDeliverance": "2016-10-06T05:00:00.000Z",
+      "dateOfProcuration": "2016-10-14T05:00:00.000Z"
+    }
   }
 ];

@@ -1440,6 +1440,7 @@ module.exports = {
 
         Formation.find(query)
           .populate('place')
+          .populate ('customers')
           .exec(function (err, Formations) {
             if (err) {
               return res.json({status: "error", info: sails.__("ERROR_FORMATION_SEARCHING")});
@@ -1570,10 +1571,10 @@ module.exports = {
 
     text =  req.param('text');
 
-    FormationServices.sendMessageToCustomer(idStr, from, subject, text).exec(function (err, result){
+    FormationService.sendMessageToCustomer(idStr, from, subject, text, function (err, result){
       console.log("Search data object")
       if (typeof err != "undefined"){
-        console.log("Send information ", formationObject.customers.length)
+        //console.log("Send information ", formationObject.customers.length)
         return res.json({status:"error", message:err.message})
       }
       return res.json({status:"ok", message:"sended"})

@@ -1,0 +1,120 @@
+<br/>
+<form name="paymentForm" id="paymentForm">
+    <div class="row">
+        <div class="col-sm-9 col-sm-offset-1">
+
+            <div class="form-group">
+                <!--<h4 class="text-center">Payment data</h4>-->
+                <div uib-alert ng-repeat="message in vm.customerFoundMessages"
+                     ng-class="'alert-' + message.type">{{message.info}}
+                </div>
+            </div>
+
+            <div class="form-group"><!--CARD NUMBER-->
+                <label class="control-label" for="cardNumber">Card number (*)</label>
+                <input name="cardNumber" id="cardNumber"
+                       ng-model="vm.paymentData.cardNumber"
+                       ng-pattern="vm.cardNumberRegExp"
+                       maxlength="16"
+                       minlength="16"
+                       class="form-control"
+                       type="text"
+                       required/>
+                <span style="color:#cc0000" ng-show="paymentForm.cardNumber.$dirty && paymentForm.cardNumber.$invalid">
+                    <span ng-show="paymentForm.cardNumber.$error.required">Card number is required.</span>
+                    <span ng-show="paymentForm.cardNumber.$error.pattern">Invalid card number.</span>
+                </span>
+            </div><!--END CARD NUMBER-->
+
+            <div class="form-group"><!--CARD CSV-->
+                <label class="control-label" for="cardCSV">CSV (*)</label>
+                <input name="cardCSV" id="cardCSV"
+                       ng-model="vm.paymentData.cardCSV"
+                       ng-pattern="vm.numberRegExpCard"
+                       maxlength="3"
+                       minlength="3"
+                       class="form-control"
+                       type="text"
+                       required/>
+                <span style="color:#cc0000" ng-show="paymentForm.cardCSV.$dirty && paymentForm.cardCSV.$invalid">
+                    <span ng-show="paymentForm.cardCSV.$error.required">CSV is required.</span>
+                    <span ng-show="paymentForm.cardCSV.$error.pattern">Invalid CSV.</span>
+                </span>
+            </div><!--END CARD CSV-->
+
+            <div class="form-group"> <!-- EXPIRATION CARD DATE -->
+                <label class="control-label" for="CardExpirationDate">{{'EXPIRATION_DATE' | translate}} </label>
+                <div class="input-group date">
+                    <input name="CardExpirationDate" id="CardExpirationDate"
+                           ng-model="vm.paymentData.CardExpirationDate"
+                           class="form-control"
+                           type="text"
+                           required
+                           ng-change="vm.checkExpirationDate()"
+                           placeholder="{{ ( 'DATE_PLACEHOLDER' | translate) }}"
+                           ng-pattern="vm.dateRegExp"
+                           uib-datepicker-popup="{{vm.format}}"
+                           is-open="vm.popupCardExpirationDate.opened"
+                           datepicker-options="vm.ExpirationDateOptions"/>
+                    <span class="input-group-addon">
+                        <span id="CardExpirationDateInit" class="fa fa-calendar"
+                              ng-click="vm.openCardExpirationDate()"></span>
+                    </span>
+                </div>
+
+                <span style="color:#cc0000"
+                      ng-show="paymentForm.CardExpirationDate.$dirty && paymentForm.CardExpirationDate.$invalid">
+                    You should provide a valid date string.
+                </span>
+
+                <span style="color:#cc0000"
+                      ng-show="vm.ExpirationDateError">
+                    Date out of range.
+                </span>
+            </div> <!-- END EXPIRATION CARD DATE -->
+
+            <div class="form-group"><!-- CARD TYPE -->
+                <label class="control-label" for="cardType">{{'CARD_TYPE' | translate}} </label>
+                <select name="cardType" id="cardType" class="form-control" ng-model="vm.paymentData.cardType">
+                    <option value="CB_VISA_MASTERCARD">CB_VISA_MASTERCARD</option>
+                    <option value="AMEX">AMEX</option>
+                    <option value="DINERS">DINERS</option>
+                    <option value="MASTERPASS">MASTERPASS</option>
+                    <option value="MAESTRO">MAESTRO</option>
+                    <option value="P24">P24</option>
+                    <option value="IDEAL">IDEAL</option>
+                    <option value="BCMC">BCMC</option>
+                    <option value="PAYLIB">PAYLIB</option>
+                </select>
+            </div><!--END CARD TYPE -->
+
+            <div class="form-group"> <!-- CURRENCY -->
+                <label class="control-label" for="currency">{{'CURRENCY' | translate}} </label>
+                <select class="form-control" name="currency" id="currency" ng-model="vm.paymentData.currency">
+                    <option value="EUR">EUR</option>
+                    <option value="USD">USD</option>
+                    <option value="GBP">GBP</option>
+                    <option value="PLN">PLN</option>
+                    <option value="CHF">CHF</option>
+                    <option value="NOK">NOK</option>
+                    <option value="SEK">SEK</option>
+                    <option value="DKK">DKK</option>
+                    <option value="CAD">CAD</option>
+                    <option value="ZAR">ZAR</option>
+                </select>
+            </div><!--END CURRENCY -->
+            <br/>
+            <div class="form-group">
+                <button class="btn btn-success btn-block"
+                        ng-click="vm.AddCustomerToWaitingRoom()"
+                        ng-disabled="paymentForm.$invalid">
+                    {{'ADD' | translate}}
+                </button>
+            </div>
+
+            <br/>
+            <br/>
+
+        </div>
+    </div>
+</form>

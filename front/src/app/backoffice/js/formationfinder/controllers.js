@@ -274,6 +274,10 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             $rootScope.username = result.data.username;
                             $rootScope.userIsMain = result.data.isMainLogin;
 
+                            console.log("$rootScope.userIsMain: ", $rootScope.userIsMain);
+
+                            console.log("En el login lo que devuelve SAILS es: ", result);
+
                             //************** Set the token for authentication ************************
                             localStorage.setItem('id_token', result.data.token);
 
@@ -486,6 +490,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             $scope.len = 5;
             $scope.maxSize = null;
             $scope.currentPage = 1;
+            $scope.userIsMain = $rootScope.userIsMain;
 
             $scope.lens = [5, 10, 15, 20];
 
@@ -1012,6 +1017,23 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                 });
 
+            }
+
+            $scope.showUserButton = function (customer) {
+                if (typeof customer != "undefined") {
+                    if (customer.length > 0) {
+                        //console.log("Show value")
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+            $scope.okViewUsers = function (formation) {
+
+                $scope.formation;
+
+                $location.path("/formation/listclient/" + formation.id);
             }
 
         }])
@@ -3038,6 +3060,12 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 $location.path("/waitingroom/customeradd/no_id");
             };
 
+            $scope.gotoAddCustomerToWaitingRoom = function () {
+
+                $location.path("/waitingroom/directCustomerAdd");
+
+            };
+
             $scope.showModalMessage = function (messageshow, objectData) {
 
                 $scope.items = objectData;
@@ -3195,12 +3223,693 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                 var urlPath = $location.path();
 
-                if(urlPath.indexOf("/no_id") < 0){
+                if (urlPath.indexOf("/no_id") < 0) {
                     $location.path("/formation/admin");
-                }else {
+                } else {
                     $location.path("/waitingroom/manage");
                 }
             };
+        }])
+    .controller("WaitingRoomAddCustomerWizardController", ["$rootScope", "$http", "$routeParams", "$scope", "$uibModal", "$location", "$translate",
+        function ($rootScope, $http, $routeParams, $scope, $uibModal, $location, $translate) {
+
+            var vm = this;
+
+            var actDate = new Date();
+            var maxBirthDateYear = actDate.getFullYear() - 16;
+
+            //The month is in range 0..11, because of that we added 1.
+            vm.birthDatePlaceHolder = actDate.getDate() + "/" + (actDate.getMonth() + 1) + "/" + maxBirthDateYear;
+
+
+            //Model
+            vm.currentStep = 1;
+
+            vm.validPayment = false;
+
+            //Messages arrays.
+            vm.validationMessages = [];
+            vm.paymentMessages = [];
+            vm.customerFoundMessages = [];
+
+            //Initializating customer Object.
+            vm.initData = function () {
+                vm.customerData = {};
+                vm.customerData.civility = "M";
+                vm.customerData.nationality = "FR";
+                vm.customerData.residenceCountry = "FR";
+
+                vm.customerData.driverLicence = {};
+
+                vm.paymentData = {};
+                vm.paymentData.cardType = "CB_VISA_MASTERCARD";
+                vm.paymentData.currency = "EUR";
+            };
+            vm.initData();
+
+            //Regulars expressions for validate fields.
+            //vm.emailRedExp = /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/;
+            //vm.nameRegExp = /^[A-Za-z\s]{2,40}$/;
+            vm.phoneRegExp = /^(0)\d{9}$/;
+            vm.zipcodeRegExp = /^\d{5}$/;
+            vm.nameRegExp = /^[A-Za-z][A-Za-z\s]+$/;
+            vm.emailRedExp = /^[a-z][_a-z0-9-]*(\.[_a-z0-9-]+)*@[a-z][a-z0-9-]*(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/;
+            vm.dateRegExp = /^\d{2}\/\d{2}\/\d{4}$/;
+            vm.numberRegExp = /^\d{12}$/;
+            vm.cardNumberRegExp = /^\d{16}$/;
+            vm.numberRegExpCard = /^\d{3}$/;
+
+            vm.paymentServicesError = false;
+            vm.paymentButtonDisabled = true;
+            vm.customerLicenceNumberUsed = false;
+            vm.showBDerror = false; //Show Birth Date Error.
+            vm.showDDerror = false; //Show Date of Deliverance error.
+            vm.showPDerror = false; //Show Date of Procuration error.
+            vm.showPDerrorLessDD = false; //Show error if procuration date less than Deliverance Date.
+
+            //Wizard navigation steps.
+            vm.steps = [
+                {
+                    step: 1,
+                    name: "Customer Information",
+                    template: "templates/waitingroom/AddCustomerWizard/customer.html",
+                },
+                {
+                    step: 2,
+                    name: "Licence",
+                    template: "templates/waitingroom/AddCustomerWizard/licence.html",
+                },
+                {
+                    step: 3,
+                    name: "Payment",
+                    template: "templates/waitingroom/AddCustomerWizard/payment.html",
+                },
+                {
+                    step: 4,
+                    name: "Recap",
+                    template: "templates/waitingroom/AddCustomerWizard/recap.html",
+                }
+            ];
+
+            vm.showValidationMessage = function (message) {
+                if (vm.validationMessages.length > 0)
+                    vm.validationMessages.splice(0, 1);
+
+                vm.validationMessages.push({type: message.type, info: message.info});
+            };
+
+            vm.showPaymentMessages = function (message) {
+
+                if (vm.paymentMessages.length > 0) {
+                    vm.paymentMessages.splice(0, 1);
+                }
+
+                vm.paymentMessages.push({type: message.type, info: message.info});
+            };
+
+            //wizard Functions
+            vm.gotoStep = function (newStep) {
+
+                //Esto para navegar sin las validaciones
+                //vm.currentStep = newStep;
+                //return;
+
+                if (vm.currentStep === 1) {
+                    if (newStep === 4) {
+                        vm.showValidationMessage({
+                            type: "danger",
+                            info: "After provide customer and licence information, you should choose a form of payment."
+                        });
+                        return;
+                    }
+
+
+                    if (newStep === 2) {
+                        if (vm.validateStep1()) {
+                            vm.currentStep = newStep;
+                        }
+                        else {
+                            vm.showValidationMessage({
+                                type: "danger",
+                                info: "There are some mising or invalid information, please check again."
+                            });
+                        }
+                        return;
+                    }
+                    if (newStep === 3) {
+                        if (vm.validateStep1()) {
+                            if (vm.validateStep2()) {
+                                vm.currentStep = newStep;
+                            }
+                            else {
+                                vm.currentStep = 2;
+                                vm.showValidationMessage({
+                                    type: "danger",
+                                    info: "There are some mising or invalid information, please check again."
+                                });
+                            }
+                        }
+                        else {
+                            vm.showValidationMessage({
+                                type: "danger",
+                                info: "There are some mising or invalid information, please check again."
+                            });
+                        }
+                        return;
+                    }
+
+                    return;
+                }
+
+                if (vm.currentStep === 2) {
+
+                    if (newStep === 4) {
+                        vm.showValidationMessage({
+                            type: "danger",
+                            info: "After provide customer and licence information, you should choose a form of payment."
+                        });
+                        return;
+                    }
+
+                    if (newStep === 1 || newStep === 3) {
+                        if (vm.validateStep2()) {
+                            vm.currentStep = newStep;
+                        }
+                        else {
+                            vm.showValidationMessage({
+                                type: "danger",
+                                info: "There are some mising or invalid information, please check again."
+                            });
+                        }
+
+                        return;
+                    }
+
+                    return;
+                }
+
+                if (vm.currentStep === 3) {
+
+                    console.log("What happen")
+                    if (newStep === 4) {
+                        console.log("Not show directly form")
+                        return;
+                    }
+                    vm.currentStep = newStep;
+                    return;
+                }
+
+                if (vm.currentStep === 4) {
+                    if (newStep !== 4) {
+                        vm.initData();
+                        vm.currentStep = 1;
+                    }
+                    else ///Register new costumer
+                         ///remenber registe if paid or not
+                        console.log("Make recap to form")
+                    ///vm.bookFormation();
+
+                    return;
+                }
+            };
+
+            vm.getStepTemplate = function () {
+                for (var i = 0; i < vm.steps.length; i++) {
+                    if (vm.currentStep === vm.steps[i].step) {
+                        return vm.steps[i].template;
+                    }
+                }
+            };
+
+            vm.validateStep1 = function () {
+                if (!vm.customerData.name
+                    || !vm.customerData.firstName
+                    || !vm.customerData.phoneNumber
+                    || !vm.customerData.email
+                    || !vm.customerData.zipCode
+                    || !vm.customerData.birthDate
+                    || !vm.validBirthDate()
+                    || !vm.validCity()
+                    || !vm.validBirthCity()) {
+
+                    return false;
+                }
+
+                return true;
+            };
+
+            vm.validateStep2 = function () {
+                if (!vm.customerData.driverLicence.number
+                    || !vm.customerData.driverLicence.placeOfDeliverance
+                    || !vm.customerData.driverLicence.dateOfDeliverance
+                    || !vm.customerData.driverLicence.dateOfProcuration
+                    || !vm.validDeliDate()
+                    || !vm.validProcDate()
+                    || vm.customerLicenceNumberUsed) {
+
+                    return false;
+                }
+
+                return true;
+            };
+
+            vm.validBirthDate = function () {
+                if (vm.customerData.birthDate) {
+                    birthDate = new Date(vm.customerData.birthDate);
+                    maxBirthDate = new Date(actDate.getFullYear() - 16, actDate.getMonth(), actDate.getDate());
+                    minBirthDate = new Date(actDate.getFullYear() - 80, actDate.getMonth(), actDate.getDate());
+
+                    if (birthDate < maxBirthDate && birthDate > minBirthDate) {
+                        return true;
+                    }
+                }
+                return false;
+            };
+
+            vm.validDeliDate = function () {
+                if (vm.customerData.driverLicence.dateOfDeliverance) {
+                    deliDate = new Date(vm.customerData.driverLicence.dateOfDeliverance);
+                    maxDeliDate = new Date().setDate(actDate.getDate() - 1);
+                    minDeliDate = new Date(actDate.getFullYear() - 20, actDate.getMonth(), actDate.getDate());
+
+                    if (deliDate < maxDeliDate && deliDate > minDeliDate) {
+                        return true;
+                    }
+                }
+                return false;
+            };
+
+
+            //Return true if procuration date grait or equal than deliverance date.
+            vm.procDgtdeliD = function () {
+                if (!vm.customerData.driverLicence.dateOfProcuration
+                    || !vm.customerData.driverLicence.dateOfDeliverance) {
+                    return true;
+                }
+
+                if (new Date(vm.customerData.driverLicence.dateOfProcuration) >= new Date(vm.customerData.driverLicence.dateOfDeliverance)) {
+                    return true;
+                }
+
+                return false;
+            };
+
+            vm.validProcDate = function () {
+                if (vm.customerData.driverLicence.dateOfProcuration) {
+                    procDate = new Date(vm.customerData.driverLicence.dateOfProcuration);
+                    maxDeliDate = new Date().setDate(actDate.getDate() - 1);
+                    minDeliDate = new Date(actDate.getFullYear() - 20, actDate.getMonth(), actDate.getDate());
+
+                    if (procDate < maxDeliDate && procDate > minDeliDate && vm.procDgtdeliD()) {
+                        return true;
+                    }
+                }
+                return false;
+            };
+
+            vm.validProcDateRange = function () {
+                if (vm.customerData.driverLicence.dateOfProcuration) {
+                    procDate = new Date(vm.customerData.driverLicence.dateOfProcuration);
+                    maxDeliDate = new Date().setDate(actDate.getDate() - 1);
+                    minDeliDate = new Date(actDate.getFullYear() - 20, actDate.getMonth(), actDate.getDate());
+
+                    if (procDate <= maxDeliDate && procDate > minDeliDate) {
+                        return true;
+                    }
+                }
+
+                return false;
+            };
+
+            vm.verifyDeliDate = function () {
+                if (vm.customerData.driverLicence.dateOfDeliverance && !vm.validDeliDate()) {
+                    vm.showDDerror = true;
+                    return;
+                }
+                vm.showDDerror = false;
+
+                vm.verifyProcDate();
+            };
+
+            vm.verifyProcDate = function () {
+
+                if (vm.customerData.driverLicence.dateOfProcuration) {
+                    //if (!vm.validProcDate()) {
+                    //
+                    //    if(vm.procDgtdeliD()){
+                    //        vm.showPDerror = true;
+                    //        vm.showPDerrorLessDD = false;
+                    //    }
+                    //    else{
+                    //        vm.showPDerror = false;
+                    //        vm.showPDerrorLessDD = true;
+                    //    }
+                    //
+                    //}
+                    //else {
+                    //    vm.showPDerror = false;
+                    //    vm.showPDerrorLessDD = false;
+                    //
+                    //    if (vm.customerData.driverLicence.dateOfDeliverance
+                    //        && (new Date(vm.customerData.driverLicence.dateOfProcuration) < new Date(vm.customerData.driverLicence.dateOfDeliverance))) {
+                    //        vm.showPDerrorLessDD = true;
+                    //    }
+                    //    else {
+                    //        vm.showPDerrorLessDD = false;
+                    //    }
+                    //
+                    //}
+
+                    if (vm.validProcDateRange()) {
+
+                        vm.showPDerror = false;
+
+                        if (vm.procDgtdeliD()) {
+                            vm.showPDerrorLessDD = false;
+                        } else {
+                            vm.showPDerrorLessDD = true;
+                        }
+
+                    } else {
+                        vm.showPDerror = true;
+                        vm.showPDerrorLessDD = false;
+                    }
+                }
+                else {
+                    vm.showPDerror = false;
+                    vm.showPDerrorLessDD = false;
+                }
+            };
+
+            vm.validCity = function () {
+                if (vm.customerData.city) {
+                    return vm.nameRegExp.test(vm.customerData.city);
+                }
+                return true;
+            };
+
+            vm.validBirthCity = function () {
+                if (vm.customerData.birthCity) {
+                    return vm.nameRegExp.test(vm.customerData.birthCity);
+                }
+                return true;
+            };
+
+            vm.verifyBirthDate = function () {
+                if (vm.customerData.birthDate && !vm.validBirthDate()) {
+                    vm.showBDerror = true;
+                    return;
+                }
+                vm.showBDerror = false;
+            };
+
+            vm.checkCustomerLicenceNumber = function () {
+                console.log("*********** checkCustomerLicenceNumber *****************")
+
+                if (vm.customerData.driverLicence.number) {
+                    $http.post($rootScope.urlBase + "/customer/searchIfNotExistByLicence", {
+                            licence: vm.customerData.driverLicence.number
+                        })
+                        .success(function (data) {
+                            if (data.status === "ok") {
+                                //Customer not found in the system.
+                                vm.customerLicenceNumberUsed = false;
+                            }
+                            else {
+                                //Customer with that licence found, therefor show error.
+                                vm.customerLicenceNumberUsed = true;
+                            }
+                        })
+                        .error(function (err) {
+                            console.log("error en el chequeo de la licencia de usuario.")
+                            console.log(err);
+                        });
+                }
+                else {
+                    vm.customerLicenceNumberUsed = false;
+                }
+            };
+
+            vm.closeMessage = function (MessageIndex) {
+                vm.validationMessages.splice(MessageIndex, 1);
+            };
+
+            vm.paymentMessagesClose = function (MessageIndex) {
+                vm.paymentMessages.splice(MessageIndex, 1);
+            };
+
+            vm.AddCustomerToWaitingRoom = function () {
+
+                console.log("***************************************");
+                console.log("Estoy en AddCustomerToWaitingRoom");
+                console.log("***************************************");
+
+                $http.post($rootScope.urlBase + "/WaitingRoom/addCustomer", {
+                        formationCenter: $rootScope.formationCenter,
+                        customerData: vm.customerData,
+                        paymentData: vm.paymentData
+                    })
+                    .success(function (result) {
+                        if (result.status === "ok") {
+
+                            console.log("Add customer to waiting room ok: ", result.data);
+
+                            //Go to the 4 step.
+                            vm.currentStep = 4;
+
+                            var objeData = {type: $translate.instant('INFO')};
+                            vm.showModalMessage($translate.instant('CUSTOMER_ADDED_TO_WAITING_ROOM'), objeData);
+
+                        }
+                        else {
+                            console.log("Error adding customer to the waiting room1: ", result.info);
+
+                            objeData = {type: $translate.instant('ERROR')};
+                            vm.showModalMessage($translate.instant('ERROR_ADDING_CUSTOMER_TO_WAITING_ROOM'), objeData);
+                        }
+
+                    })
+                    .error(function (err) {
+
+                        console.log("Error adding customer to the waiting room2: ", err);
+
+                        var objeData = {type: $translate.instant('ERROR')};
+                        vm.showModalMessage($translate.instant('ERROR_ADDING_CUSTOMER_TO_WAITING_ROOM'), objeData);
+
+                    });
+            };
+
+//========================================================================================//
+//==                            Date pickers configurations.                            ==//
+//========================================================================================//
+
+            vm.today = function () {
+                vm.dt = new Date();
+            };
+
+            vm.today();
+
+            vm.clear = function () {
+                vm.dt = null;
+            };
+
+            vm.inlineOptions = {
+                customClass: getDayClass,
+                minDate: new Date(),
+                showWeeks: true
+            };
+
+            vm.dateOptions = {
+                dateDisabled: disabled,
+                formatYear: 'yyyy',
+                maxDate: new Date(2020, 5, 22),
+                minDate: new Date(2012, 5, 20),
+                startingDay: 1
+            };
+
+
+            //For date pickers options configuration.
+            actDate = new Date();
+            vm.initialBirthDateYear = 16;
+
+
+            // BirthDate options
+            vm.BirthDateOptions = {
+                dateDisabled: disabledBirthDateOptions,
+                formatYear: 'yyyy',
+                maxDate: new Date(actDate.getFullYear() - vm.initialBirthDateYear, actDate.getMonth(), actDate.getDate()),
+                minDate: new Date(actDate.getFullYear() - 80, 0, 1),
+                initDate: new Date(actDate.getFullYear() - vm.initialBirthDateYear, actDate.getMonth(), actDate.getDate()),
+                startingDay: 1
+            };
+
+            // Date of Deliverance options
+            vm.DeliDateOptions = {
+                dateDisabled: disabled,
+                formatYear: 'yyyy',
+                maxDate: new Date().setDate(actDate.getDate() - 1),
+                minDate: new Date(actDate.getFullYear() - 20, 0, 1),
+                startingDay: 1
+            };
+
+            //Date of Procuration options
+            vm.ProcuDateOptions = {
+                dateDisabled: disabled,
+                formatYear: 'yyyy',
+                maxDate: new Date().setDate(actDate.getDate() - 1),
+                minDate: new Date(actDate.getFullYear() - 20, 0, 1),
+                startingDay: 1
+            };
+
+            //Expiration date options
+            vm.ExpirationDateOptions = {
+                dateDisabled: notDisabled,
+                formatYear: 'yyyy',
+                maxDate: new Date(actDate.getFullYear() + 20, 5, 22),
+                minDate: new Date(),
+                startingDay: 1
+            };
+
+            //For showing expirationdate errors.
+            vm.ExpirationDateError = false;
+
+            vm.checkExpirationDate = function () {
+
+                if (vm.paymentData.CardExpirationDate) {
+
+                    if (vm.paymentData.CardExpirationDate < actDate
+                        || vm.paymentData.CardExpirationDate > new Date(actDate.getFullYear() + 20, actDate.getMonth(), actDate.getDate())) {
+                        vm.ExpirationDateError = true;
+                    } else {
+                        vm.ExpirationDateError = false;
+                    }
+
+                } else {
+                    vm.ExpirationDateError = false;
+                }
+
+            };
+
+            // Disable weekend selection
+            function disabled(data) {
+                var date = data.date,
+                    mode = data.mode;
+                return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
+            }
+
+            function notDisabled(data){
+                return false;
+            }
+
+            function disabledBirthDateOptions(data) {
+                return false;
+            }
+
+
+            vm.toggleMin = function () {
+                vm.inlineOptions.minDate = vm.inlineOptions.minDate ? null : new Date();
+                vm.dateOptions.minDate = vm.inlineOptions.minDate;
+            };
+
+            vm.toggleMin();
+
+            vm.openBirthDate = function () {
+                vm.popupBirthDate.opened = true;
+            };
+
+            vm.openDeliDate = function () {
+                vm.popupDeliDate.opened = true;
+            };
+
+            vm.openProcDate = function () {
+                vm.popupProcDate.opened = true;
+            };
+
+            vm.openCardExpirationDate = function () {
+                vm.popupCardExpirationDate.opened = true;
+            };
+
+            vm.setDate = function (year, month, day) {
+                vm.dt = new Date(year, month, day);
+            };
+
+            vm.formats = ['dd/MM/yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+            vm.format = vm.formats[0];
+            vm.altInputFormats = ['M!/d!/yyyy'];
+
+            vm.popupBirthDate = {
+                opened: false
+            };
+
+            vm.popupDeliDate = {
+                opened: false
+            };
+
+            vm.popupProcDate = {
+                opened: false
+            };
+
+            vm.popupCardExpirationDate = {
+                opened: false
+            };
+
+            var tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            var afterTomorrow = new Date();
+            afterTomorrow.setDate(tomorrow.getDate() + 1);
+            vm.events = [
+                {
+                    date: tomorrow,
+                    status: 'full'
+                },
+                {
+                    date: afterTomorrow,
+                    status: 'partially'
+                }
+            ];
+
+            function getDayClass(data) {
+                var date = data.date,
+                    mode = data.mode;
+                if (mode === 'day') {
+                    var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
+
+                    for (var i = 0; i < vm.events.length; i++) {
+                        var currentDay = new Date(vm.events[i].date).setHours(0, 0, 0, 0);
+
+                        if (dayToCheck === currentDay) {
+                            return vm.events[i].status;
+                        }
+                    }
+                }
+
+                return '';
+            }
+
+            vm.showModalMessage = function (messageshow, objectData) {
+
+                vm.items = objectData;
+                vm.items.message = messageshow
+
+                var modalInstance = $uibModal.open({
+                    animation: $scope.animationsEnabled,
+                    templateUrl: 'myModalMessage.html',
+                    controller: 'ModalInstanceCtrl',
+                    size: "",
+                    resolve: {
+                        items: function () {
+                            return vm.items;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+
+                }, function () {
+
+                });
+            };
+
         }])
     .controller("FormationCenterManagementController", ["$scope", "$rootScope", "$location", "$http", "NgMap", "$log",
         function ($scope, $rootScope, $location, $http, NgMap, $log) {
@@ -6798,6 +7507,15 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             };
 
+            $scope.getReadableDateEx = function (dateParmt) {
+                // console.log("DATE PARAMETER ", dateParmt)
+                value = new Date(dateParmt);
+                resultDate = $scope.weekDay[value.getDay()] + " " + value.getDate() + "/" + value.getMonth() + "/" + value.getFullYear();
+
+                return resultDate
+
+            };
+
             $scope.okAttestation = function () {
                 $scope.formation;
                 if ($scope.formation.customers.length <= 0) {
@@ -6832,6 +7550,11 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             },
                             normalText: {
                                 fontSize: 14,
+                                italic: true,
+                                margin: [0, 20, 0, 5]
+                            },
+                            minText: {
+                                fontSize: 12,
                                 italic: true,
                                 margin: [0, 20, 0, 5]
                             },
@@ -6916,13 +7639,13 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             style: 'subheaderText'
                         })
                         sigText = $translate.instant('FOOT_SING_ATTESTATION_PAGE') + " "
-                        sigTextEnd = ", " + $translate.instant('TEXT_SING_ATTESTATION_PAGE')
+                        sigTextEnd = ", " + $translate.instant('TEXT_SING_ATTESTATION_PAGE') + " "
                         sigText2 = $translate.instant('N_0') + " " + $scope.formation.place.agreementNumber + ", " + $translate.instant('END_SING_ATTESTATION_PAGE') + " :"
                         docDefinition.content.push({
                             text: [{text: sigText}, {
                                 text: $scope.formation.place.agreementName,
                                 bold: true
-                            }, {text: sigTextEnd}, {text: sigText2}], alignment: 'left', style: 'normalText'
+                            }, {text: sigTextEnd}, {text: sigText2}], alignment: 'left', style: 'minText'
                         })
 
                         //docDefinition.content.push({text: sigText2 ,alignment: 'left', style: 'normalText'})
@@ -6934,80 +7657,88 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         licenceNumberDate = (iCustomer.driverLicence !== undefined) ? iCustomer.driverLicence.dateOfDeliverance : ""
                         licenceNumberPlace = (iCustomer.driverLicence !== undefined) ? iCustomer.driverLicence.placeOfDeliverance : ""
                         dateValue = $scope.getReadableDate(iCustomer.birthDate);
-                        docDefinition.content.push({
-                            columns: [
-                                {
-                                    ul: [
-                                        {
-                                            text: [{text: $translate.instant('NAME_ATTESTATION_PAGE') + ": "}, {
-                                                text: iCustomer.name,
-                                                bold: true
-                                            }]
-                                        },
-                                        {
-                                            text: [{text: $translate.instant('BIRTHDATE_ATTESTATION_PAGE') + ": "}, {
-                                                text: dateValue,
-                                                bold: true
-                                            }]
-                                        },
-                                        {
-                                            text: [{text: $translate.instant('ADDRESS_ATTESTATION_PAGE') + ": "}, {
-                                                text: iCustomer.address,
-                                                bold: true
-                                            }]
-                                        },
-                                        {
-                                            text: [{text: $translate.instant('ZIPCODE_ATTESTATION_PAGE') + ": "}, {
-                                                text: String(iCustomer.zipCode),
-                                                bold: true
-                                            }]
-                                        },
 
-                                    ]
-                                },
-                                {
-                                    ul: [
-                                        {
-                                            text: [{text: $translate.instant('FIRSTNAME_ATTESTATION_PAGE') + ": "}, {
-                                                text: iCustomer.firstName,
-                                                bold: true
-                                            }]
-                                        },
-                                        {
-                                            text: [{text: $translate.instant('BIRTHCITY_ATTESTATION_PAGE') + ": "}, {
-                                                text: iCustomer.birthCity,
-                                                bold: true
-                                            }]
-                                        },
-                                        {
-                                            text: [{text: $translate.instant('LIVEADDRESS_ATTESTATION_PAGE') + ": "}, {
-                                                text: iCustomer.city,
-                                                bold: true
-                                            }]
-                                        },
+                        console.log("Show data ", docDefinition.content)
+                        position = 7 * (index + 1)
+
+                        columns = [
+                            {
+                                ul: [
+                                    {
+                                        text: [{text: $translate.instant('NAME_ATTESTATION_PAGE') + ": "}, {
+                                            text: iCustomer.name,
+                                            bold: true
+                                        }]
+                                    },
+                                    {
+                                        text: [{text: $translate.instant('BIRTHDATE_ATTESTATION_PAGE') + ": "}, {
+                                            text: dateValue,
+                                            bold: true
+                                        }]
+                                    },
+                                    {
+                                        text: [{text: $translate.instant('ADDRESS_ATTESTATION_PAGE') + ": "}, {
+                                            text: iCustomer.address,
+                                            bold: true
+                                        }]
+                                    },
+                                    {
+                                        text: [{text: $translate.instant('ZIPCODE_ATTESTATION_PAGE') + ": "}, {
+                                            text: String(iCustomer.zipCode),
+                                            bold: true
+                                        }]
+                                    },
+
+                                ]
+                            },
+                            {
+                                ul: [
+                                    {
+                                        text: [{text: $translate.instant('FIRSTNAME_ATTESTATION_PAGE') + ": "}, {
+                                            text: iCustomer.firstName,
+                                            bold: true
+                                        }]
+                                    },
+                                    {
+                                        text: [{text: $translate.instant('BIRTHCITY_ATTESTATION_PAGE') + ": "}, {
+                                            text: iCustomer.birthCity,
+                                            bold: true
+                                        }]
+                                    },
+                                    {
+                                        text: [{text: $translate.instant('LIVEADDRESS_ATTESTATION_PAGE') + ": "}, {
+                                            text: iCustomer.city,
+                                            bold: true
+                                        }]
+                                    },
 
 
-                                    ]
-                                }
-                            ]
-                        })
+                                ]
+                            }
+                        ]
 
                         if (licenceNumber !== undefined) {
-                            columns[0].ul.push($translate.instant('NOLICENCE_ATTESTATION_PAGE') + ": " + licenceNumber)
+                            columns[0].ul.push($translate.instant('NOLICENCE_ATTESTATION_PAGE') + ": " + String(licenceNumber))
                         }
 
                         if (licenceNumberDate !== undefined) {
-                            columns[0].ul.push($translate.instant('NOLICENCEDATE_ATTESTATION_PAGE') + ": " + $scope.getReadableDate(licenceNumberDate))
+                            columns[0].ul.push($translate.instant('NOLICENCEDATE_ATTESTATION_PAGE') + ": " + $scope.getReadableDate(new Date(licenceNumberDate)))
                         }
 
                         if (licenceNumberPlace !== undefined) {
                             columns[1].ul.push($translate.instant('NOLICENCEPLACE_ATTESTATION_PAGE') + ": " + licenceNumberPlace)
 
                         }
+                        value = {}
+                        value.columns = columns
+                        docDefinition.content.push(value)
+
+
                         docDefinition.content.push({
                             text: $translate.instant('DATE_CONFIRMATION_ATTESTATION_PAGE') + " :",
                             style: 'normalTextOther'
                         })
+
 
                         ////Set formatio dates
 
@@ -7034,12 +7765,65 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         //if ((arraySize - 1) > index)
                         //    tableObject.pageBreak='after'
 
-                        docDefinition.content.push({text: " ", style: 'subheader'})
+                        //docDefinition.content.push({text: " ", style: 'subheader'})
+
+                        dateList = ""
+                        counter = 0
+                        $scope.formation.dates.forEach(function (iDate, index) {
+                            if (index > 0)
+                                dateList += " " + $translate.instant('CONJUNCTION') + " "
+                            dateList += $scope.getReadableDateEx(iDate.date)
+                        })
+
+                        docDefinition.content.push({
+                            text: dateList,
+                            style: 'normalTextOther'
+                        })
+
 
                         docDefinition.content.push({
                             text: $translate.instant('DATE_ARTICLE') + " :" + currentDate,
                             style: 'normalTextOther'
                         })
+
+                        ///Get Animators
+                        //BAFM/BAFCRI:
+                        //Psychologue
+                        animatorOne = ["", "", ""]
+                        animatorTouw = ["", "", ""]
+                        console.log("Animators ", $scope.formation.animators)
+
+                        if ($scope.formation.animators.length > 0) {
+                            $scope.formation.animators.forEach(function (iAnimator, index) {
+                                nType = ""
+                                if (iAnimator.type == "BAFM") {
+                                    nType = "BAFM/BAFCRI"
+                                }
+                                else if (iAnimator.type == "PSY") {
+                                    nType = "Psychologue"
+                                }
+
+
+                                if (index == 0) {
+
+                                    animatorOne[1] = {
+                                        text: nType + " " + iAnimator.name + " " + iAnimator.firstName,
+                                        alignment: 'rigth'
+                                    }
+                                }
+
+                                if (index == 1) {
+
+                                    animatorTouw[1] = {
+                                        text: nType + " " + iAnimator.name + " " + iAnimator.firstName,
+                                        alignment: 'rigth'
+                                    }
+                                }
+
+
+                            })
+                        }
+
                         data = [$translate.instant('SING_CACHET'), $translate.instant('SINGS'), $translate.instant('SING')]
                         tableObject = {
                             style: 'itemsTable',
@@ -7062,7 +7846,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
 
                                     ]
-                                ].concat([data])
+                                ].concat([data]).concat([animatorOne]).concat([animatorTouw])
                             },
 
                             layout: 'noBorders'
@@ -7074,9 +7858,9 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                         docDefinition.content.push(tableObject)
 
-                        console.log("Create estructure")
+                        //console.log("Create estructure")
                     });
-                    console.log("Continue function", docDefinition.content)
+                    // console.log("Continue function", docDefinition.content)
                     //var docDefinition = {
                     //    content: [
                     //        {text: $translate.instant('ADMIN_PAGE_HEAD'), style: 'header'},
@@ -7150,6 +7934,31 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     pdfMake.createPdf(docDefinition).open()
                 }
             }
+            $scope.printWaitingRoomCustomersList = function (callback) {
+
+                $http.post($rootScope.urlBase + "/FormationCenter/getWaitingRoomCustomerListByFormationCenter", {
+                        formationCenter: $rootScope.formationCenter
+                    })
+                    .success(function (result) {
+                        if (result.status === "ok") {
+                            $scope.WaitingRoomCustomersList = result.data;
+                            callback(null, null)
+
+
+                        } else {
+                            var objeData = {type: $translate.instant('ERROR')};
+                            //$scope.showModalMessage(result.info, objeData);
+                            callback(null, null)
+                        }
+                    })
+                    .error(function (err) {
+                        var objeData = {type: $translate.instant('ERROR')};
+                        //$scope.showModalMessage($translate.instant('ERROR_PRINTING_WAITING_ROOM'), objeData);
+                        callback(null, null)
+                    })
+
+
+            };
 
 
             $scope.okPrintList = function () {
@@ -7210,52 +8019,77 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         defaultStyle: {}
                     }
 
-                    docDefinition.content.push({
-                        columns: [
-                            {text: "Dates :", style: 'normalText'},
-                            {
-                                text: [{text: $translate.instant('ADDRESS_ATTESTATION_PAGE') + ": "}, {
-                                    text: $scope.formation.place.address,
-                                    bold: true
-                                }]
-                            },
-
-                        ]
+                    dateList = ""
+                    counter = 0
+                    $scope.formation.dates.forEach(function (iDate, index) {
+                        if (index > 0)
+                            dateList += " " + $translate.instant('CONJUNCTION') + " "
+                        dateList += $scope.getReadableDateEx(iDate.date)
                     })
 
+
+                    docDefinition.content.push(
+                        {text: [{text: "Dates :", style: 'normalText'}, {text: dateList}]}
+                    )
+                    docDefinition.content.push(
+                        {
+                            text: [{text: $translate.instant('ADDRESS_ATTESTATION_PAGE') + ": "}, {
+                                text: $scope.formation.place.address,
+                                bold: true
+                            }]
+                        })
+                    valueItems = $translate.instant('PREINSCRIT')
                     var items = $scope.formation.customers.map(function (iplace) {
-                        return [iplace.name, iplace.firstName, iplace.phoneNumber, ""];
+                        return [iplace.name, iplace.firstName, iplace.phoneNumber, "FORMATIONFINDER", String($scope.formation.price), valueItems];
                     });
 
-                    docDefinition.content.push({
-                        text: " Liste des stagiaires inscrits et pré­inscrits :",
-                        style: 'normalTextOther'
+                    ////Search waiting room users
+                    $scope.printWaitingRoomCustomersList(function (err, resultData) {
+
+                        var itemsWaiting = $scope.WaitingRoomCustomersList.map(function (iplace) {
+                            return [iplace.name, iplace.firstName, iplace.phoneNumber, "WAITING ROOM", "-", $translate.instant('PREINSCRIT')];
+                        });
+                        docDefinition.content.push({
+                            text: " Liste des stagiaires inscrits et pré­inscrits :",
+                            style: 'normalTextOther'
+                        })
+
+                        tableObject = {
+                            style: 'itemsTable',
+                            table: {
+                                widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+                                body: [
+                                    [
+                                        {text: $translate.instant('TABLE_PLACE_NAME'), style: 'itemsTableHeader'},
+                                        {
+                                            text: $translate.instant('FIRSTNAME_ATTESTATION_PAGE'),
+                                            style: 'itemsTableHeader'
+                                        },
+                                        {text: $translate.instant('TABLE_PLACE_PHONE'), style: 'itemsTableHeader'},
+                                        {text: $translate.instant('TABLE_PLACE_INSCRIT'), style: 'itemsTableHeader'},
+                                        {text: $translate.instant('TABLE_PLACE_PRINCE'), style: 'itemsTableHeader'},
+                                        {text: $translate.instant('TABLE_PLACE_STATUS'), style: 'itemsTableHeader'},
+
+
+                                    ]
+                                ].concat(items)
+                            },
+
+
+                        }
+
+
+                        if (itemsWaiting.length > 0) {
+                            tableObject.table.body.concat(itemsWaiting)
+                        }
+                        //
+                        ////Validate page break
+
+
+                        docDefinition.content.push(tableObject)
+                        pdfMake.createPdf(docDefinition).open()
+
                     })
-
-                    tableObject = {
-                        style: 'itemsTable',
-                        table: {
-                            widths: ['auto', 'auto', 'auto', 'auto'],
-                            body: [
-                                [
-                                    {text: $translate.instant('TABLE_PLACE_NAME'), style: 'itemsTableHeader'},
-                                    {text: $translate.instant('FIRSTNAME_ATTESTATION_PAGE'), style: 'itemsTableHeader'},
-                                    {text: $translate.instant('TABLE_PLACE_PHONE'), style: 'itemsTableHeader'},
-                                    {text: "STATUS", style: 'itemsTableHeader'}
-
-
-                                ]
-                            ].concat(items)
-                        },
-
-
-                    }
-                    //
-                    ////Validate page break
-
-
-                    docDefinition.content.push(tableObject)
-                    pdfMake.createPdf(docDefinition).open()
                 }
             }
 
@@ -7499,31 +8333,89 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     //};
 
 
+                    //dates: [{
+                    //    date: faker.date.past([], new Date("12/12/2015")),
+                    //    morning: {
+                    //        hourStart: "07:00",
+                    //        hourEnd: "12:00"
+                    //    },
+                    //    afternoon: {
+                    //        hourStart: "04:00",
+                    //        hourEnd: "06:00"
+                    //    }
+                    //}, {
+                    //    date: faker.date.future(),
+                    //    morning: {
+                    //        hourStart: "08:00",
+                    //        hourEnd: "12:00"
+                    //    },
+                    //    afternoon: {
+                    //        hourStart: "03:00",
+                    //        hourEnd: "06:00"
+                    //    }
+                    //}],
+
+                    dateList = ""
+                    counter = 0
+                    $scope.formation.dates.forEach(function (iDate, index) {
+                        if (index > 0)
+                            dateList += " " + $translate.instant('CONJUNCTION') + " "
+                        dateList += $scope.getReadableDateEx(iDate.date)
+                    })
+
+
+                    currentDate = $scope.getReadableDate(new Date())
+
+                    sigText2 = ", " + $translate.instant('TITULAIRE') + " " + $scope.formation.place.agreementNumber
+                    //docDefinition.content.push({
+                    //    text: [{text: ""}, {
+                    //        text: $scope.formation.place.agreementName,
+                    //        bold: true
+                    //    },  {text: sigText2}], alignment: 'left', style: 'normalText'
+                    //})
+                    var items = $scope.formation.customers.map(function (iplace) {
+                        return [iplace.name + " " + iplace.firstName, "", "", "", "", ""];
+                    });
+
                     var docDefinition = {
                         content: [
                             {
                                 style: 'tableExample',
                                 color: '#445',
                                 table: {
-                                    widths: [200, 200, 200],
+                                    widths: [200, 200, 100],
                                     body: [
                                         [
-                                            {text: 'Column 2'}
+                                            {text: ''}
                                             ,
-                                            {text: 'Column 2'},
-                                            {text: 'Column 3'}
+                                            {text: $translate.instant('EMARGEMENT_TITLE'), bold: true},
+                                            {text: $scope.formation.place.address, fontSize: 10, bold: true}
                                         ]
-                                    ]
+                                    ].concat([[{text: ''}
+                                            ,
+                                            {text: ''}
+                                            ,
+                                            {text: $translate.instant('DATE_ARTICLE') + "", fontSize: 10, bold: true}
+                                        ]])
+                                        .concat([[{text: ''}
+                                            ,
+                                            {text: ''}
+                                            ,
+                                            {text: currentDate, fontSize: 10, bold: true}
+                                        ]])
                                 },
                                 layout: "noBorders"
                             },
                             {
                                 columns: [
                                     {
-                                        text: 'A simple table with nested elements', style: 'subheader'
+                                        text: dateList, fontSize: 10, bold: true
                                     },
                                     {
-                                        text: 'A simple table with nested elements', style: 'subheader'
+                                        text: [{text: ""}, {
+                                            text: $scope.formation.place.agreementName,
+                                            bold: true
+                                        }, {text: sigText2}]
                                     }
                                 ]
                             },
@@ -7531,28 +8423,29 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             {
                                 style: 'tableExample',
                                 color: '#222',
-                                widths: [100, 'auto', 'auto', 'auto', 'auto', 'auto'],
+                                widths: [100, 'auto', 200, 200, 200, 200],
                                 table: {
                                     headerRows: 2,
                                     body: [
                                         [{
                                             rowSpan: 2,
-                                            text: 'rowSpan set to 3\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor'
+                                            text: $translate.instant('NAMEDATA'),
+                                            alignment: 'center',
+                                            bold: true
                                         }, {rowSpan: 2, text: 'Cas'}, {
-                                            text: 'Header with Colspan = 2',
+                                            text: $translate.instant('DAY1'),
                                             style: 'tableHeader',
                                             colSpan: 2,
                                             alignment: 'center'
                                         }, {}, {
-                                            text: 'Header with Colspan = 2',
+                                            text: $translate.instant('DAY2'),
                                             style: 'tableHeader',
                                             colSpan: 2,
                                             alignment: 'center'
                                         }, {}],
-                                        ['Column 1', 'Column 2', 'Column 3', 'Column 1', 'Column 2', 'Column 3'],
-                                        ['Pepe de Jose', '-', '-', '-', '-', '-'],
-                                        ['Marcos Antonio de Jose', '2', '', '', '', '']
-                                    ]
+                                        ['Column 1', 'Column 2', $translate.instant('MORNING'), $translate.instant('AFTERNOON'), $translate.instant('MORNING'), $translate.instant('AFTERNOON')],
+
+                                    ].concat(items)
                                 },
                             },
                             //{ text: 'A simple table with nested elements', style: 'subheader' },
@@ -7745,6 +8638,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             //        // paddingBottom: function(i, node) { return 2; }
                             //    }
                             //}
+                            //['Pepe de Jose', '-', '-', '-', '-', '-'],
+                            // ['Marcos Antonio de Jose', '2', '', '', '', '']
                         ],
                         styles: {
                             header: {
@@ -7790,6 +8685,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         animation: $scope.animationsEnabled,
                         templateUrl: 'ModalSendEmailMessage.html',
                         controller: 'ModalInstanceCtrl',
+                        //controller: 'ModalInstanceCtrlMail',
                         size: "",
                         resolve: {
                             items: function () {
@@ -7800,8 +8696,40 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                     modalInstance.result.then(function (selectedItem) {
 
-                    }, function () {
+                        console.log("Object for send messajes", selectedItem)
 
+                        config = {}
+                        config.id = $routeParams.id
+                        config.mailuser = $routeParams.mailuser
+                        config.from = $routeParams.mailsender
+                        config.subject = $routeParams.mailsubject
+                        config.text = $routeParams.messagebody
+
+                        $http.post($rootScope.urlBase + "/formation/sendMailToCustomer", config)
+                            .success(function (result) {
+                                if (result.status === "ok") {
+                                    $scope.formation = result.message;
+                                    console.log("Formation data", result.message)
+
+                                } else {
+                                    console.log("Error searching Formation: ", result.message);
+
+                                    objeData = {type: $translate.instant('ERROR')};
+                                    $scope.showModalMessage($translate.instant('ERROR_SEND_MAIL') + ": " + result.message, objeData);
+                                    //alert("Error searching Formation: " + result.info);
+                                }
+                            })
+                            .error(function (err) {
+                                console.log("Error searching Formation: ", err);
+
+                                objeData = {type: $translate.instant('ERROR')};
+                                $scope.showModalMessage($translate.instant('ERROR_SEND_MAIL') + ": " + err, objeData);
+
+                                //alert("Error searching Formation: " + err);
+                            });
+
+                    }, function () {
+                        //console.log("Object for send messajes", selectedItem)
                     });
                 }
             }
@@ -8542,7 +9470,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
         vm.zipcodeRegExp = /^\d{5}$/;
         vm.nameRegExp = /^[A-Za-z][A-Za-z\s]+$/;
         vm.emailRedExp = /^[a-z][_a-z0-9-]*(\.[_a-z0-9-]+)*@[a-z][a-z0-9-]*(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/;
-        vm.dateRegExp = /^\d{2}\/\d{2}\/\d{4}$/;
+        vm.dateRegExp = /^\d{2}\/\d{1,2}\/\d{4}$/;
         vm.numberRegExp = /^\d{12}$/;
         vm.numberRegExpCard = /^\d{3}$/;
 
@@ -9267,6 +10195,10 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         vm.customerData = result.data;
                         $scope.formationId = vm.customerData.formation
                         console.log("Customer data", vm.customerData)
+                        vm.customerData.birthDate = $scope.getReadableDate(vm.customerData.birthDate)
+                        $scope.birthDate = vm.customerData.birthDate
+                        vm.customerData.driverLicence.dateOfDeliverance = $scope.getReadableDate(vm.customerData.driverLicence.dateOfDeliverance)
+                        vm.customerData.driverLicence.dateOfProcuration = $scope.getReadableDate(vm.customerData.driverLicence.dateOfProcuration)
                         ///---------------------------------------------////
                         $scope.searchFormation();
 
@@ -9405,21 +10337,18 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         color: '#222',
                         widths: ['auto'],
                         table: {
-
+                            headerRows: 1,
                             body: [
                                 [{
                                     text: [
-                                        {text: $translate.instant('BENEFICIARIE') + ": " + vm.customerData.name + " " + vm.customerData.firstName},
+                                        {text: $translate.instant('ADRESS_FORMATION') + ": " + $scope.formation.place.address}
 
                                     ]
                                 },
 
                                 ],
                                 [{text: $translate.instant('MODELE_REGLEMENTAIRE') + ": "}],
-                                [{text: " "}],
-                                [{text: $translate.instant('PRICE_DATA') + ": " + $scope.formation.price}],
-                                [{text: " "}],
-                                [{text: $translate.instant('PAYMENT_CONDITIONS')}],
+                                [{text: $translate.instant('PRECENSES')}],
                             ],
 
                         },
@@ -9433,7 +10362,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         margin: [0, 0, 0, 10]
                     },
                     subheader: {
-                        fontSize: 16,
+                        fontSize: 12,
                         bold: true,
                         margin: [0, 10, 0, 5]
                     },
@@ -9460,7 +10389,199 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
         }
 
+        $scope.getReadableDate = function (dateParmt) {
+            // console.log("DATE PARAMETER ", dateParmt)
+            value = new Date(dateParmt);
+            resultDate = value.getDate() + "/" + value.getMonth() + "/" + value.getFullYear();
+
+            return resultDate
+
+        };
+
+        $scope.getReadableDateEx = function (dateParmt) {
+            // console.log("DATE PARAMETER ", dateParmt)
+            value = new Date(dateParmt);
+            resultDate = $scope.weekDay[value.getDay()] + " " + value.getDate() + "/" + value.getMonth() + "/" + value.getFullYear();
+
+            return resultDate
+
+        };
         $scope.createConvocation = function () {
+
+            dateList = ""
+            counter = 0
+            $scope.formation.dates.forEach(function (iDate, index) {
+                if (index > 0)
+                    dateList += " " + $translate.instant('CONJUNCTION') + " "
+                dateList += $scope.getReadableDateEx(iDate.date)
+            })
+
+
+            currentDate = $scope.getReadableDate(new Date())
+            var docDefinition = {
+                content: [
+                    {
+                        text: $translate.instant('CONVOCATION_TITLE'), style: 'header', alignment: "center"
+                    },
+                    {
+                        text: "", style: 'header', alignment: "center"
+                    },
+                    {
+                        columns: [
+                            {
+                                text: [
+                                    {text: $translate.instant('INSCRIPCION_CONFIRME'), style: 'subheader'},
+
+
+                                ]
+                            },
+                            {
+                                text: [
+                                    {
+                                        text: vm.customerData.name + " " + vm.customerData.firstName,
+                                        style: 'textData', alignment: "rigth"
+                                    },
+
+
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        columns: [
+                            {
+                                text: [
+
+                                    {text: $translate.instant('COMUNICATION_INFO'), style: 'textDataSimple'},
+
+
+                                ]
+                            },
+                            {
+                                text: [
+                                    {text: vm.customerData.address, style: 'textDataSimple', alignment: "rigth"}
+
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        text: vm.customerData.name + " " + vm.customerData.firstName + " " + $translate.instant('THANKS_ABOUT'),
+                        style: 'subheader',
+                        alignment: "left"
+                    },
+                    {
+                        text: $translate.instant('THANKS_ABOUT_LINE'), style: 'subheader', alignment: "left"
+                    },
+
+                    {
+                        text: "", style: 'subheader', alignment: "left"
+                    },
+
+                    {
+                        text: $translate.instant('PLACE_HORAIRE'), style: 'textData', alignment: "left"
+                    },
+
+                    {
+                        style: 'tableExample',
+                        color: '#222',
+                        widths: ['1000'],
+                        headerRows: 1,
+                        table: {
+
+                            body: [
+                                [{
+                                    text: [
+                                        {text: $translate.instant('ADRESS_FORMATION') + ": " + $scope.formation.place.address},
+
+                                    ]
+                                },
+
+                                ],
+                                [{
+                                    text: [{text: dateList}, {text: ""}, {
+                                        text: $translate.instant('PRECENSES'),
+                                        alignment: "center",
+                                        bold: true
+                                    }]
+                                }],
+                            ],
+
+                        },
+
+                    },
+                    {
+                        text: $translate.instant('RULER1'), style: 'textData', alignment: "left"
+                    },
+
+                    {
+                        style: 'tableExample',
+                        color: '#222',
+                        widths: ['2000'],
+                        headerRows: 1,
+                        table: {
+
+                            body: [
+                                [{ul: [{text: $translate.instant('RULER11')}, {text: $translate.instant('RULER12')}]}
+                                ],
+
+                            ],
+
+                        },
+
+                    },
+                    {
+                        text: $translate.instant('INFORMATION_IMPORTANT'), style: 'subheader', alignment: "left"
+                    },
+                    {
+                        ul: [
+                            {text: [{text: $translate.instant('INFORMATION_IMPORTANT1')}, {text: $translate.instant('INFORMATION_IMPORTANT11')}, {text: $translate.instant('INFORMATION_IMPORTANT111')}, {text: $translate.instant('INFORMATION_IMPORTANT12')}, {text: $translate.instant('INFORMATION_IMPORTANT13')}]},
+                            {text: [{text: $translate.instant('INFORMATION_IMPORTANT22')}, {text: $translate.instant('INFORMATION_IMPORTANT21')}, {text: $translate.instant('INFORMATION_IMPORTANT212')}, {text: $translate.instant('INFORMATION_IMPORTANT23')}, {text: $translate.instant('INFORMATION_IMPORTANT24')}]},
+                        ]
+                    }
+                ],
+                styles: {
+                    header: {
+                        fontSize: 18,
+                        bold: true,
+                        margin: [0, 0, 0, 10]
+                    },
+                    subheader: {
+                        fontSize: 12,
+                        bold: true,
+                        margin: [0, 5, 0, 5]
+                    },
+                    subheaderText: {
+                        fontSize: 11,
+                        bold: true,
+                        margin: [0, 20, 0, 5]
+                    },
+                    tableExample: {
+                        margin: [0, 5, 0, 15]
+                    },
+                    tableHeader: {
+                        bold: true,
+                        fontSize: 13,
+                        color: 'read'
+                    },
+                    textData: {
+                        bold: true,
+                        fontSize: 10,
+                        color: 'read'
+                    },
+                    textDataSimple: {
+                        bold: false,
+                        fontSize: 10,
+                        color: 'read'
+                    }
+                },
+                defaultStyle: {
+                    // alignment: 'justify'
+                }
+            };
+
+            pdfMake.createPdf(docDefinition).open()
+
 
         }
 
@@ -9646,6 +10767,4 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
 
     })
-
-
 ;

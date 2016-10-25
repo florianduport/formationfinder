@@ -137,5 +137,6 @@
   "ERROR_SEARCHING_CUSTOMERS": "Error searching customers",
   "WAITING_ROOM_IS_EMPTY": "Waiting room is empty",
   "ERROR_CUSTOMER_ID_REQUIED": "Customer id is required",
-  "CUSTOMER_ADDED_TO_FORMATION": "Customer added successfully to the formation"
+  "CUSTOMER_ADDED_TO_FORMATION": "Customer added successfully to the formation",
+  "INVALID_LICENCE_STRING": "Invalid licence string"
 }

@@ -167,7 +167,7 @@ module.exports = {
         var naturalUserData = {
           FirstName: userValue.firstName, // Required
           LastName: userValue.name,    // Required
-          Birthday:userValue.birthDate,  // Required,  // Required
+          Birthday: userValue.birthDate,  // Required,  // Required
           Nationality: userValue.nacionality, // Required, default: 'FR'
           CountryOfResidence: userValue.country, // Required, default: 'FR'
           Address: {

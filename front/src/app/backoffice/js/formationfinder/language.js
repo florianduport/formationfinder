@@ -259,6 +259,48 @@ app.config(function ($translateProvider) {
             TABLE_PLACE_AGREMENT: "Agrement",
             TABLE_PLACE_ACTIVATED: "Activated",
             TABLE_PLACE_ACTIONS: "Actions",
+            //------ Changes ----------------------------
+            SEND_EMAIL:"SEND",
+            ERROR_SEND_MAIL:"Error sended email",
+            EMARGEMENT_TITLE:'FEUILLE D\'EMARGEMENT',
+            CONJUNCTION: "and",
+            TITULAIRE:"titulaire de l 'Agrément",
+            DAY1: "JOUR 1",
+            DAY2: "JOUR 2",
+            NAMEDATA: "Nom, prénom",
+            MORNING:"Matin",
+            AFTERNOON:"Après-midi",
+            VIEW_USER: "Admin users",
+            TABLE_PLACE_PHONE:"PHONE",
+            TABLE_PLACE_PRINCE:"PAYMENT",
+            TABLE_PLACE_INSCRIT:"INSCTIT PAR",
+            TABLE_PLACE_STATUS:"STATUT",
+            PREINSCRIT:"Pré­inscrit",
+            CONFIRME:"Confirmé",
+            ///----------------------  Chanhe values ---------------------------
+            USERS: "Users",
+            CONVOCATION_TITLE: "CONVOCATION A UN STAGE DE SECURITE ROUTIERE",
+            INSCRIPCION_CONFIRME: "Inscription confirmée",
+            COMUNICATION_INFO: "(A communiquer pour toute demande)",
+            THANKS_ABOUT: "merci de votre confiance.",
+            THANKS_ABOUT_LINE: "Nous vous confirmons votre inscription à un stage de sécurité routière.",
+            PLACE_HORAIRE: "Lieu et horaires du stage :",
+            PRECENSES: "Votre présence et le respect des horaires sont obligatoires.",
+            RULER1: "Merci de vous munir le jour du stage :",
+            RULER11: "De votre permis de conduire et de votre pièce d'identité.",
+            RULER12: "D'une enveloppe timbrée et libellée à votre adresse.",
+            INFORMATION_IMPORTANT: "Informations importantes :",
+            INFORMATION_IMPORTANT1: "Il est de votre responsabilité de vérifier (Préfecture, lettre 48 ou Telepoints)",
+            INFORMATION_IMPORTANT111:   "que votre solde de points sur le fichier national",
+            INFORMATION_IMPORTANT11: "du permis de conduire vous permet de récupérer 4 points et que votre participation à un stage",
+            INFORMATION_IMPORTANT12: " volontaire (cas1) date de plus de 1 an. En cas de litige ",
+            INFORMATION_IMPORTANT13:  "FORMATIONFINDER ne peut être tenu responsable.",
+
+            INFORMATION_IMPORTANT22: "Lorsque le stage réunit moins de dix personnes, la Préfecture impose à l'organisateur, l'annulation du stage. Le centre agréé",
+            INFORMATION_IMPORTANT21: "FORMATIONFINDER est tenu de vous informer de ",
+            INFORMATION_IMPORTANT212: "cette annulation par tous les moyens mis à sa disposition.",
+            INFORMATION_IMPORTANT23: "En contactant la société \"FORMATIONFINDER\" au 0557324912, une autre date ou un transfert vers un autre",
+            INFORMATION_IMPORTANT24: "lieu pourra donc vous être proposé sur votre demande.",
             //------ Piterson last change -------------------
             WAITING_ROOM: "Waitting room",
             DOCUMENTS: "Documents",
@@ -282,6 +324,12 @@ app.config(function ($translateProvider) {
             CARTE_BANCAIRE: "Carte Bancaire",
             PAIMENT_SECURISE: "Paiement sécurisé",
             CRYPTAGE_SSL: "Cryptage SSL utilisé par la banque Crédit du Nord.",
+
+            ADD_CUSTOMER_TO_WAITING_ROOM: "Add Customer to the Waiting Room",
+            EXPIRATION_DATE: "Expiration date",
+            CUSTOMER_ADDED_TO_WAITING_ROOM: "Customer added to the Waiting Room",
+
+            ERROR_ADDING_CUSTOMER_TO_WAITING_ROOM: "Error adding customer to the waiting room"
 
 
 
@@ -535,6 +583,45 @@ app.config(function ($translateProvider) {
             TABLE_PLACE_AGREMENT: "Agrement",
             TABLE_PLACE_ACTIVATED: "Activated",
             TABLE_PLACE_ACTIONS: "Actions",
+
+            //------ Changes ----------------------------
+            SEND_EMAIL:"SEND",
+            ERROR_SEND_MAIL:"Error sended email",
+            EMARGEMENT_TITLE:'FEUILLE D\'EMARGEMENT',
+            CONJUNCTION: "and",
+            VIEW_USER: "Admin users",
+            TABLE_PLACE_PHONE:"PHONE",
+            TABLE_PLACE_PRINCE:"PAYMENT",
+            TABLE_PLACE_INSCRIT:"INSCTIT PAR",
+            TABLE_PLACE_STATUS:"STATUT",
+            PREINSCRIT:"Pré­inscrit",
+            CONFIRME:"Confirmé",
+
+            ///---------------------  Chanhe values ---------------------------
+            USERS: "Users",
+            CONVOCATION_TITLE: "CONVOCATION A UN STAGE DE SECURITE ROUTIERE",
+            INSCRIPCION_CONFIRME: "Inscription confirmée",
+            COMUNICATION_INFO: "(A communiquer pour toute demande)",
+            THANKS_ABOUT: "merci de votre confiance.",
+            THANKS_ABOUT_LINE: "Nous vous confirmons votre inscription à un stage de sécurité routière.",
+            PLACE_HORAIRE: "Lieu et horaires du stage :",
+            PRECENSES: "Votre présence et le respect des horaires sont obligatoires.",
+            RULER1: "Merci de vous munir le jour du stage :",
+            RULER11: "De votre permis de conduire et de votre pièce d'identité.",
+            RULER12: "D'une enveloppe timbrée et libellée à votre adresse.",
+            INFORMATION_IMPORTANT: "Informations importantes :",
+            INFORMATION_IMPORTANT1: "Il est de votre responsabilité de vérifier (Préfecture, lettre 48 ou Telepoints)",
+            INFORMATION_IMPORTANT111:   "que votre solde de points sur le fichier national",
+            INFORMATION_IMPORTANT11: "du permis de conduire vous permet de récupérer 4 points et que votre participation à un stage",
+            INFORMATION_IMPORTANT12: " volontaire (cas1) date de plus de 1 an. En cas de litige ",
+            INFORMATION_IMPORTANT13:  "FORMATIONFINDER ne peut être tenu responsable.",
+
+            INFORMATION_IMPORTANT22: "Lorsque le stage réunit moins de dix personnes, la Préfecture impose à l'organisateur, l'annulation du stage. Le centre agréé",
+            INFORMATION_IMPORTANT21: "FORMATIONFINDER est tenu de vous informer de ",
+            INFORMATION_IMPORTANT212: "cette annulation par tous les moyens mis à sa disposition.",
+            INFORMATION_IMPORTANT23: "En contactant la société \"FORMATIONFINDER\" au 0557324912, une autre date ou un transfert vers un autre",
+            INFORMATION_IMPORTANT24: "lieu pourra donc vous être proposé sur votre demande.",
+
             //------ Piterson last change -------------------
             WAITING_ROOM: "Waitting room",
             DOCUMENTS: "Documents",
@@ -555,6 +642,10 @@ app.config(function ($translateProvider) {
             CARTE_BANCAIRE: "Carte Bancaire",
             PAIMENT_SECURISE: "Paiement sécurisé",
             CRYPTAGE_SSL: "Cryptage SSL utilisé par la banque Crédit du Nord.",
+
+            ADD_CUSTOMER_TO_WAITING_ROOM: "Add Customer to the Waiting Room",
+            EXPIRATION_DATE: "Expiration date",
+            CUSTOMER_ADDED_TO_WAITING_ROOM: "Customer added to the Waiting Room",
 
         })
         .translations('es', {
@@ -802,6 +893,45 @@ app.config(function ($translateProvider) {
             TABLE_PLACE_AGREMENT: "Agrement",
             TABLE_PLACE_ACTIVATED: "Activated",
             TABLE_PLACE_ACTIONS: "Actions",
+
+            //------ Changes ----------------------------
+            SEND_EMAIL:"SEND",
+            ERROR_SEND_MAIL:"Error sended email",
+            EMARGEMENT_TITLE:'FEUILLE D\'EMARGEMENT',
+            CONJUNCTION: "and",
+            VIEW_USER: "Administrar usuarios",
+            TABLE_PLACE_PHONE:"PHONE",
+            TABLE_PLACE_PRINCE:"PAYMENT",
+            TABLE_PLACE_INSCRIT:"INSCTIT PAR",
+            TABLE_PLACE_STATUS:"STATUT",
+            PREINSCRIT:"Pré­inscrit",
+            CONFIRME:"Confirmé",
+
+            ///---------------------  Chanhe values ---------------------------
+            USERS: "Users",
+            CONVOCATION_TITLE: "CONVOCATION A UN STAGE DE SECURITE ROUTIERE",
+            INSCRIPCION_CONFIRME: "Inscription confirmée",
+            COMUNICATION_INFO: "(A communiquer pour toute demande)",
+            THANKS_ABOUT: "merci de votre confiance.",
+            THANKS_ABOUT_LINE: "Nous vous confirmons votre inscription à un stage de sécurité routière.",
+            PLACE_HORAIRE: "Lieu et horaires du stage :",
+            PRECENSES: "Votre présence et le respect des horaires sont obligatoires.",
+            RULER1: "Merci de vous munir le jour du stage :",
+            RULER11: "De votre permis de conduire et de votre pièce d'identité.",
+            RULER12: "D'une enveloppe timbrée et libellée à votre adresse.",
+            INFORMATION_IMPORTANT: "Informations importantes :",
+            INFORMATION_IMPORTANT1: "Il est de votre responsabilité de vérifier (Préfecture, lettre 48 ou Telepoints)",
+            INFORMATION_IMPORTANT111:   "que votre solde de points sur le fichier national",
+            INFORMATION_IMPORTANT11: "du permis de conduire vous permet de récupérer 4 points et que votre participation à un stage",
+            INFORMATION_IMPORTANT12: " volontaire (cas1) date de plus de 1 an. En cas de litige ",
+            INFORMATION_IMPORTANT13:  "FORMATIONFINDER ne peut être tenu responsable.",
+
+            INFORMATION_IMPORTANT22: "Lorsque le stage réunit moins de dix personnes, la Préfecture impose à l'organisateur, l'annulation du stage. Le centre agréé",
+            INFORMATION_IMPORTANT21: "FORMATIONFINDER est tenu de vous informer de ",
+            INFORMATION_IMPORTANT212: "cette annulation par tous les moyens mis à sa disposition.",
+            INFORMATION_IMPORTANT23: "En contactant la société \"FORMATIONFINDER\" au 0557324912, une autre date ou un transfert vers un autre",
+            INFORMATION_IMPORTANT24: "lieu pourra donc vous être proposé sur votre demande.",
+
             //------ Piterson last change -------------------
             WAITING_ROOM: "Sala de espera",
             DOCUMENTS: "Documentos",
@@ -824,6 +954,10 @@ app.config(function ($translateProvider) {
             CARTE_BANCAIRE: "Carte Bancaire",
             PAIMENT_SECURISE: "Paiement sécurisé",
             CRYPTAGE_SSL: "Cryptage SSL utilisé par la banque Crédit du Nord.",
+
+            ADD_CUSTOMER_TO_WAITING_ROOM: "Agregar cliente a la sala de espera",
+            EXPIRATION_DATE: "Fecha de expiración",
+            CUSTOMER_ADDED_TO_WAITING_ROOM: "Cliente agregado a la sala de espera",
 
         });
     $translateProvider.preferredLanguage('en');

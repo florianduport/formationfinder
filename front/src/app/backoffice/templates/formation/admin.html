@@ -91,7 +91,14 @@
                     <td>
                         <div class="btn-group" role="group" aria-label="...">
                             <button type="button"
-                                    class="btn btn-sm btn-default" ng-class="[formation.costumer.length>0,btn-info]"
+                                    class="btn btn-sm btn-default"  ng-show="showUserButton(formation.customers)"
+                                    ng-click="okViewUsers(formation)"
+                                    title="{{'USERS' | translate}}"
+                                    data-toggle="tooltip">
+                                <span class="glyphicon glyphicon-book"></span>
+                            </button>
+                            <button type="button"
+                                    class="btn btn-sm btn-default"
                                     ng-click="detailsFormation(formation)"
                                     title="{{'DETAILS' | translate}}"
                                     data-toggle="tooltip">

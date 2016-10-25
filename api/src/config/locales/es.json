@@ -137,6 +137,15 @@
   "ERROR_SEARCHING_CUSTOMERS": "Error buscando clientes",
   "WAITING_ROOM_IS_EMPTY": "La sala de espera esta vacia",
   "ERROR_CUSTOMER_ID_REQUIED": "El id del cliente es requerido",
-  "CUSTOMER_ADDED_TO_FORMATION": "Cliente agregado a la formación satisfactoriamente"
+  "CUSTOMER_ADDED_TO_FORMATION": "Cliente agregado a la formación satisfactoriamente",
+
+  "PAYMENT_DATA_REQUIRED": "Informacion de pago requerida",
+  "ERROR_CREATING_CUSTOMER_BILL": "Error creando cuenta de cliente",
+  "ERROR_CREATING_CARD": "Error creando tarjeta de mangopay",
+  "ERROR_CREATING_NATURAL_USER_WALLET": "Error creando billetera de usuario natural",
+  "ERROR_IN_PAYIN_PROCESS": "Error en proceso de pago hacia mangopay (payin)",
+  "ERROR_IN_WALLET_TO_WALLET": "Error en transferencia de billetera a billetera",
+  "FORMATION_CENTER_HAS_NOT_MANGOPAY_DATA": "El centro de formacion no tiene atributos de mangopay",
+  "INVALID_LICENCE_STRING": "Licencia inválida"
 
 }

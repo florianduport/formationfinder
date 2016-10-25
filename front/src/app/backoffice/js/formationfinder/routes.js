@@ -113,5 +113,10 @@ app.config(["$routeProvider", function ($routeProvider) {
                 templateUrl: "templates/waitingroom/customeradd.html"
             }
         )
+        .when("/waitingroom/directCustomerAdd", {
+                controller: "WaitingRoomAddCustomerWizardController",
+                templateUrl: "templates/waitingroom/AddCustomerWizard/AddCustomerWizard.html"
+            }
+        )
         .otherwise("/dashboard");
 }]);

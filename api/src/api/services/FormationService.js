@@ -292,10 +292,7 @@ module.exports = {
       })
 
       callback(null, "OK")
-    })
-
-
-
+    });
   }
 
 };

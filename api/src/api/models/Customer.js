@@ -91,6 +91,14 @@ module.exports = {
 
     waitingRoom: {
       model: 'waitingRoom'
+    },
+
+    nationality: {
+      type: 'string'
+    },
+
+    residenceCountry: {
+      type: 'string'
     }
 
   },
