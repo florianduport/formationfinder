@@ -150,7 +150,7 @@ app.config(function ($translateProvider) {
             DETAILS_MAX_PEOPLE: "Max people",
             DETAILS_PSYCHOLOGIST: "Psychologist",
             DETAILS_BAFM: "Bafm",
-
+            VIEW_USER: "Users admin",
             EDIT_USER: "Edit",
             ADMIN_USER_PAGE_HEAD: "Admin clients",
             ADMIN_USER_PAGE_HEAD_DESCRIPTION: "In this window you can admin formation's clients.",
@@ -182,7 +182,7 @@ app.config(function ($translateProvider) {
             CENTER_DIRECTOR_ATTESTATION_PAGE: "Directeur du centre",
             WORKERS_ATTESTATION_PAGE: "Animateurs",
             CUSTOMERS_ATTESTATION_PAGE: "Stagiaire",
-            DATE_CONFIRMATION_ATTESTATION_PAGE: "A suivi le stage de formation spécifique correspondant au cas visé ci-dessus, qui s’est déroulé",
+            DATE_CONFIRMATION_ATTESTATION_PAGE: "a suivi le stage de formation spécifique correspondant au cas visé ci-dessus, qui s’est déroulé",
             SING: "Signature",
             SINGS: "Signatures",
             SING_CACHET: "Signature et Cachet ",
@@ -260,7 +260,6 @@ app.config(function ($translateProvider) {
             TABLE_PLACE_ACTIVATED: "Activated",
             TABLE_PLACE_ACTIONS: "Actions",
             //------ Changes ----------------------------
-<<<<<<< HEAD
             SEND_EMAIL:"SEND",
             ERROR_SEND_MAIL:"Error sended email",
             EMARGEMENT_TITLE:'FEUILLE D\'EMARGEMENT',
@@ -279,26 +278,6 @@ app.config(function ($translateProvider) {
             PREINSCRIT:"Pré­inscrit",
             CONFIRME:"Confirmé",
             ///----------------------  Chanhe values ---------------------------
-=======
-            SEND_EMAIL: "SEND",
-            ERROR_SEND_MAIL: "Error sended email",
-            EMARGEMENT_TITLE: 'FEUILLE D\'EMARGEMENT',
-            CONJUNCTION: "and",
-            TITULAIRE: "titulaire de l 'Agrément",
-            DAY1: "JOUR 1",
-            DAY2: "JOUR 2",
-            NAMEDATA: "Nom, prénom",
-            MORNING: "Matin",
-            AFTERNOON: "Après-midi",
-            VIEW_USER: "Admin users",
-            TABLE_PLACE_PHONE: "PHONE",
-            TABLE_PLACE_PRINCE: "PAYMENT",
-            TABLE_PLACE_INSCRIT: "INSCTIT PAR",
-            TABLE_PLACE_STATUS: "STATUT",
-            PREINSCRIT: "Pré­inscrit",
-            CONFIRME: "Confirmé",
-            ///---------------------  Chanhe values ---------------------------
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
             USERS: "Users",
             CONVOCATION_TITLE: "CONVOCATION A UN STAGE DE SECURITE ROUTIERE",
             INSCRIPCION_CONFIRME: "Inscription confirmée",
@@ -351,6 +330,7 @@ app.config(function ($translateProvider) {
             CUSTOMER_ADDED_TO_WAITING_ROOM: "Customer added to the Waiting Room",
 
             ERROR_ADDING_CUSTOMER_TO_WAITING_ROOM: "Error adding customer to the waiting room"
+
 
 
         })
@@ -495,6 +475,7 @@ app.config(function ($translateProvider) {
             DETAILS_MAX_PEOPLE: "Max people",
             DETAILS_PSYCHOLOGIST: "Psychologist",
             DETAILS_BAFM: "Bafm",
+            VIEW_USER: "Users admin",
             EDIT_USER: "Edit",
             ADMIN_USER_PAGE_HEAD: "Admin clients",
             ADMIN_USER_PAGE_HEAD_DESCRIPTION: "In this window you can admin formation's clients.",
@@ -526,7 +507,7 @@ app.config(function ($translateProvider) {
             CENTER_DIRECTOR_ATTESTATION_PAGE: "Directeur du centre",
             WORKERS_ATTESTATION_PAGE: "Animateurs",
             CUSTOMERS_ATTESTATION_PAGE: "Stagiaire",
-            DATE_CONFIRMATION_ATTESTATION_PAGE: "A suivi le stage de formation spécifique correspondant au cas visé ci-dessus, qui s’est déroulé",
+            DATE_CONFIRMATION_ATTESTATION_PAGE: "a suivi le stage de formation spécifique correspondant au cas visé ci-dessus, qui s’est déroulé",
             SING: "Signature",
             SINGS: "Signatures",
             SING_CACHET: "Signature et Cachet ",
@@ -602,7 +583,6 @@ app.config(function ($translateProvider) {
             TABLE_PLACE_AGREMENT: "Agrement",
             TABLE_PLACE_ACTIVATED: "Activated",
             TABLE_PLACE_ACTIONS: "Actions",
-<<<<<<< HEAD
 
             //------ Changes ----------------------------
             SEND_EMAIL:"SEND",
@@ -617,20 +597,6 @@ app.config(function ($translateProvider) {
             PREINSCRIT:"Pré­inscrit",
             CONFIRME:"Confirmé",
 
-=======
-            //------ Changes ----------------------------
-            SEND_EMAIL: "SEND",
-            ERROR_SEND_MAIL: "Error sended email",
-            EMARGEMENT_TITLE: 'FEUILLE D\'EMARGEMENT',
-            CONJUNCTION: "and",
-            VIEW_USER: "Admin users",
-            TABLE_PLACE_PHONE: "PHONE",
-            TABLE_PLACE_PRINCE: "PAYMENT",
-            TABLE_PLACE_INSCRIT: "INSCTIT PAR",
-            TABLE_PLACE_STATUS: "STATUT",
-            PREINSCRIT: "Pré­inscrit",
-            CONFIRME: "Confirmé",
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
             ///---------------------  Chanhe values ---------------------------
             USERS: "Users",
             CONVOCATION_TITLE: "CONVOCATION A UN STAGE DE SECURITE ROUTIERE",
@@ -819,6 +785,7 @@ app.config(function ($translateProvider) {
             DETAILS_MAX_PEOPLE: "Cantidad máxima",
             DETAILS_PSYCHOLOGIST: "Psicólogo",
             DETAILS_BAFM: "Bafm",
+            VIEW_USER: "Administrar usuarios",
             EDIT_USER: "Editar",
             ADMIN_USER_PAGE_HEAD: "Administrar clientes",
             ADMIN_USER_PAGE_HEAD_DESCRIPTION: "En esta vista se podra administrar los clientes de una formación.",
@@ -850,7 +817,7 @@ app.config(function ($translateProvider) {
             CENTER_DIRECTOR_ATTESTATION_PAGE: "Directeur du centre",
             WORKERS_ATTESTATION_PAGE: "Animateurs",
             CUSTOMERS_ATTESTATION_PAGE: "Stagiaire",
-            DATE_CONFIRMATION_ATTESTATION_PAGE: "A suivi le stage de formation spécifique correspondant au cas visé ci-dessus, qui s’est déroulé",
+            DATE_CONFIRMATION_ATTESTATION_PAGE: "a suivi le stage de formation spécifique correspondant au cas visé ci-dessus, qui s’est déroulé",
             SING: "Signature",
             SINGS: "Signatures",
             SING_CACHET: "Signature et Cachet ",
@@ -926,7 +893,6 @@ app.config(function ($translateProvider) {
             TABLE_PLACE_AGREMENT: "Agrement",
             TABLE_PLACE_ACTIVATED: "Activated",
             TABLE_PLACE_ACTIONS: "Actions",
-<<<<<<< HEAD
 
             //------ Changes ----------------------------
             SEND_EMAIL:"SEND",
@@ -941,20 +907,6 @@ app.config(function ($translateProvider) {
             PREINSCRIT:"Pré­inscrit",
             CONFIRME:"Confirmé",
 
-=======
-            //------ Changes ----------------------------
-            SEND_EMAIL: "SEND",
-            ERROR_SEND_MAIL: "Error sended email",
-            EMARGEMENT_TITLE: 'FEUILLE D\'EMARGEMENT',
-            CONJUNCTION: "and",
-            VIEW_USER: "Administrar usuarios",
-            TABLE_PLACE_PHONE: "PHONE",
-            TABLE_PLACE_PRINCE: "PAYMENT",
-            TABLE_PLACE_INSCRIT: "INSCTIT PAR",
-            TABLE_PLACE_STATUS: "STATUT",
-            PREINSCRIT: "Pré­inscrit",
-            CONFIRME: "Confirmé",
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
             ///---------------------  Chanhe values ---------------------------
             USERS: "Users",
             CONVOCATION_TITLE: "CONVOCATION A UN STAGE DE SECURITE ROUTIERE",
@@ -979,10 +931,7 @@ app.config(function ($translateProvider) {
             INFORMATION_IMPORTANT212: "cette annulation par tous les moyens mis à sa disposition.",
             INFORMATION_IMPORTANT23: "En contactant la société \"FORMATIONFINDER\" au 0557324912, une autre date ou un transfert vers un autre",
             INFORMATION_IMPORTANT24: "lieu pourra donc vous être proposé sur votre demande.",
-<<<<<<< HEAD
 
-=======
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
             //------ Piterson last change -------------------
             WAITING_ROOM: "Sala de espera",
             DOCUMENTS: "Documentos",

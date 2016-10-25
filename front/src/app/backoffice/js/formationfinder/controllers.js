@@ -1020,13 +1020,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             }
 
             $scope.showUserButton = function (customer) {
-<<<<<<< HEAD
                 if (typeof customer != "undefined") {
                     if (customer.length > 0) {
-=======
-                if ( typeof customer != "undefined" ) {
-                    if (customer.length > 0){
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
                         //console.log("Show value")
                         return true;
                     }
@@ -7663,17 +7658,10 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         licenceNumberPlace = (iCustomer.driverLicence !== undefined) ? iCustomer.driverLicence.placeOfDeliverance : ""
                         dateValue = $scope.getReadableDate(iCustomer.birthDate);
 
-<<<<<<< HEAD
                         console.log("Show data ", docDefinition.content)
                         position = 7 * (index + 1)
 
                         columns = [
-=======
-                        console.log("Show data ", docDefinition.content )
-                        position = 7*(index+1)
-
-                        columns =  [
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
                             {
                                 ul: [
                                     {
@@ -7700,7 +7688,6 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                                             bold: true
                                         }]
                                     },
-<<<<<<< HEAD
 
                                 ]
                             },
@@ -7725,32 +7712,6 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                                         }]
                                     },
 
-=======
-
-                                ]
-                            },
-                            {
-                                ul: [
-                                    {
-                                        text: [{text: $translate.instant('FIRSTNAME_ATTESTATION_PAGE') + ": "}, {
-                                            text: iCustomer.firstName,
-                                            bold: true
-                                        }]
-                                    },
-                                    {
-                                        text: [{text: $translate.instant('BIRTHCITY_ATTESTATION_PAGE') + ": "}, {
-                                            text: iCustomer.birthCity,
-                                            bold: true
-                                        }]
-                                    },
-                                    {
-                                        text: [{text: $translate.instant('LIVEADDRESS_ATTESTATION_PAGE') + ": "}, {
-                                            text: iCustomer.city,
-                                            bold: true
-                                        }]
-                                    },
-
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
 
                                 ]
                             }
@@ -7761,11 +7722,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         }
 
                         if (licenceNumberDate !== undefined) {
-<<<<<<< HEAD
                             columns[0].ul.push($translate.instant('NOLICENCEDATE_ATTESTATION_PAGE') + ": " + $scope.getReadableDate(new Date(licenceNumberDate)))
-=======
-                            columns[0].ul.push($translate.instant('NOLICENCEDATE_ATTESTATION_PAGE') + ": " + $scope.getReadableDate(new Date (licenceNumberDate)))
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
                         }
 
                         if (licenceNumberPlace !== undefined) {
@@ -7774,11 +7731,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         }
                         value = {}
                         value.columns = columns
-<<<<<<< HEAD
                         docDefinition.content.push(value)
-=======
-                        docDefinition.content.push( value )
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
 
 
                         docDefinition.content.push({
@@ -7817,13 +7770,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         dateList = ""
                         counter = 0
                         $scope.formation.dates.forEach(function (iDate, index) {
-<<<<<<< HEAD
                             if (index > 0)
                                 dateList += " " + $translate.instant('CONJUNCTION') + " "
-=======
-                            if ( index > 0)
-                                dateList += " " +  $translate.instant('CONJUNCTION') + " "
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
                             dateList += $scope.getReadableDateEx(iDate.date)
                         })
 
@@ -7832,7 +7780,6 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             style: 'normalTextOther'
                         })
 
-<<<<<<< HEAD
 
                         docDefinition.content.push({
                             text: $translate.instant('DATE_ARTICLE') + " :" + currentDate,
@@ -7877,47 +7824,6 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             })
                         }
 
-=======
-
-                        docDefinition.content.push({
-                            text: $translate.instant('DATE_ARTICLE') + " :" + currentDate,
-                            style: 'normalTextOther'
-                        })
-
-                        ///Get Animators
-                        //BAFM/BAFCRI:
-                        //Psychologue
-                        animatorOne = ["","" , ""]
-                        animatorTouw = ["","" , ""]
-                        console.log("Animators " , $scope.formation.animators )
-
-                        if ($scope.formation.animators.length > 0) {
-                            $scope.formation.animators.forEach(function (iAnimator, index) {
-                                nType = ""
-                                if (iAnimator.type == "BAFM") {
-                                        nType = "BAFM/BAFCRI"
-                                }
-                                else  if (iAnimator.type == "PSY") {
-                                    nType = "Psychologue"
-                                }
-
-
-                                if ( index == 0) {
-
-                                    animatorOne[1] = { text: nType + " " +iAnimator.name + " " +  iAnimator.firstName ,  alignment: 'rigth'}
-                                }
-
-                                if ( index == 1) {
-
-                                    animatorTouw[1] =  { text: nType + " " +iAnimator.name + " " +  iAnimator.firstName , alignment: 'rigth'}
-                                }
-
-
-
-                            })
-                        }
-
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
                         data = [$translate.instant('SING_CACHET'), $translate.instant('SINGS'), $translate.instant('SING')]
                         tableObject = {
                             style: 'itemsTable',
@@ -7954,11 +7860,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                         //console.log("Create estructure")
                     });
-<<<<<<< HEAD
                     // console.log("Continue function", docDefinition.content)
-=======
-                   // console.log("Continue function", docDefinition.content)
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
                     //var docDefinition = {
                     //    content: [
                     //        {text: $translate.instant('ADMIN_PAGE_HEAD'), style: 'header'},
@@ -8040,11 +7942,6 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     .success(function (result) {
                         if (result.status === "ok") {
                             $scope.WaitingRoomCustomersList = result.data;
-<<<<<<< HEAD
-=======
-
-                           // console.log("Waiting Room list ", $scope.WaitingRoomCustomersList )
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
                             callback(null, null)
 
 
@@ -8125,19 +8022,13 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     dateList = ""
                     counter = 0
                     $scope.formation.dates.forEach(function (iDate, index) {
-<<<<<<< HEAD
                         if (index > 0)
                             dateList += " " + $translate.instant('CONJUNCTION') + " "
-=======
-                        if ( index > 0)
-                            dateList += " " +  $translate.instant('CONJUNCTION') + " "
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
                         dateList += $scope.getReadableDateEx(iDate.date)
                     })
 
 
                     docDefinition.content.push(
-<<<<<<< HEAD
                         {text: [{text: "Dates :", style: 'normalText'}, {text: dateList}]}
                     )
                     docDefinition.content.push(
@@ -8158,40 +8049,10 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         var itemsWaiting = $scope.WaitingRoomCustomersList.map(function (iplace) {
                             return [iplace.name, iplace.firstName, iplace.phoneNumber, "WAITING ROOM", "-", $translate.instant('PREINSCRIT')];
                         });
-=======
-                            {text:[{text: "Dates :", style: 'normalText'},{text: dateList}]}
-
-
-
-                   )
-                    docDefinition.content.push(
-                    {
-                        text: [{text: $translate.instant('ADDRESS_ATTESTATION_PAGE') + ": "}, {
-                            text: $scope.formation.place.address,
-                            bold: true
-                        }]
-                    })
-                    valueItems = $translate.instant('PREINSCRIT')
-                    var items = $scope.formation.customers.map(function (iplace) {
-                        return [iplace.name, iplace.firstName, iplace.phoneNumber, "FORMATIONFINDER", String($scope.formation.price),valueItems ];
-                    });
-
-                    ////Search waiting room users
-                    $scope.printWaitingRoomCustomersList( function ( err, resultData){
-
-                        //console.log("List WaitingRoom --->", )
-                        var itemsWaiting = []
-                        //if ($scope.WaitingRoomCustomersList.length > 0) {
-                        //    itemsWaiting  = $scope.WaitingRoomCustomersList.map(function (iplace) {
-                        //    return [iplace.name, iplace.firstName, iplace.phoneNumber, "WAITING ROOM", "-", $translate.instant('PREINSCRIT')];
-                        //});
-                        //}
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
                         docDefinition.content.push({
                             text: " Liste des stagiaires inscrits et pré­inscrits :",
                             style: 'normalTextOther'
                         })
-<<<<<<< HEAD
 
                         tableObject = {
                             style: 'itemsTable',
@@ -8208,37 +8069,16 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                                         {text: $translate.instant('TABLE_PLACE_INSCRIT'), style: 'itemsTableHeader'},
                                         {text: $translate.instant('TABLE_PLACE_PRINCE'), style: 'itemsTableHeader'},
                                         {text: $translate.instant('TABLE_PLACE_STATUS'), style: 'itemsTableHeader'},
-=======
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
 
-                        tableObject = {
-                            style: 'itemsTable',
-                            table: {
-                                widths: ['auto', 'auto', 'auto', 'auto','auto','auto'],
-                                body: [
-                                    [
-                                        {text: $translate.instant('TABLE_PLACE_NAME'), style: 'itemsTableHeader'},
-                                        {text: $translate.instant('FIRSTNAME_ATTESTATION_PAGE'), style: 'itemsTableHeader'},
-                                        {text: $translate.instant('TABLE_PLACE_PHONE'), style: 'itemsTableHeader'},
-                                        {text:  $translate.instant('TABLE_PLACE_INSCRIT'), style: 'itemsTableHeader'},
-                                        {text: $translate.instant('TABLE_PLACE_PRINCE'), style: 'itemsTableHeader'},
-                                        {text: $translate.instant('TABLE_PLACE_STATUS'), style: 'itemsTableHeader'},
 
-<<<<<<< HEAD
                                     ]
                                 ].concat(items)
-=======
-
-                                    ]
-                                ].concat(items).concat(itemsWaiting)
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
                             },
 
 
                         }
 
 
-<<<<<<< HEAD
                         if (itemsWaiting.length > 0) {
                             tableObject.table.body.concat(itemsWaiting)
                         }
@@ -8246,8 +8086,6 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         ////Validate page break
 
 
-=======
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
                         docDefinition.content.push(tableObject)
                         pdfMake.createPdf(docDefinition).open()
 
@@ -8263,16 +8101,238 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 }
                 else {
 
-                    dateList = ""
-                    counter = 0
-                    $scope.formation.dates.forEach(function (iDate, index) {
-                        if ( index > 0)
-                            dateList += " " +  $translate.instant('CONJUNCTION') + " "
-                        dateList += $scope.getReadableDateEx(iDate.date)
-                    })
+                    //var docDefinition = {
+                    //    content: [
+                    //        { text: 'Tables', style: 'header' },
+                    //        'Official documentation is in progress, this document is just a glimpse of what is possible with pdfmake and its layout engine.',
+                    //        { text: 'A simple table (no headers, no width specified, no spans, no styling)', style: 'subheader' },
+                    //        'The following table has nothing more than a body array',
+                    //        {
+                    //            style: 'tableExample',
+                    //            table: {
+                    //                body: [
+                    //                    ['Column 1', 'Column 2', 'Column 3'],
+                    //                    ['One value goes here', 'Another one here', 'OK?']
+                    //                ]
+                    //            }
+                    //        },
+                    //        { text: 'A simple table with nested elements', style: 'subheader' },
+                    //        'It is of course possible to nest any other type of nodes available in pdfmake inside table cells',
+                    //        {
+                    //            style: 'tableExample',
+                    //            table: {
+                    //                body: [
+                    //                    ['Column 1', 'Column 2', 'Column 3'],
+                    //                    [
+                    //                        {
+                    //                            stack: [
+                    //                                'Let\'s try an unordered list',
+                    //                                {
+                    //                                    ul: [
+                    //                                        'item 1',
+                    //                                        'item 2'
+                    //                                    ]
+                    //                                }
+                    //                            ]
+                    //                        },
+                    //                        /* a nested table will appear here as soon as I fix a bug */
+                    //                        [
+                    //                            'or a nested table',
+                    //                            {
+                    //                                table: {
+                    //                                    body: [
+                    //                                        [ 'Col1', 'Col2', 'Col3'],
+                    //                                        [ '1', '2', '3'],
+                    //                                        [ '1', '2', '3']
+                    //                                    ]
+                    //                                },
+                    //                            }
+                    //                        ],
+                    //                        { text: [
+                    //                            'Inlines can be ',
+                    //                            { text: 'styled\n', italics: true },
+                    //                            { text: 'easily as everywhere else', fontSize: 10 } ]
+                    //                        }
+                    //                    ]
+                    //                ]
+                    //            }
+                    //        },
+                    //        { text: 'Defining column widths', style: 'subheader' },
+                    //        'Tables support the same width definitions as standard columns:',
+                    //        {
+                    //            bold: true,
+                    //            ul: [
+                    //                'auto',
+                    //                'star',
+                    //                'fixed value'
+                    //            ]
+                    //        },
+                    //        {
+                    //            style: 'tableExample',
+                    //            table: {
+                    //                widths: [100, '*', 200, '*'],
+                    //                body: [
+                    //                    [ 'width=100', 'star-sized', 'width=200', 'star-sized'],
+                    //                    [ 'fixed-width cells have exactly the specified width', { text: 'nothing interesting here', italics: true, color: 'gray' }, { text: 'nothing interesting here', italics: true, color: 'gray' }, { text: 'nothing interesting here', italics: true, color: 'gray' }]
+                    //                ]
+                    //            }
+                    //        },
+                    //        { text: 'Headers', style: 'subheader' },
+                    //        'You can declare how many rows should be treated as a header. Headers are automatically repeated on the following pages',
+                    //        { text: [ 'It is also possible to set keepWithHeaderRows to make sure there will be no page-break between the header and these rows. Take a look at the document-definition and play with it. If you set it to one, the following table will automatically start on the next page, since there\'s not enough space for the first row to be rendered here' ], color: 'gray', italics: true },
+                    //        {
+                    //            style: 'tableExample',
+                    //            table: {
+                    //                headerRows: 1,
+                    //                // dontBreakRows: true,
+                    //                // keepWithHeaderRows: 1,
+                    //                body: [
+                    //                    [{ text: 'Header 1', style: 'tableHeader' }, { text: 'Header 2', style: 'tableHeader' }, { text: 'Header 3', style: 'tableHeader' }],
+                    //                    [
+                    //                        'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+                    //                    ]
+                    //                ]
+                    //            }
+                    //        },
+                    //        { text: 'Column/row spans', style: 'subheader' },
+                    //        'Each cell-element can set a rowSpan or colSpan',
+                    //        {
+                    //            style: 'tableExample',
+                    //            color: '#444',
+                    //            table: {
+                    //                widths: [ 200, 'auto', 'auto' ],
+                    //                headerRows: 2,
+                    //                // keepWithHeaderRows: 1,
+                    //                body: [
+                    //                    [{ text: 'Header with Colspan = 2', style: 'tableHeader', colSpan: 2, alignment: 'center' }, {}, { text: 'Header 3', style: 'tableHeader', alignment: 'center' }],
+                    //                    [{ text: 'Header 1', style: 'tableHeader', alignment: 'center' }, { text: 'Header 2', style: 'tableHeader', alignment: 'center' }, { text: 'Header 3', style: 'tableHeader', alignment: 'center' }],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ { rowSpan: 3, text: 'rowSpan set to 3\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor' }, 'Sample value 2', 'Sample value 3' ],
+                    //                    [ '', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', { colSpan: 2, rowSpan: 2, text: 'Both:\nrowSpan and colSpan\ncan be defined at the same time' }, '' ],
+                    //                    [ 'Sample value 1', '', '' ],
+                    //                ]
+                    //            }
+                    //        },
+                    //        { text: 'Styling tables', style: 'subheader' },
+                    //        'You can provide a custom styler for the table. Currently it supports:',
+                    //        {
+                    //            ul: [
+                    //                'line widths',
+                    //                'line colors',
+                    //                'cell paddings',
+                    //            ]
+                    //        },
+                    //        'with more options coming soon...\n\npdfmake currently has a few predefined styles (see them on the next page)',
+                    //        { text: 'noBorders:', fontSize: 14, bold: true, pageBreak: 'before', margin: [0, 0, 0, 8] },
+                    //        {
+                    //            style: 'tableExample',
+                    //            table: {
+                    //                headerRows: 1,
+                    //                body: [
+                    //                    [{ text: 'Header 1', style: 'tableHeader' }, { text: 'Header 2', style: 'tableHeader'}, { text: 'Header 3', style: 'tableHeader' }],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                ]
+                    //            },
+                    //            layout: 'noBorders'
+                    //        },
+                    //        { text: 'headerLineOnly:', fontSize: 14, bold: true, margin: [0, 20, 0, 8] },
+                    //        {
+                    //            style: 'tableExample',
+                    //            table: {
+                    //                headerRows: 1,
+                    //                body: [
+                    //                    [{ text: 'Header 1', style: 'tableHeader' }, { text: 'Header 2', style: 'tableHeader'}, { text: 'Header 3', style: 'tableHeader' }],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                ]
+                    //            },
+                    //            layout: 'headerLineOnly'
+                    //        },
+                    //        { text: 'lightHorizontalLines:', fontSize: 14, bold: true, margin: [0, 20, 0, 8] },
+                    //        {
+                    //            style: 'tableExample',
+                    //            table: {
+                    //                headerRows: 1,
+                    //                body: [
+                    //                    [{ text: 'Header 1', style: 'tableHeader' }, { text: 'Header 2', style: 'tableHeader'}, { text: 'Header 3', style: 'tableHeader' }],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                ]
+                    //            },
+                    //            layout: 'lightHorizontalLines'
+                    //        },
+                    //        { text: 'but you can provide a custom styler as well', margin: [0, 20, 0, 8] },
+                    //        {
+                    //            style: 'tableExample',
+                    //            table: {
+                    //                headerRows: 1,
+                    //                body: [
+                    //                    [{ text: 'Header 1', style: 'tableHeader' }, { text: 'Header 2', style: 'tableHeader'}, { text: 'Header 3', style: 'tableHeader' }],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                    [ 'Sample value 1', 'Sample value 2', 'Sample value 3' ],
+                    //                ]
+                    //            },
+                    //            layout: {
+                    //                hLineWidth: function(i, node) {
+                    //                    return (i === 0 || i === node.table.body.length) ? 2 : 1;
+                    //                },
+                    //                vLineWidth: function(i, node) {
+                    //                    return (i === 0 || i === node.table.widths.length) ? 2 : 1;
+                    //                },
+                    //                hLineColor: function(i, node) {
+                    //                    return (i === 0 || i === node.table.body.length) ? 'black' : 'gray';
+                    //                },
+                    //                vLineColor: function(i, node) {
+                    //                    return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
+                    //                },
+                    //                // paddingLeft: function(i, node) { return 4; },
+                    //                // paddingRight: function(i, node) { return 4; },
+                    //                // paddingTop: function(i, node) { return 2; },
+                    //                // paddingBottom: function(i, node) { return 2; }
+                    //            }
+                    //        }
+                    //    ],
+                    //    styles: {
+                    //        header: {
+                    //            fontSize: 18,
+                    //            bold: true,
+                    //            margin: [0, 0, 0, 10]
+                    //        },
+                    //        subheader: {
+                    //            fontSize: 16,
+                    //            bold: true,
+                    //            margin: [0, 10, 0, 5]
+                    //        },
+                    //        tableExample: {
+                    //            margin: [0, 5, 0, 15]
+                    //        },
+                    //        tableHeader: {
+                    //            bold: true,
+                    //            fontSize: 13,
+                    //            color: 'black'
+                    //        }
+                    //    },
+                    //    defaultStyle: {
+                    //        // alignment: 'justify'
+                    //    }
+                    //};
 
 
-<<<<<<< HEAD
                     //dates: [{
                     //    date: faker.date.past([], new Date("12/12/2015")),
                     //    morning: {
@@ -8315,13 +8375,6 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     //})
                     var items = $scope.formation.customers.map(function (iplace) {
                         return [iplace.name + " " + iplace.firstName, "", "", "", "", ""];
-=======
-                    currentDate = $scope.getReadableDate(new Date())
-
-                    sigText2 = ", " + $translate.instant('TITULAIRE') + " " + $scope.formation.place.agreementNumber
-                    var items = $scope.formation.customers.map(function (iplace) {
-                        return [iplace.name + " " + iplace.firstName ,"" ,"" ,"" ,"" ,"" ];
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
                     });
 
                     var docDefinition = {
@@ -8339,27 +8392,16 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                                             {text: $scope.formation.place.address, fontSize: 10, bold: true}
                                         ]
                                     ].concat([[{text: ''}
-<<<<<<< HEAD
                                             ,
                                             {text: ''}
                                             ,
                                             {text: $translate.instant('DATE_ARTICLE') + "", fontSize: 10, bold: true}
-=======
-                                        ,
-                                        {text: ''}
-                                        ,
-                                        {text: $translate.instant('DATE_ARTICLE') + "" , fontSize: 10, bold: true}
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
                                         ]])
                                         .concat([[{text: ''}
                                             ,
                                             {text: ''}
                                             ,
-<<<<<<< HEAD
                                             {text: currentDate, fontSize: 10, bold: true}
-=======
-                                            {text:  currentDate, fontSize: 10, bold: true}
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
                                         ]])
                                 },
                                 layout: "noBorders"
@@ -8367,21 +8409,13 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             {
                                 columns: [
                                     {
-<<<<<<< HEAD
                                         text: dateList, fontSize: 10, bold: true
-=======
-                                        text: dateList,fontSize: 10, bold: true
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
                                     },
                                     {
                                         text: [{text: ""}, {
                                             text: $scope.formation.place.agreementName,
                                             bold: true
-<<<<<<< HEAD
                                         }, {text: sigText2}]
-=======
-                                        },  {text: sigText2}]
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
                                     }
                                 ]
                             },
@@ -8389,11 +8423,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             {
                                 style: 'tableExample',
                                 color: '#222',
-<<<<<<< HEAD
                                 widths: [100, 'auto', 200, 200, 200, 200],
-=======
-                                widths: [100, 'auto', 400, 400, 400, 400],
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
                                 table: {
                                     headerRows: 2,
                                     body: [
@@ -8401,11 +8431,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                                             rowSpan: 2,
                                             text: $translate.instant('NAMEDATA'),
                                             alignment: 'center',
-<<<<<<< HEAD
                                             bold: true
-=======
-                                            bold:true
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
                                         }, {rowSpan: 2, text: 'Cas'}, {
                                             text: $translate.instant('DAY1'),
                                             style: 'tableHeader',
@@ -8417,11 +8443,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                                             colSpan: 2,
                                             alignment: 'center'
                                         }, {}],
-<<<<<<< HEAD
                                         ['Column 1', 'Column 2', $translate.instant('MORNING'), $translate.instant('AFTERNOON'), $translate.instant('MORNING'), $translate.instant('AFTERNOON')],
-=======
-                                        ['Column 1', 'Column 2',  $translate.instant('MORNING'),  $translate.instant('AFTERNOON'), $translate.instant('MORNING'),   $translate.instant('AFTERNOON')],
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
 
                                     ].concat(items)
                                 },
@@ -8617,11 +8639,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             //    }
                             //}
                             //['Pepe de Jose', '-', '-', '-', '-', '-'],
-<<<<<<< HEAD
                             // ['Marcos Antonio de Jose', '2', '', '', '', '']
-=======
-                           // ['Marcos Antonio de Jose', '2', '', '', '', '']
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
                         ],
                         styles: {
                             header: {
@@ -8666,12 +8684,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     var modalInstance = $uibModal.open({
                         animation: $scope.animationsEnabled,
                         templateUrl: 'ModalSendEmailMessage.html',
-<<<<<<< HEAD
                         controller: 'ModalInstanceCtrl',
                         //controller: 'ModalInstanceCtrlMail',
-=======
-                        controller: 'ModalInstanceCtrlMail',
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
                         size: "",
                         resolve: {
                             items: function () {
@@ -8690,7 +8704,6 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         config.from = $routeParams.mailsender
                         config.subject = $routeParams.mailsubject
                         config.text = $routeParams.messagebody
-<<<<<<< HEAD
 
                         $http.post($rootScope.urlBase + "/formation/sendMailToCustomer", config)
                             .success(function (result) {
@@ -8715,32 +8728,6 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                                 //alert("Error searching Formation: " + err);
                             });
 
-=======
-
-                        $http.post($rootScope.urlBase + "/formation/sendMailToCustomer", config)
-                            .success(function (result) {
-                                if (result.status === "ok") {
-                                    $scope.formation = result.message;
-                                    console.log("Formation data", result.message)
-
-                                } else {
-                                    console.log("Error searching Formation: ", result.message);
-
-                                    objeData = {type: $translate.instant('ERROR')};
-                                    $scope.showModalMessage($translate.instant('ERROR_SEND_MAIL') + ": " + result.message, objeData);
-                                    //alert("Error searching Formation: " + result.info);
-                                }
-                            })
-                            .error(function (err) {
-                                console.log("Error searching Formation: ", err);
-
-                                objeData = {type: $translate.instant('ERROR')};
-                                $scope.showModalMessage($translate.instant('ERROR_SEND_MAIL') + ": " + err, objeData);
-
-                                //alert("Error searching Formation: " + err);
-                            });
-
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
                     }, function () {
                         //console.log("Object for send messajes", selectedItem)
                     });
@@ -8752,11 +8739,6 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 $scope.formation;
 
                 $location.path("/formation/listclient/" + $scope.formation.id);
-            }
-
-            $scope.showImage = function () {
-
-
             }
 
         }])
@@ -10213,17 +10195,10 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         vm.customerData = result.data;
                         $scope.formationId = vm.customerData.formation
                         console.log("Customer data", vm.customerData)
-<<<<<<< HEAD
                         vm.customerData.birthDate = $scope.getReadableDate(vm.customerData.birthDate)
                         $scope.birthDate = vm.customerData.birthDate
                         vm.customerData.driverLicence.dateOfDeliverance = $scope.getReadableDate(vm.customerData.driverLicence.dateOfDeliverance)
                         vm.customerData.driverLicence.dateOfProcuration = $scope.getReadableDate(vm.customerData.driverLicence.dateOfProcuration)
-=======
-                        vm.customerData.birthDate =  $scope.getReadableDate( vm.customerData.birthDate)
-                        $scope.birthDate = vm.customerData.birthDate
-                        vm.customerData.driverLicence.dateOfDeliverance = $scope.getReadableDate(  vm.customerData.driverLicence.dateOfDeliverance)
-                        vm.customerData.driverLicence.dateOfProcuration = $scope.getReadableDate(   vm.customerData.driverLicence.dateOfProcuration)
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
                         ///---------------------------------------------////
                         $scope.searchFormation();
 
@@ -10366,11 +10341,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             body: [
                                 [{
                                     text: [
-<<<<<<< HEAD
                                         {text: $translate.instant('ADRESS_FORMATION') + ": " + $scope.formation.place.address}
-=======
-                                        {text: $translate.instant('ADRESS_FORMATION') + ": " + $scope.formation.place.address }
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
 
                                     ]
                                 },
@@ -10421,11 +10392,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
         $scope.getReadableDate = function (dateParmt) {
             // console.log("DATE PARAMETER ", dateParmt)
             value = new Date(dateParmt);
-<<<<<<< HEAD
             resultDate = value.getDate() + "/" + value.getMonth() + "/" + value.getFullYear();
-=======
-            resultDate =  value.getDate() + "/" + value.getMonth() + "/" + value.getFullYear();
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
 
             return resultDate
 
@@ -10444,13 +10411,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             dateList = ""
             counter = 0
             $scope.formation.dates.forEach(function (iDate, index) {
-<<<<<<< HEAD
                 if (index > 0)
                     dateList += " " + $translate.instant('CONJUNCTION') + " "
-=======
-                if ( index > 0)
-                    dateList += " " +  $translate.instant('CONJUNCTION') + " "
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
                 dateList += $scope.getReadableDateEx(iDate.date)
             })
 
@@ -10458,7 +10420,6 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             currentDate = $scope.getReadableDate(new Date())
             var docDefinition = {
                 content: [
-<<<<<<< HEAD
                     {
                         text: $translate.instant('CONVOCATION_TITLE'), style: 'header', alignment: "center"
                     },
@@ -10466,15 +10427,6 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         text: "", style: 'header', alignment: "center"
                     },
                     {
-=======
-                     {
-                        text: $translate.instant('CONVOCATION_TITLE'), style: 'header', alignment:"center"
-                     },
-                    {
-                        text: "", style: 'header', alignment:"center"
-                    },
-                     {
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
                         columns: [
                             {
                                 text: [
@@ -10486,13 +10438,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             {
                                 text: [
                                     {
-<<<<<<< HEAD
                                         text: vm.customerData.name + " " + vm.customerData.firstName,
                                         style: 'textData', alignment: "rigth"
-=======
-                                        text:  vm.customerData.name + " " +  vm.customerData.firstName,
-                                        style: 'textData', alignment:"rigth"
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
                                     },
 
 
@@ -10512,18 +10459,13 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                             },
                             {
                                 text: [
-<<<<<<< HEAD
                                     {text: vm.customerData.address, style: 'textDataSimple', alignment: "rigth"}
-=======
-                                    {text:vm.customerData.address, style: 'textDataSimple',alignment:"rigth"}
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
 
                                 ]
                             }
                         ]
                     },
                     {
-<<<<<<< HEAD
                         text: vm.customerData.name + " " + vm.customerData.firstName + " " + $translate.instant('THANKS_ABOUT'),
                         style: 'subheader',
                         alignment: "left"
@@ -10538,20 +10480,6 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                     {
                         text: $translate.instant('PLACE_HORAIRE'), style: 'textData', alignment: "left"
-=======
-                        text: vm.customerData.name + " " +  vm.customerData.firstName + " " + $translate.instant('THANKS_ABOUT') , style: 'subheader', alignment:"left"
-                    },
-                    {
-                        text: $translate.instant('THANKS_ABOUT_LINE'), style: 'subheader', alignment:"left"
-                    },
-
-                    {
-                        text: "" , style: 'subheader', alignment:"left"
-                    },
-
-                    {
-                        text: $translate.instant('PLACE_HORAIRE') , style: 'textData', alignment:"left"
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
                     },
 
                     {
@@ -10570,7 +10498,6 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                                 },
 
                                 ],
-<<<<<<< HEAD
                                 [{
                                     text: [{text: dateList}, {text: ""}, {
                                         text: $translate.instant('PRECENSES'),
@@ -10578,20 +10505,13 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                                         bold: true
                                     }]
                                 }],
-=======
-                                [{text:[{text: dateList},{text:""},{ text:$translate.instant('PRECENSES'),alignment:"center" , bold: true}]}],
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
                             ],
 
                         },
 
                     },
                     {
-<<<<<<< HEAD
                         text: $translate.instant('RULER1'), style: 'textData', alignment: "left"
-=======
-                        text: $translate.instant('RULER1') , style: 'textData', alignment:"left"
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
                     },
 
                     {
@@ -10602,11 +10522,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         table: {
 
                             body: [
-<<<<<<< HEAD
                                 [{ul: [{text: $translate.instant('RULER11')}, {text: $translate.instant('RULER12')}]}
-=======
-                                [{ul:[{text:$translate.instant('RULER11')},{text:$translate.instant('RULER12')}]}
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
                                 ],
 
                             ],
@@ -10615,21 +10531,12 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                     },
                     {
-<<<<<<< HEAD
                         text: $translate.instant('INFORMATION_IMPORTANT'), style: 'subheader', alignment: "left"
                     },
                     {
                         ul: [
                             {text: [{text: $translate.instant('INFORMATION_IMPORTANT1')}, {text: $translate.instant('INFORMATION_IMPORTANT11')}, {text: $translate.instant('INFORMATION_IMPORTANT111')}, {text: $translate.instant('INFORMATION_IMPORTANT12')}, {text: $translate.instant('INFORMATION_IMPORTANT13')}]},
                             {text: [{text: $translate.instant('INFORMATION_IMPORTANT22')}, {text: $translate.instant('INFORMATION_IMPORTANT21')}, {text: $translate.instant('INFORMATION_IMPORTANT212')}, {text: $translate.instant('INFORMATION_IMPORTANT23')}, {text: $translate.instant('INFORMATION_IMPORTANT24')}]},
-=======
-                        text: $translate.instant('INFORMATION_IMPORTANT') , style: 'subheader', alignment:"left"
-                    },
-                    {
-                        ul:[
-                            {text:[{text:$translate.instant('INFORMATION_IMPORTANT1')},{text: $translate.instant('INFORMATION_IMPORTANT11')},{text: $translate.instant('INFORMATION_IMPORTANT111')},{text: $translate.instant('INFORMATION_IMPORTANT12')},{text: $translate.instant('INFORMATION_IMPORTANT13')}]},
-                            {text:[{text:$translate.instant('INFORMATION_IMPORTANT22') },{text: $translate.instant('INFORMATION_IMPORTANT21')},{text: $translate.instant('INFORMATION_IMPORTANT212')},{text: $translate.instant('INFORMATION_IMPORTANT23')},{text: $translate.instant('INFORMATION_IMPORTANT24')}]},
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
                         ]
                     }
                 ],
@@ -10860,33 +10767,4 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
 
     })
-<<<<<<< HEAD
-=======
-    .controller('ModalInstanceCtrlMail', function ($scope, $uibModalInstance, items) {
-
-        $scope.items = items;
-        $scope.selected = {
-            item: $scope.items
-        };
-
-        $scope.ok = function () {
-            $scope.selected.item.action = "OK"
-            $scope.selected.item.mailuser = $scope.mailuser
-            $scope.selected.item.mailsender = $scope.mailsender
-            $scope.selected.item.mailsubject = $scope.mailsubject
-            $scope.selected.item.messagebody = $scope.messagebody
-
-            $uibModalInstance.close($scope.selected.item);
-            $uibModalInstance.dismiss('cancel');
-
-        };
-
-        $scope.cancel = function () {
-            $uibModalInstance.dismiss('cancel');
-            $scope.formationCenterName = ""
-        };
-    })
-
-
->>>>>>> 8ecb095596b03cb2a7a482862f2bc233d2c43ec1
 ;

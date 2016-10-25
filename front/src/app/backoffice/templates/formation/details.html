@@ -293,8 +293,6 @@
                         <a ng-click="okShieldAtestation()"  ng-disabled="(formation.customers.length>0)?false:true"> {{'DETAILS_SHIELD' | translate}}</a>
                         <br/>
                         <a ng-click="okContacterUser()"  ng-disabled="(formation.customers.length>0)?false:true" >{{'CONTACTER_USERS' | translate}}</a>
-                        <br/>
-                        <a ng-click="showImage()"  ng-disabled="(formation.customers.length>0)?false:true" >Show IMAGE</a>
                     </div>
                 </div>
             </div>
@@ -340,7 +338,7 @@
                     <div class="form-group">
                         <label for="subject">
                             Subject</label>
-                        <input type="text" class="form-control" id="subject" required="required" ng-model="mailsubject"/>
+                        <input type="text" class="form-control" id="subject" required="required" ng-model="mailsender"/>
                     </div>
 
                     <div class="form-group">
@@ -355,7 +353,7 @@
 
 
                 <div class="modal-footer">
-                    <button class="btn btn-primary" type="button" ng-click="ok()">{{'SEND_EMAIL' | translate}}</button>
+                    <button class="btn btn-primary" type="button" ng-click="sendMail()">{{'SEND_EMAIL' | translate}}</button>
                     <button class="btn btn-warning" type="button" ng-click="cancel()">
                         {{'CANCEL' | translate}}
                     </button>
