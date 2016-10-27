@@ -1,0 +1,11 @@
+
+Backoffice templates/formation/details
+
+
+Backoffice js/formationfinder/ModalInstanceCtrlMail
+Backoffice js/formationfinder/DetailsFormationController okContacterUser()
+
+Sails
+  FormationController/sendMailToCustomer
+  FormationServices/sendMessageToCustomer
+

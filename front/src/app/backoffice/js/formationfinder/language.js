@@ -301,6 +301,9 @@ app.config(function ($translateProvider) {
             INFORMATION_IMPORTANT212: "cette annulation par tous les moyens mis à sa disposition.",
             INFORMATION_IMPORTANT23: "En contactant la société \"FORMATIONFINDER\" au 0557324912, une autre date ou un transfert vers un autre",
             INFORMATION_IMPORTANT24: "lieu pourra donc vous être proposé sur votre demande.",
+           //------------------ Change values 27/10/2016 ---------------------------------------------------------
+            SEND_MAIL_SUCESSFUL:"Mail sended",
+            INFO:"Information",
             //------ Piterson last change -------------------
             WAITING_ROOM: "Waitting room",
             DOCUMENTS: "Documents",
@@ -621,6 +624,9 @@ app.config(function ($translateProvider) {
             INFORMATION_IMPORTANT212: "cette annulation par tous les moyens mis à sa disposition.",
             INFORMATION_IMPORTANT23: "En contactant la société \"FORMATIONFINDER\" au 0557324912, une autre date ou un transfert vers un autre",
             INFORMATION_IMPORTANT24: "lieu pourra donc vous être proposé sur votre demande.",
+            //------------------ Change values 27/10/2016 ---------------------------------------------------------
+            SEND_MAIL_SUCESSFUL:"Mail sended",
+            INFO:"Information",
 
             //------ Piterson last change -------------------
             WAITING_ROOM: "Waitting room",
@@ -906,7 +912,9 @@ app.config(function ($translateProvider) {
             TABLE_PLACE_STATUS:"STATUT",
             PREINSCRIT:"Pré­inscrit",
             CONFIRME:"Confirmé",
-
+            //------------------ Change values 27/10/2016 ---------------------------------------------------------
+            SEND_MAIL_SUCESSFUL:"Mail sended",
+            INFO:"Information",
             ///---------------------  Chanhe values ---------------------------
             USERS: "Users",
             CONVOCATION_TITLE: "CONVOCATION A UN STAGE DE SECURITE ROUTIERE",

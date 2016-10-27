@@ -11,7 +11,7 @@ module.exports = [
   {
     name: faker.name.lastName(),
     firstName: faker.name.firstName(),
-    email: "juan.piterson85@gmail.com",
+    email: "inoid2007@gmail.com",
     address: faker.address.streetAddress(),
     zipCode: faker.address.zipCode(),
     city: faker.address.city(),
@@ -33,7 +33,7 @@ module.exports = [
   {
     name: faker.name.lastName(),
     firstName: faker.name.firstName(),
-    email: "juan.piterson85@gmail.com",
+    email: "inoid2007@gmail.com",
     address: faker.address.streetAddress(),
     zipCode: faker.address.zipCode(),
     city: faker.address.city(),
@@ -54,7 +54,7 @@ module.exports = [
   {
     name: faker.name.lastName(),
     firstName: faker.name.firstName(),
-    email: "juan.piterson85@gmail.com",
+    email: "inoid2007@gmail.com",
     address: faker.address.streetAddress(),
     zipCode: faker.address.zipCode(),
     city: faker.address.city(),
@@ -75,7 +75,7 @@ module.exports = [
   {
     name: faker.name.lastName(),
     firstName: faker.name.firstName(),
-    email: "juan.piterson85@gmail.com",
+    email: "inoid2007@gmail.com",
     address: faker.address.streetAddress(),
     zipCode: faker.address.zipCode(),
     city: faker.address.city(),

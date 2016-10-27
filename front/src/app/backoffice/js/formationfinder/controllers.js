@@ -8684,7 +8684,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     var modalInstance = $uibModal.open({
                         animation: $scope.animationsEnabled,
                         templateUrl: 'ModalSendEmailMessage.html',
-                        controller: 'ModalInstanceCtrl',
+                        controller: 'ModalInstanceCtrlMail',
                         //controller: 'ModalInstanceCtrlMail',
                         size: "",
                         resolve: {
@@ -8700,16 +8700,19 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
                         config = {}
                         config.id = $routeParams.id
-                        config.mailuser = $routeParams.mailuser
-                        config.from = $routeParams.mailsender
-                        config.subject = $routeParams.mailsubject
-                        config.text = $routeParams.messagebody
+                        config.mailuser = selectedItem.mailuser
+                        config.from = selectedItem.mailsender
+                        config.subject = selectedItem.mailsubject
+                        config.text = selectedItem.messagebody
 
                         $http.post($rootScope.urlBase + "/formation/sendMailToCustomer", config)
                             .success(function (result) {
                                 if (result.status === "ok") {
-                                    $scope.formation = result.message;
+                                   // $scope.formation = result.message;
                                     console.log("Formation data", result.message)
+                                    objeData = {type: $translate.instant('INFO')};
+                                    $scope.showModalMessage($translate.instant('SEND_MAIL_SUCESSFUL') , objeData);
+
 
                                 } else {
                                     console.log("Error searching Formation: ", result.message);
@@ -10766,5 +10769,29 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
         }
 
 
+    })
+    .controller('ModalInstanceCtrlMail', function ($scope, $uibModalInstance, items) {
+
+        $scope.items = items;
+        $scope.selected = {
+            item: $scope.items
+        };
+
+        $scope.ok = function () {
+            $scope.selected.item.action = "OK"
+            $scope.selected.item.mailuser = $scope.mailuser
+            $scope.selected.item.mailsender = $scope.mailsender
+            $scope.selected.item.mailsubject = $scope.mailsubject
+            $scope.selected.item.messagebody = $scope.messagebody
+
+            $uibModalInstance.close($scope.selected.item);
+            $uibModalInstance.dismiss('cancel');
+
+        };
+
+        $scope.cancel = function () {
+            $uibModalInstance.dismiss('cancel');
+            $scope.formationCenterName = ""
+        };
     })
 ;

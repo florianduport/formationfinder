@@ -1573,11 +1573,14 @@ module.exports = {
 
     FormationService.sendMessageToCustomer(idStr, from, subject, text, function (err, result){
       console.log("Search data object")
-      if (typeof err != "undefined"){
+      if (typeof err != "undefined" && err !== null){
         //console.log("Send information ", formationObject.customers.length)
-        return res.json({status:"error", message:err.message})
+
+        return res.json({status:"error", message:err})
       }
-      return res.json({status:"ok", message:"sended"})
+      else {
+        return res.json({status: "ok", message: "sended"})
+      }
     })
   },
 

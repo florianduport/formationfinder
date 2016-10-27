@@ -237,14 +237,17 @@ module.exports = {
 
     if ( idStr === undefined ){
       callback("Undefined formation identifier", null)
+      return
     }
 
     if ( from === undefined ){
       callback("Undefined from email", null)
+      return
     }
 
     if ( text === undefined ){
       callback("Undefined email text", null)
+      return
     }
 
     Formation.findOne({id:idStr}).populate('customers').exec(function (err, formationObject){
@@ -264,7 +267,7 @@ module.exports = {
       }
 
       bodytext = "<p><strong>" +  text + "</strong></p>"
-      formationObject.customers.foreach(function (iCustomer, index){
+      formationObject.customers.forEach(function (iCustomer, index){
 
         var config = {}
         config = {
@@ -292,6 +295,7 @@ module.exports = {
       })
 
       callback(null, "OK")
+      return
     });
   }
 
