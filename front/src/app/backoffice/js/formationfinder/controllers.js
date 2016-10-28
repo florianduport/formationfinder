@@ -3493,6 +3493,10 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     minDeliDate = new Date(actDate.getFullYear() - 20, actDate.getMonth(), actDate.getDate());
 
                     if (deliDate < maxDeliDate && deliDate > minDeliDate) {
+
+                        //update de min date of procuration date picker
+                        vm.ProcuDateOptions.minDate = new Date(vm.customerData.driverLicence.dateOfDeliverance);
+
                         return true;
                     }
                 }
@@ -3544,6 +3548,9 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             vm.verifyDeliDate = function () {
                 if (vm.customerData.driverLicence.dateOfDeliverance && !vm.validDeliDate()) {
                     vm.showDDerror = true;
+
+
+
                     return;
                 }
                 vm.showDDerror = false;
@@ -3748,16 +3755,22 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 dateDisabled: disabled,
                 formatYear: 'yyyy',
                 maxDate: new Date().setDate(actDate.getDate() - 1),
-                minDate: new Date(actDate.getFullYear() - 20, 0, 1),
+                minDate: new Date(actDate.getFullYear() - 20, actDate.getMonth(), actDate.getDate()),
                 startingDay: 1
             };
+
+            //var DeliDatePlaceHolderValue = new Date().setFullYear(actDate.getFullYear() - 1);
+            //var ProcuDatePlaceHolderValue = new Date(DeliDatePlaceHolderValue).setDate(DeliDatePlaceHolderValue.getDate() + 7);
+
+            //vm.DeliDatePlaceHolder = DeliDatePlaceHolderValue.toDateString();
+            //vm.ProcuDatePlaceHolder = ProcuDatePlaceHolderValue.toDateString();
 
             //Date of Procuration options
             vm.ProcuDateOptions = {
                 dateDisabled: disabled,
                 formatYear: 'yyyy',
                 maxDate: new Date().setDate(actDate.getDate() - 1),
-                minDate: new Date(actDate.getFullYear() - 20, 0, 1),
+                minDate: new Date(actDate.getFullYear() - 20, actDate.getMonth(), actDate.getDate()),
                 startingDay: 1
             };
 
@@ -8708,7 +8721,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         $http.post($rootScope.urlBase + "/formation/sendMailToCustomer", config)
                             .success(function (result) {
                                 if (result.status === "ok") {
-                                   // $scope.formation = result.message;
+                                    // $scope.formation = result.message;
                                     console.log("Formation data", result.message)
                                     objeData = {type: $translate.instant('INFO')};
                                     $scope.showModalMessage($translate.instant('SEND_MAIL_SUCESSFUL') , objeData);

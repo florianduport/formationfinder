@@ -70,9 +70,6 @@ module.exports = {
     }
   },
 
-
-
-
   costumerBooked: function (formationFounded, customerObject, callback) {
 
     if (typeof formationFounded == "undefined") {
