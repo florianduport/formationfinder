@@ -162,12 +162,12 @@ module.exports = {
           return next(err);
 
         console.log("**** Ejecucion de la ultima instruccion**** ")
-        var valResult = {resultFormation }
+        var valResult = resultFormation
         console.log(resultFormation);
         if (res)
           return res.json(resultFormation);
         else
-          return {resultFormation}
+          return resultFormation
 
       });
 
@@ -310,7 +310,7 @@ module.exports = {
     });
   },
 
-  sendMailCustomerBooked(req, res, next) {
+  sendMailCustomerBooked: function(req, res, next) {
 
       customerObject = req.param("customer");
 
@@ -373,6 +373,22 @@ module.exports = {
        return res.json({status: "ok", data: customerObject});
      })
    },
+
+  deleteById : function (req, res, next){
+    idStr = req.param('id')
+   //console.log("Identificador  ocurrido ",idStr )
+    if (idStr === undefined) {
+      return res.json({status: "error", info: sails.__("ERROR_FORMATION_REQUIRED")});
+    }
+
+    Customer.destroy({id:idStr}).exec(function (err) {
+     //console.log("Error ocurrido ",err )
+      if (err) {
+        return res.json({status: "error", info: sails.__("ERROR_FORMATION_REQUIRED")});
+      }
+      return res.json({status: "ok", data:null});
+    })
+  },
 
   searchByFormationCenterInWaitingRoom: function (req, res, next) {
 

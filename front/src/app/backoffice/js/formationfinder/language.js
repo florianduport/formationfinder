@@ -301,6 +301,19 @@ app.config(function ($translateProvider) {
             INFORMATION_IMPORTANT212: "cette annulation par tous les moyens mis à sa disposition.",
             INFORMATION_IMPORTANT23: "En contactant la société \"FORMATIONFINDER\" au 0557324912, une autre date ou un transfert vers un autre",
             INFORMATION_IMPORTANT24: "lieu pourra donc vous être proposé sur votre demande.",
+            //---------------------------------------29/10/2016-------------------------------------------
+            NAME_TOOLTIP_ERROR:"Error in name",
+            EMAIL_TOOLTIP_ERROR:"Error in email",
+            EMAIL_MAIL_PLACEHOLDER:"formationfinder@test.com",
+            NAME_MAIL_PLACEHOLDER:"Verizon Lander",
+            SUBJECT_MAIL_PLACEHOLDER:"Subject",
+            EMAIL_SUBJECT:"Subject",
+            SUBJECT_TOOLTIP_ERROR:"Error in subject",
+            TEXT_TOOLTIP_ERROR:"Error in text for email",
+            EMAIL_FIELD_ERROR:  "Sorry, Some email fields are invalid",
+            SEND_MAIL_SUCESSFUL:"Email sended",
+            CLICK_TO:"Click to ",
+            MESSAGE_DELETE_CUSTOMER: "Are you sure delete these customer information.",
             //------ Piterson last change -------------------
             WAITING_ROOM: "Waitting room",
             DOCUMENTS: "Documents",
@@ -621,6 +634,18 @@ app.config(function ($translateProvider) {
             INFORMATION_IMPORTANT212: "cette annulation par tous les moyens mis à sa disposition.",
             INFORMATION_IMPORTANT23: "En contactant la société \"FORMATIONFINDER\" au 0557324912, une autre date ou un transfert vers un autre",
             INFORMATION_IMPORTANT24: "lieu pourra donc vous être proposé sur votre demande.",
+            //---------------------------------------29/10/2016-------------------------------------------
+            NAME_TOOLTIP_ERROR:"Error in name",
+            EMAIL_TOOLTIP_ERROR:"Error in email",
+            EMAIL_MAIL_PLACEHOLDER:"formationfinder@test.com",
+            NAME_MAIL_PLACEHOLDER:"Verizon Lander",
+            SUBJECT_MAIL_PLACEHOLDER:"Subject",
+            EMAIL_SUBJECT:"Subject",
+            SUBJECT_TOOLTIP_ERROR:"Error in subject",
+            TEXT_TOOLTIP_ERROR:"Error in text for email",
+            EMAIL_FIELD_ERROR:  "Sorry, Some email fields are invalid",
+            SEND_MAIL_SUCESSFUL:"Email sended",
+            CLICK_TO:"Click to ",
 
             //------ Piterson last change -------------------
             WAITING_ROOM: "Waitting room",
@@ -931,6 +956,18 @@ app.config(function ($translateProvider) {
             INFORMATION_IMPORTANT212: "cette annulation par tous les moyens mis à sa disposition.",
             INFORMATION_IMPORTANT23: "En contactant la société \"FORMATIONFINDER\" au 0557324912, une autre date ou un transfert vers un autre",
             INFORMATION_IMPORTANT24: "lieu pourra donc vous être proposé sur votre demande.",
+            //---------------------------------------29/10/2016-------------------------------------------
+            NAME_TOOLTIP_ERROR:"Error in name",
+            EMAIL_TOOLTIP_ERROR:"Error in email",
+            EMAIL_MAIL_PLACEHOLDER:"formationfinder@test.com",
+            NAME_MAIL_PLACEHOLDER:"Verizon Lander",
+            SUBJECT_MAIL_PLACEHOLDER:"Subject",
+            EMAIL_SUBJECT:"Subject",
+            SUBJECT_TOOLTIP_ERROR:"Error in subject",
+            TEXT_TOOLTIP_ERROR:"Error in text for email",
+            EMAIL_FIELD_ERROR:  "Sorry, Some email fields are invalid",
+            SEND_MAIL_SUCESSFUL:"Email sended",
+            CLICK_TO:"Click to ",
 
             //------ Piterson last change -------------------
             WAITING_ROOM: "Sala de espera",

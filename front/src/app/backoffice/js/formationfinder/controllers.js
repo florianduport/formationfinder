@@ -9423,35 +9423,61 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.deleteUser = function (_user) {
 
+                //size = "" | "lg" | "sm"
+                $scope.items = _user;
+                $scope.items.message = $translate.instant('MESSAGE_DELETE_CUSTOMER')
+
+                var modalInstance = $uibModal.open({
+                    animation: $scope.animationsEnabled,
+                    templateUrl: 'myModalContent.html',
+                    controller: 'ModalInstanceCtrl',
+                    size: "",
+                    resolve: {
+                        items: function () {
+                            return $scope.items;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+                    $scope.selected = selectedItem;
+                    //console.log("Seleccionado OK para eliminar ", $scope.selected)
+                    if (typeof $scope.selected != "undefined" && $scope.selected.action == "OK") {
+                        $http.post($rootScope.urlBase + "/customer/deleteById", {
+                                id: _user.id
+                            })
+                            .success(function (result) {
+                                if (result.status === "ok") {
+                                    //$scope.userlist = result.data;
+                                    $scope.searchFormationUser()
+                                    // $scope.selectedPlace = $scope.formation.place;
+
+
+
+
+                                } else {
+                                    console.log("Error searching Formation: ", result.info);
+
+                                    objeData = {type: $translate.instant('ERROR')};
+                                    $scope.showModalMessage($translate.instant('ERROR_SEARCHING_CUSTOMERS') + ": " + result.info, objeData);
+                                    //alert("Error searching Formation: " + result.info);
+                                }
+                            })
+                            .error(function (err) {
+                                console.log("Error searching Formation: ", err);
+
+                                objeData = {type: $translate.instant('ERROR')};
+                                $scope.showModalMessage($translate.instant('ERROR_SEARCHING_CUSTOMERS') + ": " + err, objeData);
+
+                            });
+                    }
+                }, function () {
+                    $log.info('Close modal: ' + new Date());
+                });
+
+
                 //////Show modal for delete information
-                //$http.post($rootScope.urlBase + "/formation/searchUsersByFormation", {
-                //        id: $routeParams.id
-                //    })
-                //    .success(function (result) {
-                //        if (result.status === "ok") {
-                //            $scope.userlist = result.data;
-                //            console.log("Result information view ", $scope.userlist )
-                //            $scope.formationid =  $routeParams.id
-                //            // $scope.selectedPlace = $scope.formation.place;
-                //
-                //
-                //
-                //
-                //        } else {
-                //            console.log("Error searching Formation: ", result.info);
-                //
-                //            objeData = {type: $translate.instant('ERROR')};
-                //            $scope.showModalMessage($translate.instant('ERROR_SEARCHING_FORMATION') + ": " + result.info, objeData);
-                //            //alert("Error searching Formation: " + result.info);
-                //        }
-                //    })
-                //    .error(function (err) {
-                //        console.log("Error searching Formation: ", err);
-                //
-                //        objeData = {type: $translate.instant('ERROR')};
-                //        $scope.showModalMessage($translate.instant('ERROR_SEARCHING_FORMATION') + ": " + err, objeData);
-                //
-                //    });
+
             }
 
         }])
@@ -9765,33 +9791,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
         vm.verifyProcDate = function () {
 
             if (vm.customerData.driverLicence.dateOfProcuration) {
-                //if (!vm.validProcDate()) {
-                //
-                //    if(vm.procDgtdeliD()){
-                //        vm.showPDerror = true;
-                //        vm.showPDerrorLessDD = false;
-                //    }
-                //    else{
-                //        vm.showPDerror = false;
-                //        vm.showPDerrorLessDD = true;
-                //    }
-                //
-                //}
-                //else {
-                //    vm.showPDerror = false;
-                //    vm.showPDerrorLessDD = false;
-                //
-                //    if (vm.customerData.driverLicence.dateOfDeliverance
-                //        && (new Date(vm.customerData.driverLicence.dateOfProcuration) < new Date(vm.customerData.driverLicence.dateOfDeliverance))) {
-                //        vm.showPDerrorLessDD = true;
-                //    }
-                //    else {
-                //        vm.showPDerrorLessDD = false;
-                //    }
-                //
-                //}
-
-                if (vm.validProcDateRange()) {
+               if (vm.validProcDateRange()) {
 
                     vm.showPDerror = false;
 
@@ -9899,59 +9899,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 });
 
         }
-        //vm.validateData = function() {
-        //
-        //    //If there is some mising or invalid data, show an error and return false.
-        //    if (!vm.customerData.name
-        //        || !vm.customerData.firstName
-        //        || !vm.customerData.phoneNumber
-        //        || !vm.customerData.email
-        //        || !vm.customerData.zipCode
-        //        || !vm.customerData.birthDate
-        //        || !vm.customerData.driverLicence.number
-        //        || !vm.customerData.driverLicence.placeOfDeliverance
-        //        || !vm.customerData.driverLicence.dateOfDeliverance
-        //        || !vm.customerData.driverLicence.dateOfProcuration) {
-        //
-        //        if (vm.validationMessages.length === 0) {
-        //            vm.validationMessages.push({type: "danger", info: "There are some mising or invalid information, please check again."});
-        //        }
-        //
-        //        return false;
-        //    }
-        //
-        //    //Before enable the payment button, check if there is an customer with this data in the system in this year.
-        //    yearAct = new Date();
-        //    yearAct = yearAct.getFullYear();
-        //
-        //    $http.post($rootScope.urlBase + "/customer/searchByLicenceInYear", {
-        //            licence: vm.customerData.driverLicence.number,
-        //            year: yearAct})
-        //        .success(function(data) {
-        //            console.log("entre a success, el servicio devolvio");
-        //            if (data.status === "error") {
-        //                console.log("no encontre el usuario. Validar el botton.");
-        //                vm.paymentButtonDisabled = false;
-        //
-        //                if (vm.customerFoundMessages.length > 0) {
-        //                    vm.customerFoundMessages.splice(0, 1);
-        //                }
-        //            }
-        //            else {
-        //                vm.paymentButtonDisabled = true;
-        //
-        //                if (vm.customerFoundMessages.length === 0) {
-        //                    vm.customerFoundMessages.push({type: "danger", info: "There is a customer registered in the system with that licence number in this year."});
-        //                }
-        //            }
-        //        })
-        //        .error(function(err) {
-        //            console.log("Entre a error algun problema con el log.");
-        //            console.log(err);
-        //        });
-        //
-        //    return true;
-        //};
+
 
         ////--------------------------------------------------------------------------------------
         vm.makePayment = function () {
@@ -10783,22 +10731,54 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
 
     })
-    .controller('ModalInstanceCtrlMail', function ($scope, $uibModalInstance, items) {
-
+    .controller('ModalInstanceCtrlMail', function ($scope, $uibModalInstance, items,  $translate) {
+        $scope.phoneRegExp = /^(0)\d{9}$/;
+        $scope.zipcodeRegExp = /^\d{5}$/;
+        $scope.nameRegExp = /^[µçùàèáéíóúa-zA-Z][µçùàèáéíóúa-zA-Z\s]+$/;
+        $scope.emailRedExp = /^[a-z][_a-z0-9-]*(\.[_a-z0-9-]+)*@[a-z][a-z0-9-]*(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/;
+        $scope.dateRegExp = /^\d{2}\/\d{1,2}\/\d{4}$/;
+        $scope.numberRegExp = /^\d{12}$/;
+        $scope.numberRegExpCard = /^\d{3}$/;
         $scope.items = items;
         $scope.selected = {
             item: $scope.items
         };
 
-        $scope.ok = function () {
-            $scope.selected.item.action = "OK"
-            $scope.selected.item.mailuser = $scope.mailuser
-            $scope.selected.item.mailsender = $scope.mailsender
-            $scope.selected.item.mailsubject = $scope.mailsubject
-            $scope.selected.item.messagebody = $scope.messagebody
+        $scope.alerts = [];
 
-            $uibModalInstance.close($scope.selected.item);
-            $uibModalInstance.dismiss('cancel');
+        $scope.closeAlert = function (index) {
+            $scope.alerts.splice(index, 1);
+        }
+
+        //$scope.mailuser = ""
+        //$scope.mailsender = ""
+        //$scope.mailsubject = ""
+        //$scope.messagebody = ""
+
+        $scope.ok = function () {
+
+            ///Validate form
+            if (!$scope.formMail.$valid) {
+
+                $scope.errorValid = true
+                console.log("INSERTANDO ALERTA")
+                message = $translate.instant('EMAIL_FIELD_ERROR');
+                $scope.alerts.push({
+                    type: 'danger',
+                    msg: message
+                });
+                return;
+            }
+            else {
+                $scope.selected.item.action = "OK"
+                $scope.selected.item.mailuser = $scope.mailuser
+                $scope.selected.item.mailsender = $scope.mailsender
+                $scope.selected.item.mailsubject = $scope.mailsubject
+                $scope.selected.item.messagebody = $scope.messagebody
+
+                $uibModalInstance.close($scope.selected.item);
+                $uibModalInstance.dismiss('cancel');
+            }
 
         };
 

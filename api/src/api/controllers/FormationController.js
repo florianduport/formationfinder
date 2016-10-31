@@ -140,6 +140,8 @@ module.exports = {
   },
 
   deleteByID: function (req, res) {
+
+
     if (req.param('id') === undefined) {
       return res.json({status: "error", info: sails.__("ERROR_FORMATION_ID_REQUIED")});
     }

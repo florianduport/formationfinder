@@ -1256,7 +1256,7 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
             };
 
             $scope.showmap = false;
-            console.log("Buscando")
+            //console.log("Buscando")
             $scope.map = {
                 center: [48.864716, 2.349014],
                 options: function () {
@@ -1287,34 +1287,6 @@ app.controller("IndexController", ["$scope", "$rootScope", "$location", "$http",
                  }, 3000);*/
             }
 
-
-            ///Find formationcenter by position
-
-
-            //$http.post($rootScope.urlBase + "/formationcenter/searchallformationcenters")
-            //    .success(function (data_result) {
-            //        if (data_result.err) {
-            //            ///Mostrar mensaje en ventana modal de que no existe centros de formacion
-            //            ///regresar a la pagina inicial
-            //            $scope.errorMessage = data_result.err;
-            //            alert(data_result.err);
-            //            // $location.path("/");
-            //            return;
-            //        }
-            //
-            //        $scope.formationcenters = data_result;
-            //        console.log("formationcenters ", $scope.formationcenters)
-            //        console.log("Se obtienen resultados")
-            //        //$location.path("/search/" + $scope.criteria);
-            //    })
-            //    .error(function (error) {
-            //        //@action mostrar error
-            //        $scope.errorMessage = error
-            //        console.log(error);
-            //    })
-            //;
-
-            console.log("Buscando")
             clickMap = function (event) {
                 console.log("Buscando")
                 vm.map.setZoom(9);
