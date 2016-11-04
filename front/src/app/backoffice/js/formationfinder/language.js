@@ -334,7 +334,11 @@ app.config(function ($translateProvider) {
             ADD_CUSTOMER_TO_WAITING_ROOM: "Add Customer to the Waiting Room",
             EXPIRATION_DATE: "Expiration date",
             CUSTOMER_ADDED_TO_WAITING_ROOM: "Customer added to the Waiting Room",
-            ERROR_ADDING_CUSTOMER_TO_WAITING_ROOM: "Error adding customer to the waiting room"
+            ERROR_ADDING_CUSTOMER_TO_WAITING_ROOM: "Error adding customer to the waiting room",
+///--------------------------------------------------------------------------------------------3-11-2016
+            NUMBER_BILLS:"Number",
+            NUMBER_BILLS_ERROR:"Number has error"
+
 
         })
         .translations('fr', {
@@ -652,6 +656,9 @@ app.config(function ($translateProvider) {
             ADD_CUSTOMER_TO_WAITING_ROOM: "Add Customer to the Waiting Room",
             EXPIRATION_DATE: "Expiration date",
             CUSTOMER_ADDED_TO_WAITING_ROOM: "Customer added to the Waiting Room",
+            ///--------------------------------------------------------------------------------------------3-11-2016
+            NUMBER_BILLS:"Number",
+            NUMBER_BILLS_ERROR:"Number has error"
 
         })
         .translations('es', {
@@ -966,6 +973,9 @@ app.config(function ($translateProvider) {
             ADD_CUSTOMER_TO_WAITING_ROOM: "Agregar cliente a la sala de espera",
             EXPIRATION_DATE: "Fecha de expiración",
             CUSTOMER_ADDED_TO_WAITING_ROOM: "Cliente agregado a la sala de espera",
+            ///--------------------------------------------------------------------------------------------3-11-2016
+            NUMBER_BILLS:"Number",
+            NUMBER_BILLS_ERROR:"Number has error"
 
         });
     $translateProvider.preferredLanguage('en');

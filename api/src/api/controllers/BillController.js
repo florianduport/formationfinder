@@ -193,7 +193,7 @@ console.log("Query bill ", query)
 
     if (req.param('billNumber') !== undefined) {
       if(!isNaN(parseInt(req.param('billNumber')))){
-        query.billNumber = Math.abs(parseInt(req.param('billNumber')));
+        query.billNumber = req.param('billNumber');
       }
     }
 

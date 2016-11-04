@@ -558,7 +558,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             };
 
             $scope.clearCriteria = function () {
-                $scope.criteria = "";
+               // $scope.criteria = "";
             };
 
             $scope.showModalConfirmDelete = function (config) {
@@ -921,7 +921,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             };
 
             $scope.clearCriteria = function () {
-                $scope.criteria = "";
+               // $scope.criteria = "";
             };
 
             $scope.addCustomerFromWaitingRoom = function (iFormation) {
@@ -2245,7 +2245,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             };
 
             $scope.clearCriteria = function () {
-                $scope.criteria = "";
+                //$scope.criteria = "";
             };
 
             $scope.showModalConfirmDelete = function (Aminator) {
@@ -4766,7 +4766,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 $scope.seachPlaceAux.agreementName = null
                 $scope.seachPlaceAux.agreementName = null
                 $scope.seachPlaceAux.address = null
-                $scope.criteriaList = ""
+               // $scope.criteriaList = ""
 
 
             }
@@ -5103,7 +5103,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         $scope.places = data_result
 
                         $scope.activatedPlace = []
-                        $scope.clearSearchField()
+                       /// $scope.clearSearchField()
                         ///Review if clean al parameter
                         return;
                         // console.log("RESULTADOS", data_result)
@@ -5544,6 +5544,8 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             $scope.formats = ['dd/MM/yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy'];
             $scope.format = $scope.formats[0];
             $scope.dateRegExp = /^\d{2}\/\d{2}\/\d{4}$/;
+            $scope.usernameExpReg = /^([ê|µ|ç|ùàè|áéíóú|a-z|A-Z|ñ|Ñ]*)([\w|\d])*([_|\s]*[\.|\-|\'|ê|ç|ùàè|áéíóú|A-Z|a-z|ñ|Ñ|\d])*$/;
+            $scope.numExpReg = /^[\d]+$/;
             $scope.toggleMin = function () {
                 $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
                 $scope.dateOptions.minDate = $scope.inlineOptions.minDate;
@@ -5557,13 +5559,17 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.clearSearchField = function () {
                 $scope.searchAux.name = null
-                console.log("Clear FIELD")
+               // console.log("Clear FIELD")
                 $scope.searchAux.initialDate = null
                 $scope.searchAux.initialDate = ""
                 $scope.searchAux.endDate = null
-                $scope.criteriaList = ""
+
+                $scope.searchAux.numberSearch = null
+
                 $scope.timeInit = new Date();
                 $scope.timeEnd = new Date();
+
+                // $scope.criteriaList = ""
             }
 
             $scope.tomorrow = function () {
@@ -5734,6 +5740,10 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     config.amount = $scope.search.name
                 }
 
+                if (!isNaN(parseInt($scope.search.numberSearch))) {
+                    config.billNumber = $scope.search.numberSearch
+                }
+
                 if (typeof $scope.search.initialDate != "undefined" && $scope.search.initialDate != "" && $scope.search.initialDate != null) {
                     /// Update Hour
                     initDateAndTime = $scope.search.initialDate //new Date( $scope.search.initialDate)
@@ -5800,7 +5810,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         $scope.Bills = data_result
                         $scope.activatedBill = []
                         ///Review if clean al parameter
-                        $scope.clearSearchField()
+                      //  $scope.clearSearchField()
                         return;
                         // console.log("RESULTADOS", data_result)
                     })
@@ -5813,7 +5823,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         console.log("Error show form")
                         $scope.showModalMessage(message, objectType);
                         return;
-                        return
+
                     })
 
             }
@@ -6024,6 +6034,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 $scope.search.name = $scope.searchAux.name
                 $scope.search.initialDate = $scope.searchAux.initialDate
                 $scope.search.endDate = $scope.searchAux.endDate
+                $scope.search.numberSearch = $scope.searchAux.numberSearch
 
 
                 $scope.countRecordsBill();
@@ -6226,7 +6237,9 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             $scope.appAlert.totalItemsAlert = 0;
             $scope.appAlert.smallnumPages = 5
             $scope.dateRegExp = /^\d{2}\/\d{2}\/\d{4}$/;
+            $scope.usernameExpReg = /^([ê|µ|ç|ùàè|áéíóú|a-z|A-Z|ñ|Ñ]*)([\w|\d])*([_|\s]*[\.|\-|\'|ê|ç|ùàè|áéíóú|A-Z|a-z|ñ|Ñ|\d])*$/;
 
+            $scope.numExpReg = /^[\d]+$/;
             $scope.search = {};
             $scope.searchAux = {};
             $scope.open1 = function () {
@@ -6257,7 +6270,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 $scope.searchAux.name = null
                 $scope.searchAux.initialDate = null
                 $scope.searchAux.endDate = null
-                $scope.criteriaList = ""
+                //$scope.criteriaList = ""
             }
 
             $scope.dateOptionsSearch = {
@@ -6565,7 +6578,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         console.log("Rsults", $scope.Alerts)
                         $scope.activatedAlert = []
                         console.log("Beafore Data ", $scope.search)
-                        $scope.clearSearchField()
+                        //$scope.clearSearchField()
                         console.log("Data ", $scope.search)
                         ///Review if clean al parameter
                         return;

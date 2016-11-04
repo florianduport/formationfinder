@@ -9,7 +9,7 @@
 
 
             <div class="form-group">
-                <form name="simplesearch">
+                <form name="simplesearch" novalidate role="form">
 
                     <div class="input-group">
                         <!--For geolocation uib-typeahead="address for address in getLocation($viewValue)"
@@ -23,6 +23,7 @@
                                uib-typeahead="iBill.amount for iBill in Bills | filter:$viewValue"
                                ng-model="criteriaList"
                                name="city_zipcode"
+                               id="city_zipcode"
                                maxlength="10"
                                ng-pattern="numExpReg"
                                tooltip-placement="top"
@@ -55,62 +56,28 @@
                     <div uib-collapse="advanceSearch" horizontal>
                         <div class="fadeInDown">
 
-                            <form name="advancedSearchPlace" class="form-horizontal" role="form">
+                            <form name="advancedSearchPlace" class="form-horizontal" novalidate role="form">
 
-                                <!--<div class="form-group pull-left row col-xs-12 col-sm-12 col-md-12 col-lg-12">-->
-                                <!--<div class=" input-group ">-->
-                                <!--<span class="input-group-addon"-->
-                                <!--id="basic-addon1"><strong>Name:</strong></span>-->
-                                <!--<input class="form-control"-->
-                                <!--type="text"-->
-                                <!--name="name"-->
-                                <!--id="name"-->
-                                <!--maxlength="40"-->
-                                <!--placeholder="{{'NAME' | translate}}"-->
-                                <!--uib-typeahead="name as iplace.name for iplace in places | filter:$viewValue"-->
-                                <!--ng-model="seachPlace.name"-->
-                                <!--ng-pattern="usernameExpReg"-->
-                                <!--tooltip-placement="top"-->
-                                <!--tooltip-trigger="'none'"-->
-                                <!--uib-tooltip="{{'NAME_ERROR' | translate}}"-->
-                                <!--tooltip-class="customClass"-->
-                                <!--tooltip-is-open="advancedSearchPlace.name.$dirty && advancedSearchPlace.name.$invalid"-->
-                                <!--required aria-describedby="basic-addon1"/>-->
+                                <div class="form-group pull-left row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                    <div class=" input-group ">
 
-                                <!--</div>-->
-                                <!--&lt;!&ndash;<span style="color:#cc0000"&ndash;&gt;-->
-                                <!--&lt;!&ndash;ng-show="advancedSearchPlace.name.$dirty && advancedSearchPlace.name.$invalid">&ndash;&gt;-->
-                                <!--&lt;!&ndash;<span ng-show="advancedSearchPlace.name.$error.required">Name is required.</span>&ndash;&gt;-->
-                                <!--&lt;!&ndash;<span ng-show="advancedSearchPlace.name.$error.pattern">Invalid name format. You should provide between 2 and 40 words characters.</span>&ndash;&gt;-->
-                                <!--&lt;!&ndash;</span>&ndash;&gt;-->
-                                <!--</div>-->
-
-                                <!--<div class="form-group pull-left row col-xs-12 col-sm-12 col-md-12 col-lg-12">-->
-                                <!--<div class=" input-group ">-->
-
-                                <!--<span class="input-group-addon"-->
-                                <!--id="basic-addon2"><strong>Address:</strong></span>-->
-                                <!--<input class="form-control" type="text"-->
-                                <!--name="address" id="address"-->
-                                <!--ng-model="seachPlace.address"-->
-                                <!--maxlength="100"-->
-                                <!--placeholder="{{'ADDRESS' | translate}}"-->
-                                <!--uib-typeahead="address as iplace.address for iplace in places | filter:$viewValue"-->
-                                <!--ng-pattern="usernameExpReg"-->
-                                <!--tooltip-placement="top"-->
-                                <!--tooltip-trigger="'none'"-->
-                                <!--uib-tooltip="{{'ADDRESS_ERROR' | translate}}"-->
-                                <!--tooltip-class="customClass"-->
-                                <!--tooltip-is-open="advancedSearchPlace.address.$dirty && advancedSearchPlace.address.$invalid"-->
-                                <!--aria-describedby="basic-addon2"/>-->
-                                <!--</div>-->
-
-                                <!--&lt;!&ndash;<span style="color:#cc0000"&ndash;&gt;-->
-                                <!--&lt;!&ndash;ng-show="advancedSearchPlace.address.$dirty && advancedSearchPlace.address.$invalid">&ndash;&gt;-->
-                                <!--&lt;!&ndash;<span ng-show="advancedSearchPlace.address.$error.required">First name is required.</span>&ndash;&gt;-->
-                                <!--&lt;!&ndash;<span ng-show="advancedSearchPlace.address.$error.pattern">Invalid first name format. You should provide between 2 and 40 words characters.</span>&ndash;&gt;-->
-                                <!--&lt;!&ndash;</span>&ndash;&gt;-->
-                                <!--</div>-->
+                                                <span class="input-group-addon"
+                                                      id="basic-addon2"><strong>{{'NUMBER_BILLS' | translate}}:</strong></span>
+                                        <input class="form-control" type="text"
+                                               name="address" id="address"
+                                               ng-model="searchAux.numberSearch"
+                                               maxlength="100"
+                                               placeholder="{{'NUMBER_BILLS' | translate}}"
+                                               uib-typeahead=" iBill.billNumber for iBill in Bills | filter:$viewValue"
+                                               ng-pattern="numExpReg"
+                                               tooltip-placement="top"
+                                               tooltip-trigger="'none'"
+                                               uib-tooltip="{{'NUMBER_BILLS_ERROR' | translate}}"
+                                               tooltip-class="customClass"
+                                               tooltip-is-open="advancedSearchPlace.address.$dirty && advancedSearchPlace.address.$invalid"
+                                               aria-describedby="basic-addon2"/>
+                                    </div>
+                                </div>
                                 <div class=" form-group pull-left row col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                     <label class="text-info"><strong>Date: </strong></label>
                                     <div class=" input-group date ident-date">
@@ -128,17 +95,17 @@
                                     <span class="input-group-addon"><span id="datesearchInit" class="fa fa-calendar "
                                                                           ng-click="open1()"></span></span>
                                     </div>
-                                        <div class=" input-group date ident-date">
+                                    <div class=" input-group date ident-date">
                                         <span class="input-group-addon"><span
                                                 class="text-info">Hour Init:</span></span>
-                                            <div uib-timepicker ng-model="timeInit" hour-step="hstep"
-                                                 minute-step="mstep"
-                                                 second-step="sstep" show-seconds="true" show-meridian="false"></div>
+                                        <div uib-timepicker ng-model="timeInit" hour-step="hstep"
+                                             minute-step="mstep"
+                                             second-step="sstep" show-seconds="true" show-meridian="false"></div>
 
 
                                     <span class="input-group-addon"><span class="fa fa-clock-o "
                                     ></span></span>
-                                        </div>
+                                    </div>
 
 
                                     <!--<span   class="error-message text-danger" ng-show="myform.initDate.$dirty && myform.initDate.$invalid"><p style="text-decoration-color:#f1a417;background: #afd9ee">Init date field should be date</p></span>-->
@@ -227,8 +194,8 @@
                     </span>
                     </td>
                     <!--<td>-->
-                        <!--<a class="btn btn-primary" ng-disabled="iBill.billState" ng-click="makePayment(iBill)">Pay</a>-->
-                        <!--&lt;!&ndash;<a class="btn btn-danger" ng-click="deleteBill(iBill)">Delete</a>&ndash;&gt;-->
+                    <!--<a class="btn btn-primary" ng-disabled="iBill.billState" ng-click="makePayment(iBill)">Pay</a>-->
+                    <!--&lt;!&ndash;<a class="btn btn-danger" ng-click="deleteBill(iBill)">Delete</a>&ndash;&gt;-->
                     <!--</td>-->
                 </tr>
                 </tbody>
