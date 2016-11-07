@@ -11,7 +11,8 @@
                         <input class="form-control"
                                type="text"
                                ng-model="criteria"/>
-                        <span class="input-group-addon" ng-click="clearCriteria()">
+                            <span class="input-group-addon" ng-click="clearCriteria()" data-toggle="tooltip"
+                                  title="{{'CLEAR_FILTER' | translate}}">
                             <span class="glyphicon glyphicon-erase"></span>
                         </span>
                     </div>
@@ -22,18 +23,32 @@
 
     <br/>
 
-    <div class="row" ng-show="userIsMain">
+    <div class="row">
         <form>
-            <div class="form-group">
-                <label class="control-label"> {{'CREATE_CREDENTIAL' | translate}}
-                    <button class="btn btn-xs btn-info"
-                            ng-click="gotoCreate()">
-                        {{'CREATE' | translate}}
-                    </button>
-                </label>
+            <div class="col col-lg-6 col-xs-10" ng-show="userIsMain">
+                <div class="form-group">
+                    <label class="control-label"> {{'CREATE_CREDENTIAL' | translate}}
+                        <button class="btn btn-xs btn-info"
+                                ng-click="gotoCreate()">
+                            {{'CREATE' | translate}}
+                        </button>
+                    </label>
+                </div>
             </div>
+
+            <div class="col col-lg-offset-2 col-lg-4 col-xs-10">
+                <div class="form-group">
+                    <button class="btn btn-sm btn-default" ng-click="gotoChangePassword()">
+                        <span><i class="icon_key_alt"></i></span>
+                        {{'CHANGE_YOUR_PASSWORD' | translate}}
+                    </button>
+                </div>
+            </div>
+
+
         </form>
     </div>
+
 
     <br>
 
@@ -92,14 +107,36 @@
                     </span>
                 </td>
                 <td ng-show="userIsMain">
-                    <button type="button" class="btn btn-sm btn-primary" ng-click="editLogin(login)">
-                        {{'EDIT' | translate}}
-                    </button>
-                    <span></span>
-                    <span></span>
-                    <button type="button" class="btn btn-sm btn-danger" value="Delete" ng-click="deleteLogin(login)">
-                        {{'DELETE' | translate}}
-                    </button>
+                    <!--<button type="button" class="btn btn-sm btn-primary"-->
+                    <!--ng-disabled="login.username == username"-->
+                    <!--ng-click="editLogin(login)">-->
+                    <!--{{'EDIT' | translate}}-->
+                    <!--</button>-->
+                    <!--<span></span>-->
+                    <!--<span></span>-->
+                    <!--<button type="button" class="btn btn-sm btn-danger"-->
+                    <!--ng-disabled="login.username == username"-->
+                    <!--ng-click="deleteLogin(login)">-->
+                    <!--{{'DELETE' | translate}}-->
+                    <!--</button>-->
+                    <div class="btn-group" role="group" aria-label="...">
+                        <button type="button" class="btn btn-sm btn-default"
+                                ng-disabled="login.username == username"
+                                ng-click="editLogin(login)"
+                                title="{{'EDIT' | translate}}"
+                                data-toggle="tooltip">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </button>
+                        <span></span>
+                        <span></span>
+                        <button type="button" class="btn btn-sm btn-default"
+                                ng-disabled="login.username == username"
+                                ng-click="deleteLogin(login)"
+                                title="{{'DELETE' | translate}}"
+                                data-toggle="tooltip">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                    </div>
                 </td>
             </tr>
             </tbody>

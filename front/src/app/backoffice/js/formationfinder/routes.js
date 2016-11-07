@@ -18,6 +18,11 @@ app.config(["$routeProvider", function ($routeProvider) {
                 templateUrl: "templates/login/create.html"
             }
         )
+        .when("/login/change/password", {
+                controller: "LoginChangePasswordController",
+                templateUrl: "templates/login/changepassword.html"
+            }
+        )
         .when("/login/delete", {
                 controller: "DeleteLogincontroller",
                 templateUrl: "templates/login/delete.html"

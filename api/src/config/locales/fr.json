@@ -139,5 +139,7 @@
   "WAITING_ROOM_IS_EMPTY": "Waiting room is empty",
   "ERROR_CUSTOMER_ID_REQUIED": "Customer id is required",
   "CUSTOMER_ADDED_TO_FORMATION": "Customer added successfully to the formation",
-  "INVALID_LICENCE_STRING": "Invalid licence string"
+  "INVALID_LICENCE_STRING": "Invalid licence string",
+
+  "NEW_PASSWORD_REQUIRED": "New password required"
 }

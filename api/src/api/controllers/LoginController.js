@@ -242,6 +242,66 @@ module.exports = {
     });
   },
 
+  changePassword: function (req, res, next) {
+
+    if (req.param('username') === undefined) {
+      return res.json({status: "error", info: sails.__("USERNAME_REQUIRED")});
+    }
+
+    if (req.param('password') === undefined) {
+      return res.json({status: "error", info: sails.__("PASSWORD_REQUIRED")});
+    }
+
+    if (req.param('newPassword') === undefined) {
+      return res.json({status: "error", info: sails.__("NEW_PASSWORD_REQUIRED")});
+    }
+
+    //Search the username/password
+    Login.native(function (err, collection) {
+      if (err) return res.json({status: "error", info: sails.__("ERROR_SEARCHING_LOGIN")});
+
+      collection.find({
+          username: req.param('username'),
+          password: req.param('password')
+        })
+        .toArray(function (err, loginFoundedArray) {
+
+          if (err) {
+            return res.json({status: "error", info: sails.__("ERROR_SEARCHING_LOGIN")});
+          }
+
+          if (!loginFoundedArray || loginFoundedArray.length === 0) {
+            return res.json({status: "error", info: sails.__("INVALID_USERNAME_PASSWORD")});
+          }
+
+          if (loginFoundedArray[0].isActivated === false) {
+            return res.json({status: "error", info: sails.__("INVALID_USERNAME_PASSWORD")});
+          }
+
+          //If i get here, i have found the username/password.
+          //Now search the login.
+          Login.findOne({
+              username: req.param('username'),
+              password: req.param('password')
+            })
+            .exec(function (err, loginFounded) {
+
+              if (err) {
+                return res.json({status: "error", info: sails.__("ERROR_SEARCHING_LOGIN")});
+              }
+
+              loginFounded.password  = req.param('newPassword');
+              loginFounded.save();
+
+              return res.json({status: "ok", info: sails.__("CREDENTIAL_UPDATED")});
+
+            });
+
+        });
+    });
+
+  },
+
   verify: function (req, res) {
     token = req.param('token');
 

@@ -17,6 +17,10 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 console.log("El path ahora es: " + $location.url());
             };
 
+            $scope.change_user_password = function () {
+
+            };
+
             $scope.changeLanguage = function (langKey) {
                 console.log("Change language to ", langKey)
                 $translate.use(langKey);
@@ -483,6 +487,172 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 });
             };
         }])
+    .controller("LoginChangePasswordController", ["$scope", "$rootScope", "$location", "$http", "$uibModal", "$translate",
+        function ($scope, $rootScope, $location, $http, $uibModal, $translate) {
+
+            $scope.invalidNewPassword = false;
+            $scope.invalidConfirmPassword = false;
+
+            $scope.newPasswordEqToCurrentPassword = false;
+
+            $scope.confirmPasswordDifferentToNewPassword = false;
+
+            var newPasswordEqToCurrentPasswordFunc = function () {
+
+                if ($scope.currentPassword !== undefined
+                    && $scope.newPassword !== undefined
+                    && $scope.currentPassword === $scope.newPassword) {
+
+                    $scope.newPasswordEqToCurrentPassword = true;
+                    return true;
+                }
+
+                $scope.newPasswordEqToCurrentPassword = false;
+                return false;
+
+            };
+
+            $scope.validateNewPassword = function () {
+
+                $scope.invalidNewPassword = newPasswordEqToCurrentPasswordFunc();
+
+                $scope.validateConfirmPassword();
+            };
+
+            var confirmPasswordDifferentToNewPasswordFunc = function () {
+
+                if ($scope.newPassword !== undefined
+                    && $scope.confirmPassword !== undefined
+                    && $scope.newPassword !== $scope.confirmPassword) {
+
+                    $scope.confirmPasswordDifferentToNewPassword = true;
+                    return true;
+                }
+
+                $scope.confirmPasswordDifferentToNewPassword = false;
+                return false;
+            };
+
+            $scope.validateConfirmPassword = function () {
+
+                $scope.invalidConfirmPassword = confirmPasswordDifferentToNewPasswordFunc();
+
+            };
+
+            $scope.gotoManage = function () {
+                $location.path('/login/admin');
+            };
+
+            $scope.changePassword = function () {
+
+                var data = {
+                    username: $rootScope.username,
+                    password: $scope.currentPassword,
+                    newPassword: $scope.newPassword
+                };
+
+                var config = {
+                    messageType: "Confirmation",
+                    message: $translate.instant('CHANGE_PASSWORD_CONFIRMATION'),
+                    objectData: data
+                };
+
+                $scope.showModalConfirmChangePassword(config);
+
+            };
+
+            $scope.showModalConfirmChangePassword = function (config) {
+
+                $scope.items.messageType = config.messageType;
+                $scope.items.message = config.message;
+                $scope.items.objectData = config.objectData;
+
+
+                var modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: 'ModalConfirmMessage.html',
+                    controller: 'ModalConfirmCtrl',
+                    size: "",
+                    resolve: {
+                        items: function () {
+                            return $scope.items;
+                        }
+                    }
+                });
+
+
+                modalInstance.result.then(function (selectedItem) {
+
+                        $scope.selected = selectedItem;
+
+                        if (typeof $scope.selected !== undefined && $scope.selected.action == "OK") {
+
+                            $http.post($rootScope.urlBase + "/login/changePassword", {
+                                    username: $scope.selected.objectData.username,
+                                    password: $scope.selected.objectData.password,
+                                    newPassword: $scope.selected.objectData.newPassword
+                                })
+                                .success(function (result) {
+                                    if (result.status === "ok") {
+
+                                        var objeData = {type: "Info"};
+                                        $scope.showModalMessage($translate.instant('PASSWORD_CHANGED'), objeData);
+                                        $scope.gotoManage();
+
+                                    } else {
+
+                                        objeData = {type: "Error"};
+                                        $scope.showModalMessage($translate.instant('ERROR_CHANGING_PASSWORD') + ":" + result.info, objeData);
+
+                                    }
+                                })
+                                .error(function (err) {
+
+                                    var objeData = {type: "Error"};
+                                    $scope.showModalMessage($translate.instant('ERROR_CHANGING_PASSWORD') + err, objeData);
+
+                                })
+                                .finally(function () {
+
+                                });
+
+                        } else {
+                            return false;
+                        }
+
+                    },
+                    function () {
+
+                    });
+
+
+            };
+
+            $scope.showModalMessage = function (messageshow, objectData) {
+
+                $scope.items = objectData;
+                $scope.items.message = messageshow
+
+                var modalInstance = $uibModal.open({
+                    animation: $scope.animationsEnabled,
+                    templateUrl: 'myModalMessage.html',
+                    controller: 'ModalInstanceCtrl',
+                    size: "",
+                    resolve: {
+                        items: function () {
+                            return $scope.items;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+                    //Empty promise success
+                }, function () {
+                    //Empty promise fault
+                });
+            };
+
+        }])
     .controller("AdminLoginController", ["$scope", "$rootScope", "$location", "$http", "$uibModal", "$translate",
         function ($scope, $rootScope, $location, $http, $uibModal, $translate) {
 
@@ -545,6 +715,10 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 $location.path('/login/create');
             };
 
+            $scope.gotoChangePassword = function () {
+                $location.path('/login/change/password');
+            };
+
             $scope.editLogin = function (iLogin) {
 
                 if ($rootScope.username === iLogin.username) {
@@ -558,7 +732,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             };
 
             $scope.clearCriteria = function () {
-               // $scope.criteria = "";
+                $scope.criteria = "";
             };
 
             $scope.showModalConfirmDelete = function (config) {
@@ -921,7 +1095,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             };
 
             $scope.clearCriteria = function () {
-               // $scope.criteria = "";
+                $scope.criteria = "";
             };
 
             $scope.addCustomerFromWaitingRoom = function (iFormation) {
@@ -2245,7 +2419,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
             };
 
             $scope.clearCriteria = function () {
-                //$scope.criteria = "";
+                $scope.criteria = "";
             };
 
             $scope.showModalConfirmDelete = function (Aminator) {
@@ -3550,7 +3724,6 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                     vm.showDDerror = true;
 
 
-
                     return;
                 }
                 vm.showDDerror = false;
@@ -3810,7 +3983,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
             }
 
-            function notDisabled(data){
+            function notDisabled(data) {
                 return false;
             }
 
@@ -4766,7 +4939,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 $scope.seachPlaceAux.agreementName = null
                 $scope.seachPlaceAux.agreementName = null
                 $scope.seachPlaceAux.address = null
-               // $scope.criteriaList = ""
+                $scope.criteriaList = ""
 
 
             }
@@ -5103,7 +5276,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         $scope.places = data_result
 
                         $scope.activatedPlace = []
-                       /// $scope.clearSearchField()
+                        $scope.clearSearchField()
                         ///Review if clean al parameter
                         return;
                         // console.log("RESULTADOS", data_result)
@@ -5559,7 +5732,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
             $scope.clearSearchField = function () {
                 $scope.searchAux.name = null
-               // console.log("Clear FIELD")
+                // console.log("Clear FIELD")
                 $scope.searchAux.initialDate = null
                 $scope.searchAux.initialDate = ""
                 $scope.searchAux.endDate = null
@@ -5810,7 +5983,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                         $scope.Bills = data_result
                         $scope.activatedBill = []
                         ///Review if clean al parameter
-                      //  $scope.clearSearchField()
+                        //  $scope.clearSearchField()
                         return;
                         // console.log("RESULTADOS", data_result)
                     })
@@ -8737,7 +8910,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                                     // $scope.formation = result.message;
                                     console.log("Formation data", result.message)
                                     objeData = {type: $translate.instant('INFO')};
-                                    $scope.showModalMessage($translate.instant('SEND_MAIL_SUCESSFUL') , objeData);
+                                    $scope.showModalMessage($translate.instant('SEND_MAIL_SUCESSFUL'), objeData);
 
 
                                 } else {
@@ -9466,8 +9639,6 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                                     // $scope.selectedPlace = $scope.formation.place;
 
 
-
-
                                 } else {
                                     console.log("Error searching Formation: ", result.info);
 
@@ -9804,7 +9975,33 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
         vm.verifyProcDate = function () {
 
             if (vm.customerData.driverLicence.dateOfProcuration) {
-               if (vm.validProcDateRange()) {
+                //if (!vm.validProcDate()) {
+                //
+                //    if(vm.procDgtdeliD()){
+                //        vm.showPDerror = true;
+                //        vm.showPDerrorLessDD = false;
+                //    }
+                //    else{
+                //        vm.showPDerror = false;
+                //        vm.showPDerrorLessDD = true;
+                //    }
+                //
+                //}
+                //else {
+                //    vm.showPDerror = false;
+                //    vm.showPDerrorLessDD = false;
+                //
+                //    if (vm.customerData.driverLicence.dateOfDeliverance
+                //        && (new Date(vm.customerData.driverLicence.dateOfProcuration) < new Date(vm.customerData.driverLicence.dateOfDeliverance))) {
+                //        vm.showPDerrorLessDD = true;
+                //    }
+                //    else {
+                //        vm.showPDerrorLessDD = false;
+                //    }
+                //
+                //}
+
+                if (vm.validProcDateRange()) {
 
                     vm.showPDerror = false;
 
@@ -9912,7 +10109,59 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
                 });
 
         }
-
+        //vm.validateData = function() {
+        //
+        //    //If there is some mising or invalid data, show an error and return false.
+        //    if (!vm.customerData.name
+        //        || !vm.customerData.firstName
+        //        || !vm.customerData.phoneNumber
+        //        || !vm.customerData.email
+        //        || !vm.customerData.zipCode
+        //        || !vm.customerData.birthDate
+        //        || !vm.customerData.driverLicence.number
+        //        || !vm.customerData.driverLicence.placeOfDeliverance
+        //        || !vm.customerData.driverLicence.dateOfDeliverance
+        //        || !vm.customerData.driverLicence.dateOfProcuration) {
+        //
+        //        if (vm.validationMessages.length === 0) {
+        //            vm.validationMessages.push({type: "danger", info: "There are some mising or invalid information, please check again."});
+        //        }
+        //
+        //        return false;
+        //    }
+        //
+        //    //Before enable the payment button, check if there is an customer with this data in the system in this year.
+        //    yearAct = new Date();
+        //    yearAct = yearAct.getFullYear();
+        //
+        //    $http.post($rootScope.urlBase + "/customer/searchByLicenceInYear", {
+        //            licence: vm.customerData.driverLicence.number,
+        //            year: yearAct})
+        //        .success(function(data) {
+        //            console.log("entre a success, el servicio devolvio");
+        //            if (data.status === "error") {
+        //                console.log("no encontre el usuario. Validar el botton.");
+        //                vm.paymentButtonDisabled = false;
+        //
+        //                if (vm.customerFoundMessages.length > 0) {
+        //                    vm.customerFoundMessages.splice(0, 1);
+        //                }
+        //            }
+        //            else {
+        //                vm.paymentButtonDisabled = true;
+        //
+        //                if (vm.customerFoundMessages.length === 0) {
+        //                    vm.customerFoundMessages.push({type: "danger", info: "There is a customer registered in the system with that licence number in this year."});
+        //                }
+        //            }
+        //        })
+        //        .error(function(err) {
+        //            console.log("Entre a error algun problema con el log.");
+        //            console.log(err);
+        //        });
+        //
+        //    return true;
+        //};
 
         ////--------------------------------------------------------------------------------------
         vm.makePayment = function () {
@@ -10744,7 +10993,7 @@ app.controller("indexController", ["$scope", "$rootScope", "$location", "$http",
 
 
     })
-    .controller('ModalInstanceCtrlMail', function ($scope, $uibModalInstance, items,  $translate) {
+    .controller('ModalInstanceCtrlMail', function ($scope, $uibModalInstance, items, $translate) {
         $scope.phoneRegExp = /^(0)\d{9}$/;
         $scope.zipcodeRegExp = /^\d{5}$/;
         $scope.nameRegExp = /^[µçùàèáéíóúa-zA-Z][µçùàèáéíóúa-zA-Z\s]+$/;

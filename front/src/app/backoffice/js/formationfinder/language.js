@@ -335,10 +335,26 @@ app.config(function ($translateProvider) {
             EXPIRATION_DATE: "Expiration date",
             CUSTOMER_ADDED_TO_WAITING_ROOM: "Customer added to the Waiting Room",
             ERROR_ADDING_CUSTOMER_TO_WAITING_ROOM: "Error adding customer to the waiting room",
-///--------------------------------------------------------------------------------------------3-11-2016
+            ///--------------------------------------------------------------------------------------------3-11-2016
             NUMBER_BILLS:"Number",
-            NUMBER_BILLS_ERROR:"Number has error"
+            NUMBER_BILLS_ERROR:"Number has error",
 
+            //------------------------------------- PITERSON 07-11-2016 ---------------------------------------
+            CLEAR_FILTER: "Clear search filter",
+            CHANGE_YOUR_PASSWORD: "Change your password",
+            CHANGE_PASSWORD: "Change password",
+            INSERT_CURRENT_PASSWORD: "Insert current password",
+            CURRENT_PASSWORD: "Current password",
+            INSERT_NEW_PASSWORD: "Insert new password",
+            NEW_PASSWORD: "New password",
+            CONFIRM_NEW_PASSWORD: "Confirm new password",
+            CONFIRM_PASSWORD: "Confirm password",
+            CHANGE: "Change",
+            NEW_PASS_CAN_NOT_BE_EQUAL_TO_CURRENT_PASS: "New password can't be equal to current password",
+            CORNFIRMATION_PASS_IS_DIFFERENT: "Confirmation doesn't match with the new password",
+            CHANGE_PASSWORD_CONFIRMATION: "You are going to change your password, continue?",
+            PASSWORD_CHANGED: "Password changed",
+            ERROR_CHANGING_PASSWORD: "Error changing password"
 
         })
         .translations('fr', {
@@ -658,8 +674,24 @@ app.config(function ($translateProvider) {
             CUSTOMER_ADDED_TO_WAITING_ROOM: "Customer added to the Waiting Room",
             ///--------------------------------------------------------------------------------------------3-11-2016
             NUMBER_BILLS:"Number",
-            NUMBER_BILLS_ERROR:"Number has error"
+            NUMBER_BILLS_ERROR:"Number has error",
 
+            //------------------------------------- PITERSON 07-11-2016 ---------------------------------------
+            CLEAR_FILTER: "Clear search filter",
+            CHANGE_YOUR_PASSWORD: "Change your password",
+            CHANGE_PASSWORD: "Change password",
+            INSERT_CURRENT_PASSWORD: "Insert current password",
+            CURRENT_PASSWORD: "Current password",
+            INSERT_NEW_PASSWORD: "Insert new password",
+            NEW_PASSWORD: "New password",
+            CONFIRM_NEW_PASSWORD: "Confirm new password",
+            CONFIRM_PASSWORD: "Confirm password",
+            CHANGE: "Change",
+            NEW_PASS_CAN_NOT_BE_EQUAL_TO_CURRENT_PASS: "New password can't be equal to current password",
+            CORNFIRMATION_PASS_IS_DIFFERENT: "Confirmation doesn't match with the new password",
+            CHANGE_PASSWORD_CONFIRMATION: "You are going to change your password, continue?",
+            PASSWORD_CHANGED: "Password changed",
+            ERROR_CHANGING_PASSWORD: "Error changing password"
         })
         .translations('es', {
             HEADLINE: 'Hey, das ist meine großartige App!',
@@ -975,7 +1007,24 @@ app.config(function ($translateProvider) {
             CUSTOMER_ADDED_TO_WAITING_ROOM: "Cliente agregado a la sala de espera",
             ///--------------------------------------------------------------------------------------------3-11-2016
             NUMBER_BILLS:"Number",
-            NUMBER_BILLS_ERROR:"Number has error"
+            NUMBER_BILLS_ERROR:"Number has error",
+
+            //------------------------------------- PITERSON 07-11-2016 ---------------------------------------
+            CLEAR_FILTER: "Eliminar filtro",
+            CHANGE_YOUR_PASSWORD: "Cambie su contraseña",
+            CHANGE_PASSWORD: "Cambiar contraseña",
+            INSERT_CURRENT_PASSWORD: "Inserte contraseña actual",
+            CURRENT_PASSWORD: "Contraseña actual",
+            INSERT_NEW_PASSWORD: "Inserte nueva contraseña",
+            NEW_PASSWORD: "Nueva contraseña",
+            CONFIRM_NEW_PASSWORD: "Confirmar nueva contraseña",
+            CONFIRM_PASSWORD: "Confirmar contraseña",
+            CHANGE: "Cambiar",
+            NEW_PASS_CAN_NOT_BE_EQUAL_TO_CURRENT_PASS: "Nueva contraseña no puede ser igual a la actual",
+            CORNFIRMATION_PASS_IS_DIFFERENT: "Campo de confirmación diferente a la nueva contraseña",
+            CHANGE_PASSWORD_CONFIRMATION: "Está a punto de cambiar su contraseña, desea continuar?",
+            PASSWORD_CHANGED: "Contraseña cambiada",
+            ERROR_CHANGING_PASSWORD: "Error cambiando contraseña"
 
         });
     $translateProvider.preferredLanguage('en');

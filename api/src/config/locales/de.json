@@ -144,5 +144,7 @@
   "ERROR_IN_PAYIN_PROCESS": "Error in payin process",
   "ERROR_IN_WALLET_TO_WALLET": "Error in wallet to wallet transfer",
   "FORMATION_CENTER_HAS_NOT_MANGOPAY_DATA": "Formation Center has not Mangopay data",
-  "INVALID_LICENCE_STRING": "Invalid licence string"
+  "INVALID_LICENCE_STRING": "Invalid licence string",
+
+  "NEW_PASSWORD_REQUIRED": "New password required"
 }
